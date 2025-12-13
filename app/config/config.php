@@ -1,2 +1,2 @@
 <?php
-define('BASE_URL', '/sipadutest/public');
+define('BASE_URL', '/sipadu/public');

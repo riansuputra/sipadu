@@ -1,4 +1,5 @@
 <?php
+guestOnly();
 $title = "Dashboard";
 
 // mulai tampung HTML seperti @section('content')

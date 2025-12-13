@@ -92,7 +92,7 @@
                         <ul class="list-inline list-inline-dots mb-0">
                             <li class="list-inline-item">
                                 Copyright © 2025
-                                <a href="." class="link-secondary">BPMP Provinsi Bali</a>.
+                                <a href="https://bpmpbali.kemendikdasmen.go.id/" target="_blank" rel="noopener noreferrer" class="link-primary">BPMP Provinsi Bali</a>. All rights reserved.
                             </li>
                         </ul>
                     </div>

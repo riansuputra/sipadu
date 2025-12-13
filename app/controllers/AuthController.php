@@ -12,6 +12,10 @@ class AuthController
 
     public function authenticate()
     {
+        if (isLoggedIn()) {
+            redirectByRole(); // ⬅️ PENTING
+        }
+
         global $pdo;
 
         $stmt = $pdo->prepare("

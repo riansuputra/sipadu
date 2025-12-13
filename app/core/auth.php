@@ -28,3 +28,19 @@ function logout()
     header('Location: ' . BASE_URL . '/?page=login');
     exit;
 }
+
+
+function redirectByRole()
+{
+    switch ($_SESSION['user']['role']) {
+        case 'ADMIN':
+            header('Location: ' . BASE_URL . '/?page=dashboard-admin');
+            break;
+        case 'ATASAN':
+            header('Location: ' . BASE_URL . '/?page=dashboard-atasan');
+            break;
+        default:
+            header('Location: ' . BASE_URL . '/?page=dashboard-pegawai');
+    }
+    exit;
+}
