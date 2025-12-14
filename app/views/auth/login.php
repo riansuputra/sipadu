@@ -6,7 +6,7 @@ $title = "Dashboard";
 ob_start();
 ?>
 
-<div class="page-body mt-3" id="page-content" style="display:none;">
+<div class="page-body mt-0" id="page-content" style="display:none;">
 
     <div class="container-xl">
         <div class="row row-deck row-cards ">
@@ -14,29 +14,30 @@ ob_start();
                 <div class="row row-cards row-evenly">
 
                     <div class="col-sm-6 col-lg-4 mt-6 p-4">
-                        <h2 class="h2 text-center mb-4">Masuk ke SIPADU</h2>
-                        <form action="?page=login-process" method="post" autocomplete="off" novalidate="">
-                            <div class="mb-3">
-                                <label class="form-label">Username</label>
-                                <input type="text" name="username" class="form-control" placeholder="Masukkan username..." autocomplete="off" required>
+                        <h1 class="text-center mb-6">Masuk ke SIPADU</h1>
+                        <form action="?page=login-process" method="post" autocomplete="off">
+                            <div class="mb-5">
+                                <label class="form-label h2">Username</label>
+                                <input type="text" name="username" class="form-control h2" placeholder="Masukkan username..." autocomplete="off" required>
                             </div>
                             <div class="mb-2">
-                                <label class="form-label">
+                                <label class="form-label h2">
                                     Password
                                 </label>
-                                <div class="input-group input-group-flat">
-                                    <input type="password" id="password" name="password" class="form-control" placeholder="Masukkan password..." autocomplete="off" requiured>
-                                    <span class="input-group-text" id="togglePassword" data-bs-toggle="tooltip">
+                                <div class="input-group">
+                                    <input type="password" id="password" name="password" class="form-control h2" placeholder="Masukkan password..." autocomplete="off" requiured>
+                                    <span class="input-group-text h2" id="togglePassword" data-bs-toggle="tooltip">
                                         <a href="#" class="link-secondary">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
                                                 <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"></path>
                                                 <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"></path>
-                                            </svg></a>
+                                            </svg>
+                                        </a>
                                     </span>
                                 </div>
                             </div>
                             <div class="form-footer">
-                                <button type="submit" class="btn btn-primary w-100">Masuk</button>
+                                <button type="submit" class="btn btn-primary w-100 h2">Masuk</button>
                             </div>
                         </form>
                     </div>

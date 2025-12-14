@@ -1,3 +1,7 @@
+<?php
+$headerImage = $headerImage ?? 'https://template.canva.com/EAGMlmB-dZA/1/0/1600w-LgWW4P4tupc.jpg';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -23,7 +27,7 @@
         }
 
         .header-banner {
-            background-image: url("https://template.canva.com/EAGMlmB-dZA/1/0/1600w-LgWW4P4tupc.jpg");
+            background-image: url('<?= $headerImage ?>');
             background-size: cover;
             /* penting */
             background-position: center;
@@ -34,20 +38,20 @@
         }
 
         /* Tablet */
-        @media (max-width: 992px) {
+        /* @media (max-width: 992px) {
             .header-banner {
                 height: 180px;
                 background-image: url("banner-tablet.jpg");
             }
-        }
+        } */
 
         /* Mobile */
-        @media (max-width: 576px) {
+        /* @media (max-width: 576px) {
             .header-banner {
                 height: 140px;
                 background-image: url("banner-mobile.jpg");
             }
-        }
+        } */
 
         .row-evenly {
             display: flex;
@@ -79,10 +83,6 @@
                 </div>
             </div>
             <?= $content ?>
-            <?php if (isset($_SESSION['user'])): ?>
-                <a href="<?= BASE_URL ?>/?page=logout">Logout</a>
-            <?php endif; ?>
-
         </div>
 
         <footer class="footer footer-transparent d-print-none">

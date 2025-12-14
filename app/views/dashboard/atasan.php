@@ -1,5 +1,6 @@
 <?php
 $title = "Dashboard";
+$headerImage = 'https://images.unsplash.com/photo-1598084991519-c90900bc9df0?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGhvcml6b250YWx8ZW58MHx8MHx8fDA%3D';
 
 // mulai tampung HTML seperti @section('content')
 ob_start();
