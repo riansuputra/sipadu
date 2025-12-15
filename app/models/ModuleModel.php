@@ -42,4 +42,18 @@ class ModuleModel
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    // 🧩 Ambil SEMUA module aktif (untuk semua dashboard)
+    public function getAllActiveModules()
+    {
+        $stmt = $this->db->prepare("
+            SELECT *
+            FROM modules
+            WHERE is_active = 1
+            ORDER BY sort_order ASC
+        ");
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
