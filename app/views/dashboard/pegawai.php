@@ -1,6 +1,15 @@
 <?php
+// if (!isset($_SESSION['role_id'])) {
+//     die('Role tidak ditemukan. Silakan login ulang.');
+// }
+
 $title = "Dashboard";
 $headerImage = 'https://images.unsplash.com/photo-1587387119725-9d6bac0f22fb?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8aG9yaXpvbnRhbHxlbnwwfHwwfHx8MA%3D%3D';
+$moduleModel = new ModuleModel($pdo);
+$role = currentRole(); // ADMIN / ATASAN / PEGAWAI
+$modules = $moduleModel->getModulesByRole($role);
+// var_dump($modules);
+
 
 // mulai tampung HTML seperti @section('content')
 ob_start();
@@ -40,79 +49,18 @@ ob_start();
         <div class="row row-deck row-cards">
             <div class="col-12">
                 <div class="row row-cards row-evenly">
+                    <?php foreach ($modules as $module): ?>
+                        <div class="col-sm-6 col-lg-3 p-3">
+                            <a href="#" class="card card-link card-link-pop">
+                                <!-- Photo -->
+                                <div class="img-responsive img-responsive-21x9 card-img-top" style="background-image: url(https://images.unsplash.com/photo-1598084991519-c90900bc9df0?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGhvcml6b250YWx8ZW58MHx8MHx8fDA%3D)"></div>
+                                <div class="card-body h2 text-center mb-0">
+                                    <?= htmlspecialchars($module['link']) ?>
+                                </div>
+                            </a>
+                        </div>
+                    <?php endforeach; ?>
 
-                    <div class="col-sm-6 col-lg-3 p-3">
-                        <a href="#" class="card card-link card-link-pop">
-                            <!-- Photo -->
-                            <div class="img-responsive img-responsive-21x9 card-img-top" style="background-image: url(https://images.unsplash.com/photo-1598084991519-c90900bc9df0?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGhvcml6b250YWx8ZW58MHx8MHx8fDA%3D)"></div>
-                            <div class="card-body h2 text-center mb-0">
-                                Card with top image
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-sm-6 col-lg-3 p-3">
-                        <a href="#" class="card card-link card-link-pop">
-                            <!-- Photo -->
-                            <div class="img-responsive img-responsive-21x9 card-img-top" style="background-image: url(https://images.unsplash.com/photo-1598084991519-c90900bc9df0?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGhvcml6b250YWx8ZW58MHx8MHx8fDA%3D)"></div>
-                            <div class="card-body h2 text-center mb-0">
-                                Card with top image
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-sm-6 col-lg-3 p-3">
-                        <a href="#" class="card card-link card-link-pop">
-                            <!-- Photo -->
-                            <div class="img-responsive img-responsive-21x9 card-img-top" style="background-image: url(https://images.unsplash.com/photo-1598084991519-c90900bc9df0?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGhvcml6b250YWx8ZW58MHx8MHx8fDA%3D)"></div>
-                            <div class="card-body h2 text-center mb-0">
-                                Card with top image
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-sm-6 col-lg-3 p-3">
-                        <a href="#" class="card card-link card-link-pop">
-                            <!-- Photo -->
-                            <div class="img-responsive img-responsive-21x9 card-img-top" style="background-image: url(https://images.unsplash.com/photo-1598084991519-c90900bc9df0?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGhvcml6b250YWx8ZW58MHx8MHx8fDA%3D)"></div>
-                            <div class="card-body h2 text-center mb-0">
-                                Card with top image
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-sm-6 col-lg-3 p-3">
-                        <a href="#" class="card card-link card-link-pop">
-                            <!-- Photo -->
-                            <div class="img-responsive img-responsive-21x9 card-img-top" style="background-image: url(https://images.unsplash.com/photo-1598084991519-c90900bc9df0?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGhvcml6b250YWx8ZW58MHx8MHx8fDA%3D)"></div>
-                            <div class="card-body h2 text-center mb-0">
-                                Card with top image
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-sm-6 col-lg-3 p-3">
-                        <a href="#" class="card card-link card-link-pop">
-                            <!-- Photo -->
-                            <div class="img-responsive img-responsive-21x9 card-img-top" style="background-image: url(https://images.unsplash.com/photo-1598084991519-c90900bc9df0?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGhvcml6b250YWx8ZW58MHx8MHx8fDA%3D)"></div>
-                            <div class="card-body h2 text-center mb-0">
-                                Card with top image
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-sm-6 col-lg-3 p-3">
-                        <a href="#" class="card card-link card-link-pop">
-                            <!-- Photo -->
-                            <div class="img-responsive img-responsive-21x9 card-img-top" style="background-image: url(https://images.unsplash.com/photo-1598084991519-c90900bc9df0?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGhvcml6b250YWx8ZW58MHx8MHx8fDA%3D)"></div>
-                            <div class="card-body h2 text-center mb-0">
-                                Card with top image
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-sm-6 col-lg-3 p-3">
-                        <a href="#" class="card card-link card-link-pop">
-                            <!-- Photo -->
-                            <div class="img-responsive img-responsive-21x9 card-img-top" style="background-image: url(https://images.unsplash.com/photo-1598084991519-c90900bc9df0?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGhvcml6b250YWx8ZW58MHx8MHx8fDA%3D)"></div>
-                            <div class="card-body h2 text-center mb-0">
-                                Card with top image
-                            </div>
-                        </a>
-                    </div>
 
 
                 </div>

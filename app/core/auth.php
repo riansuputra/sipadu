@@ -1,8 +1,6 @@
 <?php
 require_once __DIR__ . '/../config/config.php';
 
-session_start();
-
 function isLoggedIn()
 {
     return isset($_SESSION['user']);
@@ -32,7 +30,9 @@ function logout()
 
 function redirectByRole()
 {
-    switch ($_SESSION['user']['role']) {
+    $role = currentRole();
+
+    switch ($role) {
         case 'ADMIN':
             header('Location: ' . BASE_URL . '/?page=dashboard-admin');
             break;
@@ -43,4 +43,9 @@ function redirectByRole()
             header('Location: ' . BASE_URL . '/?page=dashboard-pegawai');
     }
     exit;
+}
+
+function currentRole()
+{
+    return $_SESSION['user']['role'] ?? null;
 }

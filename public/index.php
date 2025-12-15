@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once __DIR__ . '/../app/config/database.php';
 require_once __DIR__ . '/../app/core/auth.php';
 require_once __DIR__ . '/../app/core/middleware.php';
@@ -34,6 +35,15 @@ switch ($page) {
         require __DIR__ . '/../app/views/dashboard/pegawai.php';
         break;
 
+    case 'arsip':
+        moduleOnly('arsip');
+        require __DIR__ . '/../app/views/modules/arsip.php';
+        break;
+
+    case 'kepegawaian':
+        moduleOnly('kepegawaian');
+        require __DIR__ . '/../app/views/modules/kepegawaian.php';
+        break;
 
     case 'logout':
         logout();
