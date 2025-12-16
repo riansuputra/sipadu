@@ -12,8 +12,9 @@ class AuthController
 
     public function authenticate()
     {
+        // Sudah login → langsung ke dashboard
         if (isLoggedIn()) {
-            redirectByRole(); // ⬅️ PENTING
+            redirectToDashboard();
         }
 
         global $pdo;
@@ -24,30 +25,24 @@ class AuthController
             JOIN roles r ON u.role_id = r.id
             LEFT JOIN work_groups wg ON u.work_group_id = wg.id
             WHERE u.username = ?
+            LIMIT 1
         ");
-
         $stmt->execute([$_POST['username']]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if (!$user || !password_verify($_POST['password'], $user['password_hash'])) {
+        if (
+            !$user ||
+            !password_verify($_POST['password'], $user['password_hash'])
+        ) {
             $_SESSION['error'] = 'Login gagal';
             header('Location: ' . BASE_URL . '/?page=login');
             exit;
         }
 
+        // set session
         login($user);
-        switch ($user['role_code']) {
-            case 'ADMIN':
-                header('Location: ' . BASE_URL . '/?page=dashboard-admin');
-                break;
 
-            case 'ATASAN':
-                header('Location: ' . BASE_URL . '/?page=dashboard-atasan');
-                break;
-
-            default:
-                header('Location: ' . BASE_URL . '/?page=dashboard-pegawai');
-        }
-        exit;
+        // satu pintu redirect
+        redirectToDashboard();
     }
 }

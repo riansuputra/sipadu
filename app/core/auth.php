@@ -9,12 +9,12 @@ function isLoggedIn()
 function login($user)
 {
     $_SESSION['user'] = [
-        'id' => $user['id'],
-        'username' => $user['username'],
-        'nama' => $user['nama_lengkap'],
-        'role' => $user['role_code'],
-        'group_id' => $user['work_group_id'],
-        'group_type' => $user['group_type']
+        'id'         => $user['id'],
+        'username'   => $user['username'],
+        'nama'       => $user['nama_lengkap'],
+        'role'       => $user['role_code'],
+        'group_id'   => $user['work_group_id'],
+        'group_type' => $user['group_type'] ?? null
     ];
 }
 
@@ -27,25 +27,24 @@ function logout()
     exit;
 }
 
-
-function redirectByRole()
-{
-    $role = currentRole();
-
-    switch ($role) {
-        case 'ADMIN':
-            header('Location: ' . BASE_URL . '/?page=dashboard-admin');
-            break;
-        case 'ATASAN':
-            header('Location: ' . BASE_URL . '/?page=dashboard-atasan');
-            break;
-        default:
-            header('Location: ' . BASE_URL . '/?page=dashboard-pegawai');
-    }
-    exit;
-}
-
+/**
+ * Helper
+ */
 function currentRole()
 {
     return $_SESSION['user']['role'] ?? null;
+}
+
+function currentUser()
+{
+    return $_SESSION['user'] ?? null;
+}
+
+/**
+ * Redirect universal ke dashboard
+ */
+function redirectToDashboard()
+{
+    header('Location: ' . BASE_URL . '/?page=dashboard');
+    exit;
 }

@@ -102,7 +102,7 @@ $headerImage = $headerImage ?? 'https://template.canva.com/EAGMlmB-dZA/1/0/1600w
         </footer>
     </div>
 
-
+    <script src="assets/dist/libs/list.js/dist/list.min.js?1759774804" defer=""></script>
     <script src="assets/dist/libs/apexcharts/dist/apexcharts.min.js?1684106062" defer></script>
     <script src="assets/js/tabler.min.js?1684106062" defer></script>
     <script src="assets/dist/libs/tom-select/dist/js/tom-select.base.min.js?1684106062" defer></script>

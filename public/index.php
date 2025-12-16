@@ -1,17 +1,31 @@
 <?php
 session_start();
+
 require_once __DIR__ . '/../app/config/database.php';
 require_once __DIR__ . '/../app/core/auth.php';
 require_once __DIR__ . '/../app/core/middleware.php';
 require_once __DIR__ . '/../app/controllers/AuthController.php';
 
-$page = $_GET['page'] ?? 'login';
+$page = $_GET['page'] ?? null;
 $auth = new AuthController();
+
+/**
+ * Default behavior
+ * - jika belum login → login
+ * - jika sudah login → dashboard sesuai role
+ */
+if ($page === null) {
+    if (isLoggedIn()) {
+        redirectToDashboard();
+    } else {
+        $page = 'login';
+    }
+}
 
 switch ($page) {
 
     case 'login':
-        guestOnly(); // ⬅️ PENTING
+        guestOnly();
         $auth->login();
         break;
 
@@ -20,28 +34,26 @@ switch ($page) {
         $auth->authenticate();
         break;
 
-    case 'dashboard-admin':
-        roleOnly(['ADMIN']);
-        require __DIR__ . '/../app/views/dashboard/admin.php';
+    case 'dashboard':
+        authOnly();
+        require __DIR__ . '/../app/views/dashboard/' . strtolower(currentRole()) . '.php';
         break;
 
-    case 'dashboard-atasan':
-        roleOnly(['ATASAN']);
-        require __DIR__ . '/../app/views/dashboard/atasan.php';
-        break;
-
-    case 'dashboard-pegawai':
-        roleOnly(['PEGAWAI']);
-        require __DIR__ . '/../app/views/dashboard/pegawai.php';
+    case 'kepegawaian':
+        authOnly();
+        // moduleOnly('kepegawaian');
+        require __DIR__ . '/../app/views/modules/kepegawaian.php';
         break;
 
     case 'arsip':
-        moduleOnly('arsip');
+        authOnly();
+        // moduleOnly('arsip');
         require __DIR__ . '/../app/views/modules/arsip.php';
         break;
 
     case 'kepegawaian':
-        moduleOnly('kepegawaian');
+        authOnly();
+        // moduleOnly('kepegawaian');
         require __DIR__ . '/../app/views/modules/kepegawaian.php';
         break;
 
@@ -50,5 +62,7 @@ switch ($page) {
         break;
 
     default:
-        echo "404";
+        http_response_code(404);
+        echo "404 - Page Not Found";
+        break;
 }
