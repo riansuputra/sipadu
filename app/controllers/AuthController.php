@@ -20,7 +20,11 @@ class AuthController
         global $pdo;
 
         $stmt = $pdo->prepare("
-            SELECT u.*, r.role_code, wg.group_type
+            SELECT 
+                u.*,
+                r.role_code,
+                wg.group_type,
+                wg.group_name
             FROM users u
             JOIN roles r ON u.role_id = r.id
             LEFT JOIN work_groups wg ON u.work_group_id = wg.id

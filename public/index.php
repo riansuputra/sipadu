@@ -39,22 +39,52 @@ switch ($page) {
         require __DIR__ . '/../app/views/dashboard/' . strtolower(currentRole()) . '.php';
         break;
 
+    case 'tim-kerja-paud':
+        authOnly();
+        // moduleOnly('kepegawaian');
+        require __DIR__ . '/../app/views/modules/paud.php';
+        break;
+
+    case 'tim-kerja-sd':
+        authOnly();
+        // moduleOnly('kepegawaian');
+        require __DIR__ . '/../app/views/modules/sd.php';
+        break;
+
+    case 'tim-kerja-smp':
+        authOnly();
+        // moduleOnly('kepegawaian');
+        require __DIR__ . '/../app/views/modules/smp.php';
+        break;
+
+    case 'tim-kerja-sma':
+        authOnly();
+        // moduleOnly('kepegawaian');
+        require __DIR__ . '/../app/views/modules/sma.php';
+        break;
+
+    case 'tim-kerja-program-prioritas':
+        authOnly();
+        // moduleOnly('kepegawaian');
+        require __DIR__ . '/../app/views/modules/program-prioritas.php';
+        break;
+
     case 'kepegawaian':
         authOnly();
         // moduleOnly('kepegawaian');
         require __DIR__ . '/../app/views/modules/kepegawaian.php';
+        break;
+
+    case 'peraturan':
+        authOnly();
+        // moduleOnly('kepegawaian');
+        require __DIR__ . '/../app/views/modules/peraturan.php';
         break;
 
     case 'arsip':
         authOnly();
         // moduleOnly('arsip');
         require __DIR__ . '/../app/views/modules/arsip.php';
-        break;
-
-    case 'kepegawaian':
-        authOnly();
-        // moduleOnly('kepegawaian');
-        require __DIR__ . '/../app/views/modules/kepegawaian.php';
         break;
 
     case 'logout':

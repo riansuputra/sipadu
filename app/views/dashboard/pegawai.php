@@ -25,19 +25,18 @@ ob_start();
 
         <div class="row align-items-center">
             <div class="col">
-                <?php if ($currentPage !== 'dashboard'): ?>
-                    <a href="<?= BASE_URL ?>/?page=dashboard" class="btn btn-icon mb-0 btn-primary" data-bs-toggle="tooltip" data-bs-placement="right" title="Home">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-home">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <path d="M5 12l-2 0l9 -9l9 9l-2 0" />
-                            <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
-                            <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
-                        </svg>
-                    </a>
-                <?php endif; ?>
+                <a href="<?= BASE_URL ?>/?page=dashboard" class="btn btn-icon mb-0 btn-primary" data-bs-toggle="tooltip" data-bs-placement="right" title="Home">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-home">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M5 12l-2 0l9 -9l9 9l-2 0" />
+                        <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+                        <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+                    </svg>
+                </a>
             </div>
             <div class="col text-center">
-                <h2 class="mb-0"><?= htmlspecialchars($user['nama']) ?></h2>
+                <div><?= htmlspecialchars($user['nama']) ?></div>
+                <div class="mt-1 small text-secondary"><?= htmlspecialchars($_SESSION['user']['group_type']) ?> <?= htmlspecialchars($_SESSION['user']['group_name']) ?></div>
             </div>
             <div class="col text-end">
                 <a href="<?= BASE_URL ?>/?page=logout" class="btn btn-icon mb-0 btn-danger" data-bs-toggle="tooltip" data-bs-placement="left" title="Keluar">
@@ -74,7 +73,7 @@ ob_start();
                         <?= !$hasAccess ? "onclick=\"noAccessAlert()\"" : "" ?>>
 
                         <div class="img-responsive img-responsive-21x9 card-img-top"
-                            style="background-image: url('paudpediadesign.png')">
+                            style="background-image: url('assets/img/<?= htmlspecialchars($module['image']) ?>')">
                         </div>
 
                         <div class="card-body h2 text-center mb-0">

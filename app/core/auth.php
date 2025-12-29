@@ -14,7 +14,8 @@ function login($user)
         'nama'       => $user['nama_lengkap'],
         'role'       => $user['role_code'],
         'group_id'   => $user['work_group_id'],
-        'group_type' => $user['group_type'] ?? null
+        'group_type' => $user['group_type'],
+        'group_name' => $user['group_name'] ?? null
     ];
 }
 

@@ -1,5 +1,5 @@
 <?php
-$headerImage = $headerImage ?? 'https://template.canva.com/EAGMlmB-dZA/1/0/1600w-LgWW4P4tupc.jpg';
+$headerImage = $headerImage ?? 'assets/img/banner.jpg';
 ?>
 
 <!DOCTYPE html>
