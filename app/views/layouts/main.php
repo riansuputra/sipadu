@@ -37,22 +37,6 @@ $headerImage = $headerImage ?? 'assets/img/banner.jpg';
             /* sesuaikan */
         }
 
-        /* Tablet */
-        /* @media (max-width: 992px) {
-            .header-banner {
-                height: 180px;
-                background-image: url("banner-tablet.jpg");
-            }
-        } */
-
-        /* Mobile */
-        /* @media (max-width: 576px) {
-            .header-banner {
-                height: 140px;
-                background-image: url("banner-mobile.jpg");
-            }
-        } */
-
         .row-evenly {
             display: flex;
             justify-content: space-evenly;

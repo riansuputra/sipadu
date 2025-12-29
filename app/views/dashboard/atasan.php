@@ -1,65 +1,110 @@
 <?php
 $title = "Dashboard";
-$headerImage = 'https://images.unsplash.com/photo-1598084991519-c90900bc9df0?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGhvcml6b250YWx8ZW58MHx8MHx8fDA%3D';
+$currentPage = $_GET['page'] ?? '';
 
-// mulai tampung HTML seperti @section('content')
+$model = new ModuleModel($pdo);
+$user  = currentUser();
+$role  = currentRole();
+
+// Semua module aktif → card selalu tampil
+// $modules = $model->getAllActiveModules();
+$modules = $model->getVisibleModulesByRoleCode($role);
+
+// echo '<pre>';
+// print_r($model);
+// print_r($user);
+// print_r($role);
+// print_r($modules);
+// echo '</pre>';
+
 ob_start();
 ?>
 
 <div class="page-body mt-3" id="page-content" style="display:none;">
-
     <div class="container-xl">
-        <div class="row row-deck row-cards ">
-            <div class="col-12">
-                <div class="row row-cards row-evenly">
 
-                    <div class="col-sm-6 col-lg-4 mt-6 p-4">
-                        <h2 class="h2 text-center mb-4">Ini Dashboard <?= $_SESSION['user']['nama'] ?></h2>
-                        <form action="./" method="get" autocomplete="off" novalidate="">
-                            <div class="mb-3">
-                                <label class="form-label">Username</label>
-                                <input type="email" class="form-control" placeholder="Masukkan username..." autocomplete="off">
-                            </div>
-                            <div class="mb-2">
-                                <label class="form-label">
-                                    Password
-                                </label>
-                                <div class="input-group input-group-flat">
-                                    <input type="password" id="password" name="password" class="form-control" placeholder="Masukkan password..." autocomplete="off">
-                                    <span class="input-group-text" id="togglePassword" data-bs-toggle="tooltip">
-                                        <a href="#" class="link-secondary">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
-                                                <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"></path>
-                                                <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"></path>
-                                            </svg></a>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="form-footer">
-                                <button type="submit" class="btn btn-primary w-100">Masuk</button>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="col-auto">
-                        <?php if (isset($_SESSION['user'])): ?>
-                            <a href="<?= BASE_URL ?>/?page=logout" class="btn btn-danger">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-logout-2">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <path d="M10 8v-2a2 2 0 0 1 2 -2h7a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-7a2 2 0 0 1 -2 -2v-2" />
-                                    <path d="M15 12h-12l3 -3" />
-                                    <path d="M6 15l-3 -3" />
-                                </svg>
-                                Logout
-                            </a>
-                        <?php endif; ?>
-                    </div>
-
+        <div class="row align-items-center">
+            <div class="col">
+                <a href="<?= BASE_URL ?>/?page=dashboard" class="btn btn-icon mb-0 btn-primary" data-bs-toggle="tooltip" data-bs-placement="right" title="Home">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-home">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M5 12l-2 0l9 -9l9 9l-2 0" />
+                        <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+                        <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+                    </svg>
+                </a>
+            </div>
+            <div class="col text-center">
+                <div><?= htmlspecialchars($user['nama']) ?></div>
+                <div class="mt-1 small text-secondary">
+                    <?php
+                    if ($role == 'ATASAN') {
+                        echo ($role);
+                    } else {
+                        htmlspecialchars($_SESSION['user']['group_type']) . htmlspecialchars($_SESSION['user']['group_name']);
+                    }
+                    ?>
                 </div>
             </div>
+            <div class="col text-end">
+                <a href="<?= BASE_URL ?>/?page=logout" class="btn btn-icon mb-0 btn-danger" data-bs-toggle="tooltip" data-bs-placement="left" title="Keluar">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-logout-2">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M10 8v-2a2 2 0 0 1 2 -2h7a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-7a2 2 0 0 1 -2 -2v-2" />
+                        <path d="M15 12h-12l3 -3" />
+                        <path d="M6 15l-3 -3" />
+                    </svg>
+                </a>
+            </div>
+        </div>
 
+        <hr class="my-3">
+
+        <div class="row row-cards row-evenly">
+            <?php foreach ($modules as $module): ?>
+
+                <?php
+                $hasAccess = $model->userHasAccess(
+                    $user['role'],
+                    $user['group_id'],
+                    $module['link']
+                );
+
+                // echo '<pre>';
+                // print_r($hasAccess);
+                // echo '</pre>';
+                ?>
+
+                <div class="col-sm-6 col-lg-3 p-3">
+                    <a href="<?= $hasAccess ? BASE_URL . '/?page=' . $module['link'] : '#' ?>"
+                        class="card card-link card-link-pop"
+                        <?= !$hasAccess ? "onclick=\"noAccessAlert()\"" : "" ?>>
+
+                        <div class="img-responsive img-responsive-21x9 card-img-top"
+                            style="background-image: url('assets/img/<?= htmlspecialchars($module['image']) ?>')">
+                        </div>
+
+                        <div class="card-body h2 text-center mb-0">
+                            <?= htmlspecialchars($module['title']) ?>
+                        </div>
+                    </a>
+                </div>
+
+            <?php endforeach; ?>
         </div>
     </div>
 </div>
+
+<script>
+    function noAccessAlert() {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Akses Ditolak',
+            text: 'Anda tidak memiliki akses ke modul ini.',
+            confirmButtonText: 'Mengerti'
+        });
+    }
+</script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -72,21 +117,7 @@ ob_start();
         });
     });
 </script>
-<script>
-    $(document).ready(function() {
-        $('#togglePassword').click(function() {
-            var passwordInput = $('#password');
-            if (passwordInput.attr('type') === 'password') {
-                passwordInput.attr('type', 'text');
-            } else {
-                passwordInput.attr('type', 'password');
-            }
-        });
-    });
-</script>
 
 <?php
 $content = ob_get_clean();
-
-// panggil layout utama seperti @extends
 include __DIR__ . '/../layouts/main.php';
