@@ -14,7 +14,7 @@ $headerImage = $headerImage ?? 'assets/img/banner.jpg';
     <link href="assets/css/tabler-vendors.min.css?1684106062" rel="stylesheet" />
     <link href="assets/dist/css/demo.min.css?1684106062" rel="stylesheet" />
     <link href="assets/dist/css/tabler-flags.min.css?1684106062" rel="stylesheet" />
-    <link rel="icon" type="image/png" href="assets/img/logo-2.png" />
+    <link rel="icon" type="image/png" href="assets/img/logo-bpmp.png" />
     <style>
         @import url('https://rsms.me/inter/inter.css');
 
@@ -58,6 +58,8 @@ $headerImage = $headerImage ?? 'assets/img/banner.jpg';
         <header class="navbar navbar-expand-md d-print-none header-banner">
 
         </header>
+
+
         <div class="page-wrapper">
             <div class="container container-slim my-auto" id="spinner" style="display:none;">
                 <div class="text-center">

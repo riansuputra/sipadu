@@ -39,31 +39,31 @@ switch ($page) {
         require __DIR__ . '/../app/views/dashboard/' . strtolower(currentRole()) . '.php';
         break;
 
-    case 'tim-kerja-paud':
+    case 'paud':
         authOnly();
         // moduleOnly('kepegawaian');
         require __DIR__ . '/../app/views/modules/paud.php';
         break;
 
-    case 'tim-kerja-sd':
+    case 'sd':
         authOnly();
         // moduleOnly('kepegawaian');
         require __DIR__ . '/../app/views/modules/sd.php';
         break;
 
-    case 'tim-kerja-smp':
+    case 'smp':
         authOnly();
         // moduleOnly('kepegawaian');
         require __DIR__ . '/../app/views/modules/smp.php';
         break;
 
-    case 'tim-kerja-sma':
+    case 'sma':
         authOnly();
         // moduleOnly('kepegawaian');
         require __DIR__ . '/../app/views/modules/sma.php';
         break;
 
-    case 'tim-kerja-program-prioritas':
+    case 'program-prioritas':
         authOnly();
         // moduleOnly('kepegawaian');
         require __DIR__ . '/../app/views/modules/program-prioritas.php';
@@ -86,6 +86,13 @@ switch ($page) {
         // moduleOnly('arsip');
         require __DIR__ . '/../app/views/modules/arsip.php';
         break;
+
+    case 'zi-wbbm':
+        authOnly();
+        // moduleOnly('arsip');
+        require __DIR__ . '/../app/views/modules/zi-wbbm.php';
+        break;
+
 
     case 'logout':
         logout();
