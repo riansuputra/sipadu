@@ -72,7 +72,10 @@ switch ($page) {
     case 'kepegawaian':
         authOnly();
         // moduleOnly('kepegawaian');
-        require __DIR__ . '/../app/views/modules/kepegawaian.php';
+        // require __DIR__ . '/../app/views/modules/kepegawaian.php';
+        require __DIR__ . '/../app/controllers/PegawaiController.php';
+        $controller = new PegawaiController($pdo);
+        $controller->index();
         break;
 
     case 'peraturan':

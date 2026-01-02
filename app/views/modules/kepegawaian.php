@@ -2,16 +2,13 @@
 $title = "Dashboard";
 $currentPage = $_GET['page'] ?? '';
 
-$model = new ModuleModel($pdo);
+// $pegawai = new PegawaiModel($pdo);
+// $pegawai = $pegawai->getAll();
 $user  = currentUser();
 $role  = currentRole();
 
-// Semua module aktif → card selalu tampil
-// $modules = $model->getAllActiveModules();
-$modules = $model->getVisibleModulesByRoleCode($role);
-
 // echo '<pre>';
-// print_r($model);
+// print_r($pegawai);
 // print_r($user);
 // print_r($role);
 // print_r($modules);
@@ -141,157 +138,41 @@ ob_start();
                                         </tr>
                                     </thead>
                                     <tbody class="table-tbody">
-                                        <tr>
-                                            <td class="sort-no text-center">
-                                                1
-                                            </td>
-                                            <td class="sort-nama">
-                                                I Made Rian Suputra, S.Kom
-                                            </td>
-                                            <td class="sort-nip">200203052026061002</td>
-                                            <td class="sort-jabatan">Analis Kepegawaian Ahli Muda</td>
-                                            <td class="sort-gol">III/c-Penata</td>
-                                            <td class="sort-status">
-                                                <span class="badge bg-success-lt">Aktif</span>
-                                            </td>
-                                            <td class="sort-mb">37 thn 5 bln</td>
-                                            <td class="text-end">
-                                                <span class="dropdown">
-                                                    <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
-                                                    <div class="dropdown-menu dropdown-menu-end">
-                                                        <a class="dropdown-item" href="#"> Action </a>
-                                                        <a class="dropdown-item" href="#"> Another action </a>
-                                                    </div>
-                                                </span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="sort-no text-center">
-                                                2
-                                            </td>
-                                            <td class="sort-nama">
-                                                I Made Rian Suputra, S.Kom
-                                            </td>
-                                            <td class="sort-nip">200203052026061002</td>
-                                            <td class="sort-jabatan">Analis Kepegawaian Ahli Muda</td>
-                                            <td class="sort-gol">III/c-Penata</td>
-                                            <td class="sort-status">
-                                                <span class="badge bg-success-lt">Aktif</span>
-                                            </td>
-                                            <td class="sort-mb">37 thn 5 bln</td>
-                                            <td class="text-end">
-                                                <span class="dropdown">
-                                                    <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
-                                                    <div class="dropdown-menu dropdown-menu-end">
-                                                        <a class="dropdown-item" href="#"> Action </a>
-                                                        <a class="dropdown-item" href="#"> Another action </a>
-                                                    </div>
-                                                </span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="sort-no text-center">
-                                                3
-                                            </td>
-                                            <td class="sort-nama">
-                                                I Made Rian Suputra, S.Kom
-                                            </td>
-                                            <td class="sort-nip">200203052026061002</td>
-                                            <td class="sort-jabatan">Analis Kepegawaian Ahli Muda</td>
-                                            <td class="sort-gol">III/c-Penata</td>
-                                            <td class="sort-status">
-                                                <span class="badge bg-success-lt">Aktif</span>
-                                            </td>
-                                            <td class="sort-mb">37 thn 5 bln</td>
-                                            <td class="text-end">
-                                                <span class="dropdown">
-                                                    <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
-                                                    <div class="dropdown-menu dropdown-menu-end">
-                                                        <a class="dropdown-item" href="#"> Action </a>
-                                                        <a class="dropdown-item" href="#"> Another action </a>
-                                                    </div>
-                                                </span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="sort-no text-center">
-                                                4
-                                            </td>
-                                            <td class="sort-nama">
-                                                I Made Rian Suputra, S.Kom
-                                            </td>
-                                            <td class="sort-nip">200203052026061002</td>
-                                            <td class="sort-jabatan">Analis Kepegawaian Ahli Muda</td>
-                                            <td class="sort-gol">III/c-Penata</td>
-                                            <td class="sort-status">
-                                                <span class="badge bg-success-lt">Aktif</span>
-                                            </td>
-                                            <td class="sort-mb">37 thn 5 bln</td>
-                                            <td class="text-end">
-                                                <span class="dropdown">
-                                                    <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
-                                                    <div class="dropdown-menu dropdown-menu-end">
-                                                        <a class="dropdown-item" href="#"> Action </a>
-                                                        <a class="dropdown-item" href="#"> Another action </a>
-                                                    </div>
-                                                </span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="sort-no text-center">
-                                                5
-                                            </td>
-                                            <td class="sort-nama">
-                                                I Made Rian Suputra, S.Kom
-                                            </td>
-                                            <td class="sort-nip">200203052026061002</td>
-                                            <td class="sort-jabatan">Analis Kepegawaian Ahli Muda</td>
-                                            <td class="sort-gol">III/c-Penata</td>
-                                            <td class="sort-status">
-                                                <span class="badge bg-success-lt">Aktif</span>
-                                            </td>
-                                            <td class="sort-mb">37 thn 5 bln</td>
-                                            <td class="text-end">
-                                                <span class="dropdown">
-                                                    <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
-                                                    <div class="dropdown-menu dropdown-menu-end">
-                                                        <a class="dropdown-item" href="#"> Action </a>
-                                                        <a class="dropdown-item" href="#"> Another action </a>
-                                                    </div>
-                                                </span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="sort-no text-center">
-                                                6
-                                            </td>
-                                            <td class="sort-nama">
-                                                I Made Rian Suputra, S.Kom
-                                            </td>
-                                            <td class="sort-nip">200203052026061002</td>
-                                            <td class="sort-jabatan">Analis Kepegawaian Ahli Muda</td>
-                                            <td class="sort-gol">III/c-Penata</td>
-                                            <td class="sort-status">
-                                                <span class="badge bg-success-lt">Aktif</span>
-                                            </td>
-                                            <td class="sort-mb">37 thn 5 bln</td>
-                                            <td class="text-end">
-                                                <span class="dropdown">
-                                                    <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
-                                                    <div class="dropdown-menu dropdown-menu-end">
-                                                        <a class="dropdown-item" href="#"> Action </a>
-                                                        <a class="dropdown-item" href="#"> Another action </a>
-                                                    </div>
-                                                </span>
-                                            </td>
-                                        </tr>
+                                        <?php foreach ($pegawai as $i => $p): ?>
+                                            <tr>
+                                                <td class="sort-no text-center">
+                                                    <?= $i + 1 ?>
+                                                </td>
+                                                <td class="sort-nama">
+                                                    <?= htmlspecialchars($p['nama_lengkap'] ?? '-') ?>
+                                                </td>
+                                                <td class="sort-nip"><?= htmlspecialchars($p['nip'] ?? '-') ?></td>
+                                                <td class="sort-jabatan"><?= htmlspecialchars($p['jabatan'] ?? '-') ?></td>
+                                                <td class="sort-gol">III/c-Penata</td>
+                                                <td class="sort-status"><?= htmlspecialchars($p['status_pegawai'] ?? '-') ?></td>
+                                                <td class="sort-mb">
+                                                    <span class="badge bg-danger-lt">1 Tahun 2 Bulan</span>
+                                                </td>
+                                                <td>
+                                                    <a href="">
+
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-info-square">
+                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                            <path d="M12 9h.01" />
+                                                            <path d="M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14" />
+                                                            <path d="M11 12h1v4h1" />
+                                                        </svg>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
                                     </tbody>
                                 </table>
                             </div>
                             <div class="card-footer d-flex align-items-center">
                                 <div class="dropdown">
                                     <a class="btn dropdown-toggle" data-bs-toggle="dropdown">
-                                        <span id="page-count" class="me-1">20</span>
+                                        <span id="page-count" class="me-1">10</span>
                                         <span>records</span>
                                     </a>
                                     <div class="dropdown-menu">
@@ -383,7 +264,7 @@ ob_start();
                     const list = (window.tabler_list["advanced-table"] = new List("advanced-table", {
                         sortClass: "table-sort",
                         listClass: "table-tbody",
-                        page: parseInt("20"),
+                        page: parseInt("10"),
                         pagination: {
                             item: (value) => {
                                 return `<li class="page-item"><a class="page-link cursor-pointer">${value.page}</a></li>`;
