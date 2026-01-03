@@ -31,7 +31,7 @@ ob_start();
         </div>
         <div class="col text-center">
             <div><?= htmlspecialchars($user['nama']) ?></div>
-            <div class="mt-1 small text-secondary"><?= htmlspecialchars($_SESSION['user']['group_type']) ?> <?= htmlspecialchars($_SESSION['user']['group_name']) ?></div>
+            <div class="mt-1 small text-secondary"><?= htmlspecialchars($_SESSION['user']['tipe_grup']) ?> <?= htmlspecialchars($_SESSION['user']['nama_grup']) ?></div>
         </div>
         <!-- END NAVBAR LOGO -->
         <div class="navbar-nav flex-row order-md-last me-2">

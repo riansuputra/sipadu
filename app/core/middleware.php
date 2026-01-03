@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/../config/config.php';
-require_once __DIR__ . '/../models/ModuleModel.php';
+require_once __DIR__ . '/../models/ModulModel.php';
 
 /**
  * Harus login
@@ -27,11 +27,11 @@ function guestOnly()
 /**
  * Batasi berdasarkan role (optional, jarang dipakai)
  */
-function roleOnly(array $roles)
+function roleOnly(array $role)
 {
     authOnly();
 
-    if (!in_array(currentRole(), $roles)) {
+    if (!in_array(currentRole(), $role)) {
         http_response_code(403);
         require __DIR__ . '/../views/pages/403.php';
         exit;
@@ -41,24 +41,24 @@ function roleOnly(array $roles)
 /**
  * Proteksi module
  */
-function moduleOnly(string $moduleLink)
+function modulOnly(string $modulLink)
 {
     authOnly();
 
     // ADMIN & ATASAN selalu lolos
-    if (in_array(currentRole(), ['ADMIN', 'ATASAN'])) {
+    if (in_array(currentRole(), ['Superadmin', 'Pimpinan'])) {
         return true;
     }
 
     global $pdo;
-    $moduleModel = new ModuleModel($pdo);
+    $modulModel = new ModulModel($pdo);
 
     $user = currentUser();
 
-    $hasAccess = $moduleModel->userHasAccess(
+    $hasAccess = $modulModel->userHasAccess(
         $user['role'],
         $user['group_id'],
-        $moduleLink
+        $modulLink
     );
 
     if (!$hasAccess) {

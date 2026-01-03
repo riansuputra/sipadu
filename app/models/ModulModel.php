@@ -1,6 +1,6 @@
 <?php
 
-class ModuleModel
+class ModulModel
 {
     private $db;
 
@@ -11,37 +11,37 @@ class ModuleModel
 
     /**
      * 🔐 Cek akses module berdasarkan:
-     * - role_code
-     * - work_group_id
-     * - module link
+     * - kode_role
+     * - pokja_id
+     * - modul link
      */
-    public function userHasAccess(string $roleCode, ?int $groupId, string $moduleLink): bool
+    public function userHasAccess(string $kodeRole, ?int $groupId, string $modulLink): bool
     {
         // 1️⃣ ADMIN & ATASAN bebas
-        if (in_array($roleCode, ['ADMIN', 'ATASAN'])) {
+        if (in_array($kodeRole, ['Superadmin', 'Pimpinan'])) {
             return true;
         }
 
         // 2️⃣ Cek module + role
         $stmt = $this->db->prepare("
             SELECT m.id, m.is_global
-            FROM modules m
-            JOIN module_roles mr ON m.id = mr.module_id
-            JOIN roles r ON mr.role_id = r.id
-            WHERE r.role_code = ?
+            FROM modul m
+            JOIN modul_role mr ON m.id = mr.modul_id
+            JOIN role r ON mr.role_id = r.id
+            WHERE r.kode_role = ?
               AND m.link = ?
               AND m.is_active = 1
             LIMIT 1
         ");
-        $stmt->execute([$roleCode, $moduleLink]);
-        $module = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->execute([$kodeRole, $modulLink]);
+        $modul = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if (!$module) {
+        if (!$modul) {
             return false;
         }
 
         // 3️⃣ Module global
-        if ((int)$module['is_global'] === 1) {
+        if ((int)$modul['is_global'] === 1) {
             return true;
         }
 
@@ -52,11 +52,11 @@ class ModuleModel
 
         $stmt = $this->db->prepare("
             SELECT COUNT(*)
-            FROM module_work_groups
-            WHERE module_id = ?
-              AND work_group_id = ?
+            FROM modul_pokja
+            WHERE modul_id = ?
+              AND pokja_id = ?
         ");
-        $stmt->execute([$module['id'], $groupId]);
+        $stmt->execute([$modul['id'], $groupId]);
 
         return $stmt->fetchColumn() > 0;
     }
@@ -64,18 +64,18 @@ class ModuleModel
     /**
      * 🧩 Module untuk card berdasarkan role
      */
-    public function getModulesByRole(string $roleCode): array
+    public function getModulByRole(string $kodeRole): array
     {
         $stmt = $this->db->prepare("
             SELECT m.*
-            FROM modules m
-            JOIN module_roles mr ON m.id = mr.module_id
-            JOIN roles r ON mr.role_id = r.id
-            WHERE r.role_code = ?
+            FROM module m
+            JOIN modul_role mr ON m.id = mr.modul_id
+            JOIN role r ON mr.role_id = r.id
+            WHERE r.kode_role = ?
               AND m.is_active = 1
-            ORDER BY m.sort_order ASC
+            ORDER BY m.urutan ASC
         ");
-        $stmt->execute([$roleCode]);
+        $stmt->execute([$kodeRole]);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -87,9 +87,9 @@ class ModuleModel
     {
         $stmt = $this->db->prepare("
             SELECT *
-            FROM modules
+            FROM modul
             WHERE is_active = 1
-            ORDER BY sort_order ASC
+            ORDER BY urutan ASC
         ");
         $stmt->execute();
 
@@ -99,23 +99,23 @@ class ModuleModel
     /**
      * 🧩 Module sesuai role (card dashboard)
      */
-    public function getVisibleModulesByRoleCode($roleCode)
+    public function getVisibleModulesByRoleCode($kodeRole)
     {
         $sql = "
         SELECT DISTINCT m.*
-        FROM modules m
-        LEFT JOIN module_roles mr ON m.id = mr.module_id
-        LEFT JOIN roles r ON mr.role_id = r.id
+        FROM modul m
+        LEFT JOIN modul_role mr ON m.id = mr.modul_id
+        LEFT JOIN role r ON mr.role_id = r.id
         WHERE m.is_active = 1
         AND (
             m.is_global = 1
-            OR r.role_code = ?
+            OR r.kode_role = ?
         )
-        ORDER BY m.sort_order ASC
+        ORDER BY m.urutan ASC
     ";
 
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([$roleCode]);
+        $stmt->execute([$kodeRole]);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

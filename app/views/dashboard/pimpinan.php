@@ -2,7 +2,7 @@
 $title = "Dashboard";
 $currentPage = $_GET['page'] ?? '';
 
-$model = new ModuleModel($pdo);
+$model = new ModulModel($pdo);
 $user  = currentUser();
 $role  = currentRole();
 
@@ -87,11 +87,11 @@ ob_start();
                         <?= !$hasAccess ? "onclick=\"noAccessAlert()\"" : "" ?>>
 
                         <div class="img-responsive img-responsive-21x9 card-img-top"
-                            style="background-image: url('assets/img/<?= htmlspecialchars($module['image']) ?>')">
+                            style="background-image: url('assets/img/<?= htmlspecialchars($module['gambar']) ?>')">
                         </div>
 
                         <div class="card-body h2 text-center mb-0">
-                            <?= htmlspecialchars($module['title']) ?>
+                            <?= htmlspecialchars($module['judul']) ?>
                         </div>
                     </a>
                 </div>

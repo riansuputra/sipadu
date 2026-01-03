@@ -22,12 +22,12 @@ class AuthController
         $stmt = $pdo->prepare("
             SELECT 
                 u.*,
-                r.role_code,
-                wg.group_type,
-                wg.group_name
+                r.kode_role,
+                pj.tipe_grup,
+                pj.nama_grup
             FROM users u
-            JOIN roles r ON u.role_id = r.id
-            LEFT JOIN work_groups wg ON u.work_group_id = wg.id
+            JOIN role r ON u.role_id = r.id
+            LEFT JOIN pokja pj ON u.pokja_id = pj.id
             WHERE u.username = ?
             LIMIT 1
         ");

@@ -12,9 +12,9 @@ class PegawaiModel
     public function getAll()
     {
         $stmt = $this->db->query("
-            SELECT p.*, wg.group_name AS nama_pokja
+            SELECT p.*, pj.nama_grup AS nama_pokja
             FROM pegawai p
-            LEFT JOIN work_groups wg ON p.work_group_id = wg.id
+            LEFT JOIN pokja pj ON p.pokja_id = pj.id
             WHERE p.is_active = 1
             ORDER BY p.nama_lengkap
         ");

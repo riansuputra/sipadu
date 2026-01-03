@@ -12,10 +12,10 @@ function login($user)
         'id'         => $user['id'],
         'username'   => $user['username'],
         'nama'       => $user['nama_lengkap'],
-        'role'       => $user['role_code'],
-        'group_id'   => $user['work_group_id'],
-        'group_type' => $user['group_type'],
-        'group_name' => $user['group_name'] ?? null
+        'role'       => $user['kode_role'],
+        'grup_id'    => $user['pokja_id'],
+        'tipe_grup'  => $user['tipe_grup'],
+        'nama_grup'  => $user['nama_grup'] ?? null
     ];
 }
 

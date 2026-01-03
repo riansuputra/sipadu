@@ -2,7 +2,7 @@
 $title = "Dashboard";
 $currentPage = $_GET['page'] ?? '';
 
-$model = new ModuleModel($pdo);
+$model = new ModulModel($pdo);
 $user  = currentUser();
 $role  = currentRole();
 
@@ -34,7 +34,7 @@ ob_start();
         </div>
         <div class="col text-center">
             <div><?= htmlspecialchars($user['nama']) ?></div>
-            <div class="mt-1 small text-secondary"><?= htmlspecialchars($_SESSION['user']['group_type']) ?> <?= htmlspecialchars($_SESSION['user']['group_name']) ?></div>
+            <div class="mt-1 small text-secondary"><?= htmlspecialchars($_SESSION['user']['tipe_grup']) ?> <?= htmlspecialchars($_SESSION['user']['nama_grup']) ?></div>
         </div>
         <!-- END NAVBAR LOGO -->
         <div class="navbar-nav flex-row order-md-last me-2">
@@ -70,7 +70,7 @@ ob_start();
             <div class="col-sm-6 col-lg-3 p-3">
                 <a href="#" class="card card-link card-link-pop">
                     <div class="img-responsive img-responsive-21x9 card-img-top"
-                        style="background-image: url('assets/img/<?= htmlspecialchars($module['image'] ?? 'banner.jpg')  ?>')">
+                        style="background-image: url('assets/img/<?= htmlspecialchars($module['gambar'] ?? 'banner.jpg')  ?>')">
                     </div>
                     <div class="card-body h2 text-center mb-0">
                         Modul
