@@ -7,6 +7,7 @@ require_once __DIR__ . '/../app/core/middleware.php';
 require_once __DIR__ . '/../app/controllers/AuthController.php';
 
 $page = $_GET['page'] ?? null;
+
 $auth = new AuthController();
 
 /**
