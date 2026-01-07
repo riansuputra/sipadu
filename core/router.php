@@ -35,6 +35,9 @@ function routeRequest()
             logout();
             break;
 
+        case 'sd':
+            break;
+
         // ========================
         // DASHBOARD
         // ========================
@@ -51,6 +54,11 @@ function routeRequest()
             authOnly();
             require_once __DIR__ . '/../controllers/PegawaiController.php';
             // (new PegawaiController())->index();
+            break;
+
+        case 'pegawai-create':
+            require_once __DIR__ . '/../controllers/PegawaiController.php';
+            // (new PegawaiController())->create();
             break;
 
         // ========================

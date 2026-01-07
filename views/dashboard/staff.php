@@ -33,7 +33,8 @@ ob_start();
 
                 <?php
                 $hasAccess = $moduleModel->canAccess(
-                    $user['role_id'],
+                    $user['role'],
+                    $user['pokja_id'],
                     $module['link']
                 );
 
@@ -52,6 +53,8 @@ ob_start();
 
                 // echo '<pre>';
                 // print_r($hasAccess);
+                // print_r($user['role_id']);
+                // print_r($module['link']);
                 // echo '</pre>';
                 ?>
 
