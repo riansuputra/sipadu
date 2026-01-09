@@ -47,6 +47,18 @@ function routeRequest()
             (new DashboardController())->index();
             break;
 
+        case 'arsip':
+            authOnly(); // wajib login
+            require_once __DIR__ . '/../controllers/ArsipController.php';
+            (new ArsipController())->index();
+            break;
+
+        case 'tambah-arsip':
+            authOnly(); // wajib login
+            require_once __DIR__ . '/../controllers/ArsipController.php';
+            (new ArsipController())->create();
+            break;
+
         // ========================
         // PEGAWAI
         // ========================

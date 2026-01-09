@@ -3,13 +3,14 @@
 // SIDEBAR DINAMIS BERDASARKAN ROLE
 // ================================
 $page = $_GET['page'] ?? '';
+$arsipPages = ['arsip', 'tambah-arsip', 'arsip-tim'];
 ?>
 
 <div class="collapse navbar-collapse" id="sidebar-menu">
     <hr class="mt-2 mb-0">
     <ul class="navbar-nav pt-lg-3">
         <li class="nav-item <?= $page === 'dashboard' ? 'active' : '' ?> mb-2">
-            <a class="nav-link" href="{{ route('admin.dashboard') }}">
+            <a class="nav-link" href="<?= BASE_URL ?>/?page=dashboard">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                     <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -25,7 +26,7 @@ $page = $_GET['page'] ?? '';
         </li>
 
 
-        <li class="nav-item dropdown {{ request()->routeIs('admin.permintaan.kategori') ? 'active' : '' }} mb-2">
+        <li class="nav-item dropdown <?= in_array($page, $arsipPages) ? 'active' : '' ?> mb-2">
             <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-files">
@@ -37,16 +38,16 @@ $page = $_GET['page'] ?? '';
                     Arsip
                 </span>
             </a>
-            <div class="dropdown-menu">
+            <div class="dropdown-menu <?= in_array($page, $arsipPages) ? 'show' : '' ?>">
                 <div class="dropdown-menu-columns">
                     <div class="dropdown-menu-column">
-                        <a class="dropdown-item" href="{{ route('admin.permintaan.kategori') }}">
-                            Semua Arsip
+                        <a class="dropdown-item <?= $page === 'arsip' ? 'active' : '' ?>" href="<?= BASE_URL ?>/?page=arsip">
+                            Daftar Arsip
                         </a>
-                        <a class="dropdown-item" href="{{ route('admin.permintaan.kategori') }}">
+                        <a class="dropdown-item <?= $page === 'tambah-arsip' ? 'active' : '' ?>" href="<?= BASE_URL ?>/?page=tambah-arsip">
                             Tambah Arsip
                         </a>
-                        <a class="dropdown-item" href="{{ route('admin.permintaan.kategori') }}">
+                        <a class="dropdown-item <?= $page === 'arsip' ? 'tim' : '' ?>" href="<?= BASE_URL ?>/?page=logout">
                             Arsip Tim
                         </a>
                     </div>
@@ -73,7 +74,7 @@ $page = $_GET['page'] ?? '';
                 <div class="dropdown-menu-columns">
                     <div class="dropdown-menu-column">
                         <a class="dropdown-item" href="{{ route('admin.permintaan.kategori') }}">
-                            Semua Publikasi
+                            Daftar Publikasi
                         </a>
                         <a class="dropdown-item" href="{{ route('admin.permintaan.kategori') }}">
                             Tambah Publikasi
@@ -85,92 +86,90 @@ $page = $_GET['page'] ?? '';
                 </div>
             </div>
         </li>
-        <?php if ($_SESSION['user']['role_id'] === '1'): ?>
-            <li class="nav-item dropdown {{ request()->routeIs('admin.permintaan.kategori') ? 'active' : '' }} mb-2">
-                <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
-                    <span class="nav-link-icon d-md-none d-lg-inline-block">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-users">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
-                            <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                            <path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />
-                        </svg>
-                    </span>
-                    <span class="nav-link-title">
-                        Pegawai
-                    </span>
-                </a>
-                <div class="dropdown-menu">
-                    <div class="dropdown-menu-columns">
-                        <div class="dropdown-menu-column">
-                            <a class="dropdown-item" href="{{ route('admin.permintaan.kategori') }}">
-                                Semua Pegawai
-                            </a>
-                            <a class="dropdown-item" href="{{ route('admin.permintaan.kategori') }}">
-                                Tambah Pegawai
-                            </a>
-                        </div>
+        <li class="nav-item dropdown {{ request()->routeIs('admin.permintaan.kategori') ? 'active' : '' }} mb-2">
+            <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
+                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-users">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+                        <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        <path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />
+                    </svg>
+                </span>
+                <span class="nav-link-title">
+                    Pegawai
+                </span>
+            </a>
+            <div class="dropdown-menu">
+                <div class="dropdown-menu-columns">
+                    <div class="dropdown-menu-column">
+                        <a class="dropdown-item" href="{{ route('admin.permintaan.kategori') }}">
+                            Daftar Pegawai
+                        </a>
+                        <a class="dropdown-item" href="{{ route('admin.permintaan.kategori') }}">
+                            Tambah Pegawai
+                        </a>
                     </div>
                 </div>
-            </li>
-            <li class="nav-item dropdown {{ request()->routeIs('admin.permintaan.kategori') ? 'active' : '' }} mb-2">
-                <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
-                    <span class="nav-link-icon d-md-none d-lg-inline-block">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-info-square-rounded">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <path d="M12 9h.01" />
-                            <path d="M11 12h1v4h1" />
-                            <path d="M12 3c7.2 0 9 1.8 9 9c0 7.2 -1.8 9 -9 9c-7.2 0 -9 -1.8 -9 -9c0 -7.2 1.8 -9 9 -9" />
-                        </svg>
-                    </span>
-                    <span class="nav-link-title">
-                        DIP
-                    </span>
-                </a>
-                <div class="dropdown-menu">
-                    <div class="dropdown-menu-columns">
-                        <div class="dropdown-menu-column">
-                            <a class="dropdown-item" href="{{ route('admin.permintaan.kategori') }}">
-                                Semua DIP
-                            </a>
-                            <a class="dropdown-item" href="{{ route('admin.permintaan.kategori') }}">
-                                Tambah DIP
-                            </a>
-                        </div>
+            </div>
+        </li>
+        <li class="nav-item dropdown {{ request()->routeIs('admin.permintaan.kategori') ? 'active' : '' }} mb-2">
+            <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
+                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-info-square-rounded">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M12 9h.01" />
+                        <path d="M11 12h1v4h1" />
+                        <path d="M12 3c7.2 0 9 1.8 9 9c0 7.2 -1.8 9 -9 9c-7.2 0 -9 -1.8 -9 -9c0 -7.2 1.8 -9 9 -9" />
+                    </svg>
+                </span>
+                <span class="nav-link-title">
+                    DIP
+                </span>
+            </a>
+            <div class="dropdown-menu">
+                <div class="dropdown-menu-columns">
+                    <div class="dropdown-menu-column">
+                        <a class="dropdown-item" href="{{ route('admin.permintaan.kategori') }}">
+                            Daftar DIP
+                        </a>
+                        <a class="dropdown-item" href="{{ route('admin.permintaan.kategori') }}">
+                            Tambah DIP
+                        </a>
                     </div>
                 </div>
-            </li>
-            <li class="nav-item dropdown {{ request()->routeIs('admin.permintaan.kategori') ? 'active' : '' }} mb-2">
-                <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
-                    <span class="nav-link-icon d-md-none d-lg-inline-block">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-gavel">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <path d="M13 10l7.383 7.418c.823 .82 .823 2.148 0 2.967a2.11 2.11 0 0 1 -2.976 0l-7.407 -7.385" />
-                            <path d="M6 9l4 4" />
-                            <path d="M13 10l-4 -4" />
-                            <path d="M3 21h7" />
-                            <path d="M6.793 15.793l-3.586 -3.586a1 1 0 0 1 0 -1.414l2.293 -2.293l.5 .5l3 -3l-.5 -.5l2.293 -2.293a1 1 0 0 1 1.414 0l3.586 3.586a1 1 0 0 1 0 1.414l-2.293 2.293l-.5 -.5l-3 3l.5 .5l-2.293 2.293a1 1 0 0 1 -1.414 0" />
-                        </svg>
-                    </span>
-                    <span class="nav-link-title">
-                        Peraturan
-                    </span>
-                </a>
-                <div class="dropdown-menu">
-                    <div class="dropdown-menu-columns">
-                        <div class="dropdown-menu-column">
-                            <a class="dropdown-item" href="{{ route('admin.permintaan.kategori') }}">
-                                Semua Peraturan
-                            </a>
-                            <a class="dropdown-item" href="{{ route('admin.permintaan.kategori') }}">
-                                Tambah Peraturan
-                            </a>
-                        </div>
+            </div>
+        </li>
+        <li class="nav-item dropdown {{ request()->routeIs('admin.permintaan.kategori') ? 'active' : '' }} mb-2">
+            <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
+                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-gavel">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M13 10l7.383 7.418c.823 .82 .823 2.148 0 2.967a2.11 2.11 0 0 1 -2.976 0l-7.407 -7.385" />
+                        <path d="M6 9l4 4" />
+                        <path d="M13 10l-4 -4" />
+                        <path d="M3 21h7" />
+                        <path d="M6.793 15.793l-3.586 -3.586a1 1 0 0 1 0 -1.414l2.293 -2.293l.5 .5l3 -3l-.5 -.5l2.293 -2.293a1 1 0 0 1 1.414 0l3.586 3.586a1 1 0 0 1 0 1.414l-2.293 2.293l-.5 -.5l-3 3l.5 .5l-2.293 2.293a1 1 0 0 1 -1.414 0" />
+                    </svg>
+                </span>
+                <span class="nav-link-title">
+                    Peraturan
+                </span>
+            </a>
+            <div class="dropdown-menu">
+                <div class="dropdown-menu-columns">
+                    <div class="dropdown-menu-column">
+                        <a class="dropdown-item" href="{{ route('admin.permintaan.kategori') }}">
+                            Daftar Peraturan
+                        </a>
+                        <a class="dropdown-item" href="{{ route('admin.permintaan.kategori') }}">
+                            Tambah Peraturan
+                        </a>
                     </div>
                 </div>
-            </li>
-        <?php endif; ?>
+            </div>
+        </li>
 
         <li class="nav-item dropdown {{ request()->routeIs('admin.permintaan.kategori') ? 'active' : '' }} mb-2">
             <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">

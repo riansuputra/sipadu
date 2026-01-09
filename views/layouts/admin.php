@@ -27,6 +27,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.12/pdfmake.min.js" integrity="sha512-axXaF5grZBaYl7qiM6OMHgsgVXdSLxqq0w7F4CQxuFyrcPmn0JfnqsOtYHUun80g6mRRdvJDrTCyL8LQqBOt/Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.12/vfs_fonts.js" integrity="sha512-nNkHPz+lD0Wf0eFGO0ZDxr+lWiFalFutgVeGkPdVgrG4eXDYUnhfEj9Zmg1QkrJFLC0tGs8ZExyU/1mjs4j93w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 
 <body class="layout-fluid">
@@ -136,6 +138,7 @@
         require __DIR__ . '/footer.php';
         ?>
     </div>
+    <script src="assets/dist/libs/list.js/dist/list.min.js?1759774804" defer=""></script>
     <script src="assets/dist/libs/apexcharts/dist/apexcharts.min.js?1684106062" defer></script>
     <script src="assets/js/tabler.min.js?1684106062" defer></script>
     <script src="assets/dist/libs/tom-select/dist/js/tom-select.base.min.js?1684106062" defer></script>
