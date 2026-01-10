@@ -4,7 +4,7 @@
 // ================================
 
 // Judul
-$title = "Tambah Arsip";
+$title = "Tambah Publikasi";
 
 
 // Mulai buffer konten
@@ -23,8 +23,8 @@ ob_start();
         <div class="row g-2 align-items-center">
             <div class="col">
                 <!-- Page pre-title -->
-                <div class="page-pretitle">Arsip</div>
-                <h2 class="page-title">Tambah Arsip</h2>
+                <div class="page-pretitle">Publikasi</div>
+                <h2 class="page-title">Tambah Publikasi</h2>
             </div>
         </div>
     </div>
@@ -38,23 +38,17 @@ ob_start();
             <div class="col-sm-12 col-lg-6">
                 <form class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Form Tambah Arsip</h3>
+                        <h3 class="card-title">Form Tambah Publikasi</h3>
                         <div class="card-actions">
                             <a class="btn btn-outline-primary"><!-- Download SVG icon from http://tabler.io/icons/icon/chevron-left -->
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
                                     <path d="M15 6l-6 6l6 6"></path>
                                 </svg>
-                                Daftar Arsip
+                                Daftar Publikasi
                             </a>
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="mb-3 row">
-                            <label class="col-3 col-form-label required">Kode Arsip</label>
-                            <div class="col">
-                                <input type="text" class="form-control" aria-describedby="emailHelp" placeholder="Enter email">
-                            </div>
-                        </div>
                         <div class="mb-3 row">
                             <label class="col-3 col-form-label required">Judul</label>
                             <div class="col">
@@ -68,26 +62,9 @@ ob_start();
                             </div>
                         </div>
                         <div class="mb-3 row">
-                            <label class="col-3 col-form-label">Kategori</label>
+                            <label class="col-3 col-form-label required">Lokasi</label>
                             <div class="col">
-                                <select class="form-select">
-                                    <option>Option 1</option>
-                                    <optgroup label="Optgroup 1">
-                                        <option>Option 1</option>
-                                        <option>Option 2</option>
-                                    </optgroup>
-                                    <option>Option 2</option>
-                                    <optgroup label="Optgroup 2">
-                                        <option>Option 1</option>
-                                        <option>Option 2</option>
-                                    </optgroup>
-                                    <optgroup label="Optgroup 3">
-                                        <option>Option 1</option>
-                                        <option>Option 2</option>
-                                    </optgroup>
-                                    <option>Option 3</option>
-                                    <option>Option 4</option>
-                                </select>
+                                <input type="text" class="form-control" aria-describedby="emailHelp" placeholder="Enter email">
                             </div>
                         </div>
                         <div class="mb-3 row">

@@ -47,6 +47,18 @@ function routeRequest()
             (new DashboardController())->index();
             break;
 
+        case 'backup-data':
+            authOnly(); // wajib login
+            require_once __DIR__ . '/../controllers/PengaturanController.php';
+            (new PengaturanController())->backupData();
+            break;
+
+        case 'manajemen-file':
+            authOnly(); // wajib login
+            require_once __DIR__ . '/../controllers/PengaturanController.php';
+            (new PengaturanController())->manajemenFile();
+            break;
+
         case 'arsip':
             authOnly(); // wajib login
             require_once __DIR__ . '/../controllers/ArsipController.php';
@@ -57,6 +69,18 @@ function routeRequest()
             authOnly(); // wajib login
             require_once __DIR__ . '/../controllers/ArsipController.php';
             (new ArsipController())->create();
+            break;
+
+        case 'publikasi':
+            authOnly(); // wajib login
+            require_once __DIR__ . '/../controllers/PublikasiController.php';
+            (new PublikasiController())->index();
+            break;
+
+        case 'tambah-publikasi':
+            authOnly(); // wajib login
+            require_once __DIR__ . '/../controllers/PublikasiController.php';
+            (new PublikasiController())->create();
             break;
 
         // ========================

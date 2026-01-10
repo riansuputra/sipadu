@@ -4,7 +4,7 @@
 // ================================
 
 // Judul
-$title = "Arsip";
+$title = "Publikasi";
 
 
 // Mulai buffer konten
@@ -23,8 +23,8 @@ ob_start();
         <div class="row g-2 align-items-center">
             <div class="col">
                 <!-- Page pre-title -->
-                <div class="page-pretitle">Arsip</div>
-                <h2 class="page-title">Daftar Arsip</h2>
+                <div class="page-pretitle">Publikasi</div>
+                <h2 class="page-title">Daftar Publikasi</h2>
             </div>
             <!-- Page title actions -->
             <div class="col-auto ms-auto d-print-none">
@@ -158,6 +158,7 @@ ob_start();
                                             <td class="sort-tgl">Ini Tsdffgl</td>
                                             <td class="sort-file">Ini File</td>
                                             <td>
+
                                                 <div class="btn-group w-100">
                                                     <a href="" class="text-green">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-download">
@@ -187,7 +188,6 @@ ob_start();
                                                         </svg>
                                                     </a>
                                                 </div>
-
                                             </td>
                                         </tr>
                                     </tbody>

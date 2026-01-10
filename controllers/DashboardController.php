@@ -19,12 +19,22 @@ class DashboardController
         global $pdo;
 
         $user = currentUser();
-        // Ambil role user
         $role = currentRole();
+
+        $mode = $_GET['mode'] ?? null;
 
         // ----------------------------
         // 3. STAFF → modul tampil di dashboard
         // ----------------------------
+        if ($mode === 'staff' && in_array($role, ['Admin', 'Superadmin'])) {
+            $moduleModel = new ModulModel($pdo);
+
+            // ambil semua modul aktif
+            $modules = $moduleModel->getAllActive();
+            require __DIR__ . '/../views/dashboard/staff.php';
+            return;
+        }
+
         if ($role === 'Staff') {
             $moduleModel = new ModulModel($pdo);
 
@@ -37,23 +47,16 @@ class DashboardController
         // Tentukan view dashboard berdasarkan role
         switch ($role) {
             case 'Superadmin':
-                $view = 'superadmin';
-                break;
-
             case 'Admin':
-                $view = 'admin';
+                require __DIR__ . '/../views/dashboard/admin.php';
                 break;
 
             case 'Pimpinan':
-                $view = 'pimpinan';
-                break;
-
-            default:
-                $view = 'staff';
+            case 'Staff':
+                require __DIR__ . '/../views/dashboard/staff.php';
                 break;
         }
 
         // Load dashboard sesuai role
-        require __DIR__ . '/../views/dashboard/' . $view . '.php';
     }
 }

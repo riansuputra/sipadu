@@ -4,7 +4,7 @@
 // ================================
 
 // Judul
-$title = "Arsip";
+$title = "Manajemen File";
 
 
 // Mulai buffer konten
