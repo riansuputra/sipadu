@@ -61,7 +61,7 @@ $headerImage = $headerImage ?? 'assets/img/banner.jpg';
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
-<body class="layout-fluid">
+<body>
     <script src="assets/dist/js/demo-theme.min.js?1684106062"></script>
     <div class="page">
 

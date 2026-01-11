@@ -23,8 +23,8 @@ ob_start();
         <div class="row g-2 align-items-center">
             <div class="col">
                 <!-- Page pre-title -->
-                <div class="page-pretitle">Arsip</div>
-                <h2 class="page-title">Daftar Arsip</h2>
+                <div class="page-pretitle">Pengaturan</div>
+                <h2 class="page-title">Manajemen File</h2>
             </div>
             <!-- Page title actions -->
             <div class="col-auto ms-auto d-print-none">
@@ -61,8 +61,8 @@ ob_start();
                         <div class="card-header">
                             <div class="row w-full">
                                 <div class="col">
-                                    <h3 class="card-title mb-0">Tabel Arsip</h3>
-                                    <p class="text-secondary m-0">Daftar Arsip Divisi ---</p>
+                                    <h3 class="card-title mb-0">Tabel File</h3>
+                                    <p class="text-secondary m-0">Daftar File ---</p>
                                 </div>
                                 <div class="col-md-auto col-sm-12">
                                     <div class="ms-auto d-flex flex-wrap btn-list">
@@ -122,19 +122,16 @@ ob_start();
                                                 <button class="table-sort d-flex justify-content-between" data-sort="sort-no">No</button>
                                             </th>
                                             <th class="w-1">
-                                                <button class="table-sort d-flex justify-content-between" data-sort="sort-kode">Kode Arsip</button>
+                                                <button class="table-sort d-flex justify-content-between" data-sort="sort-file">File</button>
                                             </th>
                                             <th>
-                                                <button class="table-sort d-flex justify-content-between" data-sort="sort-judul">Judul</button>
+                                                <button class="table-sort d-flex justify-content-between" data-sort="sort-arsip">Arsip</button>
                                             </th>
                                             <th>
-                                                <button class="table-sort d-flex justify-content-between" data-sort="sort-deskripsi">Deskripsi</button>
+                                                <button class="table-sort d-flex justify-content-between" data-sort="sort-ukuran">Ukuran File</button>
                                             </th>
                                             <th class="w-1">
                                                 <button class="table-sort d-flex justify-content-between" data-sort="sort-tgl">Tgl. Upload</button>
-                                            </th>
-                                            <th>
-                                                <button class="table-sort d-flex justify-content-between" data-sort="sort-file">File</button>
                                             </th>
                                             <th class="w-1">
                                                 <button class="table-sort d-flex justify-content-between" data-sort="sort-aksi">Aksi</button>
@@ -146,17 +143,16 @@ ob_start();
                                             <td class="sort-no text-center">
                                                 1
                                             </td>
-                                            <td class="sort-no text-center">
+                                            <td class="sort-file text-center">
                                                 1
                                             </td>
-                                            <td class="sort-judul">
+                                            <td class="sort-arsip">
                                                 Ini Judul
                                             </td>
-                                            <td class="sort-judul">
+                                            <td class="sort-ukuran">
                                                 Ini Judul
                                             </td>
-                                            <td class="sort-tgl">Ini Tsdffgl</td>
-                                            <td class="sort-file">Ini File</td>
+                                            <td class="sort-tgl">Ini File</td>
                                             <td>
                                                 <div class="btn-group w-100">
                                                     <a href="" class="text-green">
@@ -229,24 +225,20 @@ ob_start();
                 name: "No"
             },
             {
-                "data-sort": "sort-kode",
-                name: "Kode Arsip"
+                "data-sort": "sort-file",
+                name: "File"
             },
             {
-                "data-sort": "sort-judul",
-                name: "Judul"
+                "data-sort": "sort-arsip",
+                name: "Arsip"
             },
             {
-                "data-sort": "sort-Deskripsi",
-                name: "Deskripsi"
+                "data-sort": "sort-ukuran",
+                name: "Ukuran File"
             },
             {
                 "data-sort": "sort-tgl",
                 name: "Tgl. Upload"
-            },
-            {
-                "data-sort": "sort-file",
-                name: "File"
             },
             {
                 "data-sort": "sort-aksi",

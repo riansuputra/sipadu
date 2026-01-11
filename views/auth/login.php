@@ -12,7 +12,7 @@ ob_start();
             <div class="col-12">
                 <div class="row row-cards row-evenly">
 
-                    <div class="col-sm-6 col-lg-4 mt-6 p-4">
+                    <div class="col-sm-6 col-lg-6 mt-6 p-4">
                         <h1 class="text-center mb-6">Masuk ke SIPADU</h1>
                         <form action="<?= BASE_URL ?>/?page=login-process" method="post" autocomplete="off">
                             <div class="mb-5">
