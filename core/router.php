@@ -83,6 +83,107 @@ function routeRequest()
             (new PublikasiController())->create();
             break;
 
+        // ================= DIP =================
+        case 'dip':
+            authOnly();
+            require_once __DIR__ . '/../controllers/DipController.php';
+            $controller = new DipController();
+            $controller->index();
+            break;
+
+        case 'tambah-dip':
+            authOnly();
+            require_once __DIR__ . '/../controllers/DipController.php';
+            $controller = new DipController();
+            $controller->create();
+            break;
+
+        case 'simpan-dip':
+            authOnly();
+            require_once __DIR__ . '/../controllers/DipController.php';
+            $controller = new DipController();
+            $controller->store();
+            break;
+
+        case 'detail-dip':
+            authOnly();
+            require_once __DIR__ . '/../controllers/DipController.php';
+            $controller = new DipController();
+            $controller->detail();
+            break;
+
+        case 'hapus-dip':
+            authOnly();
+            require_once __DIR__ . '/../controllers/DipController.php';
+            $controller = new DipController();
+            $controller->delete();
+            break;
+
+        // =============================
+        // PERATURAN
+        // =============================
+        case 'peraturan':
+            authOnly();
+            require_once __DIR__ . '/../controllers/PeraturanController.php';
+            (new PeraturanController())->index();
+            break;
+
+        case 'tambah-peraturan':
+            authOnly();
+            require_once __DIR__ . '/../controllers/PeraturanController.php';
+            (new PeraturanController())->create();
+            break;
+
+        case 'simpan-peraturan':
+            authOnly();
+            require_once __DIR__ . '/../controllers/PeraturanController.php';
+            (new PeraturanController())->store();
+            break;
+
+        case 'detail-peraturan':
+            authOnly();
+            require_once __DIR__ . '/../controllers/PeraturanController.php';
+            (new PeraturanController())->detail();
+            break;
+
+        case 'hapus-peraturan':
+            authOnly();
+            require_once __DIR__ . '/../controllers/PeraturanController.php';
+            (new PeraturanController())->delete();
+            break;
+
+
+        // =============================
+        // JENIS PERATURAN (MASTER)
+        // =============================
+        case 'jenis-peraturan':
+            authOnly();
+            require_once __DIR__ . '/../controllers/JenisPeraturanController.php';
+            (new JenisPeraturanController())->index();
+            break;
+
+        case 'tambah-jenis-peraturan':
+            authOnly();
+            require_once __DIR__ . '/../controllers/JenisPeraturanController.php';
+            (new JenisPeraturanController())->create();
+            break;
+
+        case 'simpan-jenis-peraturan':
+            authOnly();
+            require_once __DIR__ . '/../controllers/JenisPeraturanController.php';
+            (new JenisPeraturanController())->store();
+            break;
+
+        case 'hapus-jenis-peraturan':
+            authOnly();
+            require_once __DIR__ . '/../controllers/JenisPeraturanController.php';
+            (new JenisPeraturanController())->delete();
+            break;
+
+
+
+
+
         // ========================
         // PEGAWAI
         // ========================
