@@ -1,32 +1,26 @@
 <?php
 // ======================================================
-// MODEL ARSIP SESUAI TABEL
+// MODEL PUBLIKASI SESUAI STRUKTUR TABEL
 // ======================================================
-class ArsipModel
+class PublikasiModel
 {
     protected $db;
 
-    // constructor
+    // constructor koneksi
     public function __construct($pdo)
     {
         $this->db = $pdo;
     }
 
     // ----------------------------------------------------
-    // Ambil semua arsip + join dasar
+    // Ambil semua publikasi
     // ----------------------------------------------------
     public function getAll()
     {
         $stmt = $this->db->prepare("
-            SELECT a.*,
-                   k.nama_kategori,
-                   p.nama_pokja,
-                   u.nama as pembuat
-            FROM arsip a
-            JOIN arsip_kategori k ON a.kategori_id = k.id
-            JOIN pokja p ON a.pokja_id = p.id
-            JOIN users u ON a.dibuat_oleh = u.id
-            ORDER BY a.created_at DESC
+            SELECT * FROM publikasi
+            WHERE is_published = 1
+            ORDER BY created_at DESC
         ");
 
         $stmt->execute();
@@ -36,134 +30,128 @@ class ArsipModel
     public function getById($id)
     {
         $stmt = $this->db->prepare("
-            SELECT * FROM arsip WHERE id = ?
+            SELECT * FROM publikasi WHERE id = ?
         ");
 
         $stmt->execute([$id]);
-        return $stmt->fetch();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     // ----------------------------------------------------
-    // Insert arsip
+    // Simpan publikasi
     // ----------------------------------------------------
     public function insert($data)
     {
         $stmt = $this->db->prepare("
-            INSERT INTO arsip (
-                kode_arsip, 
+            INSERT INTO publikasi (
                 judul, 
                 deskripsi, 
-                kategori_id,
+                tanggal_kegiatan, 
+                lokasi, 
                 pokja_id, 
-                dibuat_oleh, 
-                retensi_arsip
-            ) VALUES (?,?,?,?,?,?,?)
+                dibuat_oleh
+            ) VALUES (?,?,?,?,?,?)
         ");
 
         $stmt->execute([
-            $data['kode_arsip'],
             $data['judul'],
             $data['deskripsi'],
-            $data['kategori_id'],
+            $data['tanggal_kegiatan'],
+            $data['lokasi'],
             $data['pokja_id'],
-            $data['dibuat_oleh'],
-            $data['retensi_arsip']
+            $data['dibuat_oleh']
         ]);
 
         return $this->db->lastInsertId();
     }
 
     // ----------------------------------------------------
-    // Update arsip
+    // Update publikasi
     // ----------------------------------------------------
     public function update($id, $data)
     {
         $stmt = $this->db->prepare("
-            UPDATE arsip SET
-                kode_arsip = ?,
+            UPDATE publikasi SET
                 judul = ?,
                 deskripsi = ?,
-                kategori_id = ?,
-                pokja_id = ?,
-                retensi_arsip = ?
+                tanggal_kegiatan = ?,
+                lokasi = ?,
+                pokja_id = ?
             WHERE id = ?
         ");
 
         return $stmt->execute([
-            $data['kode_arsip'],
             $data['judul'],
             $data['deskripsi'],
-            $data['kategori_id'],
+            $data['tanggal_kegiatan'],
+            $data['lokasi'],
             $data['pokja_id'],
-            $data['retensi_arsip'],
             $id
         ]);
     }
 
-    // ----------------------------------------------------
-    // Detail arsip
-    // ----------------------------------------------------
-
-
-    // ----------------------------------------------------
-    // Delete arsip
-    // ----------------------------------------------------
     public function delete($id)
     {
         $stmt = $this->db->prepare("
-            UPDATE arsip SET is_active = 0 WHERE id = ?
+            UPDATE publikasi SET is_published = 0 WHERE id = ?
         ");
 
         return $stmt->execute([$id]);
     }
 
     // ----------------------------------------------------
-    // Insert file arsip
+    // Simpan file publikasi (SESUAI TABEL publikasi_file)
     // ----------------------------------------------------
-    public function insertFile($arsip_id, $file)
+    public function insertFile($publikasi_id, $file)
     {
         $stmt = $this->db->prepare("
-            INSERT INTO arsip_file (
-                arsip_id, 
+            INSERT INTO publikasi_file (
+                publikasi_id,
+                tipe, 
                 nama_file, 
-                path_file, 
-                tipe_file, 
-                ukuran_file
-            ) VALUES (?,?,?,?,?)
+                path_file
+            ) VALUES (?,?,?,?)
         ");
 
         return $stmt->execute([
-            $arsip_id,
+            $publikasi_id,
+            $file['tipe'],
             $file['nama_file'],
-            $file['path_file'],
-            $file['tipe_file'],
-            $file['ukuran_file']
+            $file['path_file']
         ]);
     }
 
     // ----------------------------------------------------
-    // Ambil file arsip
+    // Ambil file berdasarkan publikasi
     // ----------------------------------------------------
-    public function getFiles($arsip_id)
+    public function getFiles($publikasi_id)
     {
         $stmt = $this->db->prepare("
-            SELECT * FROM arsip_file
-            WHERE arsip_id = ?
+            SELECT * FROM publikasi_file WHERE publikasi_id = ?
         ");
 
-        $stmt->execute([$arsip_id]);
+        $stmt->execute([$publikasi_id]);
         return $stmt->fetchAll();
     }
 
     // ----------------------------------------------------
-    // Hapus file by arsip
+    // Hapus file by publikasi
     // ----------------------------------------------------
-    public function deleteFiles($arsip_id)
+    public function deleteFiles($publikasi_id)
     {
         $stmt = $this->db->prepare("
-            DELETE FROM arsip_file WHERE arsip_id = ?
+            DELETE FROM publikasi_file WHERE publikasi_id = ?
         ");
 
-        return $stmt->execute([$arsip_id]);
+        return $stmt->execute([$publikasi_id]);
+    }
+
+    public function deleteFilesByParent($publikasi_id)
+    {
+        $stmt = $this->db->prepare("
+            DELETE FROM publikasi_file WHERE publikasi_id = ?
+        ");
+
+        return $stmt->execute([$publikasi_id]);
     }
 }

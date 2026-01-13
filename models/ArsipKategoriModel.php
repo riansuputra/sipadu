@@ -1,6 +1,6 @@
 <?php
 
-class JenisPeraturanModel
+class ArsipKategoriModel
 {
     protected $db;
 
@@ -13,7 +13,7 @@ class JenisPeraturanModel
     public function getAll()
     {
         return $this->db->query("
-            SELECT * FROM jenis_peraturan
+            SELECT * FROM arsip_kategori
             ORDER BY nama ASC
         ")->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -21,7 +21,7 @@ class JenisPeraturanModel
     public function getById($id)
     {
         $stmt = $this->db->prepare("
-            SELECT * FROM jenis_peraturan
+            SELECT * FROM arsip_kategori
             WHERE id = ?
         ");
 
@@ -33,19 +33,15 @@ class JenisPeraturanModel
     public function insert($data)
     {
         $stmt = $this->db->prepare("
-            INSERT INTO jenis_peraturan (
-                kode, 
-                nama, 
-                keterangan, 
-                is_active
-            ) VALUES (?, ?, ?, ?)
+            INSERT INTO arsip_kategori (
+                nama_kategori,
+                is_global
+            ) VALUES (?, ?)
         ");
 
         $stmt->execute([
-            $data['kode'],
-            $data['nama'],
-            $data['keterangan'],
-            $data['is_active']
+            $data['nama_kategori'],
+            $data['is_global'],
         ]);
 
         return $this->db->lastInsertId();
@@ -54,19 +50,15 @@ class JenisPeraturanModel
     public function update($data)
     {
         $stmt = $this->db->prepare("
-            UPDATE jenis_peraturan SET
-                kode = ?, 
-                nama = ?, 
-                keterangan = ?, 
-                is_active = ? 
-            WHERE id = ? 
+            UPDATE arsip_kategori SET
+                nama_kategori = ?,
+                is_global = ?
+            ) VALUES (?, ?)
         ");
 
         return $stmt->execute([
-            $data['kode'],
-            $data['nama'],
-            $data['keterangan'],
-            $data['is_active']
+            $data['nama_kategori'],
+            $data['is_global'],
         ]);
     }
 
@@ -74,8 +66,8 @@ class JenisPeraturanModel
     {
         $stmt = $this->db->prepare("
         SELECT COUNT(*) 
-        FROM peraturan 
-        WHERE jenis_id = ?
+        FROM arsip 
+        WHERE kategori_id = ?
     ");
 
         $stmt->execute([$id]);
@@ -87,7 +79,7 @@ class JenisPeraturanModel
     public function delete($id)
     {
         $stmt = $this->db->prepare("
-            UPDATE jenis_peraturan SET is_active = 0 WHERE id = ?
+            UPDATE arsip_kategori SET is_active = 0 WHERE id = ?
         ");
 
         return $stmt->execute([$id]);

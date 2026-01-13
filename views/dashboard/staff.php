@@ -68,7 +68,7 @@ ob_start();
                             style="background-image: url('assets/img/<?= htmlspecialchars($module['gambar']) ?>')">
                         </div>
 
-                        <div class="card-body h2 text-center mb-0">
+                        <div class="card-body text-center mb-0">
                             <?= htmlspecialchars($module['judul']) ?>
                         </div>
                     </a>

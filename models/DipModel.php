@@ -5,7 +5,7 @@
 
 class DipModel
 {
-    private $db;
+    protected $db;
 
     // koneksi database
     public function __construct($pdo)
@@ -38,7 +38,7 @@ class DipModel
     }
 
     // Simpan DIP baru
-    public function store($data)
+    public function insert($data)
     {
         $stmt = $this->db->prepare("
             INSERT INTO dip (
@@ -113,7 +113,7 @@ class DipModel
     }
 
     // Simpan file DIP
-    public function uploadFile($dipId, $file)
+    public function insertFile($dipId, $file)
     {
         $stmt = $this->db->prepare("
             INSERT INTO dip_file (
@@ -138,10 +138,29 @@ class DipModel
     public function getFiles($dipId)
     {
         $stmt = $this->db->prepare("
-            SELECT * FROM dip_file WHERE dip_id = ?
+            SELECT * FROM dip_file 
+            WHERE dip_id = ?
         ");
 
         $stmt->execute([$dipId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function deleteFiles($dipId)
+    {
+        $stmt = $this->db->prepare("
+            DELETE FROM dip_file WHERE dip_id = ?
+        ");
+
+        return $stmt->execute([$dipId]);
+    }
+
+    public function deleteFilesByParent($dipId)
+    {
+        $stmt = $this->db->prepare("
+            DELETE FROM dip_file WHERE dip_id = ?
+        ");
+
+        return $stmt->execute([$dipId]);
     }
 }

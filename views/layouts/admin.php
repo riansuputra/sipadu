@@ -101,7 +101,7 @@
                                 <path d="M10.01 17h.005" />
                             </svg>
                             <div class="d-none d-xl-block ps-2 text-white">
-                                <span>Tanggal 1 Januari 2026</span>
+                                <span><?= tgl_sekarang(); ?></span>
                             </div>
                         </a>
                     </div>

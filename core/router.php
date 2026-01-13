@@ -16,191 +16,389 @@ function routeRequest()
     // ----------------------------
     switch ($page) {
 
-        // ========================
-        // AUTHENTICATION
-        // ========================
+        // Autentikasi ================================
         case 'login':
             guestOnly(); // hanya untuk user belum login
-            require_once __DIR__ . '/../controllers/AuthController.php';
-            (new AuthController())->login();
+            require __DIR__ . '/../controllers/AuthController.php';
+            $controller = new AuthController();
+            $controller->login();
             break;
 
         case 'login-process':
             guestOnly();
-            require_once __DIR__ . '/../controllers/AuthController.php';
-            (new AuthController())->authenticate();
+            require __DIR__ . '/../controllers/AuthController.php';
+            $controller = new AuthController();
+            $controller->authenticate();
             break;
 
         case 'logout':
             logout();
             break;
 
-        case 'sd':
-            break;
-
-        // ========================
-        // DASHBOARD
-        // ========================
+        // Dashboard =================================
         case 'dashboard':
             authOnly(); // wajib login
-            require_once __DIR__ . '/../controllers/DashboardController.php';
+            require __DIR__ . '/../controllers/DashboardController.php';
             (new DashboardController())->index();
             break;
 
-        case 'backup-data':
-            authOnly(); // wajib login
-            require_once __DIR__ . '/../controllers/PengaturanController.php';
-            (new PengaturanController())->backupData();
-            break;
-
-        case 'manajemen-file':
-            authOnly(); // wajib login
-            require_once __DIR__ . '/../controllers/PengaturanController.php';
-            (new PengaturanController())->manajemenFile();
-            break;
-
+        // Arsip ==========================================
         case 'arsip':
-            authOnly(); // wajib login
-            require_once __DIR__ . '/../controllers/ArsipController.php';
-            (new ArsipController())->index();
+            authOnly();
+            require __DIR__ . '/../controllers/ArsipController.php';
+            $controller = new ArsipController();
+            $controller->index();
             break;
 
         case 'tambah-arsip':
-            authOnly(); // wajib login
-            require_once __DIR__ . '/../controllers/ArsipController.php';
-            (new ArsipController())->create();
+            authOnly();
+            require __DIR__ . '/../controllers/ArsipController.php';
+            $controller = new ArsipController();
+            $controller->create();
             break;
 
+        case 'arsip-store':
+            authOnly();
+            require __DIR__ . '/../controllers/ArsipController.php';
+            $controller = new ArsipController();
+            $controller->store();
+            break;
+
+        case 'detail-arsip':
+            authOnly();
+            require __DIR__ . '/../controllers/ArsipController.php';
+            $controller = new ArsipController();
+            $controller->show();
+            break;
+
+        case 'edit-arsip':
+            authOnly();
+            require __DIR__ . '/../controllers/ArsipController.php';
+            $controller = new ArsipController();
+            $controller->edit();
+            break;
+
+        case 'arsip-update':
+            authOnly();
+            require __DIR__ . '/../controllers/ArsipController.php';
+            $controller = new ArsipController();
+            $controller->update();
+            break;
+
+        case 'arsip-delete':
+            authOnly();
+            require __DIR__ . '/../controllers/ArsipController.php';
+            $controller = new ArsipController();
+            $controller->delete();
+            break;
+
+        // Arsip Kategori ==========================================
+        case 'arsip-kategori':
+            authOnly();
+            require __DIR__ . '/../controllers/ArsipKategoriController.php';
+            $controller = new ArsipKategoriController();
+            $controller->index();
+            break;
+
+        case 'tambah-arsip-kategori':
+            authOnly();
+            require __DIR__ . '/../controllers/ArsipKategoriController.php';
+            $controller = new ArsipKategoriController();
+            $controller->create();
+            break;
+
+        case 'arsip-kategori-store':
+            authOnly();
+            require __DIR__ . '/../controllers/ArsipKategoriController.php';
+            $controller = new ArsipKategoriController();
+            $controller->store();
+            break;
+
+        case 'detail-arsip-kategori':
+            authOnly();
+            require __DIR__ . '/../controllers/ArsipKategoriController.php';
+            $controller = new ArsipKategoriController();
+            $controller->show();
+            break;
+
+        case 'edit-arsip-kategori':
+            authOnly();
+            require __DIR__ . '/../controllers/ArsipKategoriController.php';
+            $controller = new ArsipKategoriController();
+            $controller->edit();
+            break;
+
+        case 'arsip-kategori-update':
+            authOnly();
+            require __DIR__ . '/../controllers/ArsipKategoriController.php';
+            $controller = new ArsipKategoriController();
+            $controller->update();
+            break;
+
+        case 'arsip-kategori-delete':
+            authOnly();
+            require __DIR__ . '/../controllers/ArsipKategoriController.php';
+            $controller = new ArsipKategoriController();
+            $controller->delete();
+            break;
+
+        // Publikasi =======================================
         case 'publikasi':
-            authOnly(); // wajib login
-            require_once __DIR__ . '/../controllers/PublikasiController.php';
-            (new PublikasiController())->index();
+            authOnly();
+            require __DIR__ . '/../controllers/PublikasiController.php';
+            $controller = new PublikasiController();
+            $controller->index();
             break;
 
         case 'tambah-publikasi':
-            authOnly(); // wajib login
-            require_once __DIR__ . '/../controllers/PublikasiController.php';
-            (new PublikasiController())->create();
+            authOnly();
+            require __DIR__ . '/../controllers/PublikasiController.php';
+            $controller = new PublikasiController();
+            $controller->create();
             break;
 
-        // ================= DIP =================
+        case 'publikasi-store':
+            authOnly();
+            require __DIR__ . '/../controllers/PublikasiController.php';
+            $controller = new PublikasiController();
+            $controller->store();
+            break;
+
+        case 'detail-publikasi':
+            authOnly();
+            require __DIR__ . '/../controllers/PublikasiController.php';
+            $controller = new PublikasiController();
+            $controller->show();
+            break;
+
+        case 'edit-publikasi':
+            authOnly();
+            require __DIR__ . '/../controllers/PublikasiController.php';
+            $controller = new PublikasiController();
+            $controller->edit();
+            break;
+
+        case 'publikasi-update':
+            authOnly();
+            require __DIR__ . '/../controllers/PublikasiController.php';
+            $controller = new PublikasiController();
+            $controller->update();
+            break;
+
+        case 'publikasi-delete':
+            authOnly();
+            require __DIR__ . '/../controllers/PublikasiController.php';
+            $controller = new PublikasiController();
+            $controller->delete();
+            break;
+
+        // DIP =============================================
         case 'dip':
             authOnly();
-            require_once __DIR__ . '/../controllers/DipController.php';
+            require __DIR__ . '/../controllers/DipController.php';
             $controller = new DipController();
             $controller->index();
             break;
 
         case 'tambah-dip':
             authOnly();
-            require_once __DIR__ . '/../controllers/DipController.php';
+            require __DIR__ . '/../controllers/DipController.php';
             $controller = new DipController();
             $controller->create();
             break;
 
-        case 'simpan-dip':
+        case 'dip-store':
             authOnly();
-            require_once __DIR__ . '/../controllers/DipController.php';
+            require __DIR__ . '/../controllers/DipController.php';
             $controller = new DipController();
             $controller->store();
             break;
 
         case 'detail-dip':
             authOnly();
-            require_once __DIR__ . '/../controllers/DipController.php';
+            require __DIR__ . '/../controllers/DipController.php';
             $controller = new DipController();
-            $controller->detail();
+            $controller->show();
             break;
 
-        case 'hapus-dip':
+        case 'edit-dip':
             authOnly();
-            require_once __DIR__ . '/../controllers/DipController.php';
+            require __DIR__ . '/../controllers/DipController.php';
+            $controller = new DipController();
+            $controller->edit();
+            break;
+
+        case 'dip-delete':
+            authOnly();
+            require __DIR__ . '/../controllers/DipController.php';
             $controller = new DipController();
             $controller->delete();
             break;
 
-        // =============================
-        // PERATURAN
-        // =============================
+        // Peraturan ======================================
         case 'peraturan':
             authOnly();
-            require_once __DIR__ . '/../controllers/PeraturanController.php';
-            (new PeraturanController())->index();
+            require __DIR__ . '/../controllers/PeraturanController.php';
+            $controller = new PeraturanController();
+            $controller->index();
             break;
 
         case 'tambah-peraturan':
             authOnly();
-            require_once __DIR__ . '/../controllers/PeraturanController.php';
-            (new PeraturanController())->create();
+            require __DIR__ . '/../controllers/PeraturanController.php';
+            $controller = new PeraturanController();
+            $controller->create();
             break;
 
-        case 'simpan-peraturan':
+        case 'peraturan-store':
             authOnly();
-            require_once __DIR__ . '/../controllers/PeraturanController.php';
-            (new PeraturanController())->store();
+            require __DIR__ . '/../controllers/PeraturanController.php';
+            $controller = new PeraturanController();
+            $controller->store();
             break;
 
         case 'detail-peraturan':
             authOnly();
-            require_once __DIR__ . '/../controllers/PeraturanController.php';
-            (new PeraturanController())->detail();
+            require __DIR__ . '/../controllers/PeraturanController.php';
+            $controller = new PeraturanController();
+            $controller->show();
             break;
 
-        case 'hapus-peraturan':
+        case 'edit-peraturan':
             authOnly();
-            require_once __DIR__ . '/../controllers/PeraturanController.php';
-            (new PeraturanController())->delete();
+            require __DIR__ . '/../controllers/PeraturanController.php';
+            $controller = new PeraturanController();
+            $controller->edit();
             break;
 
+        case 'peraturan-update':
+            authOnly();
+            require __DIR__ . '/../controllers/PeraturanController.php';
+            $controller = new PeraturanController();
+            $controller->update();
+            break;
 
-        // =============================
-        // JENIS PERATURAN (MASTER)
-        // =============================
+        case 'peraturan-delete':
+            authOnly();
+            require __DIR__ . '/../controllers/PeraturanController.php';
+            $controller = new PeraturanController();
+            $controller->delete();
+            break;
+
+        // Jenis Peraturan =================================
         case 'jenis-peraturan':
             authOnly();
-            require_once __DIR__ . '/../controllers/JenisPeraturanController.php';
-            (new JenisPeraturanController())->index();
+            require __DIR__ . '/../controllers/JenisPeraturanController.php';
+            $controller = new JenisPeraturanController();
+            $controller->index();
             break;
 
         case 'tambah-jenis-peraturan':
             authOnly();
-            require_once __DIR__ . '/../controllers/JenisPeraturanController.php';
-            (new JenisPeraturanController())->create();
+            require __DIR__ . '/../controllers/JenisPeraturanController.php';
+            $controller = new JenisPeraturanController();
+            $controller->create();
             break;
 
-        case 'simpan-jenis-peraturan':
+        case 'jenis-peraturan-store':
             authOnly();
-            require_once __DIR__ . '/../controllers/JenisPeraturanController.php';
-            (new JenisPeraturanController())->store();
+            require __DIR__ . '/../controllers/JenisPeraturanController.php';
+            $controller = new JenisPeraturanController();
+            $controller->store();
             break;
 
-        case 'hapus-jenis-peraturan':
+        case 'detail-jenis-peraturan':
             authOnly();
-            require_once __DIR__ . '/../controllers/JenisPeraturanController.php';
-            (new JenisPeraturanController())->delete();
+            require __DIR__ . '/../controllers/JenisPeraturanController.php';
+            $controller = new JenisPeraturanController();
+            $controller->show();
             break;
 
+        case 'edit-jenis-peraturan':
+            authOnly();
+            require __DIR__ . '/../controllers/JenisPeraturanController.php';
+            $controller = new JenisPeraturanController();
+            $controller->edit();
+            break;
 
+        case 'jenis-peraturan-update':
+            authOnly();
+            require __DIR__ . '/../controllers/JenisPeraturanController.php';
+            $controller = new JenisPeraturanController();
+            $controller->update();
+            break;
 
+        case 'jenis-peraturan-delete':
+            authOnly();
+            require __DIR__ . '/../controllers/JenisPeraturanController.php';
+            $controller = new JenisPeraturanController();
+            $controller->delete();
+            break;
 
-
-        // ========================
-        // PEGAWAI
-        // ========================
+        // Pegawai =======================================
         case 'pegawai':
             authOnly();
-            require_once __DIR__ . '/../controllers/PegawaiController.php';
-            // (new PegawaiController())->index();
+            require __DIR__ . '/../controllers/PegawaiController.php';
+            $controller = new PegawaiController();
+            $controller->index();
             break;
 
-        case 'pegawai-create':
-            require_once __DIR__ . '/../controllers/PegawaiController.php';
-            // (new PegawaiController())->create();
+        case 'tambah-pegawai':
+            authOnly();
+            require __DIR__ . '/../controllers/PegawaiController.php';
+            $controller = new PegawaiController();
+            $controller->create();
             break;
 
-        // ========================
-        // DEFAULT
-        // ========================
+        case 'pegawai-store':
+            authOnly();
+            require __DIR__ . '/../controllers/PegawaiController.php';
+            $controller = new PegawaiController();
+            $controller->store();
+            break;
+
+        case 'detail-pegawai':
+            authOnly();
+            require __DIR__ . '/../controllers/PegawaiController.php';
+            $controller = new PegawaiController();
+            $controller->show();
+            break;
+
+        case 'edit-pegawai':
+            authOnly();
+            require __DIR__ . '/../controllers/PegawaiController.php';
+            $controller = new PegawaiController();
+            $controller->edit();
+            break;
+
+        case 'pegawai-update':
+            authOnly();
+            require __DIR__ . '/../controllers/PegawaiController.php';
+            $controller = new PegawaiController();
+            $controller->update();
+            break;
+
+        case 'pegawai-delete':
+            authOnly();
+            require __DIR__ . '/../controllers/PegawaiController.php';
+            $controller = new PegawaiController();
+            $controller->delete();
+            break;
+
+        // Unclasified
+        case 'backup-data':
+            authOnly(); // wajib login
+            require __DIR__ . '/../controllers/PengaturanController.php';
+            (new PengaturanController())->backupData();
+            break;
+
+        case 'manajemen-file':
+            authOnly(); // wajib login
+            require __DIR__ . '/../controllers/PengaturanController.php';
+            (new PengaturanController())->manajemenFile();
+            break;
+
+        // Default ========================================
         default:
             http_response_code(404);
             echo 'Halaman tidak ditemukan';

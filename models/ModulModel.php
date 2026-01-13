@@ -2,7 +2,7 @@
 
 class ModulModel
 {
-    private $db;
+    protected $db;
 
     public function __construct($pdo)
     {

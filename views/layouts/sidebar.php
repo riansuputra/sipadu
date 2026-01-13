@@ -158,13 +158,13 @@ $peraturanPages = ['peraturan', 'tambah-peraturan', 'detail-peraturan', 'jenis-p
             <div class="dropdown-menu <?= in_array($page, $peraturanPages) ? 'show' : '' ?>">
                 <div class="dropdown-menu-columns">
                     <div class="dropdown-menu-column">
-                        <a class="dropdown-item" href="{{ route('admin.permintaan.kategori') }}">
+                        <a class="dropdown-item <?= $page === 'peraturan' ? 'active' : '' ?>" href="<?= BASE_URL ?>/?page=peraturan">
                             Daftar Peraturan
                         </a>
-                        <a class="dropdown-item" href="{{ route('admin.permintaan.kategori') }}">
+                        <a class="dropdown-item <?= $page === 'tambah-peraturan' ? 'active' : '' ?>" href="<?= BASE_URL ?>/?page=tambah-peraturan">
                             Tambah Peraturan
                         </a>
-                        <a class="dropdown-item" href="{{ route('admin.permintaan.kategori') }}">
+                        <a class="dropdown-item <?= $page === 'tambah-jenis-peraturan' ? 'active' : '' ?>" href="<?= BASE_URL ?>/?page=tambah-jenis-peraturan">
                             Jenis Peraturan
                         </a>
                     </div>
