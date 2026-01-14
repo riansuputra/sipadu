@@ -44,7 +44,7 @@ ob_start();
             <!-- Page title actions -->
             <div class="col-auto ms-auto d-print-none">
                 <div class="btn-list">
-                    <a href="#" class="btn btn-primary btn-5 d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#modal-report">
+                    <a href="<?= BASE_URL ?>/?page=tambah-peraturan" class="btn btn-primary btn-5 d-none d-sm-inline-block">
 
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">
                             <path d="M12 5l0 14"></path>
@@ -52,7 +52,7 @@ ob_start();
                         </svg>
                         Tambah Peraturan
                     </a>
-                    <a href="#" class="btn btn-primary btn-6 d-sm-none btn-icon" data-bs-toggle="modal" data-bs-target="#modal-report" aria-label="Create new report">
+                    <a href="#" class="btn btn-primary btn-6 d-sm-none btn-icon">
 
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">
                             <path d="M12 5l0 14"></path>
@@ -77,7 +77,6 @@ ob_start();
                             <div class="row w-full">
                                 <div class="col">
                                     <h3 class="card-title mb-0">Tabel Peraturan</h3>
-                                    <p class="text-secondary m-0">Daftar Peraturan ---</p>
                                 </div>
                                 <div class="col-md-auto col-sm-12">
                                     <div class="ms-auto d-flex flex-wrap btn-list">
@@ -99,23 +98,13 @@ ob_start();
                                                 <path d="M19 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path>
                                             </svg>
                                         </a>
-                                        <div class="dropdown">
-                                            <a href="#" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-category-2">
-                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                    <path d="M14 4h6v6h-6l0 -6" />
-                                                    <path d="M4 14h6v6h-6l0 -6" />
-                                                    <path d="M14 17a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
-                                                    <path d="M4 7a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
-                                                </svg>
-                                                Kategori
-                                            </a>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="#">Action</a>
-                                                <a class="dropdown-item" href="#">Another action</a>
-                                                <a class="dropdown-item" href="#">Third action</a>
-                                            </div>
-                                        </div>
+
+                                        <select id="filter-jenis" class="form-select w-auto">
+                                            <option value="" disabled selected>-- Pilih Status --</option>
+                                            <option value="">Semua</option>
+                                            <option value="@Berlaku@">Berlaku</option>
+                                            <option value="@Tidak Berlaku@">Tidak Berlaku</option>
+                                        </select>
                                         <a href="#" class="btn">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-history">
                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -139,14 +128,17 @@ ob_start();
                                             <th>
                                                 <button class="table-sort d-flex justify-content-between" data-sort="sort-judul">Judul</button>
                                             </th>
-                                            <th class="w-1">
-                                                <button class="table-sort d-flex justify-content-between" data-sort="sort-nomor">Nomor</button>
-                                            </th>
                                             <th>
                                                 <button class="table-sort d-flex justify-content-between" data-sort="sort-jenis">Jenis</button>
                                             </th>
+                                            <th hidden>
+                                                <button class="table-sort d-flex justify-content-between" data-sort="sort-status-hid">Status-hid</button>
+                                            </th>
                                             <th class="w-1">
                                                 <button class="table-sort d-flex justify-content-between" data-sort="sort-tahun">Tahun Terbit</button>
+                                            </th>
+                                            <th class="w-1">
+                                                <button class="table-sort d-flex justify-content-between" data-sort="sort-subjek">Subjek</button>
                                             </th>
                                             <th>
                                                 <button class="table-sort d-flex justify-content-between" data-sort="sort-status">Status</button>
@@ -168,52 +160,107 @@ ob_start();
                                                 <td class="sort-judul">
                                                     <?= htmlspecialchars($d['judul'] ?? '-') ?>
                                                 </td>
-                                                <td class="sort-nomor">
-                                                    <?= htmlspecialchars($d['nomor'] ?? '-') ?>
-                                                </td>
+
                                                 <td class="sort-jenis">
                                                     <?= htmlspecialchars($d['jenis'] ?? '-') ?> (<?= htmlspecialchars($d['kode_jenis'] ?? '-') ?>)
+                                                </td>
+                                                <td class="sort-status-hid" hidden>
+                                                    @<?= $d['status'] ?>@
                                                 </td>
                                                 <td class="sort-tahun">
                                                     <?= htmlspecialchars($d['tahun_terbit'] ?? '-') ?>
                                                 </td>
+                                                <td class="sort-subjek">
+                                                    <?= htmlspecialchars($d['subjek'] ?? '-') ?>
+                                                </td>
                                                 <td class="sort-status">
-                                                    <?= htmlspecialchars($d['status'] ?? '-') ?>
+                                                    <?php
+                                                    if ($d['status'] === 'BERLAKU') {
+                                                        $bg = 'bg-success-lt';
+                                                    } else {
+                                                        $bg = 'bg-danger-lt';
+                                                    }
+                                                    ?>
+                                                    <span class="badge <?= $bg ?>"><?= htmlspecialchars(ucwords(strtolower($d['status']))) ?></span>
                                                 </td>
                                                 <td class="sort-file">
                                                     <?php
-                                                    foreach ($data as $dt => $d):
-                                                        if ($d['files']) {
+                                                    $listFile = [];
 
-                                                            $files = explode('##', $d['files']);
+                                                    if (!empty($d['files'])) {
 
-                                                            foreach ($files as $f) {
+                                                        $files = explode('##', $d['files']);
 
-                                                                list($id, $nama, $path) = explode('|', $f);
+                                                        foreach ($files as $f) {
 
-                                                                echo "<a href='/sipadu/$path' target='_blank'>$nama</a><br>";
+                                                            $part = explode('|', $f);
+
+                                                            if (count($part) === 4) {
+
+                                                                list($id, $nama, $path, $tipe) = $part;
+
+                                                                $listFile[] = [
+                                                                    'nama' => htmlspecialchars($nama),
+                                                                    'path' => htmlspecialchars($path),
+                                                                    'tipe' => htmlspecialchars($tipe)
+                                                                ];
                                                             }
                                                         }
+                                                    }
 
-                                                    endforeach;
+                                                    // tampilkan
+                                                    foreach ($listFile as $f):
+                                                        $ext = strtolower(pathinfo($f['nama'], PATHINFO_EXTENSION));
+
+                                                        // SVG inline
+                                                        if ($ext === 'pdf') {
+                                                            $icon = '
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red icon icon-tabler icons-tabler-outline icon-tabler-file-type-pdf">
+                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                                <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                                                                <path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v4" />
+                                                                <path d="M5 18h1.5a1.5 1.5 0 0 0 0 -3h-1.5v6" />
+                                                                <path d="M17 18h2" />
+                                                                <path d="M20 15h-3v6" />
+                                                                <path d="M11 15v6h1a2 2 0 0 0 2 -2v-2a2 2 0 0 0 -2 -2h-1" />
+                                                            </svg>';
+                                                        } else if ($ext === 'jpg') {
+                                                            // image
+                                                            $icon = '
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow icon icon-tabler icons-tabler-outline icon-tabler-file-type-jpg">
+                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                                <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                                                                <path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v4" />
+                                                                <path d="M11 18h1.5a1.5 1.5 0 0 0 0 -3h-1.5v6" />
+                                                                <path d="M20 15h-1a2 2 0 0 0 -2 2v2a2 2 0 0 0 2 2h1v-3" />
+                                                                <path d="M5 15h3v4.5a1.5 1.5 0 0 1 -3 0" />
+                                                            </svg>';
+                                                        } else {
+                                                            $icon = '
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-secondary icon icon-tabler icons-tabler-outline icon-tabler-file-type-png">
+                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                                <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                                                                <path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v4" />
+                                                                <path d="M20 15h-1a2 2 0 0 0 -2 2v2a2 2 0 0 0 2 2h1v-3" />
+                                                                <path d="M5 18h1.5a1.5 1.5 0 0 0 0 -3h-1.5v6" />
+                                                                <path d="M11 21v-6l3 6v-6" />
+                                                            </svg>';
+                                                        }
+
                                                     ?>
-                                                    <a href='/sipadu/<?= $path ?>' target='_blank'>
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red icon icon-tabler icons-tabler-outline icon-tabler-file-type-pdf">
-                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                            <path d="M14 3v4a1 1 0 0 0 1 1h4" />
-                                                            <path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v4" />
-                                                            <path d="M5 18h1.5a1.5 1.5 0 0 0 0 -3h-1.5v6" />
-                                                            <path d="M17 18h2" />
-                                                            <path d="M20 15h-3v6" />
-                                                            <path d="M11 15v6h1a2 2 0 0 0 2 -2v-2a2 2 0 0 0 -2 -2h-1" />
-                                                        </svg>
-                                                        <?= $nama ?>
-                                                    </a>
-                                                    <br>
+                                                        <a href='/sipadu/<?= $path ?>' target='_blank'>
+
+
+
+                                                            <?= $icon ?>
+                                                            <?= shortname($f['nama'], 50) ?>
+                                                        </a>
+                                                        <br>
+                                                    <?php endforeach; ?>
                                                 </td>
                                                 <td>
                                                     <div class="btn-group w-100">
-                                                        <a href="" class="text-green">
+                                                        <a href="" class="text-green me-1">
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-download">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                 <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
@@ -221,7 +268,7 @@ ob_start();
                                                                 <path d="M12 4l0 12" />
                                                             </svg>
                                                         </a>
-                                                        <a href="" class="text-yellow">
+                                                        <a href="" class="text-yellow me-1">
 
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-edit">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -284,21 +331,30 @@ ob_start();
                 "data-sort": "sort-no",
                 name: "No"
             },
-            {
-                "data-sort": "sort-kode",
-                name: "Kode Arsip"
-            },
+
             {
                 "data-sort": "sort-judul",
                 name: "Judul"
             },
             {
-                "data-sort": "sort-Deskripsi",
-                name: "Deskripsi"
+                "data-sort": "sort-jenis",
+                name: "Jenis"
             },
             {
-                "data-sort": "sort-tgl",
-                name: "Tgl. Upload"
+                "data-sort": "sort-status-hid",
+                name: "Status-hid"
+            },
+            {
+                "data-sort": "sort-tahun",
+                name: "Tahun Terbit"
+            },
+            {
+                "data-sort": "sort-subjek",
+                name: "Subjek"
+            },
+            {
+                "data-sort": "sort-status",
+                name: "Status"
             },
             {
                 "data-sort": "sort-file",
@@ -353,6 +409,18 @@ ob_start();
     });
 </script>
 
+<script>
+    document.querySelector('#filter-jenis').addEventListener('change', function() {
+        const val = this.value;
+        const list = window.tabler_list["advanced-table"];
+
+        if (val === '') {
+            list.search('');
+        } else {
+            list.search(val, ['sort-status-hid']);
+        }
+    });
+</script>
 
 
 <?php

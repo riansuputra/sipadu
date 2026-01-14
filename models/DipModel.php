@@ -17,10 +17,19 @@ class DipModel
     public function getAll()
     {
         $stmt = $this->db->prepare("
-            SELECT * FROM dip
-            WHERE is_active = 1
-            ORDER BY created_at DESC
+            SELECT 
+                dip.*,
+                GROUP_CONCAT(
+                    CONCAT(df.id, '|', df.nama_file, '|', df.path_file, '|', df.tipe_file) 
+                    SEPARATOR '##'
+                ) AS files
+            FROM dip
+            LEFT JOIN dip_file df ON dip.id = df.dip_id
+            WHERE dip.is_active = 1
+            GROUP BY dip.id
+            ORDER BY dip.created_at DESC
         ");
+
 
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

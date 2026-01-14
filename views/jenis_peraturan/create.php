@@ -17,7 +17,7 @@ ob_start();
 
 <?php
 // echo '<pre>';
-// print_r($user);  
+// print_r($data);
 // echo '</pre>';
 ?>
 
@@ -39,7 +39,7 @@ ob_start();
         <div class="row row-deck row-cards ">
 
             <div class="col-sm-12 col-lg-6">
-                <form class="card" method="POST" action="?page=simpan-jenis-peraturan" enctype="multipart/form-data">
+                <form class="card" method="POST" action="?page=jenis-peraturan-store" enctype="multipart/form-data">
                     <div class="card-header">
                         <h3 class="card-title">Form Tambah Jenis Peraturan</h3>
                         <div class="card-actions">
@@ -110,22 +110,6 @@ ob_start();
                                             </span>
                                             <input id="advanced-table-search" type="text" class="form-control" autocomplete="off">
                                         </div>
-                                        <a href="#" class="btn btn-icon" aria-label="Button">
-
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
-                                                <path d="M5 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path>
-                                                <path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path>
-                                                <path d="M19 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path>
-                                            </svg>
-                                        </a>
-                                        <a href="#" class="btn">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-history">
-                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                <path d="M12 8l0 4l2 2" />
-                                                <path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5" />
-                                            </svg>
-                                            Riwayat Arsip
-                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -153,48 +137,57 @@ ob_start();
                                         </tr>
                                     </thead>
                                     <tbody class="table-tbody">
-                                        <tr>
-                                            <td class="sort-no text-center">
-                                                1
-                                            </td>
-                                            <td class="sort-no text-center">
-                                                1
-                                            </td>
-                                            <td class="sort-tgl">Ini Tsdffgl</td>
-                                            <td class="sort-file">Ini File</td>
-                                            <td>
-                                                <div class="btn-group w-100">
-                                                    <a href="" class="text-green">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-download">
-                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                            <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
-                                                            <path d="M7 11l5 5l5 -5" />
-                                                            <path d="M12 4l0 12" />
-                                                        </svg>
-                                                    </a>
-                                                    <a href="" class="text-yellow">
+                                        <?php foreach ($data as $dt => $d): ?>
+                                            <tr>
+                                                <td class="sort-no text-center">
+                                                    <?= $dt + 1 ?>
+                                                </td>
+                                                <td class="sort-kode">
+                                                    <?= htmlspecialchars($d['kode'] ?? '-') ?>
 
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-edit">
-                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                            <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
-                                                            <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415" />
-                                                            <path d="M16 5l3 3" />
-                                                        </svg>
-                                                    </a>
-                                                    <a href="" class="text-red">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
-                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                            <path d="M4 7l16 0" />
-                                                            <path d="M10 11l0 6" />
-                                                            <path d="M14 11l0 6" />
-                                                            <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                                                            <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-                                                        </svg>
-                                                    </a>
-                                                </div>
+                                                </td>
+                                                <td class="sort-nama">
+                                                    <?= htmlspecialchars($d['nama'] ?? '-') ?>
+                                                </td>
+                                                <td class="sort-keterangan">
+                                                    <?= htmlspecialchars($d['keterangan'] ?? '-') ?>
 
-                                            </td>
-                                        </tr>
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group w-100">
+                                                        <a href="" class="text-green me-2">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-download">
+                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                                <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
+                                                                <path d="M7 11l5 5l5 -5" />
+                                                                <path d="M12 4l0 12" />
+                                                            </svg>
+                                                        </a>
+                                                        <a href="" class="text-yellow me-2">
+
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-edit">
+                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                                <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+                                                                <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415" />
+                                                                <path d="M16 5l3 3" />
+                                                            </svg>
+                                                        </a>
+                                                        <a href="" class="text-red me-2">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                                <path d="M4 7l16 0" />
+                                                                <path d="M10 11l0 6" />
+                                                                <path d="M14 11l0 6" />
+                                                                <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                                                                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                                                            </svg>
+                                                        </a>
+                                                    </div>
+
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+
                                     </tbody>
                                 </table>
                             </div>
@@ -342,23 +335,15 @@ ob_start();
             },
             {
                 "data-sort": "sort-kode",
-                name: "Kode Arsip"
+                name: "Singkatan Jenis"
             },
             {
-                "data-sort": "sort-judul",
-                name: "Judul"
+                "data-sort": "sort-nama",
+                name: "Nama"
             },
             {
-                "data-sort": "sort-Deskripsi",
-                name: "Deskripsi"
-            },
-            {
-                "data-sort": "sort-tgl",
-                name: "Tgl. Upload"
-            },
-            {
-                "data-sort": "sort-file",
-                name: "File"
+                "data-sort": "sort-keterangan",
+                name: "Keterangan"
             },
             {
                 "data-sort": "sort-aksi",

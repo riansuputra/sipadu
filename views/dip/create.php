@@ -39,7 +39,7 @@ ob_start();
         <div class="row row-deck row-cards ">
 
             <div class="col-sm-12 col-lg-6">
-                <form class="card" method="POST" action="?page=simpan-dip" enctype="multipart/form-data">
+                <form class="card" method="POST" action="?page=dip-store" enctype="multipart/form-data">
                     <div class="card-header">
                         <h3 class="card-title">Form Tambah DIP</h3>
                         <div class="card-actions">
@@ -80,7 +80,7 @@ ob_start();
                             <label class="col-3 col-form-label required">Jenis Informasi</label>
                             <div class="col">
                                 <select class="form-select" name="jenis_informasi" id="jenis_informasi">
-                                    <option value="" disabled selected>Pilih Jenis...</option>
+                                    <option value="" disabled selected>-- Pilih Jenis --</option>
                                     <option value="BERKALA">Berkala</option>
                                     <option value="SERTA MERTA">Serta Merta</option>
                                     <option value="SETIAP SAAT">Setiap Saat</option>
@@ -92,7 +92,7 @@ ob_start();
                             <label class="col-3 col-form-label required">Bentuk Informasi</label>
                             <div class="col">
                                 <select class="form-select" name="bentuk_informasi" id="bentuk_informasi">
-                                    <option value="" disabled selected>Pilih Bentuk...</option>
+                                    <option value="" disabled selected>-- Pilih Bentuk --</option>
                                     <option value="HARDCOPY">Hardcopy</option>
                                     <option value="SOFTCOPY">Softcopy</option>
                                     <option value="HARDCOPY+SOFTCOPY">Hardcopy + Softcopy</option>
@@ -108,13 +108,23 @@ ob_start();
                         <div class="mb-3 row">
                             <label class="col-3 col-form-label required">Tanggal Pembuatan</label>
                             <div class="col">
-                                <input type="date" name="tanggal_pembuatan" id="tanggal_pembuatan" class="form-control">
+                                <input type="date" name="tanggal_pembuatan" id="tanggal_pembuatan" class="form-control" value="<?= date('Y-m-d') ?>">
                             </div>
                         </div>
                         <div class="mb-3 row">
                             <label class="col-3 col-form-label required">Retensi Arsip</label>
                             <div class="col">
-                                <input type="text" name="retensi_arsip" id="retensi_arsip" class="form-control">
+                                <select class="form-select" name="retensi_arsip" id="retensi_arsip">
+                                    <option value="" disabled selected>-- Pilih Retensi --</option>
+                                    <option value="Aktif">Aktif</option>
+                                    <option value="1 Tahun">1 Tahun</option>
+                                    <option value="2 Tahun">2 Tahun</option>
+                                    <option value="3 Tahun">3 Tahun</option>
+                                    <option value="5 Tahun">5 Tahun</option>
+                                    <option value="10 Tahun">10 Tahun</option>
+                                    <option value="Musnah">Musnah</option>
+                                    <option value="Permanen">Permanen</option>
+                                </select>
                             </div>
                         </div>
                         <div class="mb-3 row">
@@ -122,8 +132,7 @@ ob_start();
                             <div class="col">
                                 <input type="file" class="form-control" name="file[]" id="file" accept=".pdf, .jpg, .png" multiple>
                                 <small class="form-hint">
-                                    Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or
-                                    emoji.
+                                    Format: PDF, JPG, PNG (maks 5MB)
                                 </small>
                             </div>
                         </div>

@@ -285,6 +285,20 @@ function routeRequest()
             $controller->delete();
             break;
 
+        case 'peraturan-publik':
+            authOnly();
+            require __DIR__ . '/../controllers/PeraturanController.php';
+            $controller = new PeraturanController();
+            $controller->publicIndex();
+            break;
+
+        case 'peraturan-file':
+            require __DIR__ . '/../controllers/PeraturanController.php';
+            $controller = new PeraturanController();
+            $controller->downloadFile();
+            break;
+
+
         // Jenis Peraturan =================================
         case 'jenis-peraturan':
             authOnly();

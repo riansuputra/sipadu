@@ -122,6 +122,8 @@ class PeraturanController
 
         $id = $_GET['id'];
 
+        $model->incrementView($id);
+
         $peraturan = $model->getById($id);
         $files = $model->getFiles($id);
 
@@ -225,5 +227,37 @@ class PeraturanController
         $model->delete($_GET['id']);
 
         header("Location: ?page=peraturan");
+    }
+
+    public function publicIndex()
+    {
+        global $pdo;
+
+        $model = new PeraturanModel($pdo);
+        $modeljenis = new JenisPeraturanModel($pdo);
+        $jenis = $modeljenis->getAll();
+        $params = $_GET;
+
+        if (!empty(array_filter($params))) {
+            $data = $model->filter($params);
+        } else {
+            $data = $model->getLatest(5);
+        }
+
+        require __DIR__ . '/../views/peraturan/publicIndex.php';
+    }
+
+    public function downloadFile()
+    {
+        global $pdo;
+        $id = $_GET['id'];
+
+        $model = new PeraturanModel($pdo);
+        $file = $model->getFiles($id);
+
+        $model->incrementDownload($id);
+
+        header("Location: /sipadu/" . $file['path_file']);
+        exit;
     }
 }

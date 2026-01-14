@@ -8,6 +8,7 @@ $publikasiPages = ['publikasi', 'tambah-publikasi'];
 $pengaturanPages = ['profil', 'manajemen-file', 'backup-data'];
 $dipPages = ['dip', 'tambah-dip', 'detail-dip'];
 $peraturanPages = ['peraturan', 'tambah-peraturan', 'detail-peraturan', 'jenis-peraturan', 'tambah-jenis-peraturan'];
+$pegawaiPages = ['pegawai', 'tambah-pegawai', 'detail-pegawai'];
 ?>
 
 <div class="collapse navbar-collapse" id="sidebar-menu">
@@ -28,8 +29,6 @@ $peraturanPages = ['peraturan', 'tambah-peraturan', 'detail-peraturan', 'jenis-p
                 </span>
             </a>
         </li>
-
-
         <li class="nav-item dropdown <?= in_array($page, $arsipPages) ? 'active' : '' ?> mb-2">
             <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -84,7 +83,7 @@ $peraturanPages = ['peraturan', 'tambah-peraturan', 'detail-peraturan', 'jenis-p
                 </div>
             </div>
         </li>
-        <li class="nav-item dropdown {{ request()->routeIs('admin.permintaan.kategori') ? 'active' : '' }} mb-2">
+        <li class="nav-item dropdown <?= in_array($page, $pegawaiPages) ? 'active' : '' ?> mb-2">
             <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-users">
@@ -99,13 +98,13 @@ $peraturanPages = ['peraturan', 'tambah-peraturan', 'detail-peraturan', 'jenis-p
                     Pegawai
                 </span>
             </a>
-            <div class="dropdown-menu">
+            <div class="dropdown-menu <?= in_array($page, $arsipPages) ? 'show' : '' ?>">
                 <div class="dropdown-menu-columns">
                     <div class="dropdown-menu-column">
-                        <a class="dropdown-item" href="{{ route('admin.permintaan.kategori') }}">
+                        <a class="dropdown-item" href="<?= BASE_URL ?>/?page=pegawai">
                             Daftar Pegawai
                         </a>
-                        <a class="dropdown-item" href="{{ route('admin.permintaan.kategori') }}">
+                        <a class="dropdown-item" href="<?= BASE_URL ?>/?page=tambah-pegawai">
                             Tambah Pegawai
                         </a>
                     </div>

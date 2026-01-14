@@ -20,7 +20,7 @@ class PeraturanModel
             j.nama AS jenis,
             j.kode AS kode_jenis,
             GROUP_CONCAT(
-                CONCAT(pf.id, '|', pf.nama_file, '|', pf.path_file)
+                CONCAT(pf.id, '|', pf.nama_file, '|', pf.path_file, '|', pf.tipe_file)
                 SEPARATOR '##'
             ) AS files
 
@@ -75,9 +75,8 @@ class PeraturanModel
                 bidang_hukum,
                 subjek,
                 pemrakarsa,
-                kata_kunci,
-                penandatangan,
-            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                penandatangan
+            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
         ");
 
         $stmt->execute([
@@ -93,11 +92,10 @@ class PeraturanModel
             $data['bahasa'],
             $data['status'],
             $data['lokasi'],
-            $data['bidang_huku,'],
+            $data['bidang_hukum'],
             $data['subjek'],
             $data['pemrakarsa'],
-            $data['kata_kunci'],
-            $data['penandatangan'],
+            $data['penandatangan']
         ]);
 
         return $this->db->lastInsertId();
@@ -122,7 +120,6 @@ class PeraturanModel
                 bidang_hukum = ?,
                 subjek = ?,
                 pemrakarsa = ?,
-                kata_kunci = ?,
                 penandatangan = ?,
             WHERE id = ?
         ");
@@ -140,10 +137,9 @@ class PeraturanModel
             $data['bahasa'],
             $data['status'],
             $data['lokasi'],
-            $data['bidang_huku,'],
+            $data['bidang_hukum'],
             $data['subjek'],
             $data['pemrakarsa'],
-            $data['kata_kunci'],
             $data['penandatangan'],
         ]);
     }
@@ -196,5 +192,98 @@ class PeraturanModel
         ");
 
         return $stmt->execute([$id]);
+    }
+
+    public function getLatest($limit = 5)
+    {
+        $stmt = $this->db->prepare("
+        SELECT * FROM peraturan
+        WHERE is_active = 1
+        ORDER BY created_at DESC
+        LIMIT ?
+    ");
+        $stmt->bindValue(1, (int)$limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public function searchByJudul($judul)
+    {
+        $stmt = $this->db->prepare("
+        SELECT 
+    p.*,
+    j.nama AS jenis,
+    GROUP_CONCAT(
+        CONCAT(pf.id,'|',pf.nama_file,'|',pf.path_file)
+        SEPARATOR '##'
+    ) AS files
+FROM peraturan p
+LEFT JOIN jenis_peraturan j ON p.jenis_id = j.id
+LEFT JOIN peraturan_file pf ON p.id = pf.peraturan_id
+WHERE p.is_active = 1
+-- + kondisi filter dinamis
+GROUP BY p.id
+ORDER BY p.created_at DESC
+
+    ");
+        $stmt->execute(['%' . $judul . '%']);
+        return $stmt->fetchAll();
+    }
+
+    public function filter($params)
+    {
+        $sql = "SELECT * FROM peraturan WHERE is_active = 1";
+        $bind = [];
+
+        if (!empty($params['judul'])) {
+            $sql .= " AND judul LIKE ?";
+            $bind[] = '%' . $params['judul'] . '%';
+        }
+
+        if (!empty($params['nomor'])) {
+            $sql .= " AND nomor LIKE ?";
+            $bind[] = '%' . $params['nomor'] . '%';
+        }
+
+        if (!empty($params['tahun'])) {
+            $sql .= " AND tahun_terbit = ?";
+            $bind[] = $params['tahun'];
+        }
+
+        if (!empty($params['jenis'])) {
+            $sql .= " AND jenis_id = ?";
+            $bind[] = $params['jenis'];
+        }
+
+        if (!empty($params['status'])) {
+            $sql .= " AND status = ?";
+            $bind[] = $params['status'];
+        }
+
+        $sql .= " ORDER BY created_at DESC";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bind);
+        return $stmt->fetchAll();
+    }
+
+    public function incrementDownload($fileId)
+    {
+        $stmt = $this->db->prepare("
+        UPDATE peraturan_file
+        SET jumlah_download = jumlah_download + 1
+        WHERE id = ?
+    ");
+        $stmt->execute([$fileId]);
+    }
+
+    public function incrementView($id)
+    {
+        $stmt = $this->db->prepare("
+        UPDATE peraturan
+        SET jumlah_dilihat = jumlah_dilihat + 1
+        WHERE id = ?
+    ");
+        $stmt->execute([$id]);
     }
 }

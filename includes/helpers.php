@@ -9,3 +9,10 @@ function tgl_sekarang()
 
     return $formatter->format(new DateTime());
 }
+
+function shortName($text, $limit = 20)
+{
+    return strlen($text) > $limit
+        ? substr($text, 0, $limit) . '...'
+        : $text;
+}

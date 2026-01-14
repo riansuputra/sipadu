@@ -39,7 +39,7 @@ ob_start();
         <div class="row row-deck row-cards ">
 
             <div class="col-12">
-                <form class="card" method="POST" action="?page=simpan-peraturan" enctype="multipart/form-data">
+                <form class="card" method="POST" action="?page=peraturan-store" enctype="multipart/form-data">
                     <div class="card-header">
                         <h3 class="card-title">Form Tambah Peraturan</h3>
                         <div class="card-actions">
@@ -194,8 +194,7 @@ ob_start();
                                     <div class="col">
                                         <input type="file" class="form-control" name="file[]" id="file" accept=".pdf, .jpg, .png" multiple>
                                         <small class="form-hint">
-                                            Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or
-                                            emoji.
+                                            Format: PDF, JPG, PNG (maks 5MB)
                                         </small>
                                     </div>
                                 </div>
@@ -376,9 +375,9 @@ ob_start();
                 }).then((result) => {
 
                     if (result.isConfirmed) {
-                        window.location = "?page=tambah-dip";
+                        window.location = "?page=tambah-peraturan";
                     } else {
-                        window.location = "?page=dip";
+                        window.location = "?page=peraturan";
                     }
 
                 });
