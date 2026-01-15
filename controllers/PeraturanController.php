@@ -232,32 +232,123 @@ class PeraturanController
     public function publicIndex()
     {
         global $pdo;
-
         $model = new PeraturanModel($pdo);
+
         $modeljenis = new JenisPeraturanModel($pdo);
         $jenis = $modeljenis->getAll();
-        $params = $_GET;
 
-        if (!empty(array_filter($params))) {
-            $data = $model->filter($params);
-        } else {
-            $data = $model->getLatest(5);
-        }
+        $limit = 5; // data per halaman
+        $page  = isset($_GET['p']) ? (int)$_GET['p'] : 1;
+        if ($page < 1) $page = 1;
+        $offset = ($page - 1) * $limit;
+
+        // Ambil filter dari GET
+        $params = [
+            'judul'   => $_GET['judul'] ?? '',
+            'nomor'   => $_GET['nomor'] ?? '',
+            'tahun'   => $_GET['tahun'] ?? '',
+            'subjek'  => $_GET['subjek'] ?? '',
+            'jenis'   => $_GET['jenis'] ?? '',
+            'status'  => $_GET['status'] ?? ''
+        ];
+
+        // Jika semua filter kosong, tetap tampil 5 data terbaru
+        $allEmpty = array_filter($params) ? false : true;
+
+        $data  = $model->filterWithPagination($params, $limit, $offset);
+        $total = $allEmpty
+            ? $model->countAll()
+            : $model->countFiltered($params);
+
+        $totalPage = ceil($total / $limit);
 
         require __DIR__ . '/../views/peraturan/publicIndex.php';
     }
 
     public function downloadFile()
     {
+        authOnly();
         global $pdo;
-        $id = $_GET['id'];
+
+        $fileId = $_GET['file'];
+        $peraturanId = $_GET['id'];
 
         $model = new PeraturanModel($pdo);
-        $file = $model->getFiles($id);
+        $file  = $model->getFileById($fileId);
 
-        $model->incrementDownload($id);
+        if (!$file) {
+            exit('File tidak ditemukan');
+        }
 
-        header("Location: /sipadu/" . $file['path_file']);
+        // hitung download (di tabel peraturan)
+        $model->incrementDownload($peraturanId);
+
+        $fullPath = __DIR__ . '/../' . $file['path_file'];
+
+        if (!file_exists($fullPath)) {
+            exit('File tidak ada di server');
+        }
+
+        // paksa download
+        header('Content-Description: File Transfer');
+        header('Content-Type: ' . $file['tipe_file']);
+        header('Content-Disposition: attachment; filename="' . basename($file['nama_file']) . '"');
+        header('Content-Length: ' . filesize($fullPath));
+
+        readfile($fullPath);
         exit;
+    }
+
+    public function download()
+    {
+        authOnly();
+        global $pdo;
+
+        $fileId = $_GET['file'];
+
+        $model = new PeraturanModel($pdo);
+        $file  = $model->getFileById($fileId);
+
+        if (!$file) {
+            exit('File tidak ditemukan');
+        }
+
+        // hitung download (di tabel peraturan)
+        $model->incrementDownload($file['peraturan_id']);
+
+        $fullPath = __DIR__ . '/../' . $file['path_file'];
+
+        if (!file_exists($fullPath)) {
+            exit('File tidak ada di server');
+        }
+
+        // paksa download
+        header('Content-Description: File Transfer');
+        header('Content-Type: ' . $file['tipe_file']);
+        header('Content-Disposition: attachment; filename="' . basename($file['nama_file']) . '"');
+        header('Content-Length: ' . filesize($fullPath));
+
+        readfile($fullPath);
+        exit;
+    }
+
+
+    public function detail($id)
+    {
+        authOnly();
+        global $pdo;
+
+        $model = new PeraturanModel($pdo);
+
+        $model->incrementView($id);
+
+
+        // Ambil data peraturan
+        $data  = $model->getById($id);
+
+        // Ambil file terkait
+        $files = $model->getFiles($id);
+
+        require __DIR__ . '/../views/peraturan/publicDetail.php';
     }
 }

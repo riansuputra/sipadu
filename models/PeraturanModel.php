@@ -46,7 +46,7 @@ class PeraturanModel
     public function getById($id)
     {
         $stmt = $this->db->prepare("
-            SELECT p.*, j.nama as jenis
+            SELECT p.*, j.nama as jenis, j.kode as kode
             FROM peraturan p
             LEFT JOIN jenis_peraturan j ON p.jenis_id = j.id
             WHERE p.id = ?
@@ -185,6 +185,16 @@ class PeraturanModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getFileById($id)
+    {
+        $stmt = $this->db->prepare("
+        SELECT * FROM peraturan_file WHERE id = ?
+    ");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+
     public function deleteFiles($id)
     {
         $stmt = $this->db->prepare("
@@ -267,14 +277,14 @@ ORDER BY p.created_at DESC
         return $stmt->fetchAll();
     }
 
-    public function incrementDownload($fileId)
+    public function incrementDownload($id)
     {
         $stmt = $this->db->prepare("
-        UPDATE peraturan_file
-        SET jumlah_download = jumlah_download + 1
+        UPDATE peraturan
+        SET jumlah_unduhan = jumlah_unduhan + 1
         WHERE id = ?
     ");
-        $stmt->execute([$fileId]);
+        $stmt->execute([$id]);
     }
 
     public function incrementView($id)
@@ -285,5 +295,99 @@ ORDER BY p.created_at DESC
         WHERE id = ?
     ");
         $stmt->execute([$id]);
+    }
+
+    public function filterWithPagination($params, $limit, $offset)
+    {
+        $sql = "
+        SELECT 
+            p.*,
+            j.nama AS jenis,
+            GROUP_CONCAT(
+                CONCAT(pf.id,'|',pf.nama_file,'|',pf.path_file)
+                SEPARATOR '##'
+            ) AS files
+        FROM peraturan p
+        LEFT JOIN jenis_peraturan j ON p.jenis_id = j.id
+        LEFT JOIN peraturan_file pf ON p.id = pf.peraturan_id
+        WHERE p.is_active = 1
+    ";
+        $bind = [];
+
+        if (!empty($params['judul'])) {
+            $sql .= " AND p.judul LIKE ?";
+            $bind[] = "%{$params['judul']}%";
+        }
+        if (!empty($params['nomor'])) {
+            $sql .= " AND p.nomor LIKE ?";
+            $bind[] = "%{$params['nomor']}%";
+        }
+        if (!empty($params['tahun'])) {
+            $sql .= " AND p.tahun_terbit = ?";
+            $bind[] = $params['tahun'];
+        }
+        if (!empty($params['subjek'])) {
+            $sql .= " AND p.subjek LIKE ?";
+            $bind[] = "%{$params['subjek']}%";
+        }
+        if (!empty($params['jenis'])) {
+            $sql .= " AND p.jenis_id = ?";
+            $bind[] = $params['jenis'];
+        }
+        if (!empty($params['status'])) {
+            $sql .= " AND p.status = ?";
+            $bind[] = $params['status'];
+        }
+
+        $sql .= "
+        GROUP BY p.id
+        ORDER BY p.created_at DESC
+        LIMIT $limit OFFSET $offset
+    ";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bind);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function countFiltered($params)
+    {
+        $sql = "SELECT COUNT(DISTINCT p.id) FROM peraturan p WHERE p.is_active = 1";
+        $bind = [];
+
+        if (!empty($params['judul'])) {
+            $sql .= " AND p.judul LIKE ?";
+            $bind[] = "%{$params['judul']}%";
+        }
+        if (!empty($params['nomor'])) {
+            $sql .= " AND p.nomor LIKE ?";
+            $bind[] = "%{$params['nomor']}%";
+        }
+        if (!empty($params['tahun'])) {
+            $sql .= " AND p.tahun_terbit = ?";
+            $bind[] = $params['tahun'];
+        }
+        if (!empty($params['subjek'])) {
+            $sql .= " AND p.subjek LIKE ?";
+            $bind[] = "%{$params['subjek']}%";
+        }
+        if (!empty($params['jenis'])) {
+            $sql .= " AND p.jenis_id = ?";
+            $bind[] = $params['jenis'];
+        }
+        if (!empty($params['status'])) {
+            $sql .= " AND p.status = ?";
+            $bind[] = $params['status'];
+        }
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bind);
+        return $stmt->fetchColumn();
+    }
+
+    public function countAll()
+    {
+        $stmt = $this->db->query("SELECT COUNT(*) FROM peraturan WHERE is_active = 1");
+        return $stmt->fetchColumn();
     }
 }

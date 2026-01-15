@@ -298,6 +298,12 @@ function routeRequest()
             $controller->downloadFile();
             break;
 
+        case 'peraturan-detail':
+            authOnly();
+            require_once __DIR__ . '/../controllers/PeraturanController.php';
+            $controller = new PeraturanController();
+            $controller->detail($_GET['id']);
+            break;
 
         // Jenis Peraturan =================================
         case 'jenis-peraturan':
