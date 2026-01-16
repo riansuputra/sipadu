@@ -192,7 +192,7 @@ function routeRequest()
             $controller->delete();
             break;
 
-        // DIP =============================================
+        // DIP Admin =============================================
         case 'dip':
             authOnly();
             require __DIR__ . '/../controllers/DipController.php';
@@ -235,7 +235,15 @@ function routeRequest()
             $controller->delete();
             break;
 
-        // Peraturan ======================================
+        // DIP ======================================
+        case 'dip-publik':
+            authOnly();
+            require __DIR__ . '/../controllers/DipController.php';
+            $controller = new DipController();
+            $controller->publicIndex();
+            break;
+
+        // Peraturan Admin ======================================
         case 'peraturan':
             authOnly();
             require __DIR__ . '/../controllers/PeraturanController.php';
@@ -285,6 +293,7 @@ function routeRequest()
             $controller->delete();
             break;
 
+        // Peraturan Publik ======================================
         case 'peraturan-publik':
             authOnly();
             require __DIR__ . '/../controllers/PeraturanController.php';
@@ -355,7 +364,7 @@ function routeRequest()
             $controller->delete();
             break;
 
-        // Pegawai =======================================
+        // Pegawai Admin =======================================
         case 'pegawai':
             authOnly();
             require __DIR__ . '/../controllers/PegawaiController.php';

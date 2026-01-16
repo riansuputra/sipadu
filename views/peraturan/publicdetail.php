@@ -4,7 +4,7 @@
 // ================================
 
 // Judul
-$title = "Dashboard";
+$title = "Detail Peraturan";
 
 // echo '<pre>';
 // print_r($data);

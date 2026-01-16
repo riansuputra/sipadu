@@ -98,13 +98,13 @@ $pegawaiPages = ['pegawai', 'tambah-pegawai', 'detail-pegawai'];
                     Pegawai
                 </span>
             </a>
-            <div class="dropdown-menu <?= in_array($page, $arsipPages) ? 'show' : '' ?>">
+            <div class="dropdown-menu <?= in_array($page, $pegawaiPages) ? 'show' : '' ?>">
                 <div class="dropdown-menu-columns">
                     <div class="dropdown-menu-column">
-                        <a class="dropdown-item" href="<?= BASE_URL ?>/?page=pegawai">
+                        <a class="dropdown-item <?= $page === 'pegawai' ? 'active' : '' ?>" href="<?= BASE_URL ?>/?page=pegawai">
                             Daftar Pegawai
                         </a>
-                        <a class="dropdown-item" href="<?= BASE_URL ?>/?page=tambah-pegawai">
+                        <a class="dropdown-item <?= $page === 'tambah-pegawai' ? 'active' : '' ?>" href="<?= BASE_URL ?>/?page=tambah-pegawai">
                             Tambah Pegawai
                         </a>
                     </div>

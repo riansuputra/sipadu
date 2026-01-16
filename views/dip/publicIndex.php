@@ -6,56 +6,33 @@
 // Judul
 $title = "DIP";
 
+// echo '<pre>';
+// print_r($moduleModel);
+// print_r($user);
+// print_r($modules);
+// echo '</pre>';
 
 // Mulai buffer konten
 ob_start();
 ?>
 
-
-<?php
-// echo '<pre>';
-// print_r($data);
-// echo '</pre>';
-?>
-
-<div class="page-header d-print-none" aria-label="Page header">
+<div class="page-body mt-3" id="page-content" style="display:none;">
     <div class="container-xl">
-        <div class="row g-2 align-items-center">
-            <div class="col">
-                <!-- Page pre-title -->
-                <div class="page-pretitle">DIP</div>
-                <h2 class="page-title">Daftar DIP</h2>
+
+
+
+        <div class="row row-cards">
+            <div class="col-12 ms-2 mb-0">
+                <ol class="breadcrumb text-center" aria-label="breadcrumbs">
+                    <li class="breadcrumb-item active">
+                        <a href="#">Dashboard</a>
+                    </li>
+                </ol>
             </div>
-            <!-- Page title actions -->
-            <div class="col-auto ms-auto d-print-none">
-                <div class="btn-list">
-                    <a href="<?= BASE_URL ?>/?page=tambah-dip" class="btn btn-primary btn-5 d-none d-sm-inline-block">
 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">
-                            <path d="M12 5l0 14"></path>
-                            <path d="M5 12l14 0"></path>
-                        </svg>
-                        Tambah DIP
-                    </a>
-                    <a href="<?= BASE_URL ?>/?page=tambah-dip" class="btn btn-primary btn-6 d-sm-none btn-icon">
-
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">
-                            <path d="M12 5l0 14"></path>
-                            <path d="M5 12l14 0"></path>
-                        </svg>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="page-body" id="page-content" style="display:none;">
-
-    <div class="container-xl">
-        <div class="row row-deck row-cards ">
 
             <div class="col-12">
+
                 <div class="card">
                     <div class="card-table">
                         <div class="card-header">
@@ -83,15 +60,6 @@ ob_start();
                                             <option value="Setiap Saat">Setiap Saat</option>
                                             <option value="Dikecualikan">Dikecualikan</option>
                                         </select>
-
-                                        <a href="#" class="btn">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-history">
-                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                <path d="M12 8l0 4l2 2" />
-                                                <path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5" />
-                                            </svg>
-                                            Riwayat DIP
-                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -134,7 +102,7 @@ ob_start();
                                                 <td class="sort-no text-center">
                                                     <?= $dt + 1 ?>
                                                 </td>
-                                                <td class="sort-judul">
+                                                <td class="sort-judul file-name">
                                                     <?= htmlspecialchars($d['judul_informasi']) ?>
                                                 </td>
                                                 <td class="sort-tgl">
@@ -243,7 +211,7 @@ ob_start();
 
 
                                                             <?= $icon ?>
-                                                            <?= shortname($f['nama'], 50) ?>
+                                                            <?= shortname($f['nama'], 20) ?>
                                                         </a>
                                                         <br>
                                                     <?php endforeach; ?>
@@ -265,24 +233,6 @@ ob_start();
                                                                 <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
                                                                 <path d="M7 11l5 5l5 -5" />
                                                                 <path d="M12 4l0 12" />
-                                                            </svg>
-                                                        </a>
-                                                        <a href="" class="text-yellow me-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-edit">
-                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                                <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
-                                                                <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415" />
-                                                                <path d="M16 5l3 3" />
-                                                            </svg>
-                                                        </a>
-                                                        <a href="" class="text-red" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
-                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                                <path d="M4 7l16 0" />
-                                                                <path d="M10 11l0 6" />
-                                                                <path d="M14 11l0 6" />
-                                                                <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                                                                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
                                                             </svg>
                                                         </a>
                                                     </div>
@@ -415,11 +365,9 @@ ob_start();
     });
 </script>
 
-
-
 <?php
 // Simpan konten ke variabel
 $content = ob_get_clean();
 
 // Load layout utama
-require __DIR__ . '/../layouts/admin.php';
+require __DIR__ . '/../layouts/main.php';

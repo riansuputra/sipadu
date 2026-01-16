@@ -132,7 +132,7 @@ ob_start();
                             <div class="col">
                                 <input type="file" class="form-control" name="file[]" id="file" accept=".pdf, .jpg, .png" multiple>
                                 <small class="form-hint">
-                                    Format: PDF, JPG, PNG (maks 5MB)
+                                    Format: PDF, JPG, PNG
                                 </small>
                             </div>
                         </div>

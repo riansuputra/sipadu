@@ -39,38 +39,50 @@ class PegawaiModel
     {
         $stmt = $this->db->prepare("
             INSERT INTO pegawai (
-                nip,
                 nama_lengkap,
+                nik,
+                nip,
                 tempat_lahir,
                 tanggal_lahir,
                 jenis_kelamin,
-                status_pegawai,
-                jabatan,
-                pangkat,
-                tmt_pengangkatan,
-                pokja_id,
-                email,
-                no_hp,
-                alamat_rumah,
+                agama,
                 alamat_domisili,
-            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                no_telepon,
+                email,
+                status_asn,
+                pangkat_golongan,
+                grade,
+                jabatan,
+                pendidikan,
+                jurusan,
+                nomor_sk_pengangkatan,
+                nomor_sk_spmt,
+                proyeksi_pensiun,
+                foto
+            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
         ");
 
         $stmt->execute([
-            $data['nip'],
             $data['nama_lengkap'],
+            $data['nik'],
+            $data['nip'],
             $data['tempat_lahir'],
             $data['tanggal_lahir'],
             $data['jenis_kelamin'],
-            $data['status_pegawai'],
-            $data['jabatan'],
-            $data['pangkat'],
-            $data['tmt_pengangkatan'],
-            $data['pokja_id'],
-            $data['email'],
-            $data['no_hp'],
-            $data['alamat_rumah'],
+            $data['agama'],
             $data['alamat_domisili'],
+            $data['no_telepon'],
+            $data['email'],
+            $data['status_asn'],
+            $data['pangkat_golongan'],
+            $data['grade'],
+            $data['jabatan'],
+            $data['pendidikan'],
+            $data['jurusan'],
+            $data['nomor_sk_pengangkatan'],
+            $data['nomor_sk_spmt'],
+            $data['proyeksi_pensiun'],
+            $data['foto']
         ]);
 
         return $this->db->lastInsertId();
@@ -81,38 +93,50 @@ class PegawaiModel
     {
         $stmt = $this->db->prepare("
             UPDATE pegawai SET
-                nip = ?,
                 nama_lengkap = ?,
+                nik = ?,
+                nip = ?,
                 tempat_lahir = ?,
                 tanggal_lahir = ?,
                 jenis_kelamin = ?,
-                status_pegawai = ?,
-                jabatan = ?,
-                pangkat = ?,
-                tmt_pengangkatan = ?,
-                pokja_id = ?,
-                email = ?,
-                no_hp = ?,
-                alamat_rumah = ?,
+                agama = ?,
                 alamat_domisili = ?,
+                no_telepon = ?,
+                email = ?,
+                status_asn = ?,
+                pangkat_golongan = ?,
+                grade = ?,
+                jabatan = ?,
+                pendidikan = ?,
+                jurusan = ?,
+                nomor_sk_pengangkatan = ?,
+                nomor_sk_spmt = ?,
+                proyeksi_pensiun = ?,
+                foto = ?
             WHERE id = ? 
         ");
 
         return $stmt->execute([
-            $data['nip'],
             $data['nama_lengkap'],
+            $data['nik'],
+            $data['nip'],
             $data['tempat_lahir'],
             $data['tanggal_lahir'],
             $data['jenis_kelamin'],
-            $data['status_pegawai'],
-            $data['jabatan'],
-            $data['pangkat'],
-            $data['tmt_pengangkatan'],
-            $data['pokja_id'],
-            $data['email'],
-            $data['no_hp'],
-            $data['alamat_rumah'],
+            $data['agama'],
             $data['alamat_domisili'],
+            $data['no_telepon'],
+            $data['email'],
+            $data['status_asn'],
+            $data['pangkat_golongan'],
+            $data['grade'],
+            $data['jabatan'],
+            $data['pendidikan'],
+            $data['jurusan'],
+            $data['nomor_sk_pengangkatan'],
+            $data['nomor_sk_spmt'],
+            $data['proyeksi_pensiun'],
+            $data['foto']
         ]);
     }
 
@@ -165,7 +189,7 @@ class PegawaiModel
     public function deleteFiles($id)
     {
         $stmt = $this->db->prepare("
-            DELETE FROM pegawai_file WHERE dip_id = ?
+            DELETE FROM pegawai_file WHERE pegawai_id = ?
         ");
 
         return $stmt->execute([$id]);
@@ -174,7 +198,7 @@ class PegawaiModel
     public function deleteFilesByParent($id)
     {
         $stmt = $this->db->prepare("
-            DELETE FROM pegawai_file WHERE dip_id = ?
+            DELETE FROM pegawai_file WHERE pegawai_id = ?
         ");
 
         return $stmt->execute([$id]);

@@ -52,6 +52,15 @@ $headerImage = $headerImage ?? 'assets/img/banner.jpg';
             justify-content: space-evenly;
             flex-wrap: wrap;
         }
+
+        .file-name {
+            max-width: 220px;
+            /* atur lebar kolom */
+            white-space: normal;
+            /* boleh turun baris */
+            word-break: break-word;
+            /* potong kata panjang */
+        }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">

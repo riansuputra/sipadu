@@ -459,4 +459,19 @@ class DipController
 
         header("Location: ?page=dip");
     }
+
+    public function publicIndex()
+    {
+        authOnly();
+
+        global $pdo;
+
+        $user = currentUser();
+        $role = currentRole();
+
+        $model = new DipModel($pdo);
+        $data = $model->getAll();
+
+        require __DIR__ . '/../views/dip/publicIndex.php';
+    }
 }
