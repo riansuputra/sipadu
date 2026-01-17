@@ -35,6 +35,12 @@ class PegawaiController
         authOnly();
         global $pdo;
 
+        // echo "<pre>";
+        // print_r($_POST);
+        // print_r($_FILES);
+        // echo "</pre>";
+        // die();
+
         $user = currentUser();
         $role = currentRole();
 
@@ -42,10 +48,11 @@ class PegawaiController
 
         // mapping input → jenis dokumen → folder
         $dokumenMap = [
-            'file_ktp'    => 'ktp',
-            'file_kk'     => 'kk',
-            'file_npwp'   => 'npwp',
-            'file_ijazah' => 'ijazah'
+            'file_ktp'    => 'KTP',
+            'file_foto'    => 'Foto',
+            'file_kk'     => 'KK',
+            'file_sk_pengangkatan'   => 'SK Pengangkatan',
+            'file_sk_spmt' => 'SK SPMT'
         ];
 
         $allowedExt  = ['pdf', 'jpg', 'jpeg', 'png'];
@@ -204,10 +211,11 @@ class PegawaiController
         $role = currentRole();
 
         $dokumenMap = [
-            'file_ktp'    => 'ktp',
-            'file_kk'     => 'kk',
-            'file_npwp'   => 'npwp',
-            'file_ijazah' => 'ijazah'
+            'file_ktp'    => 'KTP',
+            'file_foto'    => 'Foto',
+            'file_kk'     => 'KK',
+            'file_sk_pengangkatan'   => 'SK Pengangkatan',
+            'file_sk_spmt' => 'SK SPMT'
         ];
 
         $allowedExt  = ['pdf', 'jpg', 'jpeg', 'png'];

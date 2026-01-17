@@ -47,7 +47,7 @@ ob_start();
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
                                     <path d="M15 6l-6 6l6 6"></path>
                                 </svg>
-                                Daftar Peraturan
+                                Daftar Pegawai
                             </a>
                         </div>
                     </div>
@@ -58,7 +58,7 @@ ob_start();
                                 <div class="mb-3 row">
                                     <div class="col-lg-auto col-sm-12 me-3">
                                         <div
-                                            onclick="document.getElementById('foto').click()"
+                                            onclick="document.getElementById('file_foto').click()"
                                             style="
                                                 width:110px;
                                                 height:146px;
@@ -92,47 +92,56 @@ ob_start();
                                                     left:0;
                                                 ">
                                         </div>
-
                                         <input
                                             type="file"
-                                            id="foto"
-                                            name="foto"
+                                            id="file_foto"
+                                            name="file_foto"
                                             accept="image/*"
                                             hidden
                                             onchange="previewImage(this)">
-
                                     </div>
-
                                     <div class="col">
                                         <label class="form-label required">Nama Lengkap</label>
-                                        <input type="text" name="judul" id="judul" class="form-control mb-3" placeholder="">
+                                        <input type="text" name="nama" id="nama" class="form-control mb-3" placeholder="">
                                         <div class="row">
                                             <div class="col">
                                                 <label class="form-label">Tempat Lahir</label>
-                                                <input type="text" name="judul" id="judul" class="form-control" placeholder="">
+                                                <input type="text" name="tempat_lahir" id="tempat_lahir" class="form-control" placeholder="">
 
                                             </div>
                                             <div class="col">
                                                 <label class="form-label required">Tanggal Lahir</label>
-                                                <input type="text" name="judul" id="judul" class="form-control" placeholder="">
+                                                <input type="date" name="tanggal_lahir" id="tanggal_lahir" class="form-control" placeholder="">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">NIK</label>
-                                    <input type="text" name="nomor" id="nomor" class="form-control" placeholder="">
+                                    <input type="text" name="nik" id="nik" class="form-control" placeholder="">
                                 </div>
                                 <div class="mb-3 row">
                                     <div class="col">
                                         <div class="row">
                                             <div class="col">
                                                 <label class="form-label required">Jenis Kelamin</label>
-                                                <input type="text" name="judul" id="judul" class="form-control" placeholder="">
+                                                <select class="form-select" name="jenis_kelamin" id="jenis_kelamin">
+                                                    <option value="" disabled selected>-- Pilih Jenis Kelamin --</option>
+                                                    <option value="L">Laki-Laki</option>
+                                                    <option value="P">Perempuan</option>
+                                                </select>
                                             </div>
                                             <div class="col">
                                                 <label class="form-label required">Agama</label>
-                                                <input type="text" name="judul" id="judul" class="form-control" placeholder="">
+                                                <select class="form-select" name="agama" id="agama">
+                                                    <option value="" disabled selected>-- Pilih Agama --</option>
+                                                    <option value="Islam">Islam</option>
+                                                    <option value="Kristen Protestan">Kristen Protestan</option>
+                                                    <option value="Katolik">Katolik</option>
+                                                    <option value="Hindu">Hindu</option>
+                                                    <option value="Buddha">Buddha</option>
+                                                    <option value="Konghucu">Konghucu</option>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -142,32 +151,36 @@ ob_start();
                                         <div class="row">
                                             <div class="col">
                                                 <label class="form-label required">No. Telepon</label>
-                                                <input type="text" name="judul" id="judul" class="form-control" placeholder="">
+                                                <input type="text" name="no_telepon" id="no_telepon" class="form-control" placeholder="">
                                             </div>
                                             <div class="col">
                                                 <label class="form-label">Alamat Email</label>
-                                                <input type="text" name="judul" id="judul" class="form-control" placeholder="">
+                                                <input type="email" name="email" id="email" class="form-control" placeholder="">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="">
                                     <label class="form-label required">Alamat</label>
-                                    <input type="text" name="nomor" id="nomor" class="form-control" placeholder="">
+                                    <input type="text" name="alamat_domisili" id="alamat_domisili" class="form-control" placeholder="">
                                 </div>
                             </div>
                             <div class="form-fieldset col-sm-12 col-lg-6">
-
                                 <div class="mb-3 row">
                                     <div class="col">
                                         <div class="row">
                                             <div class="col">
                                                 <label class="form-label required">Status ASN</label>
-                                                <input type="text" name="judul" id="judul" class="form-control" placeholder="">
+                                                <select class="form-select" name="status_asn" id="status_asn">
+                                                    <option value="" disabled selected>-- Pilih Status --</option>
+                                                    <option value="PNS">PNS</option>
+                                                    <option value="PPPK">PPPK</option>
+                                                    <option value="PPNPN/OUTSOURCING">PPNPN/Outsourcing</option>
+                                                </select>
                                             </div>
                                             <div class="col">
                                                 <label class="form-label">NIP / NIPPPK</label>
-                                                <input type="text" name="judul" id="judul" class="form-control" placeholder="">
+                                                <input type="text" name="nip" id="nip" class="form-control" placeholder="">
                                             </div>
                                         </div>
                                     </div>
@@ -177,47 +190,115 @@ ob_start();
                                         <div class="row">
                                             <div class="col">
                                                 <label class="form-label required">Pendidikan</label>
-                                                <input type="text" name="judul" id="judul" class="form-control" placeholder="">
+                                                <select class="form-select" name="pendidikan" id="pendidikan">
+                                                    <option value="" disabled selected>-- Pilih Pendidikan --</option>
+                                                    <option value="S3">S3</option>
+                                                    <option value="S2">S2</option>
+                                                    <option value="S1">S1</option>
+                                                    <option value="SMA">SMA</option>
+                                                </select>
                                             </div>
                                             <div class="col">
                                                 <label class="form-label">Jurusan</label>
-                                                <input type="text" name="judul" id="judul" class="form-control" placeholder="">
+                                                <input type="text" name="jurusan" id="jurusan" class="form-control" placeholder="">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Pangkat, Gol/Ruang</label>
-                                    <input type="text" name="nomor" id="nomor" class="form-control" placeholder="">
+                                    <select class="form-select" name="pangkat_golongan" id="pangkat_golongan">
+                                        <option value="" disabled selected>-- Pilih Pangkat/Gol, Ruang --</option>
+                                        <option value="Juru Muda, I/a">Juru Muda, I/a</option>
+                                        <option value="Juru Muda Tingkat I, I/a">Juru Muda Tingkat I, I/a</option>
+                                        <option value="Juru, I/c">Juru, I/c</option>
+                                        <option value="Juru Tingkat I, I/d">Juru Tingkat I, I/d</option>
+                                        <option value="Pengatur Muda, II/a">Pengatur Muda, II/a</option>
+                                        <option value="Pengatur Muda Tingkat I, II/b">Pengatur Muda Tingkat I, II/b</option>
+                                        <option value="Pengatur Muda, II/c">Pengatur Muda, II/c</option>
+                                        <option value="Pengatur Muda, II/d">Pengatur Muda, II/d</option>
+                                        <option value="Penata Muda, III/a">Penata Muda, III/a</option>
+                                        <option value="Penata Muda Tingkat I, III/b">Penata Muda Tingkat I, III/b</option>
+                                        <option value="Penata, III/c">Penata, III/c</option>
+                                        <option value="Penata Tingkat I, III/d">Penata Tingkat I, III/d</option>
+                                        <option value="Pembina, IV/a">Pembina, IV/a</option>
+                                        <option value="Pembina Tingkat I, IV/b">Pembina Tingkat I, IV/b</option>
+                                        <option value="Pembina Utama Muda, IV/c">Pembina Utama Muda, IV/c</option>
+                                        <option value="Pembina Utama Madya, IV/d">Pembina Utama Madya, IV/d</option>
+                                        <option value="Pembina Utama, IV/e">Pembina Utama, IV/e</option>
+                                    </select>
                                 </div>
                                 <div class="mb-3 row">
                                     <div class="col">
                                         <div class="row">
                                             <div class="col">
                                                 <label class="form-label required">Jabatan</label>
-                                                <input type="text" name="judul" id="judul" class="form-control" placeholder="">
+                                                <select class="form-select" name="jabatan" id="jabatan" placeholder="-- Pilih Jabatan --" autocomplete="off">
+                                                    <option value="" disabled selected>-- Pilih Jabatan --</option>
+                                                    <option value="Analis Kemitraan">Analis Kemitraan</option>
+                                                    <option value="Analis Sumber Daya Manusia Aparatur Ahli Pertama">Analis Sumber Daya Manusia Aparatur Ahli Pertama</option>
+                                                    <option value="Arsiparis Ahli Pertama">Arsiparis Ahli Pertama</option>
+                                                    <option value="Arsiparis Mahir">Arsiparis Mahir</option>
+                                                    <option value="Cleaning Service">Cleaning Service</option>
+                                                    <option value="Kepala BPMP Provinsi Bali">Kepala BPMP Provinsi Bali</option>
+                                                    <option value="Kepala Sub Bagian Umum">Kepala Sub Bagian Umum</option>
+                                                    <option value="Penelaah Informasi dan Komunikasi Publik">Penelaah Informasi dan Komunikasi Publik</option>
+                                                    <option value="Penelaah Teknis Kebijakan">Penelaah Teknis Kebijakan</option>
+                                                    <option value="Pengadministrasi Keuangan">Pengadministrasi Keuangan</option>
+                                                    <option value="Pengadministrasi Perkantoran">Pengadministrasi Perkantoran</option>
+                                                    <option value="Pengelola Sistem dan Teknologi Informasi">Pengelola Sistem dan Teknologi Informasi</option>
+                                                    <option value="Pengolah Data dan Informasi">Pengolah Data dan Informasi</option>
+                                                    <option value="Pranata Komputer Ahli Pertama">Pranata Komputer Ahli Pertama</option>
+                                                    <option value="Satpam">Satpam</option>
+                                                    <option value="Sopir">Sopir</option>
+                                                    <option value="Teknisi Sarana dan Prasarana">Teknisi Sarana dan Prasarana</option>
+                                                    <option value="Tenaga Administrasi">Tenaga Administrasi</option>
+                                                    <option value="Tukang Kebun">Tukang Kebun</option>
+                                                    <option value="Widyaprada Ahli Madya">Widyaprada Ahli Madya</option>
+                                                    <option value="Widyaprada Ahli Muda">Widyaprada Ahli Muda</option>
+                                                    <option value="Widyaprada Ahli Pertama">Widyaprada Ahli Pertama</option>
+                                                </select>
                                             </div>
                                             <div class="col-3">
                                                 <label class="form-label">Grade</label>
-                                                <input type="text" name="judul" id="judul" class="form-control" placeholder="">
+                                                <select class="form-select" name="grade" id="grade">
+                                                    <option value="" disabled selected>-- Pilih Grade --</option>
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                    <option value="4">4</option>
+                                                    <option value="5">5</option>
+                                                    <option value="6">6</option>
+                                                    <option value="7">7</option>
+                                                    <option value="8">8</option>
+                                                    <option value="9">9</option>
+                                                    <option value="10">10</option>
+                                                    <option value="11">11</option>
+                                                    <option value="12">12</option>
+                                                    <option value="13">13</option>
+                                                    <option value="14">14</option>
+                                                    <option value="15">15</option>
+                                                    <option value="16">16</option>
+                                                    <option value="17">17</option>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">No. SK Pengangkatan</label>
-                                    <input type="text" name="nomor" id="nomor" class="form-control" placeholder="">
+                                    <input type="text" name="nomor_sk_pengangkatan" id="nomor_sk_pengangkatan" class="form-control" placeholder="">
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">No. SK SPMT</label>
-                                    <input type="text" name="nomor" id="nomor" class="form-control" placeholder="">
+                                    <input type="text" name="nomor_sk_spmt" id="nomor_sk_spmt" class="form-control" placeholder="">
                                 </div>
                             </div>
                             <div class="form-fieldset col-sm-12 col-lg-6">
                                 <div class="mb-3 row">
                                     <label class="col-3 col-form-label">File KK</label>
                                     <div class="col">
-                                        <input type="file" class="form-control" name="file[]" id="file" accept=".pdf, .jpg, .png" multiple>
+                                        <input type="file" class="form-control" name="file_kk" id="file_kk" accept=".pdf, .jpg, .png">
                                         <small class="form-hint">
                                             Format: PDF
                                         </small>
@@ -236,7 +317,7 @@ ob_start();
                                 <div class="mb-3 row">
                                     <label class="col-3 col-form-label">File KTP</label>
                                     <div class="col">
-                                        <input type="file" class="form-control" name="file[]" id="file" accept=".pdf, .jpg, .png" multiple>
+                                        <input type="file" class="form-control" name="file_ktp" id="file_ktp" accept=".pdf, .jpg, .png">
                                         <small class="form-hint">
                                             Format: PDF
                                         </small>
@@ -258,7 +339,7 @@ ob_start();
                                 <div class="mb-3 row">
                                     <label class="col-3 col-form-label">File SK Pengangkatan</label>
                                     <div class="col">
-                                        <input type="file" class="form-control" name="file[]" id="file" accept=".pdf, .jpg, .png" multiple>
+                                        <input type="file" class="form-control" name="file_sk_pengangkatan" id="file_sk_pengangkatan" accept=".pdf, .jpg, .png">
                                         <small class="form-hint">
                                             Format: PDF
                                         </small>
@@ -277,7 +358,7 @@ ob_start();
                                 <div class="mb-3 row">
                                     <label class="col-3 col-form-label">File SK SPMT</label>
                                     <div class="col">
-                                        <input type="file" class="form-control" name="file[]" id="file" accept=".pdf, .jpg, .png" multiple>
+                                        <input type="file" class="form-control" name="file_sk_spmt" id="file_sk_spmt" accept=".pdf, .jpg, .png">
                                         <small class="form-hint">
                                             Format: PDF
                                         </small>
@@ -470,9 +551,9 @@ ob_start();
                 }).then((result) => {
 
                     if (result.isConfirmed) {
-                        window.location = "?page=tambah-peraturan";
+                        window.location = "?page=tambah-pegawai";
                     } else {
-                        window.location = "?page=peraturan";
+                        window.location = "?page=pegawai";
                     }
 
                 });
@@ -553,7 +634,15 @@ ob_start();
     }
 </script>
 
-
+<script>
+    new TomSelect("#jabatan", {
+        create: true,
+        sortField: {
+            field: "text",
+            direction: "asc"
+        }
+    });
+</script>
 
 <?php
 // Simpan konten ke variabel

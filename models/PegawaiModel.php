@@ -39,7 +39,7 @@ class PegawaiModel
     {
         $stmt = $this->db->prepare("
             INSERT INTO pegawai (
-                nama_lengkap,
+                nama,
                 nik,
                 nip,
                 tempat_lahir,
@@ -56,14 +56,12 @@ class PegawaiModel
                 pendidikan,
                 jurusan,
                 nomor_sk_pengangkatan,
-                nomor_sk_spmt,
-                proyeksi_pensiun,
-                foto
-            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                nomor_sk_spmt
+            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
         ");
 
         $stmt->execute([
-            $data['nama_lengkap'],
+            $data['nama'],
             $data['nik'],
             $data['nip'],
             $data['tempat_lahir'],
@@ -80,9 +78,7 @@ class PegawaiModel
             $data['pendidikan'],
             $data['jurusan'],
             $data['nomor_sk_pengangkatan'],
-            $data['nomor_sk_spmt'],
-            $data['proyeksi_pensiun'],
-            $data['foto']
+            $data['nomor_sk_spmt']
         ]);
 
         return $this->db->lastInsertId();
@@ -93,7 +89,7 @@ class PegawaiModel
     {
         $stmt = $this->db->prepare("
             UPDATE pegawai SET
-                nama_lengkap = ?,
+                nama = ?,
                 nik = ?,
                 nip = ?,
                 tempat_lahir = ?,
@@ -110,14 +106,12 @@ class PegawaiModel
                 pendidikan = ?,
                 jurusan = ?,
                 nomor_sk_pengangkatan = ?,
-                nomor_sk_spmt = ?,
-                proyeksi_pensiun = ?,
-                foto = ?
+                nomor_sk_spmt = ?
             WHERE id = ? 
         ");
 
         return $stmt->execute([
-            $data['nama_lengkap'],
+            $data['nama'],
             $data['nik'],
             $data['nip'],
             $data['tempat_lahir'],
@@ -134,9 +128,7 @@ class PegawaiModel
             $data['pendidikan'],
             $data['jurusan'],
             $data['nomor_sk_pengangkatan'],
-            $data['nomor_sk_spmt'],
-            $data['proyeksi_pensiun'],
-            $data['foto']
+            $data['nomor_sk_spmt']
         ]);
     }
 
