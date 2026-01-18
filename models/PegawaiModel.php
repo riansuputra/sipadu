@@ -14,9 +14,20 @@ class PegawaiModel
     public function getAll()
     {
         $stmt = $this->db->prepare("
-            SELECT * FROM pegawai
-            WHERE is_active = 1
-            ORDER BY created_at DESC
+            SELECT 
+            p.*,
+            GROUP_CONCAT(
+                CONCAT(pf.id, '|', pf.jenis_dokumen, '|', pf.nama_file, '|', pf.path_file, '|', pf.tipe_file)
+                SEPARATOR '##'
+            ) AS files
+
+            FROM pegawai p
+
+            LEFT JOIN pegawai_file pf 
+                ON p.id = pf.pegawai_id
+
+            GROUP BY p.id
+            ORDER BY p.created_at DESC
         ");
 
         $stmt->execute();

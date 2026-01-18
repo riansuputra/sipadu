@@ -8,7 +8,6 @@ class PegawaiController
     public function index()
     {
         authOnly();
-
         global $pdo;
 
         $user = currentUser();
@@ -17,8 +16,15 @@ class PegawaiController
         $model = new PegawaiModel($pdo);
         $data = $model->getAll();
 
+        foreach ($data as &$dt) {
+            $dt['umur'] = umurTahun($dt['tanggal_lahir']) . ' th';
+            $dt['status_pensiun'] = statusPensiunSingkat($dt['tanggal_lahir'], 58);
+        }
+        unset($dt);
+
         require __DIR__ . '/../views/pegawai/index.php';
     }
+
 
     public function create()
     {
