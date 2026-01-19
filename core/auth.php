@@ -61,6 +61,14 @@ function currentRole()
 }
 
 // -------------------------------
+// AMBIL ROLE SAAT INI
+// -------------------------------
+function currentPokja()
+{
+    return $_SESSION['user']['pokja_id'] ?? null;
+}
+
+// -------------------------------
 // REDIRECT SETELAH LOGIN
 // -------------------------------
 function redirectByRole()

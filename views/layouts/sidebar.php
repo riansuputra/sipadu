@@ -38,6 +38,31 @@ $pegawaiPages = ['pegawai', 'tambah-pegawai', 'detail-pegawai'];
                     </svg>
                 </span>
                 <span class="nav-link-title">
+                    Dokumen
+                </span>
+            </a>
+            <div class="dropdown-menu <?= in_array($page, $arsipPages) ? 'show' : '' ?>">
+                <div class="dropdown-menu-columns">
+                    <div class="dropdown-menu-column">
+                        <a class="dropdown-item <?= $page === 'arsip' ? 'active' : '' ?>" href="<?= BASE_URL ?>/?page=arsip">
+                            Daftar Dokumen
+                        </a>
+                        <a class="dropdown-item <?= $page === 'tambah-arsip' ? 'active' : '' ?>" href="<?= BASE_URL ?>/?page=tambah-arsip">
+                            Tambah Dokumen
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="nav-item dropdown <?= in_array($page, $arsipPages) ? 'active' : '' ?> mb-2">
+            <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
+                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-files">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M11 2l3 .001v5.999a1 1 0 0 0 .883 .993l.117 .007h6v6a3 3 0 0 1 -3 3h-1v1a3 3 0 0 1 -3 3h-7a3 3 0 0 1 -3 -3v-10a3 3 0 0 1 3 -3h1v-1a3 3 0 0 1 3 -3m-3 6h-1a1 1 0 0 0 -1 1v10a1 1 0 0 0 1 1h7a1 1 0 0 0 1 -1v-1h-4a3 3 0 0 1 -3 -3zm12.415 -1h-4.415v-4.415z" />
+                    </svg>
+                </span>
+                <span class="nav-link-title">
                     Arsip
                 </span>
             </a>
@@ -78,6 +103,9 @@ $pegawaiPages = ['pegawai', 'tambah-pegawai', 'detail-pegawai'];
                         </a>
                         <a class="dropdown-item <?= $page === 'tambah-publikasi' ? 'active' : '' ?>" href="<?= BASE_URL ?>/?page=tambah-publikasi">
                             Tambah Publikasi
+                        </a>
+                        <a class="dropdown-item <?= $page === 'tambah-jenis-publikasi' ? 'active' : '' ?>" href="<?= BASE_URL ?>/?page=tambah-jenis-publikasi">
+                            Jenis Publikasi
                         </a>
                     </div>
                 </div>

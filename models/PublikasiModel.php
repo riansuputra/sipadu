@@ -18,9 +18,25 @@ class PublikasiModel
     public function getAll()
     {
         $stmt = $this->db->prepare("
-            SELECT * FROM publikasi
-            WHERE is_published = 1
-            ORDER BY created_at DESC
+            SELECT 
+            p.*,
+            pj.pokja_tipe AS tim,
+            pj.pokja_nama AS nama_tim,
+            GROUP_CONCAT(
+                CONCAT(pf.id, '|', pf.nama_file, '|', pf.path_file, '|', pf.tipe)
+                SEPARATOR '##'
+            ) AS files
+
+            FROM publikasi p
+
+            LEFT JOIN pokja pj 
+                ON p.pokja_id = pj.id
+
+            LEFT JOIN publikasi_file pf 
+                ON p.id = pf.publikasi_id
+
+            GROUP BY p.id
+            ORDER BY p.created_at DESC
         ");
 
         $stmt->execute();
@@ -48,9 +64,13 @@ class PublikasiModel
                 deskripsi, 
                 tanggal_kegiatan, 
                 lokasi, 
+                jenis_id, 
                 pokja_id, 
+                penulis, 
+                editor, 
+                sumber, 
                 dibuat_oleh
-            ) VALUES (?,?,?,?,?,?)
+            ) VALUES (?,?,?,?,?,?,?,?,?,?)
         ");
 
         $stmt->execute([
@@ -58,7 +78,11 @@ class PublikasiModel
             $data['deskripsi'],
             $data['tanggal_kegiatan'],
             $data['lokasi'],
+            $data['jenis_id'],
             $data['pokja_id'],
+            $data['penulis'],
+            $data['editor'],
+            $data['sumber'],
             $data['dibuat_oleh']
         ]);
 
@@ -76,6 +100,10 @@ class PublikasiModel
                 deskripsi = ?,
                 tanggal_kegiatan = ?,
                 lokasi = ?,
+                jenis_id = ?,
+                penulis = ?,
+                editor = ?,
+                sumber = ?,
                 pokja_id = ?
             WHERE id = ?
         ");
@@ -85,6 +113,10 @@ class PublikasiModel
             $data['deskripsi'],
             $data['tanggal_kegiatan'],
             $data['lokasi'],
+            $data['jenis_id'],
+            $data['penulis'],
+            $data['editor'],
+            $data['sumber'],
             $data['pokja_id'],
             $id
         ]);

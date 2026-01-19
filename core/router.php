@@ -192,6 +192,56 @@ function routeRequest()
             $controller->delete();
             break;
 
+        // Jenis Publikasi =======================================
+        case 'jenis-publikasi':
+            authOnly();
+            require __DIR__ . '/../controllers/JenisPublikasiController.php';
+            $controller = new JenisPublikasiController();
+            $controller->index();
+            break;
+
+        case 'tambah-jenis-publikasi':
+            authOnly();
+            require __DIR__ . '/../controllers/JenisPublikasiController.php';
+            $controller = new JenisPublikasiController();
+            $controller->create();
+            break;
+
+        case 'jenis-publikasi-store':
+            authOnly();
+            require __DIR__ . '/../controllers/JenisPublikasiController.php';
+            $controller = new JenisPublikasiController();
+            $controller->store();
+            break;
+
+        case 'detail-jenis-publikasi':
+            authOnly();
+            require __DIR__ . '/../controllers/JenisPublikasiController.php';
+            $controller = new JenisPublikasiController();
+            $controller->show();
+            break;
+
+        case 'edit-jenis-publikasi':
+            authOnly();
+            require __DIR__ . '/../controllers/JenisPublikasiController.php';
+            $controller = new JenisPublikasiController();
+            $controller->edit();
+            break;
+
+        case 'jenis-publikasi-update':
+            authOnly();
+            require __DIR__ . '/../controllers/JenisPublikasiController.php';
+            $controller = new JenisPublikasiController();
+            $controller->update();
+            break;
+
+        case 'jenis-publikasi-delete':
+            authOnly();
+            require __DIR__ . '/../controllers/JenisPublikasiController.php';
+            $controller = new JenisPublikasiController();
+            $controller->delete();
+            break;
+
         // DIP Admin =============================================
         case 'dip':
             authOnly();

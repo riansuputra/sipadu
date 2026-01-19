@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../models/PublikasiModel.php';
+require_once __DIR__ . '/../models/JenisPublikasiModel.php';
 require_once __DIR__ . '/../core/auth.php';
 
 class PublikasiController
@@ -24,8 +25,12 @@ class PublikasiController
     {
         authOnly();
 
+        global $pdo;
         $user = currentUser();
         $role = currentRole();
+
+        $modeljenis = new JenisPublikasiModel($pdo);
+        $jenis = $modeljenis->getAll();
 
         require __DIR__ . '/../views/publikasi/create.php';
     }
@@ -44,6 +49,7 @@ class PublikasiController
 
         $user = currentUser();
         $role = currentRole();
+        $pokja = currentPokja();
 
         $errors = [];
 
@@ -72,6 +78,7 @@ class PublikasiController
 
         $data = $_POST;
         $data['dibuat_oleh'] = currentUser()['id'];
+        $data['pokja_id'] = $pokja;
 
         $publikasiId = $model->insert($data);
 
@@ -118,7 +125,7 @@ class PublikasiController
                     $model->insertFile($publikasiId, [
                         'nama_file'   => $namaAsli,
                         'path_file'   => 'uploads/publikasi/' . $namaBaru,
-                        'tipe_file'   => $type,
+                        'tipe'   => $type,
                         'ukuran_file' => $size
                     ]);
                 }

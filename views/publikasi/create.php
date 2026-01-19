@@ -39,7 +39,7 @@ ob_start();
         <div class="row row-deck row-cards ">
 
             <div class="col-sm-12 col-lg-6">
-                <form class="card" method="POST" action="?page=dip-store" enctype="multipart/form-data">
+                <form class="card" method="POST" action="?page=publikasi-store" enctype="multipart/form-data">
                     <div class="card-header">
                         <h3 class="card-title">Form Tambah Publikasi</h3>
                         <div class="card-actions">
@@ -67,13 +67,51 @@ ob_start();
                         <div class="mb-3 row">
                             <label class="col-3 col-form-label required">Tanggal Pembuatan</label>
                             <div class="col">
-                                <input type="date" name="tanggal_pembuatan" id="tanggal_pembuatan" class="form-control" value="<?= date('Y-m-d') ?>">
+                                <input type="date" name="tanggal_kegiatan" id="tanggal_kegiatan" class="form-control" value="<?= date('Y-m-d') ?>">
                             </div>
                         </div>
                         <div class="mb-3 row">
                             <label class="col-3 col-form-label required">Lokasi</label>
                             <div class="col">
                                 <input type="text" name="lokasi" id="lokasi" class="form-control" placeholder="">
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label class="col-3 col-form-label required">Jenis</label>
+                            <div class="col">
+                                <select class="form-select" name="jenis_id" id="jenis_id">
+                                    <option value="" disabled selected>-- Pilih Jenis --</option>
+                                    <?php foreach ($jenis as $j): ?>
+                                        <option value="<?= $j['id'] ?>">
+                                            <?= $j['nama'] ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- <div class="mb-3 row">
+                            <label class="col-3 col-form-label required">Kategori</label>
+                            <div class="col">
+                                <input type="text" name="kategori" id="kategori" class="form-control" placeholder="">
+                            </div>
+                        </div> -->
+                        <div class="mb-3 row">
+                            <label class="col-3 col-form-label required">Penulis</label>
+                            <div class="col">
+                                <input type="text" name="penulis" id="penulis" class="form-control" placeholder="">
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label class="col-3 col-form-label required">Editor</label>
+                            <div class="col">
+                                <input type="text" name="editor" id="editor" class="form-control" placeholder="">
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label class="col-3 col-form-label required">Sumber</label>
+                            <div class="col">
+                                <input type="text" name="sumber" id="sumber" class="form-control" placeholder="">
                             </div>
                         </div>
                         <div class="mb-3 row">
@@ -259,9 +297,9 @@ ob_start();
                 }).then((result) => {
 
                     if (result.isConfirmed) {
-                        window.location = "?page=tambah-dip";
+                        window.location = "?page=tambah-publikasi";
                     } else {
-                        window.location = "?page=dip";
+                        window.location = "?page=publikasi";
                     }
 
                 });
