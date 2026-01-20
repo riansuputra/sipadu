@@ -22,13 +22,9 @@ class ArsipController
     public function create()
     {
         authOnly();
-        global $pdo;
 
         $user = currentUser();
         $role = currentRole();
-
-        $modelkategori = new ArsipKategoriModel($pdo);
-        $kategori = $modelkategori->getAll();
 
         require __DIR__ . '/../views/arsip/create.php';
     }
@@ -65,6 +61,8 @@ class ArsipController
         $model = new ArsipModel($pdo);
 
         $data = $_POST;
+        $data['dibuat_oleh'] = currentUser()['id'];
+
         $id = $model->insert($data);
 
         // ============= UPLOAD FILE ==============

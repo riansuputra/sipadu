@@ -58,7 +58,6 @@ class ArsipModel
                 jenis_arsip, 
                 kurun_waktu, 
                 tanggal_arsip, 
-                tahun, 
                 tingkat_perkembangan, 
                 jumlah, 
                 keterangan, 
@@ -80,9 +79,9 @@ class ArsipModel
                 kota_kabupaten, 
                 dibuat_oleh 
             ) VALUES (
+                ?,?,?,?,?,?,?,?,?,
                 ?,?,?,?,?,?,?,?,?,?,
-                ?,?,?,?,?,?,?,?,?,?,
-                ?,?,?,?,?,?,?,?,?,?
+                ?,?,?,?,?,?,?,?,?
             )
         ");
 
@@ -95,7 +94,6 @@ class ArsipModel
             $data['jenis_arsip'],
             $data['kurun_waktu'],
             $data['tanggal_arsip'],
-            $data['tahun'],
             $data['tingkat_perkembangan'],
             $data['jumlah'],
             $data['keterangan'],
@@ -136,7 +134,6 @@ class ArsipModel
                 jenis_arsip = ?, 
                 kurun_waktu = ?, 
                 tanggal_arsip = ?, 
-                tahun = ?, 
                 tingkat_perkembangan = ?, 
                 jumlah = ?, 
                 keterangan = ?, 
@@ -169,7 +166,6 @@ class ArsipModel
             $data['jenis_arsip'],
             $data['kurun_waktu'],
             $data['tanggal_arsip'],
-            $data['tahun'],
             $data['tingkat_perkembangan'],
             $data['jumlah'],
             $data['keterangan'],

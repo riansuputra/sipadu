@@ -5,7 +5,7 @@
 
 // Base URL aplikasi
 // Contoh: http://localhost/sipadu/public
-define('BASE_URL', '/sipadu/public');
+define('BASE_URL', 'http://localhost/sipadu');
 
 // Nama aplikasi
 define('APP_NAME', 'SIPADU');

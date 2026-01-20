@@ -42,6 +42,106 @@ function routeRequest()
             (new DashboardController())->index();
             break;
 
+        // Dokumen =======================================
+        case 'dokumen':
+            authOnly();
+            require __DIR__ . '/../controllers/DokumenController.php';
+            $controller = new DokumenController();
+            $controller->index();
+            break;
+
+        case 'tambah-dokumen':
+            authOnly();
+            require __DIR__ . '/../controllers/DokumenController.php';
+            $controller = new DokumenController();
+            $controller->create();
+            break;
+
+        case 'dokumen-store':
+            authOnly();
+            require __DIR__ . '/../controllers/DokumenController.php';
+            $controller = new DokumenController();
+            $controller->store();
+            break;
+
+        case 'detail-dokumen':
+            authOnly();
+            require __DIR__ . '/../controllers/DokumenController.php';
+            $controller = new DokumenController();
+            $controller->show();
+            break;
+
+        case 'edit-dokumen':
+            authOnly();
+            require __DIR__ . '/../controllers/DokumenController.php';
+            $controller = new DokumenController();
+            $controller->edit();
+            break;
+
+        case 'dokumen-update':
+            authOnly();
+            require __DIR__ . '/../controllers/DokumenController.php';
+            $controller = new DokumenController();
+            $controller->update();
+            break;
+
+        case 'dokumen-delete':
+            authOnly();
+            require __DIR__ . '/../controllers/DokumenController.php';
+            $controller = new DokumenController();
+            $controller->delete();
+            break;
+
+        // Jenis Publikasi =======================================
+        case 'jenis-dokumen':
+            authOnly();
+            require __DIR__ . '/../controllers/JenisDokumenController.php';
+            $controller = new JenisDokumenController();
+            $controller->index();
+            break;
+
+        case 'tambah-jenis-dokumen':
+            authOnly();
+            require __DIR__ . '/../controllers/JenisDokumenController.php';
+            $controller = new JenisDokumenController();
+            $controller->create();
+            break;
+
+        case 'jenis-dokumen-store':
+            authOnly();
+            require __DIR__ . '/../controllers/JenisDokumenController.php';
+            $controller = new JenisDokumenController();
+            $controller->store();
+            break;
+
+        case 'detail-jenis-dokumen':
+            authOnly();
+            require __DIR__ . '/../controllers/JenisDokumenController.php';
+            $controller = new JenisDokumenController();
+            $controller->show();
+            break;
+
+        case 'edit-jenis-dokumen':
+            authOnly();
+            require __DIR__ . '/../controllers/JenisDokumenController.php';
+            $controller = new JenisDokumenController();
+            $controller->edit();
+            break;
+
+        case 'jenis-dokumen-update':
+            authOnly();
+            require __DIR__ . '/../controllers/JenisDokumenController.php';
+            $controller = new JenisDokumenController();
+            $controller->update();
+            break;
+
+        case 'jenis-dokumen-delete':
+            authOnly();
+            require __DIR__ . '/../controllers/JenisDokumenController.php';
+            $controller = new JenisDokumenController();
+            $controller->delete();
+            break;
+
         // Arsip ==========================================
         case 'arsip':
             authOnly();
@@ -89,56 +189,6 @@ function routeRequest()
             authOnly();
             require __DIR__ . '/../controllers/ArsipController.php';
             $controller = new ArsipController();
-            $controller->delete();
-            break;
-
-        // Arsip Kategori ==========================================
-        case 'arsip-kategori':
-            authOnly();
-            require __DIR__ . '/../controllers/ArsipKategoriController.php';
-            $controller = new ArsipKategoriController();
-            $controller->index();
-            break;
-
-        case 'tambah-arsip-kategori':
-            authOnly();
-            require __DIR__ . '/../controllers/ArsipKategoriController.php';
-            $controller = new ArsipKategoriController();
-            $controller->create();
-            break;
-
-        case 'arsip-kategori-store':
-            authOnly();
-            require __DIR__ . '/../controllers/ArsipKategoriController.php';
-            $controller = new ArsipKategoriController();
-            $controller->store();
-            break;
-
-        case 'detail-arsip-kategori':
-            authOnly();
-            require __DIR__ . '/../controllers/ArsipKategoriController.php';
-            $controller = new ArsipKategoriController();
-            $controller->show();
-            break;
-
-        case 'edit-arsip-kategori':
-            authOnly();
-            require __DIR__ . '/../controllers/ArsipKategoriController.php';
-            $controller = new ArsipKategoriController();
-            $controller->edit();
-            break;
-
-        case 'arsip-kategori-update':
-            authOnly();
-            require __DIR__ . '/../controllers/ArsipKategoriController.php';
-            $controller = new ArsipKategoriController();
-            $controller->update();
-            break;
-
-        case 'arsip-kategori-delete':
-            authOnly();
-            require __DIR__ . '/../controllers/ArsipKategoriController.php';
-            $controller = new ArsipKategoriController();
             $controller->delete();
             break;
 

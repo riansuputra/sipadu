@@ -1,0 +1,10 @@
+# Blok akses file sensitif
+<FilesMatch "\.(env|ini|log|sql|php)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Kecualikan index.php
+<Files index.php>
+    Allow from all
+</Files>

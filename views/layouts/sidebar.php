@@ -4,7 +4,8 @@
 // ================================
 $page = $_GET['page'] ?? '';
 $arsipPages = ['arsip', 'tambah-arsip'];
-$publikasiPages = ['publikasi', 'tambah-publikasi'];
+$publikasiPages = ['publikasi', 'tambah-publikasi', 'tambah-jenis-publikasi'];
+$dokumenPages = ['dokumen', 'tambah-dokumen', 'tambah-jenis-dokumen'];
 $pengaturanPages = ['profil', 'manajemen-file', 'backup-data'];
 $dipPages = ['dip', 'tambah-dip', 'detail-dip'];
 $peraturanPages = ['peraturan', 'tambah-peraturan', 'detail-peraturan', 'jenis-peraturan', 'tambah-jenis-peraturan'];
@@ -32,34 +33,12 @@ $pegawaiPages = ['pegawai', 'tambah-pegawai', 'detail-pegawai'];
         <li class="nav-item dropdown <?= in_array($page, $arsipPages) ? 'active' : '' ?> mb-2">
             <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-files">
+
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-archive">
                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M11 2l3 .001v5.999a1 1 0 0 0 .883 .993l.117 .007h6v6a3 3 0 0 1 -3 3h-1v1a3 3 0 0 1 -3 3h-7a3 3 0 0 1 -3 -3v-10a3 3 0 0 1 3 -3h1v-1a3 3 0 0 1 3 -3m-3 6h-1a1 1 0 0 0 -1 1v10a1 1 0 0 0 1 1h7a1 1 0 0 0 1 -1v-1h-4a3 3 0 0 1 -3 -3zm12.415 -1h-4.415v-4.415z" />
-                    </svg>
-                </span>
-                <span class="nav-link-title">
-                    Dokumen
-                </span>
-            </a>
-            <div class="dropdown-menu <?= in_array($page, $arsipPages) ? 'show' : '' ?>">
-                <div class="dropdown-menu-columns">
-                    <div class="dropdown-menu-column">
-                        <a class="dropdown-item <?= $page === 'arsip' ? 'active' : '' ?>" href="<?= BASE_URL ?>/?page=arsip">
-                            Daftar Dokumen
-                        </a>
-                        <a class="dropdown-item <?= $page === 'tambah-arsip' ? 'active' : '' ?>" href="<?= BASE_URL ?>/?page=tambah-arsip">
-                            Tambah Dokumen
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </li>
-        <li class="nav-item dropdown <?= in_array($page, $arsipPages) ? 'active' : '' ?> mb-2">
-            <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
-                <span class="nav-link-icon d-md-none d-lg-inline-block">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-files">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M11 2l3 .001v5.999a1 1 0 0 0 .883 .993l.117 .007h6v6a3 3 0 0 1 -3 3h-1v1a3 3 0 0 1 -3 3h-7a3 3 0 0 1 -3 -3v-10a3 3 0 0 1 3 -3h1v-1a3 3 0 0 1 3 -3m-3 6h-1a1 1 0 0 0 -1 1v10a1 1 0 0 0 1 1h7a1 1 0 0 0 1 -1v-1h-4a3 3 0 0 1 -3 -3zm12.415 -1h-4.415v-4.415z" />
+                        <path d="M3 6a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2" />
+                        <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+                        <path d="M10 12l4 0" />
                     </svg>
                 </span>
                 <span class="nav-link-title">
@@ -74,6 +53,63 @@ $pegawaiPages = ['pegawai', 'tambah-pegawai', 'detail-pegawai'];
                         </a>
                         <a class="dropdown-item <?= $page === 'tambah-arsip' ? 'active' : '' ?>" href="<?= BASE_URL ?>/?page=tambah-arsip">
                             Tambah Arsip
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="nav-item dropdown <?= in_array($page, $dipPages) ? 'active' : '' ?> mb-2">
+            <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
+                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-info-square-rounded">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M12 9h.01" />
+                        <path d="M11 12h1v4h1" />
+                        <path d="M12 3c7.2 0 9 1.8 9 9c0 7.2 -1.8 9 -9 9c-7.2 0 -9 -1.8 -9 -9c0 -7.2 1.8 -9 9 -9" />
+                    </svg>
+                </span>
+                <span class="nav-link-title">
+                    DIP
+                </span>
+            </a>
+            <div class="dropdown-menu <?= in_array($page, $dipPages) ? 'show' : '' ?>">
+                <div class="dropdown-menu-columns">
+                    <div class="dropdown-menu-column">
+                        <a class="dropdown-item <?= $page === 'dip' ? 'active' : '' ?>" href="<?= BASE_URL ?>/?page=dip">
+                            Daftar DIP
+                        </a>
+                        <a class="dropdown-item <?= $page === 'tambah-dip' ? 'active' : '' ?>" href="<?= BASE_URL ?>/?page=tambah-dip">
+                            Tambah DIP
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="nav-item dropdown <?= in_array($page, $dokumenPages) ? 'active' : '' ?> mb-2">
+            <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
+                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-files">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M15 3v4a1 1 0 0 0 1 1h4" />
+                        <path d="M18 17h-7a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2h4l5 5v7a2 2 0 0 1 -2 2" />
+                        <path d="M16 17v2a2 2 0 0 1 -2 2h-7a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2h2" />
+                    </svg>
+                </span>
+                <span class="nav-link-title">
+                    Dokumen
+                </span>
+            </a>
+            <div class="dropdown-menu <?= in_array($page, $dokumenPages) ? 'show' : '' ?>">
+                <div class="dropdown-menu-columns">
+                    <div class="dropdown-menu-column">
+                        <a class="dropdown-item <?= $page === 'dokumen' ? 'active' : '' ?>" href="<?= BASE_URL ?>/?page=dokumen">
+                            Daftar Dokumen
+                        </a>
+                        <a class="dropdown-item <?= $page === 'tambah-dokumen' ? 'active' : '' ?>" href="<?= BASE_URL ?>/?page=tambah-dokumen">
+                            Tambah Dokumen
+                        </a>
+                        <a class="dropdown-item <?= $page === 'tambah-jenis-dokumen' ? 'active' : '' ?>" href="<?= BASE_URL ?>/?page=tambah-jenis-dokumen">
+                            Tambah Jenis Dokumen
                         </a>
                     </div>
                 </div>
@@ -139,33 +175,7 @@ $pegawaiPages = ['pegawai', 'tambah-pegawai', 'detail-pegawai'];
                 </div>
             </div>
         </li>
-        <li class="nav-item dropdown <?= in_array($page, $dipPages) ? 'active' : '' ?> mb-2">
-            <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
-                <span class="nav-link-icon d-md-none d-lg-inline-block">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-info-square-rounded">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M12 9h.01" />
-                        <path d="M11 12h1v4h1" />
-                        <path d="M12 3c7.2 0 9 1.8 9 9c0 7.2 -1.8 9 -9 9c-7.2 0 -9 -1.8 -9 -9c0 -7.2 1.8 -9 9 -9" />
-                    </svg>
-                </span>
-                <span class="nav-link-title">
-                    DIP
-                </span>
-            </a>
-            <div class="dropdown-menu <?= in_array($page, $dipPages) ? 'show' : '' ?>">
-                <div class="dropdown-menu-columns">
-                    <div class="dropdown-menu-column">
-                        <a class="dropdown-item <?= $page === 'dip' ? 'active' : '' ?>" href="<?= BASE_URL ?>/?page=dip">
-                            Daftar DIP
-                        </a>
-                        <a class="dropdown-item <?= $page === 'tambah-dip' ? 'active' : '' ?>" href="<?= BASE_URL ?>/?page=tambah-dip">
-                            Tambah DIP
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </li>
+
         <li class="nav-item dropdown <?= in_array($page, $peraturanPages) ? 'active' : '' ?> mb-2">
             <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">

@@ -4,7 +4,7 @@
 // ================================
 
 // Judul
-$title = "Tambah Jenis Peraturan";
+$title = "Tambah Peraturan";
 
 
 

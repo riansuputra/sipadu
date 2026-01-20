@@ -2,7 +2,7 @@
 // ================================
 // LAYOUT UTAMA APLIKASI
 // ================================
-$headerImage = $headerImage ?? 'assets/img/banner.jpg';
+$headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/banner.jpg';
 ?>
 
 <!DOCTYPE html>
@@ -17,13 +17,13 @@ $headerImage = $headerImage ?? 'assets/img/banner.jpg';
     <title><?= $title ?> | SIPADU</title>
 
     <!-- CSS Global  -->
-    <link href="assets/css/tabler.min.css?1684106062" rel="stylesheet" />
-    <link href="assets/css/tabler-vendors.min.css?1684106062" rel="stylesheet" />
-    <link href="assets/dist/css/demo.min.css?1684106062" rel="stylesheet" />
-    <link href="assets/dist/css/tabler-flags.min.css?1684106062" rel="stylesheet" />
+    <link href="<?= BASE_URL ?>/public/assets/css/tabler.min.css?1684106062" rel="stylesheet" />
+    <link href="<?= BASE_URL ?>/public/assets/css/tabler-vendors.min.css?1684106062" rel="stylesheet" />
+    <link href="<?= BASE_URL ?>/public/assets/dist/css/demo.min.css?1684106062" rel="stylesheet" />
+    <link href="<?= BASE_URL ?>/public/assets/dist/css/tabler-flags.min.css?1684106062" rel="stylesheet" />
 
     <!-- Icon -->
-    <link rel="icon" type="image/png" href="assets/img/logo-bpmp.png" />
+    <link rel="icon" type="image/png" href="<?= BASE_URL ?>/public/assets/img/logo-bpmp.png" />
 
     <style>
         @import url('https://rsms.me/inter/inter.css');
@@ -71,7 +71,7 @@ $headerImage = $headerImage ?? 'assets/img/banner.jpg';
 </head>
 
 <body>
-    <script src="assets/dist/js/demo-theme.min.js?1684106062"></script>
+    <script src="<?= BASE_URL ?>/public/assets/dist/js/demo-theme.min.js?1684106062"></script>
     <div class="page">
 
         <!-- Header Banner SIPADU -->
@@ -111,10 +111,10 @@ $headerImage = $headerImage ?? 'assets/img/banner.jpg';
     </div>
 
     <!-- JS Global -->
-    <script src="assets/dist/libs/list.js/dist/list.min.js?1759774804" defer=""></script>
-    <script src="assets/dist/libs/apexcharts/dist/apexcharts.min.js?1684106062" defer></script>
-    <script src="assets/js/tabler.min.js?1684106062" defer></script>
-    <script src="assets/dist/libs/tom-select/dist/js/tom-select.base.min.js?1684106062" defer></script>
+    <script src="<?= BASE_URL ?>/public/assets/dist/libs/list.js/dist/list.min.js?1759774804" defer=""></script>
+    <script src="<?= BASE_URL ?>/public/assets/dist/libs/apexcharts/dist/apexcharts.min.js?1684106062" defer></script>
+    <script src="<?= BASE_URL ?>/public/assets/js/tabler.min.js?1684106062" defer></script>
+    <script src="<?= BASE_URL ?>/public/assets/dist/libs/tom-select/dist/js/tom-select.base.min.js?1684106062" defer></script>
 </body>
 
 </html>

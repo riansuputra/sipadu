@@ -1,10 +1,9 @@
 <?php
 
-require_once __DIR__ . '/../models/ArsipKategoriModel.php';
+require_once __DIR__ . '/../models/JenisDokumenModel.php';
 require_once __DIR__ . '/../core/auth.php';
 
-
-class ArsipKategoriController
+class JenisDokumenController
 {
     public function index()
     {
@@ -14,10 +13,10 @@ class ArsipKategoriController
         $user = currentUser();
         $role = currentRole();
 
-        $model = new ArsipKategoriModel($pdo);
+        $model = new JenisDokumenModel($pdo);
         $data  = $model->getAll();
 
-        require __DIR__ . '/../views/arsip_kategori/index.php';
+        require __DIR__ . '/../views/jenis_dokumen/index.php';
     }
 
     public function create()
@@ -28,9 +27,9 @@ class ArsipKategoriController
         $user = currentUser();
         $role = currentRole();
 
-        $model = new ArsipKategoriModel($pdo);
+        $model = new JenisDokumenModel($pdo);
         $data  = $model->getAll();
-        require __DIR__ . '/../views/arsip_kategori/create.php';
+        require __DIR__ . '/../views/jenis_dokumen/create.php';
     }
 
     public function store()
@@ -42,7 +41,7 @@ class ArsipKategoriController
 
         $errors = [];
 
-        if (empty($_POST['nama_kategori']))
+        if (empty($_POST['nama']))
             $errors[] = "Nama wajib diisi";
 
         if ($errors) {
@@ -51,20 +50,20 @@ class ArsipKategoriController
                 'message' => implode("<br>", $errors)
             ];
 
-            header("Location: ?page=tambah-arsip-kategori");
+            header("Location: ?page=tambah-jenis-dokumen");
             exit;
         }
 
-        $model = new ArsipKategoriModel($pdo);
+        $model = new JenisDokumenModel($pdo);
         $data = $_POST;
         $jenis = $model->insert($data);
 
         $_SESSION['flash'] = [
             'status' => 'success',
-            'message' => 'Kategori Arsip berhasil disimpan'
+            'message' => 'Jenis dokumen berhasil disimpan'
         ];
 
-        header("Location: ?page=tambah-arsip-kategori");
+        header("Location: ?page=tambah-jenis-dokumen");
     }
 
     public function show()
@@ -76,13 +75,13 @@ class ArsipKategoriController
         $user = currentUser();
         $role = currentRole();
 
-        $model = new ArsipKategoriModel($pdo);
+        $model = new JenisDokumenModel($pdo);
 
         $id = $_GET['id'];
 
         $jenis = $model->getById($id);
 
-        require __DIR__ . '/../views/arsip_kategori/detail.php';
+        require __DIR__ . '/../views/jenis_dokumen/create.php';
     }
 
     public function edit()
@@ -94,13 +93,13 @@ class ArsipKategoriController
         $user = currentUser();
         $role = currentRole();
 
-        $model = new ArsipKategoriModel($pdo);
+        $model = new JenisDokumenModel($pdo);
 
         $id = $_GET['id'];
 
         $publikasi = $model->getById($id);
 
-        require __DIR__ . '/../views/arsip_kategori/edit.php';
+        require __DIR__ . '/../views/jenis_dokumen/edit.php';
     }
 
     public function update()
@@ -112,7 +111,10 @@ class ArsipKategoriController
 
         $errors = [];
 
-        if (empty($_POST['nama_kategori']))
+        if (empty($_POST['kode']))
+            $errors[] = "Kode wajib diisi";
+
+        if (empty($_POST['nama']))
             $errors[] = "Nama wajib diisi";
 
         if ($errors) {
@@ -121,20 +123,20 @@ class ArsipKategoriController
                 'message' => implode("<br>", $errors)
             ];
 
-            header("Location: ?page=tambah-arsip-kategori&id=" . $_POST['id']);
+            header("Location: ?page=tambah-jenis-dokumen&id=" . $_POST['id']);
             exit;
         }
 
-        $model = new ArsipKategoriModel($pdo);
+        $model = new JenisDokumenModel($pdo);
         $data = $_POST;
         $model->update($_POST['id'], $data);
 
         $_SESSION['flash'] = [
             'status' => 'success',
-            'message' => 'Kategori Arsip berhasil diperbarui'
+            'message' => 'Jenis dokumen berhasil diperbarui'
         ];
 
-        header("Location: ?page=tambah-arsip-kategori");
+        header("Location: ?page=tambah-jenis-dokumen");
     }
 
     public function delete()
@@ -145,7 +147,7 @@ class ArsipKategoriController
         $user = currentUser();
         $role = currentRole();
 
-        $model = new ArsipKategoriModel($pdo);
+        $model = new JenisDokumenModel($pdo);
 
         $id = $_GET['id'];
 
@@ -154,10 +156,10 @@ class ArsipKategoriController
 
             $_SESSION['flash'] = [
                 'status'  => 'error',
-                'message' => 'Kategori tidak dapat dihapus karena masih digunakan di data arsip'
+                'message' => 'Jenis tidak dapat dihapus karena masih digunakan di data dokumen'
             ];
 
-            header("Location: ?page=tambah-arsip-kategori");
+            header("Location: ?page=tambah-jenis-dokumen");
             exit;
         }
 
@@ -165,9 +167,9 @@ class ArsipKategoriController
 
         $_SESSION['flash'] = [
             'status'  => 'success',
-            'message' => 'Kategori arsip berhasil dinonaktifkan'
+            'message' => 'Jenis dokumen berhasil dinonaktifkan'
         ];
 
-        header("Location: ?page=tambah-arsip-kategori");
+        header("Location: ?page=tambah-jenis-dokumen");
     }
 }

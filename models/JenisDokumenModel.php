@@ -1,6 +1,6 @@
 <?php
 
-class ArsipKategoriModel
+class JenisDokumenModel
 {
     protected $db;
 
@@ -13,7 +13,7 @@ class ArsipKategoriModel
     public function getAll()
     {
         return $this->db->query("
-            SELECT * FROM arsip_kategori
+            SELECT * FROM jenis_dokumen
             ORDER BY nama ASC
         ")->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -21,7 +21,7 @@ class ArsipKategoriModel
     public function getById($id)
     {
         $stmt = $this->db->prepare("
-            SELECT * FROM arsip_kategori
+            SELECT * FROM jenis_dokumen
             WHERE id = ?
         ");
 
@@ -33,15 +33,17 @@ class ArsipKategoriModel
     public function insert($data)
     {
         $stmt = $this->db->prepare("
-            INSERT INTO arsip_kategori (
-                nama_kategori,
-                is_global
-            ) VALUES (?, ?)
+            INSERT INTO jenis_dokumen (
+                nama, 
+                deskripsi, 
+                is_active
+            ) VALUES (?, ?, ?)
         ");
 
         $stmt->execute([
-            $data['nama_kategori'],
-            $data['is_global'],
+            $data['nama'],
+            $data['deskripsi'],
+            $data['is_active']
         ]);
 
         return $this->db->lastInsertId();
@@ -50,15 +52,17 @@ class ArsipKategoriModel
     public function update($data)
     {
         $stmt = $this->db->prepare("
-            UPDATE arsip_kategori SET
-                nama_kategori = ?,
-                is_global = ?
-            ) VALUES (?, ?)
+            UPDATE jenis_dokumen SET
+                nama = ?, 
+                deskripsi = ?, 
+                is_active = ? 
+            WHERE id = ? 
         ");
 
         return $stmt->execute([
-            $data['nama_kategori'],
-            $data['is_global'],
+            $data['nama'],
+            $data['deskripsi'],
+            $data['is_active']
         ]);
     }
 
@@ -66,8 +70,8 @@ class ArsipKategoriModel
     {
         $stmt = $this->db->prepare("
         SELECT COUNT(*) 
-        FROM arsip 
-        WHERE kategori_id = ?
+        FROM peraturan 
+        WHERE jenis_id = ?
     ");
 
         $stmt->execute([$id]);
@@ -79,7 +83,7 @@ class ArsipKategoriModel
     public function delete($id)
     {
         $stmt = $this->db->prepare("
-            UPDATE arsip_kategori SET is_active = 0 WHERE id = ?
+            UPDATE jenis_dokumen SET is_active = 0 WHERE id = ?
         ");
 
         return $stmt->execute([$id]);
