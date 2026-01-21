@@ -155,6 +155,20 @@ class DipModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    // ==============================
+    // HAPUS FILE BERDASARKAN ID FILE
+    // ==============================
+    public function deleteFileById($fileId)
+    {
+        $stmt = $this->db->prepare("
+        DELETE FROM dip_file
+        WHERE id = ?
+    ");
+
+        return $stmt->execute([$fileId]);
+    }
+
+
     public function deleteFiles($dipId)
     {
         $stmt = $this->db->prepare("

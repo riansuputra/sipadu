@@ -19,13 +19,14 @@ class ArsipModel
     {
         $stmt = $this->db->prepare("
             SELECT a.*,
-                   k.nama_kategori,
-                   p.nama_pokja,
-                   u.nama as pembuat
+                   GROUP_CONCAT(
+                        CONCAT(af.id, '|', af.nama_file, '|', af.path_file, '|', af.tipe_file)
+                        SEPARATOR '##'
+                    ) AS files
             FROM arsip a
-            JOIN arsip_kategori k ON a.kategori_id = k.id
-            JOIN pokja p ON a.pokja_id = p.id
-            JOIN users u ON a.dibuat_oleh = u.id
+            LEFT JOIN arsip_file af 
+            ON a.id = af.arsip_id
+            GROUP BY a.id
             ORDER BY a.created_at DESC
         ");
 

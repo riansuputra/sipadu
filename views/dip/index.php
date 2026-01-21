@@ -6,7 +6,6 @@
 // Judul
 $title = "DIP";
 
-
 // Mulai buffer konten
 ob_start();
 ?>
@@ -135,41 +134,63 @@ ob_start();
                                                     <?= $dt + 1 ?>
                                                 </td>
                                                 <td class="sort-judul">
-                                                    <?= htmlspecialchars($d['judul_informasi']) ?>
+                                                    <?= htmlspecialchars(
+                                                        $d["judul_informasi"],
+                                                    ) ?>
                                                 </td>
                                                 <td class="sort-tgl">
-                                                    <?= htmlspecialchars(date('d-m-Y', strtotime($d['tanggal_pembuatan']))) ?>
+                                                    <?= htmlspecialchars(
+                                                        date(
+                                                            "d-m-Y",
+                                                            strtotime(
+                                                                $d["tanggal_pembuatan"],
+                                                            ),
+                                                        ),
+                                                    ) ?>
                                                 </td>
                                                 <td class="sort-retensi">
-                                                    <?= htmlspecialchars($d['retensi_arsip']) ?>
+                                                    <?= htmlspecialchars(
+                                                        $d["retensi_arsip"],
+                                                    ) ?>
                                                 </td>
                                                 <td class="sort-bentuk">
-                                                    <?php
-                                                    if ($d['bentuk_informasi'] === 'HARDCOPY') {
-                                                        $badge = '<span class="badge">Hardcopy</span>';
-                                                    } else if ($d['bentuk_informasi'] === 'SOFTCOPY') {
-                                                        $badge = '<span class="badge">Softcopy</span>';
+                                                    <?php if (
+                                                        $d["bentuk_informasi"] === "HARDCOPY"
+                                                    ) {
+                                                        $badge =
+                                                            '<span class="badge">Hardcopy</span>';
+                                                    } elseif (
+                                                        $d["bentuk_informasi"] === "SOFTCOPY"
+                                                    ) {
+                                                        $badge =
+                                                            '<span class="badge">Softcopy</span>';
                                                     } else {
-                                                        $badge = '<span class="badge">Hardcopy + Softcopy</span>';
-                                                    }
-                                                    ?>
+                                                        $badge =
+                                                            '<span class="badge">Hardcopy + Softcopy</span>';
+                                                    } ?>
                                                     <div class="badges-list">
                                                         <?= $badge ?>
                                                     </div>
                                                 </td>
                                                 <td class="sort-jenis">
-                                                    <?php
-                                                    if ($d['jenis_informasi'] === 'BERKALA') {
-                                                        $bg = 'bg-primary-lt';
-                                                    } else if ($d['jenis_informasi'] === 'SERTA MERTA') {
-                                                        $bg = 'bg-danger-lt';
-                                                    } else if ($d['jenis_informasi'] === 'SETIAP SAAT') {
-                                                        $bg = 'bg-success-lt';
+                                                    <?php if (
+                                                        $d["jenis_informasi"] === "BERKALA"
+                                                    ) {
+                                                        $bg = "bg-primary-lt";
+                                                    } elseif (
+                                                        $d["jenis_informasi"] === "SERTA MERTA"
+                                                    ) {
+                                                        $bg = "bg-danger-lt";
+                                                    } elseif (
+                                                        $d["jenis_informasi"] === "SETIAP SAAT"
+                                                    ) {
+                                                        $bg = "bg-success-lt";
                                                     } else {
-                                                        $bg = 'bg-secondary-lt';
-                                                    }
-                                                    ?>
-                                                    <span class="badge <?= $bg ?>"><?= htmlspecialchars(ucwords(strtolower($d['jenis_informasi']))) ?></span>
+                                                        $bg = "bg-secondary-lt";
+                                                    } ?>
+                                                    <span class="badge <?= $bg ?>"><?= htmlspecialchars(
+                                                                                        ucwords(strtolower($d["jenis_informasi"])),
+                                                                                    ) ?></span>
                                                 </td>
 
 
@@ -177,22 +198,39 @@ ob_start();
                                                     <?php
                                                     $listFile = [];
 
-                                                    if (!empty($d['files'])) {
-
-                                                        $files = explode('##', $d['files']);
+                                                    if (!empty($d["files"])) {
+                                                        $files = explode(
+                                                            "##",
+                                                            $d["files"],
+                                                        );
 
                                                         foreach ($files as $f) {
+                                                            $part = explode(
+                                                                "|",
+                                                                $f,
+                                                            );
 
-                                                            $part = explode('|', $f);
-
-                                                            if (count($part) === 4) {
-
-                                                                list($id, $nama, $path, $tipe) = $part;
+                                                            if (
+                                                                count($part) ===
+                                                                4
+                                                            ) {
+                                                                [
+                                                                    $id,
+                                                                    $nama,
+                                                                    $path,
+                                                                    $tipe,
+                                                                ] = $part;
 
                                                                 $listFile[] = [
-                                                                    'nama' => htmlspecialchars($nama),
-                                                                    'path' => htmlspecialchars($path),
-                                                                    'tipe' => htmlspecialchars($tipe)
+                                                                    "nama" => htmlspecialchars(
+                                                                        $nama,
+                                                                    ),
+                                                                    "path" => htmlspecialchars(
+                                                                        $path,
+                                                                    ),
+                                                                    "tipe" => htmlspecialchars(
+                                                                        $tipe,
+                                                                    ),
                                                                 ];
                                                             }
                                                         }
@@ -200,10 +238,16 @@ ob_start();
 
                                                     // tampilkan
                                                     foreach ($listFile as $f):
-                                                        $ext = strtolower(pathinfo($f['nama'], PATHINFO_EXTENSION));
+
+                                                        $ext = strtolower(
+                                                            pathinfo(
+                                                                $f["nama"],
+                                                                PATHINFO_EXTENSION,
+                                                            ),
+                                                        );
 
                                                         // SVG inline
-                                                        if ($ext === 'pdf') {
+                                                        if ($ext === "pdf") {
                                                             $icon = '
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red icon icon-tabler icons-tabler-outline icon-tabler-file-type-pdf">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -214,7 +258,9 @@ ob_start();
                                                                 <path d="M20 15h-3v6" />
                                                                 <path d="M11 15v6h1a2 2 0 0 0 2 -2v-2a2 2 0 0 0 -2 -2h-1" />
                                                             </svg>';
-                                                        } else if ($ext === 'jpg') {
+                                                        } elseif (
+                                                            $ext === "jpg"
+                                                        ) {
                                                             // image
                                                             $icon = '
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow icon icon-tabler icons-tabler-outline icon-tabler-file-type-jpg">
@@ -236,17 +282,21 @@ ob_start();
                                                                 <path d="M11 21v-6l3 6v-6" />
                                                             </svg>';
                                                         }
-
                                                     ?>
                                                         <a href='/sipadu/<?= $path ?>' target='_blank'>
 
 
 
                                                             <?= $icon ?>
-                                                            <?= shortname($f['nama'], 50) ?>
+                                                            <?= shortname(
+                                                                $f["nama"],
+                                                                50,
+                                                            ) ?>
                                                         </a>
                                                         <br>
-                                                    <?php endforeach; ?>
+                                                    <?php
+                                                    endforeach;
+                                                    ?>
 
                                                 </td>
 
@@ -267,7 +317,7 @@ ob_start();
                                                                 <path d="M12 4l0 12" />
                                                             </svg>
                                                         </a>
-                                                        <a href="" class="text-yellow me-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
+                                                        <a href="?page=edit-dip&id=<?= $d["id"] ?>" class="text-yellow me-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-edit">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                 <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
@@ -422,4 +472,4 @@ ob_start();
 $content = ob_get_clean();
 
 // Load layout utama
-require __DIR__ . '/../layouts/admin.php';
+require __DIR__ . "/../layouts/admin.php";

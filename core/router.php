@@ -328,6 +328,13 @@ function routeRequest()
             $controller->edit();
             break;
 
+        case 'dip-update':
+            authOnly();
+            require __DIR__ . '/../controllers/DipController.php';
+            $controller = new DipController();
+            $controller->update();
+            break;
+
         case 'dip-delete':
             authOnly();
             require __DIR__ . '/../controllers/DipController.php';
