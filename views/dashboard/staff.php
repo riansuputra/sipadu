@@ -65,7 +65,7 @@ ob_start();
                         <?= $hasAccess && $isExternal ? 'target="_blank" rel="noopener noreferrer"' : '' ?>>
 
                         <div class="img-responsive img-responsive-21x9 card-img-top"
-                            style="background-image: url('assets/img/<?= htmlspecialchars($module['gambar']) ?>')">
+                            style="background-image: url('public/assets/img/<?= htmlspecialchars($module['gambar']) ?>')">
                         </div>
 
                         <div class="card-body text-center mb-0">

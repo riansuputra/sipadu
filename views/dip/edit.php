@@ -53,7 +53,12 @@ ob_start();
                         <div class="mb-3 row">
                             <label class="col-3 col-form-label required">Judul Informasi</label>
                             <div class="col">
-                                <input type="text" name="judul_informasi" id="judul_informasi" class="form-control" placeholder="" value="<?= $dip["judul_informasi"] ?>">
+                                <input type="text"
+                                    name="judul_informasi"
+                                    id="judul_informasi"
+                                    class="form-control"
+                                    placeholder=""
+                                    value="<?= $dip["judul_informasi"] ?>">
                             </div>
                         </div>
                         <div class="mb-3 row">

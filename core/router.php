@@ -42,6 +42,37 @@ function routeRequest()
             (new DashboardController())->index();
             break;
 
+        // Tim Kerja =================================
+        case 'paud':
+            authOnly(); // wajib login
+            require __DIR__ . '/../controllers/DashboardController.php';
+            (new DashboardController())->paud();
+            break;
+
+        case 'sd':
+            authOnly(); // wajib login
+            require __DIR__ . '/../controllers/DashboardController.php';
+            (new DashboardController())->sd();
+            break;
+
+        case 'smp':
+            authOnly(); // wajib login
+            require __DIR__ . '/../controllers/DashboardController.php';
+            (new DashboardController())->smp();
+            break;
+
+        case 'sma':
+            authOnly(); // wajib login
+            require __DIR__ . '/../controllers/DashboardController.php';
+            (new DashboardController())->sma();
+            break;
+
+        case 'widyaprada':
+            authOnly(); // wajib login
+            require __DIR__ . '/../controllers/DashboardController.php';
+            (new DashboardController())->widyaprada();
+            break;
+
         // Dokumen =======================================
         case 'dokumen':
             authOnly();

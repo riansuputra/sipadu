@@ -160,7 +160,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                 <input type="date"
                                     name="tanggal_pembuatan"
                                     id="tanggal_pembuatan"
-                                    value="<?= $old['tanggal_pembuatan'] ?? '' ?>"
+                                    value="<?= $old['tanggal_pembuatan'] ?? date('Y-m-d') ?>"
                                     class="form-control <?= isset($errors['tanggal_pembuatan']) ? 'is-invalid' : '' ?>">
                                 <div class="invalid-feedback">
                                     <?= $errors['tanggal_pembuatan'] ?? '' ?>

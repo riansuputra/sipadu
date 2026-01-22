@@ -59,4 +59,69 @@ class DashboardController
 
         // Load dashboard sesuai role
     }
+
+    public function paud()
+    {
+        // Pastikan user sudah login
+        authOnly();
+
+        global $pdo;
+
+        $user = currentUser();
+        $role = currentRole();
+
+        require __DIR__ . "/../views/paud/index.php";
+    }
+
+    public function sd()
+    {
+        // Pastikan user sudah login
+        authOnly();
+
+        global $pdo;
+
+        $user = currentUser();
+        $role = currentRole();
+
+        require __DIR__ . "/../views/sd/index.php";
+    }
+
+    public function smp()
+    {
+        // Pastikan user sudah login
+        authOnly();
+
+        global $pdo;
+
+        $user = currentUser();
+        $role = currentRole();
+
+        require __DIR__ . "/../views/smp/index.php";
+    }
+
+    public function sma()
+    {
+        // Pastikan user sudah login
+        authOnly();
+
+        global $pdo;
+
+        $user = currentUser();
+        $role = currentRole();
+
+        require __DIR__ . "/../views/sma/index.php";
+    }
+
+    public function widyaprada()
+    {
+        // Pastikan user sudah login
+        authOnly();
+
+        global $pdo;
+
+        $user = currentUser();
+        $role = currentRole();
+
+        require __DIR__ . "/../views/widyaprada/index.php";
+    }
 }
