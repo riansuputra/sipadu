@@ -45,20 +45,17 @@ class DipController
         $role = currentRole();
 
         $errors = [];
-        if (empty($_POST['judul_informasi'])) {
-            $errors['judul_informasi'] = "Judul informasi wajib diisi";
-        } elseif (strlen($_POST['judul_informasi']) < 3) {
-            $errors['judul_informasi'] = "Judul informasi minimal 3 karakter";
-        } elseif (strlen($_POST['judul_informasi']) > 200) {
-            $errors['judul_informasi'] = "Judul informasi maksimal 200 karakter";
+        if (empty($_POST['nama_informasi'])) {
+            $errors['nama_informasi'] = "Nama informasi wajib diisi";
+        } elseif (strlen($_POST['nama_informasi']) < 3) {
+            $errors['nama_informasi'] = "Nama informasi minimal 3 karakter";
+        } elseif (strlen($_POST['nama_informasi']) > 200) {
+            $errors['nama_informasi'] = "Nama informasi maksimal 200 karakter";
         }
-        if (!empty($_POST['ringkasan']) && strlen($_POST['ringkasan']) < 1) {
-            $errors['ringkasan'] = "Ringkasan minimal 1 karakter jika diisi";
-        }
-        if (empty($_POST['unit_penguasaan'])) {
-            $errors['unit_penguasaan'] = "Unit penguasaan wajib diisi";
-        } elseif (strlen($_POST['unit_penguasaan']) < 1) {
-            $errors['unit_penguasaan'] = "Unit penguasaan minimal 1 karakter";
+        if (empty($_POST['unit_penyedia'])) {
+            $errors['unit_penyedia'] = "Unit penguasaan wajib diisi";
+        } elseif (strlen($_POST['unit_penyedia']) < 1) {
+            $errors['unit_penyedia'] = "Unit penguasaan minimal 1 karakter";
         }
         if (!empty($_POST['penanggung_jawab']) && strlen($_POST['penanggung_jawab']) < 1) {
             $errors['penanggung_jawab'] = "Penanggung jawab minimal 1 karakter";
@@ -78,17 +75,19 @@ class DipController
         } elseif (strlen($_POST['tempat_pembuatan']) > 200) {
             $errors['tempat_pembuatan'] = "Tempat pembuatan maksimal 200 karakter";
         }
-        if (empty($_POST['tanggal_pembuatan'])) {
-            $errors['tanggal_pembuatan'] = "Tanggal pembuatan wajib diisi";
-        } elseif (strtotime($_POST['tanggal_pembuatan']) > time()) {
-            $errors['tanggal_pembuatan'] = "Tanggal pembuatan tidak boleh di masa depan";
+        $currentYear = (int) date('Y');
+        $inputYear   = (int) $_POST['tahun_pembuatan'];
+
+        if (empty($_POST['tahun_pembuatan'])) {
+            $errors['tahun_pembuatan'] = "Tahun pembuatan wajib diisi";
+        } elseif ($inputYear > $currentYear) {
+            $errors['tahun_pembuatan'] = "Tahun pembuatan tidak boleh di masa depan";
         }
         if (empty($_POST['retensi_arsip'])) {
             $errors['retensi_arsip'] = "Retensi arsip wajib diisi";
         }
-        if (empty($_FILES["file"]["name"][0])) {
-            $errors['file'] = "Minimal upload 1 file";
-        } else {
+        if (!empty($_FILES["file"]["name"][0])) {
+
             $allowed = ["pdf", "jpg", "jpeg", "png"];
 
             foreach ($_FILES["file"]["name"] as $i => $name) {
@@ -231,105 +230,68 @@ class DipController
         $role = currentRole();
 
         $errors = [];
+        if (empty($_POST['nama_informasi'])) {
+            $errors['nama_informasi'] = "Nama informasi wajib diisi";
+        } elseif (strlen($_POST['nama_informasi']) < 3) {
+            $errors['nama_informasi'] = "Nama informasi minimal 3 karakter";
+        } elseif (strlen($_POST['nama_informasi']) > 200) {
+            $errors['nama_informasi'] = "Nama informasi maksimal 200 karakter";
+        }
+        if (empty($_POST['unit_penyedia'])) {
+            $errors['unit_penyedia'] = "Unit penguasaan wajib diisi";
+        } elseif (strlen($_POST['unit_penyedia']) < 1) {
+            $errors['unit_penyedia'] = "Unit penguasaan minimal 1 karakter";
+        }
+        if (!empty($_POST['penanggung_jawab']) && strlen($_POST['penanggung_jawab']) < 1) {
+            $errors['penanggung_jawab'] = "Penanggung jawab minimal 1 karakter";
+        }
+        $allowedJenis = ['BERKALA', 'SERTA MERTA', 'SETIAP SAAT', 'DIKECUALIKAN'];
+        if (empty($_POST['jenis_informasi']) || !in_array($_POST['jenis_informasi'], $allowedJenis)) {
+            $errors['jenis_informasi'] = "Jenis informasi tidak valid";
+        }
+        $allowedBentuk = ['HARDCOPY', 'SOFTCOPY', 'HARDCOPY+SOFTCOPY'];
+        if (empty($_POST['bentuk_informasi']) || !in_array($_POST['bentuk_informasi'], $allowedBentuk)) {
+            $errors['bentuk_informasi'] = "Bentuk informasi tidak valid";
+        }
+        if (empty($_POST['tempat_pembuatan'])) {
+            $errors['tempat_pembuatan'] = "Tempat pembuatan wajib diisi";
+        } elseif (strlen($_POST['tempat_pembuatan']) < 1) {
+            $errors['tempat_pembuatan'] = "Tempat pembuatan minimal 1 karakter";
+        } elseif (strlen($_POST['tempat_pembuatan']) > 200) {
+            $errors['tempat_pembuatan'] = "Tempat pembuatan maksimal 200 karakter";
+        }
+        $currentYear = (int) date('Y');
+        $inputYear   = (int) $_POST['tahun_pembuatan'];
 
-        // ================================
-        // VALIDASI INPUT
-        // ================================
+        if (empty($_POST['tahun_pembuatan'])) {
+            $errors['tahun_pembuatan'] = "Tahun pembuatan wajib diisi";
+        } elseif ($inputYear > $currentYear) {
+            $errors['tahun_pembuatan'] = "Tahun pembuatan tidak boleh di masa depan";
+        }
+        if (empty($_POST['retensi_arsip'])) {
+            $errors['retensi_arsip'] = "Retensi arsip wajib diisi";
+        }
+        if (!empty($_FILES["file"]["name"][0])) {
 
-        // 1. Judul
-        // if (empty($_POST['judul_informasi'])) {
-        //     $errors[] = "Judul informasi wajib diisi";
-        // } elseif (strlen($_POST['judul_informasi']) < 5) {
-        //     $errors[] = "Judul minimal 5 karakter";
-        // }
+            $allowed = ["pdf", "jpg", "jpeg", "png"];
 
-        // // 2. Ringkasan
-        // if (empty($_POST['ringkasan'])) {
-        //     $errors[] = "Ringkasan wajib diisi";
-        // } elseif (strlen($_POST['ringkasan']) < 10) {
-        //     $errors[] = "Ringkasan minimal 10 karakter";
-        // }
+            foreach ($_FILES["file"]["name"] as $i => $name) {
+                $size = $_FILES["file"]["size"][$i];
+                $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
 
-        // // 3. Unit
-        // if (empty($_POST['unit_penguasaan'])) {
-        //     $errors[] = "Unit penguasaan wajib diisi";
-        // }
+                if (!in_array($ext, $allowed)) {
+                    $errors['file'] = "File {$name} tidak diizinkan";
+                }
 
-        // // 4. Penanggung jawab
-        // if (empty($_POST['penanggung_jawab'])) {
-        //     $errors[] = "Penanggung jawab wajib diisi";
-        // }
-
-        // // 5. Jenis informasi
-        // $jenisValid = ['BERKALA', 'SERTA MERTA', 'SETIAP SAAT', 'DIKECUALIKAN'];
-        // if (empty($_POST['jenis_informasi'])) {
-        //     $errors[] = "Jenis informasi wajib dipilih";
-        // } elseif (!in_array($_POST['jenis_informasi'], $jenisValid)) {
-        //     $errors[] = "Jenis informasi tidak valid";
-        // }
-
-        // // 6. Bentuk informasi
-        // $bentukValid = ['HARDCOPY', 'SOFTCOPY', 'HARDCOPY+SOFTCOPY'];
-        // if (empty($_POST['bentuk_informasi'])) {
-        //     $errors[] = "Bentuk informasi wajib dipilih";
-        // } elseif (!in_array($_POST['bentuk_informasi'], $bentukValid)) {
-        //     $errors[] = "Bentuk informasi tidak valid";
-        // }
-
-        // // 7. Tempat pembuatan
-        // if (empty($_POST['tempat_pembuatan'])) {
-        //     $errors[] = "Tempat pembuatan wajib diisi";
-        // }
-
-        // // 8. Tanggal
-        // if (empty($_POST['tanggal_pembuatan'])) {
-        //     $errors[] = "Tanggal pembuatan wajib diisi";
-        // } elseif ($_POST['tanggal_pembuatan'] > date('Y-m-d')) {
-        //     $errors[] = "Tanggal tidak boleh lebih dari hari ini";
-        // }
-
-        // // 9. Retensi
-        // if (empty($_POST['retensi_arsip'])) {
-        //     $errors[] = "Retensi arsip wajib diisi";
-        // }
-
-        // ================================
-        // VALIDASI FILE
-        // ================================
-
-        // if (empty($_FILES['file']['name'][0])) {
-        //     $errors[] = "Minimal upload 1 file";
-        // } else {
-
-        //     $allowed = ['pdf', 'jpg', 'jpeg', 'png'];
-
-        //     foreach ($_FILES['file']['name'] as $i => $name) {
-
-        //         $size = $_FILES['file']['size'][$i];
-        //         $ext  = strtolower(pathinfo($name, PATHINFO_EXTENSION));
-
-        //         if (!in_array($ext, $allowed)) {
-        //             $errors[] = "File {$name} tidak diizinkan";
-        //         }
-
-        //         if ($size > 2 * 1024 * 1024) {
-        //             $errors[] = "File {$name} lebih dari 2MB";
-        //         }
-        //     }
-        // }
-
-        // ================================
-        // JIKA ADA ERROR → BALIK
-        // ================================
+                if ($size > 2 * 1024 * 1024) {
+                    $errors['file'] = "File {$name} lebih dari 2MB";
+                }
+            }
+        }
 
         if (!empty($errors)) {
             $_SESSION["errors"] = $errors;
             $_SESSION["old"] = $_POST;
-
-            $_SESSION["flash"] = [
-                "status" => "error",
-                "message" => implode("<br>", $errors),
-            ];
 
             header("Location: ?page=edit-dip&id=" . $_POST["id"]);
             exit();
@@ -407,10 +369,10 @@ class DipController
 
         $_SESSION["flash"] = [
             "status" => "success",
-            "message" => "Data DIP berhasil disimpan",
+            "message" => "Data DIP berhasil diperbarui",
         ];
 
-        header("Location: ?page=dip");
+        header("Location: ?page=edit-dip&id=" . $_POST["id"]);
         exit();
     }
 

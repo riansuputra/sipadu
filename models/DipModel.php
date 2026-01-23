@@ -51,28 +51,26 @@ class DipModel
     {
         $stmt = $this->db->prepare("
             INSERT INTO dip (
-                judul_informasi,
-                ringkasan,
-                unit_penguasaan,
-                penanggung_jawab,
                 jenis_informasi,
-                bentuk_informasi,
-                tanggal_pembuatan,
+                nama_informasi,
+                unit_penyedia,
+                penanggung_jawab,
+                tahun_pembuatan,
                 tempat_pembuatan,
+                bentuk_informasi,
                 retensi_arsip,
                 dibuat_oleh
-            ) VALUES (?,?,?,?,?,?,?,?,?,?)
+            ) VALUES (?,?,?,?,?,?,?,?,?)
         ");
 
         $stmt->execute([
-            $data['judul_informasi'],
-            $data['ringkasan'],
-            $data['unit_penguasaan'],
-            $data['penanggung_jawab'],
             $data['jenis_informasi'],
-            $data['bentuk_informasi'],
-            $data['tanggal_pembuatan'],
+            $data['nama_informasi'],
+            $data['unit_penyedia'],
+            $data['penanggung_jawab'],
+            $data['tahun_pembuatan'],
             $data['tempat_pembuatan'],
+            $data['bentuk_informasi'],
             $data['retensi_arsip'],
             $data['dibuat_oleh']
         ]);
@@ -85,27 +83,25 @@ class DipModel
     {
         $stmt = $this->db->prepare("
             UPDATE dip SET
-                judul_informasi = ?,
-                ringkasan = ?,
-                unit_penguasaan = ?,
-                penanggung_jawab = ?,
                 jenis_informasi = ?,
-                bentuk_informasi = ?,
-                tanggal_pembuatan = ?,
+                nama_informasi = ?,
+                unit_penyedia = ?,
+                penanggung_jawab = ?,
+                tahun_pembuatan = ?,
                 tempat_pembuatan = ?,
+                bentuk_informasi = ?,
                 retensi_arsip = ?
             WHERE id = ?
         ");
 
         return $stmt->execute([
-            $data['judul_informasi'],
-            $data['ringkasan'],
-            $data['unit_penguasaan'],
-            $data['penanggung_jawab'],
             $data['jenis_informasi'],
-            $data['bentuk_informasi'],
-            $data['tanggal_pembuatan'],
+            $data['nama_informasi'],
+            $data['unit_penyedia'],
+            $data['penanggung_jawab'],
+            $data['tahun_pembuatan'],
             $data['tempat_pembuatan'],
+            $data['bentuk_informasi'],
             $data['retensi_arsip'],
             $id
         ]);

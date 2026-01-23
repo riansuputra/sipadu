@@ -12,11 +12,16 @@ ob_start();
 
 
 <?php
-// echo "<pre>";
-// print_r($user);
-// print_r($dip);
-// echo "</pre>";
+// echo '<pre>';
+// print_r($user);  
+// echo '</pre>';
+$errors = $_SESSION['errors'] ?? [];
+$old    = $_SESSION['old'] ?? [];
+
+// 🔥 HAPUS SETELAH DIPAKAI
+unset($_SESSION['errors'], $_SESSION['old']);
 ?>
+
 
 <div class="page-header d-print-none" aria-label="Page header">
     <div class="container-xl">
@@ -36,140 +41,159 @@ ob_start();
         <div class="row row-cards ">
 
             <div class="col-sm-12 col-lg-6">
-                <form class="card" method="POST" action="?page=dip-update" enctype="multipart/form-data">
-                    <input type="text" name="id" id="id" class="form-control" placeholder="" value="<?= $dip["id"] ?>" hidden>
+                <form class="card" method="POST" action="?page=dip-update&id=<?= $dip['id'] ?>" enctype="multipart/form-data">
                     <div class="card-header">
                         <h3 class="card-title">Form Edit DIP</h3>
                         <div class="card-actions">
-                            <a class="btn btn-outline-primary" href="?page=dip"><!-- Download SVG icon from http://tabler.io/icons/icon/chevron-left -->
+                            <a class="btn btn-primary" href="?page=dip"><!-- Download SVG icon from http://tabler.io/icons/icon/chevron-left -->
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
                                     <path d="M15 6l-6 6l6 6"></path>
                                 </svg>
-                                Daftar DIP
+                                Lihat Daftar DIP
                             </a>
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="mb-3 row">
-                            <label class="col-3 col-form-label required">Judul Informasi</label>
-                            <div class="col">
+                        <div class="form-fieldset">
+                            <div class="mb-3">
+                                <label class="form-label required">Nama Informasi :</label>
+                                <textarea
+                                    name="nama_informasi"
+                                    id="nama_informasi"
+                                    placeholder="Nama Informasi..."
+                                    rows="3"
+                                    class="form-control <?= isset($errors['nama_informasi']) ? 'is-invalid' : '' ?>"><?= $dip['nama_informasi'] ?? $old['nama_informasi'] ?></textarea>
+                                <div class="invalid-feedback">
+                                    <?= $errors['nama_informasi'] ?? '' ?>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label required">Unit Kerja yang Menyediakan :</label>
                                 <input type="text"
-                                    name="judul_informasi"
-                                    id="judul_informasi"
-                                    class="form-control"
-                                    placeholder=""
-                                    value="<?= $dip["judul_informasi"] ?>">
+                                    name="unit_penyedia"
+                                    id="unit_penyedia"
+                                    value="<?= $dip['unit_penyedia'] ?? '' ?>"
+                                    placeholder="Unit Kerja yang Menyediakan..."
+                                    class="form-control <?= isset($errors['unit_penyedia']) ? 'is-invalid' : '' ?>">
+                                <div class="invalid-feedback">
+                                    <?= $errors['unit_penyedia'] ?? '' ?>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Penanggung Jawab Informasi :</label>
+                                <input type="text"
+                                    name="penanggung_jawab"
+                                    id="penanggung_jawab"
+                                    value="<?= $dip['penanggung_jawab'] ?? '' ?>"
+                                    placeholder="Penanggung Jawab Informasi..."
+                                    class="form-control <?= isset($errors['penanggung_jawab']) ? 'is-invalid' : '' ?>">
+                                <div class="invalid-feedback">
+                                    <?= $errors['penanggung_jawab'] ?? '' ?>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="row">
+                                    <label class="form-label required">Waktu dan Tempat Pembuatan :</label>
+                                    <div class="col-auto">
+                                        <select name="tahun_pembuatan" id="tahun_pembuatan" class="form-select <?= isset($errors['tahun_pembuatan']) ? 'is-invalid' : '' ?>">
+                                            <option value="" disabled <?= empty($dip['tahun_pembuatan']) ? 'selected' : '' ?>>-- Pilih Tahun --</option>
+                                            <?php for ($i = date('Y'); $i >= 2000; $i--): ?>
+                                                <option value="<?= $i ?>" <?= ($dip['tahun_pembuatan'] ?? '') == $i ? 'selected' : '' ?>><?= $i ?></option>
+                                            <?php endfor; ?>
+                                        </select>
+                                        <div class="invalid-feedback">
+                                            <?= $errors['tahun_pembuatan'] ?? '' ?>
+                                        </div>
+                                    </div>,
+                                    <div class="col">
+                                        <input type="text"
+                                            name="tempat_pembuatan"
+                                            id="tempat_pembuatan"
+                                            value="<?= $dip['tempat_pembuatan'] ?? '' ?>"
+                                            placeholder="Tempat Pembuatan..."
+                                            class="form-control <?= isset($errors['tempat_pembuatan']) ? 'is-invalid' : '' ?>">
+                                        <div class="invalid-feedback">
+                                            <?= $errors['tempat_pembuatan'] ?? '' ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="form-label required">Jenis Informasi :</label>
+                                        <select class="form-select <?= isset($errors['jenis_informasi']) ? 'is-invalid' : '' ?>"
+                                            name="jenis_informasi"
+                                            id="jenis_informasi">
+                                            <option value="" disabled <?= empty($dip['jenis_informasi']) ? 'selected' : '' ?>>-- Pilih Jenis --</option>
+                                            <option value="BERKALA" <?= ($dip['jenis_informasi'] ?? '') == 'BERKALA' ? 'selected' : '' ?>>Berkala</option>
+                                            <option value="SERTA MERTA" <?= ($dip['jenis_informasi'] ?? '') == 'SERTA MERTA' ? 'selected' : '' ?>>Serta Merta</option>
+                                            <option value="SETIAP SAAT" <?= ($dip['jenis_informasi'] ?? '') == 'SETIAP SAAT' ? 'selected' : '' ?>>Setiap Saat</option>
+                                            <option value="DIKECUALIKAN" <?= ($dip['jenis_informasi'] ?? '') == 'DIKECUALIKAN' ? 'selected' : '' ?>>Dikecualikan</option>
+                                        </select>
+                                        <div class="invalid-feedback">
+                                            <?= $errors['jenis_informasi'] ?? '' ?>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <label class="form-label required">Bentuk Informasi :</label>
+                                        <select class="form-select <?= isset($errors['bentuk_informasi']) ? 'is-invalid' : '' ?>"
+                                            name="bentuk_informasi"
+                                            id="bentuk_informasi">
+                                            <option value="" disabled <?= empty($dip['bentuk_informasi']) ? 'selected' : '' ?>>-- Pilih Bentuk --</option>
+                                            <option value="HARDCOPY" <?= ($dip['bentuk_informasi'] ?? '') == 'HARDCOPY' ? 'selected' : '' ?>>Hardcopy</option>
+                                            <option value="SOFTCOPY" <?= ($dip['bentuk_informasi'] ?? '') == 'SOFTCOPY' ? 'selected' : '' ?>>Softcopy</option>
+                                            <option value="HARDCOPY+SOFTCOPY" <?= ($dip['bentuk_informasi'] ?? '') == 'HARDCOPY+SOFTCOPY' ? 'selected' : '' ?>>Hardcopy + Softcopy</option>
+                                        </select>
+                                        <div class="invalid-feedback">
+                                            <?= $errors['bentuk_informasi'] ?? '' ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="form-label">Retensi Arsip :</label>
+                                        <select class="form-select <?= isset($errors['retensi_arsip']) ? 'is-invalid' : '' ?>"
+                                            name="retensi_arsip"
+                                            id="retensi_arsip">
+                                            <option value="" disabled <?= empty($dip['retensi_arsip']) ? 'selected' : '' ?>>-- Pilih Retensi --</option>
+                                            <option value="Aktif" <?= ($dip['retensi_arsip'] ?? '') == 'Aktif' ? 'selected' : '' ?>>Aktif</option>
+                                            <option value="1 Tahun" <?= ($dip['retensi_arsip'] ?? '') == '1 Tahun' ? 'selected' : '' ?>>1 Tahun</option>
+                                            <option value="2 Tahun" <?= ($dip['retensi_arsip'] ?? '') == '2 Tahun' ? 'selected' : '' ?>>2 Tahun</option>
+                                            <option value="3 Tahun" <?= ($dip['retensi_arsip'] ?? '') == '3 Tahun' ? 'selected' : '' ?>>3 Tahun</option>
+                                            <option value="5 Tahun" <?= ($dip['retensi_arsip'] ?? '') == '5 Tahun' ? 'selected' : '' ?>>5 Tahun</option>
+                                            <option value="10 Tahun" <?= ($dip['retensi_arsip'] ?? '') == '10 Tahun' ? 'selected' : '' ?>>10 Tahun</option>
+                                            <option value="Musnah" <?= ($dip['retensi_arsip'] ?? '') == 'Musnah' ? 'selected' : '' ?>>Musnah</option>
+                                            <option value="Permanen" <?= ($dip['bentuk_informasi'] ?? '') == 'Permanen' ? 'selected' : '' ?>>Permanen</option>
+                                        </select>
+                                        <div class="invalid-feedback">
+                                            <?= $errors['retensi_arsip'] ?? '' ?>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <label class="form-label">File :</label>
+                                        <input type="file"
+                                            name="file[]"
+                                            id="file"
+                                            accept=".pdf, .jpg, .png"
+                                            multiple
+                                            class="form-control <?= isset($errors['file']) ? 'is-invalid' : '' ?>">
+                                        <div class="invalid-feedback">
+                                            <?= $errors['file'] ?? '' ?>
+                                        </div>
+                                        <small class="form-hint">
+                                            Format: PDF, JPG, PNG
+                                        </small>
+                                    </div>
+                                    <input type="text" name="id" id="id" value="<?= $dip['id'] ?>" hidden>
+                                    <input type="text" name="hapus_file" id="hapus_file" hidden>
+                                </div>
                             </div>
                         </div>
-                        <div class="mb-3 row">
-                            <label class="col-3 col-form-label required">Ringkasan Informasi</label>
-                            <div class="col">
-                                <textarea class="form-control" name="ringkasan" id="ringkasan" rows="3" placeholder="Ringkasan.."><?= $dip["ringkasan"] ?></textarea>
-                            </div>
-                        </div>
-                        <div class="mb-3 row">
-                            <label class="col-3 col-form-label required">Unit Penguasaan</label>
-                            <div class="col">
-                                <input type="text" name="unit_penguasaan" id="unit_penguasaan" class="form-control" placeholder="" value="<?= $dip["unit_penguasaan"] ?>">
-                            </div>
-                        </div>
-                        <div class="mb-3 row">
-                            <label class="col-3 col-form-label">Penanggung Jawab</label>
-                            <div class="col">
-                                <input type="text" name="penanggung_jawab" id="penanggung_jawab" class="form-control" placeholder="" value="<?= $dip["penanggung_jawab"] ?>">
-                            </div>
-                        </div>
-                        <div class="mb-3 row">
-                            <label class="col-3 col-form-label required">Jenis Informasi</label>
-                            <div class="col">
-                                <select class="form-select" name="jenis_informasi" id="jenis_informasi">
-                                    <option value="" disabled selected>-- Pilih Jenis --</option>
-                                    <option value="BERKALA" <?= $dip["jenis_informasi"] == "BERKALA" ? "selected" : "" ?>>Berkala</option>
-                                    <option value="SERTA MERTA" <?= $dip["jenis_informasi"] == "SERTA MERTA"
-                                                                    ? "selected"
-                                                                    : "" ?>>Serta Merta</option>
-                                    <option value="SETIAP SAAT" <?= $dip["jenis_informasi"] == "SETIAP SAAT"
-                                                                    ? "selected"
-                                                                    : "" ?>>Setiap Saat</option>
-                                    <option value="DIKECUALIKAN" <?= $dip["jenis_informasi"] == "DIKECUALIKAN"
-                                                                        ? "selected"
-                                                                        : "" ?>>Dikecualikan</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="mb-3 row">
-                            <label class="col-3 col-form-label required">Bentuk Informasi</label>
-                            <div class="col">
-                                <select class="form-select" name="bentuk_informasi" id="bentuk_informasi">
-                                    <option value="" disabled selected>-- Pilih Bentuk --</option>
-                                    <option value="HARDCOPY" <?= $dip["bentuk_informasi"] == "HARDCOPY"
-                                                                    ? "selected"
-                                                                    : "" ?>>Hardcopy</option>
-                                    <option value="SOFTCOPY" <?= $dip["bentuk_informasi"] == "SOFTCOPY"
-                                                                    ? "selected"
-                                                                    : "" ?>>Softcopy</option>
-                                    <option value="HARDCOPY+SOFTCOPY" <?= $dip["bentuk_informasi"] == "HARDCOPY+SOFTCOPY"
-                                                                            ? "selected"
-                                                                            : "" ?>>Hardcopy + Softcopy</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="mb-3 row">
-                            <label class="col-3 col-form-label required">Tempat Pembuatan</label>
-                            <div class="col">
-                                <input type="text" name="tempat_pembuatan" id="tempat_pembuatan" class="form-control" placeholder="Tempat Pembuatan..." value="<?= $dip["tempat_pembuatan"] ?>">
-                            </div>
-                        </div>
-                        <div class="mb-3 row">
-                            <label class="col-3 col-form-label required">Tanggal Pembuatan</label>
-                            <div class="col">
-                                <input type="date" name="tanggal_pembuatan" id="tanggal_pembuatan" class="form-control" value="<?= $dip["tanggal_pembuatan"] ?>">
-                            </div>
-                        </div>
-                        <div class="mb-3 row">
-                            <label class="col-3 col-form-label required">Retensi Arsip</label>
-                            <div class="col">
-                                <select class="form-select" name="retensi_arsip" id="retensi_arsip">
-                                    <option value="" disabled selected>-- Pilih Retensi --</option>
-                                    <option value="Aktif" <?= $dip["retensi_arsip"] == "Aktif"
-                                                                ? "selected"
-                                                                : "" ?>>Aktif</option>
-                                    <option value="1 Tahun" <?= $dip["retensi_arsip"] == "1 Tahun"
-                                                                ? "selected"
-                                                                : "" ?>>1 Tahun</option>
-                                    <option value="2 Tahun" <?= $dip["retensi_arsip"] == "2 Tahun"
-                                                                ? "selected"
-                                                                : "" ?>>2 Tahun</option>
-                                    <option value="3 Tahun" <?= $dip["retensi_arsip"] == "3 Tahun"
-                                                                ? "selected"
-                                                                : "" ?>>3 Tahun</option>
-                                    <option value="5 Tahun" <?= $dip["retensi_arsip"] == "5 Tahun"
-                                                                ? "selected"
-                                                                : "" ?>>5 Tahun</option>
-                                    <option value="10 Tahun" <?= $dip["retensi_arsip"] == "10 Tahun"
-                                                                    ? "selected"
-                                                                    : "" ?>>10 Tahun</option>
-                                    <option value="Musnah" <?= $dip["retensi_arsip"] == "Musnah"
-                                                                ? "selected"
-                                                                : "" ?>>Musnah</option>
-                                    <option value="Permanen" <?= $dip["retensi_arsip"] == "Permanen"
-                                                                    ? "selected"
-                                                                    : "" ?>>Permanen</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="mb-3 row">
-                            <label class="col-3 col-form-label required">File</label>
-                            <div class="col">
-                                <input type="file" class="form-control" name="file[]" id="file" accept=".pdf, .jpg, .png" multiple>
-                                <small class="form-hint">
-                                    Format: PDF, JPG, PNG
-                                </small>
-                            </div>
-                        </div>
-                        <input type="hidden" name="hapus_file" id="hapus_file">
                         <div class="">
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <button type="submit" class="btn btn-success">Simpan</button>
                         </div>
                     </div>
                 </form>
@@ -390,15 +414,11 @@ ob_start();
                     icon: 'success',
                     title: 'Berhasil!',
                     text: message,
-                    showCancelButton: true,
-                    confirmButtonText: 'Input Lagi',
-                    cancelButtonText: 'Lihat Daftar',
+                    confirmButtonText: 'Lihat Daftar',
                     reverseButtons: true
                 }).then((result) => {
 
                     if (result.isConfirmed) {
-                        window.location = "?page=tambah-dip";
-                    } else {
                         window.location = "?page=dip";
                     }
 
