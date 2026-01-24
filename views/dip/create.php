@@ -357,7 +357,6 @@ unset($_SESSION['errors'], $_SESSION['old']);
                     showCancelButton: true,
                     confirmButtonText: 'Input Lagi',
                     cancelButtonText: 'Lihat Daftar',
-                    reverseButtons: true
                 }).then((result) => {
 
                     if (result.isConfirmed) {

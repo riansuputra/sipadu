@@ -14,10 +14,43 @@ class DipController
         $user = currentUser();
         $role = currentRole();
 
+        $tahun = $_GET['tahun'] ?? null;
+        $jenis = $_GET['jenis'] ?? null;
+
         $model = new DipModel($pdo);
-        $data = $model->getAll();
+        if (!empty($tahun) || !empty($jenis)) {
+            $data = $model->getFiltered($tahun, $jenis);
+        } else {
+            // default
+            $data = $model->getAll();
+        }
 
         require __DIR__ . "/../views/dip/index.php";
+    }
+
+    public function getFiltered()
+    {
+        // ambil filter dari GET
+        $tahun = $_GET['tahun'] ?? null;
+        $jenis = $_GET['jenis'] ?? null;
+
+        // jika ada filter → pakai getFiltered
+        global $pdo;
+
+        $user = currentUser();
+        $role = currentRole();
+
+        $model = new DipModel($pdo);
+        if (!empty($tahun) || !empty($jenis)) {
+            $data = $model->getFiltered($tahun, $jenis);
+        } else {
+            // default
+            $data = $model->getAll();
+        }
+
+        // kirim ke view
+        header('Location: ?page=dip');
+        exit;
     }
 
     public function create()
@@ -49,8 +82,6 @@ class DipController
             $errors['nama_informasi'] = "Nama informasi wajib diisi";
         } elseif (strlen($_POST['nama_informasi']) < 3) {
             $errors['nama_informasi'] = "Nama informasi minimal 3 karakter";
-        } elseif (strlen($_POST['nama_informasi']) > 200) {
-            $errors['nama_informasi'] = "Nama informasi maksimal 200 karakter";
         }
         if (empty($_POST['unit_penyedia'])) {
             $errors['unit_penyedia'] = "Unit penguasaan wajib diisi";
@@ -234,8 +265,6 @@ class DipController
             $errors['nama_informasi'] = "Nama informasi wajib diisi";
         } elseif (strlen($_POST['nama_informasi']) < 3) {
             $errors['nama_informasi'] = "Nama informasi minimal 3 karakter";
-        } elseif (strlen($_POST['nama_informasi']) > 200) {
-            $errors['nama_informasi'] = "Nama informasi maksimal 200 karakter";
         }
         if (empty($_POST['unit_penyedia'])) {
             $errors['unit_penyedia'] = "Unit penguasaan wajib diisi";
@@ -379,7 +408,11 @@ class DipController
     // hapus
     public function delete()
     {
-        authOnly();
+        // echo "<pre>";
+        // print_r($_GET["id"]);
+        // echo "</pre>";
+        // die();
+        // authOnly();
 
         global $pdo;
 
@@ -389,8 +422,16 @@ class DipController
         $model = new DipModel($pdo);
         $model->delete($_GET["id"]);
 
-        header("Location: ?page=dip");
+        $_SESSION['flash'] = [
+            'status'  => 'success',
+            'message' => 'Data berhasil dihapus'
+        ];
+
+        header('Location: ?page=dip');
+        exit;
     }
+
+
 
     public function publicIndex()
     {
@@ -405,5 +446,36 @@ class DipController
         $data = $model->getAll();
 
         require __DIR__ . "/../views/dip/publicIndex.php";
+    }
+
+    public function downloadFile()
+    {
+        authOnly();
+        global $pdo;
+
+        $fileId = $_GET['file'];
+        $dipId = $_GET['id'];
+
+        $model = new DipModel($pdo);
+        $file  = $model->getFileById($fileId);
+
+        if (!$file) {
+            exit('File tidak ditemukan');
+        }
+
+        $fullPath = __DIR__ . '/../' . $file['path_file'];
+
+        if (!file_exists($fullPath)) {
+            exit('File tidak ada di server');
+        }
+
+        // paksa download
+        header('Content-Description: File Transfer');
+        header('Content-Type: ' . $file['tipe_file']);
+        header('Content-Disposition: attachment; filename="' . basename($file['nama_file']) . '"');
+        header('Content-Length: ' . filesize($fullPath));
+
+        readfile($fullPath);
+        exit;
     }
 }

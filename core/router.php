@@ -373,6 +373,12 @@ function routeRequest()
             $controller->delete();
             break;
 
+        case 'dip-file':
+            require __DIR__ . '/../controllers/DipController.php';
+            $controller = new DipController();
+            $controller->downloadFile();
+            break;
+
         // DIP ======================================
         case 'dip-publik':
             authOnly();

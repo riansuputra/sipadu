@@ -27,13 +27,51 @@ class DipModel
             LEFT JOIN dip_file df ON dip.id = df.dip_id
             WHERE dip.is_active = 1
             GROUP BY dip.id
-            ORDER BY dip.created_at DESC
+            ORDER BY dip.tahun_pembuatan DESC, dip.created_at DESC
         ");
 
 
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getFiltered($tahun = null, $jenis = null)
+    {
+        $sql = "
+        SELECT 
+            dip.*,
+            GROUP_CONCAT(
+                CONCAT(df.id, '|', df.nama_file, '|', df.path_file, '|', df.tipe_file) 
+                SEPARATOR '##'
+            ) AS files
+        FROM dip
+        LEFT JOIN dip_file df ON dip.id = df.dip_id
+        WHERE dip.is_active = 1
+    ";
+
+        $params = [];
+
+        if (!empty($tahun)) {
+            $sql .= " AND dip.tahun_pembuatan = ?";
+            $params[] = $tahun;
+        }
+
+        if (!empty($jenis)) {
+            $sql .= " AND dip.jenis_informasi = ?";
+            $params[] = $jenis;
+        }
+
+        $sql .= "
+        GROUP BY dip.id
+        ORDER BY dip.tahun_pembuatan DESC, dip.created_at DESC
+    ";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 
     // Ambil detail DIP
     public function getById($id)
@@ -149,6 +187,15 @@ class DipModel
 
         $stmt->execute([$dipId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getFileById($id)
+    {
+        $stmt = $this->db->prepare("
+        SELECT * FROM dip_file WHERE id = ?
+    ");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     // ==============================

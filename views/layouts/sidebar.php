@@ -81,6 +81,9 @@ $pegawaiPages = ['pegawai', 'tambah-pegawai', 'detail-pegawai'];
                         <a class="dropdown-item <?= $page === 'tambah-dip' ? 'active' : '' ?>" href="<?= BASE_URL ?>/?page=tambah-dip">
                             Tambah DIP
                         </a>
+                        <a class="dropdown-item <?= $page === 'tambah-dip' ? 'active' : '' ?>" href="<?= BASE_URL ?>/?page=tambah-dip">
+                            Riwayat DIP
+                        </a>
                     </div>
                 </div>
             </div>
