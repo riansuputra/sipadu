@@ -2,7 +2,7 @@
 // ================================
 // LAYOUT UTAMA APLIKASI
 // ================================
-$headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/banner.jpg';
+$headerImage = $headerImage ?? 'http://localhost:8000/public/assets/img/banner.jpg';
 ?>
 
 <!DOCTYPE html>

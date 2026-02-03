@@ -43,7 +43,7 @@ ob_start();
                     <div class="card-header">
                         <h3 class="card-title">Form Tambah Publikasi</h3>
                         <div class="card-actions">
-                            <a class="btn btn-outline-primary" href="?page=dip"><!-- Download SVG icon from http://tabler.io/icons/icon/chevron-left -->
+                            <a class="btn btn-primary" href="?page=dip"><!-- Download SVG icon from http://tabler.io/icons/icon/chevron-left -->
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
                                     <path d="M15 6l-6 6l6 6"></path>
                                 </svg>
@@ -52,79 +52,80 @@ ob_start();
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="mb-3 row">
-                            <label class="col-3 col-form-label required">Judul</label>
-                            <div class="col">
-                                <input type="text" name="judul" id="judul" class="form-control" placeholder="">
+                        <div class="form-fieldset">
+                            <div class="mb-3 row">
+                                <label class="col-3 col-form-label required">Judul Publikasi</label>
+                                <div class="col">
+                                    <input type="text" name="judul" id="judul" class="form-control" placeholder="Judul Publikasi...">
+                                </div>
                             </div>
-                        </div>
-                        <div class="mb-3 row">
-                            <label class="col-3 col-form-label required">Deskripsi</label>
-                            <div class="col">
-                                <textarea class="form-control" name="deskripsi" id="deskripsi" rows="3" placeholder="Ringkasan.."></textarea>
+                            <div class="mb-3 row">
+                                <label class="col-3 col-form-label">Deskripsi</label>
+                                <div class="col">
+                                    <textarea class="form-control" name="deskripsi" id="deskripsi" rows="3" placeholder="Deskripsi.."></textarea>
+                                </div>
                             </div>
-                        </div>
-                        <div class="mb-3 row">
-                            <label class="col-3 col-form-label required">Tanggal Pembuatan</label>
-                            <div class="col">
-                                <input type="date" name="tanggal_kegiatan" id="tanggal_kegiatan" class="form-control" value="<?= date('Y-m-d') ?>">
+                            <div class="mb-3 row">
+                                <label class="col-3 col-form-label required">Tanggal :</label>
+                                <div class="col">
+                                    <input type="date" name="tanggal_kegiatan" id="tanggal_kegiatan" class="form-control" value="<?= date('Y-m-d') ?>">
+                                </div>
                             </div>
-                        </div>
-                        <div class="mb-3 row">
-                            <label class="col-3 col-form-label required">Lokasi</label>
-                            <div class="col">
-                                <input type="text" name="lokasi" id="lokasi" class="form-control" placeholder="">
+                            <div class="mb-3 row">
+                                <label class="col-3 col-form-label required">Lokasi</label>
+                                <div class="col">
+                                    <input type="text" name="lokasi" id="lokasi" class="form-control" placeholder="Lokasi...">
+                                </div>
                             </div>
-                        </div>
-                        <div class="mb-3 row">
-                            <label class="col-3 col-form-label required">Jenis</label>
-                            <div class="col">
-                                <select class="form-select" name="jenis_id" id="jenis_id">
-                                    <option value="" disabled selected>-- Pilih Jenis --</option>
-                                    <?php foreach ($jenis as $j): ?>
-                                        <option value="<?= $j['id'] ?>">
-                                            <?= $j['nama'] ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
+                            <div class="mb-3 row">
+                                <label class="col-3 col-form-label required">Jenis</label>
+                                <div class="col">
+                                    <select class="form-select" name="jenis_id" id="jenis_id">
+                                        <option value="" disabled selected>-- Pilih Jenis --</option>
+                                        <?php foreach ($jenis as $j): ?>
+                                            <option value="<?= $j['id'] ?>">
+                                                <?= $j['nama'] ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-                        <!-- <div class="mb-3 row">
+                            <!-- <div class="mb-3 row">
                             <label class="col-3 col-form-label required">Kategori</label>
                             <div class="col">
                                 <input type="text" name="kategori" id="kategori" class="form-control" placeholder="">
                             </div>
                         </div> -->
-                        <div class="mb-3 row">
-                            <label class="col-3 col-form-label required">Penulis</label>
-                            <div class="col">
-                                <input type="text" name="penulis" id="penulis" class="form-control" placeholder="">
+                            <div class="mb-3 row">
+                                <label class="col-3 col-form-label required">Penulis</label>
+                                <div class="col">
+                                    <input type="text" name="penulis" id="penulis" class="form-control" placeholder="Penulis...">
+                                </div>
                             </div>
-                        </div>
-                        <div class="mb-3 row">
-                            <label class="col-3 col-form-label required">Editor</label>
-                            <div class="col">
-                                <input type="text" name="editor" id="editor" class="form-control" placeholder="">
+                            <div class="mb-3 row">
+                                <label class="col-3 col-form-label required">Kabupaten/Kota</label>
+                                <div class="col">
+                                    <input type="text" name="kabupaten" id="kabupaten" class="form-control" placeholder="Kabupaten/Kota...">
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="mb-3 row">
-                            <label class="col-3 col-form-label required">Sumber</label>
-                            <div class="col">
-                                <input type="text" name="sumber" id="sumber" class="form-control" placeholder="">
+                            <div class="mb-3 row">
+                                <label class="col-3 col-form-label">File</label>
+                                <div class="col">
+                                    <input type="file" class="form-control" name="file[]" id="file" accept=".pdf, .jpg, .png" multiple>
+                                    <small class="form-hint">
+                                        Format: PDF, JPG, PNG (Untuk video, silakan masukkan link video di bawah)
+                                    </small>
+                                </div>
                             </div>
-                        </div>
-                        <div class="mb-3 row">
-                            <label class="col-3 col-form-label required">File</label>
-                            <div class="col">
-                                <input type="file" class="form-control" name="file[]" id="file" accept=".pdf, .jpg, .png" multiple>
-                                <small class="form-hint">
-                                    Format: PDF, JPG, PNG
-                                </small>
+                            <div class="mb-3 row">
+                                <label class="col-3 col-form-label">Link</label>
+                                <div class="col">
+                                    <input type="text" name="link" id="link" class="form-control" placeholder="Link...">
+                                </div>
                             </div>
                         </div>
                         <div class="">
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <button type="submit" class="btn btn-success">Simpan</button>
                         </div>
                     </div>
                 </form>

@@ -67,8 +67,8 @@ class PublikasiModel
                 jenis_id, 
                 pokja_id, 
                 penulis, 
-                editor, 
-                sumber, 
+                kabupaten, 
+                link, 
                 dibuat_oleh
             ) VALUES (?,?,?,?,?,?,?,?,?,?)
         ");
@@ -81,8 +81,8 @@ class PublikasiModel
             $data['jenis_id'],
             $data['pokja_id'],
             $data['penulis'],
-            $data['editor'],
-            $data['sumber'],
+            $data['kabupaten'],
+            $data['link'],
             $data['dibuat_oleh']
         ]);
 
@@ -102,8 +102,8 @@ class PublikasiModel
                 lokasi = ?,
                 jenis_id = ?,
                 penulis = ?,
-                editor = ?,
-                sumber = ?,
+                kabupaten = ?,
+                link = ?,
                 pokja_id = ?
             WHERE id = ?
         ");
@@ -115,8 +115,8 @@ class PublikasiModel
             $data['lokasi'],
             $data['jenis_id'],
             $data['penulis'],
-            $data['editor'],
-            $data['sumber'],
+            $data['kabupaten'],
+            $data['link'],
             $data['pokja_id'],
             $id
         ]);

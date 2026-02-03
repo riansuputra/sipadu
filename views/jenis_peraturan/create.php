@@ -36,7 +36,7 @@ ob_start();
 <div class="page-body" id="page-content" style="display:none;">
 
     <div class="container-xl">
-        <div class="row row-deck row-cards ">
+        <div class="row row-cards ">
 
             <div class="col-sm-12 col-lg-6">
                 <form class="card" method="POST" action="?page=jenis-peraturan-store" enctype="multipart/form-data">
@@ -52,35 +52,37 @@ ob_start();
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="mb-3 row">
-                            <label class="col-3 col-form-label required">Singkatan Jenis</label>
-                            <div class="col">
-                                <input type="text" name="kode" id="kode" class="form-control" placeholder="">
+                        <div class="form-fieldset">
+                            <div class="mb-3 row">
+                                <label class="col-3 col-form-label required">Singkatan Jenis</label>
+                                <div class="col">
+                                    <input type="text" name="kode" id="kode" class="form-control" placeholder="Singkatan Jenis...">
+                                </div>
                             </div>
-                        </div>
-                        <div class="mb-3 row">
-                            <label class="col-3 col-form-label required">Jenis Peraturan</label>
-                            <div class="col">
-                                <input type="text" name="nama" id="nama" class="form-control" placeholder="">
+                            <div class="mb-3 row">
+                                <label class="col-3 col-form-label required">Jenis Peraturan</label>
+                                <div class="col">
+                                    <input type="text" name="nama" id="nama" class="form-control" placeholder="Jenis Peraturan...">
+                                </div>
                             </div>
-                        </div>
-                        <div class="mb-3 row">
-                            <label class="col-3 col-form-label required">Keterangan</label>
-                            <div class="col">
-                                <textarea class="form-control" name="keterangan" id="keterangan" rows="3" placeholder="Ringkasan.."></textarea>
+                            <div class="mb-3 row">
+                                <label class="col-3 col-form-label">Keterangan</label>
+                                <div class="col">
+                                    <textarea class="form-control" name="keterangan" id="keterangan" rows="3" placeholder="Keterangan..."></textarea>
+                                </div>
                             </div>
-                        </div>
-                        <div class="mb-3 row">
-                            <label class="col-3 col-form-label required">Tampilkan</label>
-                            <div class="col">
-                                <label class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="is_active" id="is_active" value="1" checked="">
-                                    <span class="form-check-label">Ya</span>
-                                </label>
-                                <label class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="is_active" id="is_active" value="0">
-                                    <span class="form-check-label">Tidak</span>
-                                </label>
+                            <div class="mb-3 row">
+                                <label class="col-3 col-form-label required">Tampilkan</label>
+                                <div class="col">
+                                    <label class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="is_active" id="is_active" value="1" checked="">
+                                        <span class="form-check-label">Ya</span>
+                                    </label>
+                                    <label class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="is_active" id="is_active" value="0">
+                                        <span class="form-check-label">Tidak</span>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                         <div class="">
@@ -108,7 +110,7 @@ ob_start();
                                                     <path d="M21 21l-6 -6"></path>
                                                 </svg>
                                             </span>
-                                            <input id="advanced-table-search" type="text" class="form-control" autocomplete="off">
+                                            <input id="advanced-table-search" type="text" class="form-control" autocomplete="off" placeholder="Cari Jenis Peraturan...">
                                         </div>
                                     </div>
                                 </div>
@@ -128,9 +130,6 @@ ob_start();
                                             <th>
                                                 <button class="table-sort d-flex justify-content-between" data-sort="sort-judul">Jenis Peraturan</button>
                                             </th>
-                                            <th>
-                                                <button class="table-sort d-flex justify-content-between" data-sort="sort-deskripsi">Keterangan</button>
-                                            </th>
                                             <th class="w-1">
                                                 <button class="table-sort d-flex justify-content-between" data-sort="sort-aksi">Aksi</button>
                                             </th>
@@ -149,18 +148,13 @@ ob_start();
                                                 <td class="sort-nama">
                                                     <?= htmlspecialchars($d['nama'] ?? '-') ?>
                                                 </td>
-                                                <td class="sort-keterangan">
-                                                    <?= htmlspecialchars($d['keterangan'] ?? '-') ?>
-
-                                                </td>
                                                 <td>
                                                     <div class="btn-group w-100">
-                                                        <a href="" class="text-green me-2">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-download">
+                                                        <a href="" class="text-primary me-2">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-eye" data-bs-toggle="tooltip" data-bs-placement="top" title="Detail">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                                <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
-                                                                <path d="M7 11l5 5l5 -5" />
-                                                                <path d="M12 4l0 12" />
+                                                                <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                                                                <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
                                                             </svg>
                                                         </a>
                                                         <a href="" class="text-yellow me-2">

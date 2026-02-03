@@ -14,8 +14,16 @@ class PeraturanController
         $user = currentUser();
         $role = currentRole();
 
+        $tahun = $_GET['tahun'] ?? null;
+        $jenis = $_GET['jenis'] ?? null;
+
         $model = new PeraturanModel($pdo);
-        $data  = $model->getAll();
+        if (!empty($tahun) || !empty($jenis)) {
+            $data = $model->getFiltered($tahun, $jenis);
+        } else {
+            // default
+            $data = $model->getAll();
+        }
 
         require __DIR__ . '/../views/peraturan/index.php';
     }
@@ -348,7 +356,6 @@ class PeraturanController
 
         // Ambil file terkait
         $files = $model->getFiles($id);
-
         require __DIR__ . '/../views/peraturan/publicDetail.php';
     }
 }

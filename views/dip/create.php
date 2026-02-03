@@ -214,9 +214,6 @@ unset($_SESSION['errors'], $_SESSION['old']);
     </div>
 </div>
 
-
-
-
 <script>
     let dt = new DataTransfer(); // ← kunci utama
 

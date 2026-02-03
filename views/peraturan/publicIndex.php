@@ -50,7 +50,7 @@ ob_start();
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="mb-3 col-3">
+                                <div class="mb-3 col-4">
                                     <label class="form-label">Nomor</label>
                                     <div class="input-icon mb-3">
                                         <span class="input-icon-addon">
@@ -64,7 +64,7 @@ ob_start();
                                         <input type="text" name="nomor" value="<?= htmlspecialchars($_GET['nomor'] ?? '') ?>" class="form-control" placeholder="Nomor...">
                                     </div>
                                 </div>
-                                <div class="mb-3 col-3">
+                                <div class="mb-3 col-4">
                                     <label class="form-label">Tahun</label>
                                     <div class="input-icon mb-3">
                                         <select name="tahun" id="tahun" class="form-select">
@@ -78,7 +78,7 @@ ob_start();
                                     </div>
                                 </div>
 
-                                <div class="mb-3 col-3">
+                                <div class="mb-3 col-4">
                                     <label class="form-label">Jenis Peraturan</label>
                                     <div class="input-icon mb-3">
                                         <select class="form-select" name="jenis" id="jenis">
@@ -91,21 +91,16 @@ ob_start();
                                         </select>
                                     </div>
                                 </div>
-
-                                <div class="mb-3 col-3">
-                                    <label class="form-label">Status</label>
-                                    <div class="input-icon mb-3">
-                                        <select class="form-select" name="status" id="status">
-                                            <option value="" disabled <?= empty($_GET['status']) ? 'selected' : '' ?>>-- Pilih Status --</option>
-                                            <option value="BERLAKU" <?= (($_GET['status'] ?? '') == 'BERLAKU') ? 'selected' : '' ?>>Berlaku</option>
-                                            <option value="TIDAK BERLAKU" <?= (($_GET['status'] ?? '') == 'TIDAK BERLAKU') ? 'selected' : '' ?>>Tidak Berlaku</option>
-                                        </select>
-                                    </div>
-                                </div>
-
                             </div>
                             <div class="text-end">
-                                <a href="?page=peraturan-publik" class="btn btn-1 btn-danger">
+                                <button type="submit" class="btn btn-primary btn-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-search">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+                                        <path d="M21 21l-6 -6" />
+                                    </svg>Cari
+                                </button>
+                                <a href="?page=peraturan-publik" class="btn btn-1 btn-secondary">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                         <path d="M4 7l16 0" />
@@ -114,13 +109,6 @@ ob_start();
                                         <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
                                         <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
                                     </svg>Reset </a>
-                                <button type="submit" class="btn btn-primary btn-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-search">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
-                                        <path d="M21 21l-6 -6" />
-                                    </svg>Cari
-                                </button>
                             </div>
                         </form>
                     </div>
@@ -151,36 +139,12 @@ ob_start();
                                             <div class="card-body ps-0">
                                                 <div class="row">
                                                     <div class="col">
-                                                        <a class="mb-0 h3" href="?page=peraturan-detail&id=<?= $d['id'] ?>"><span class="text-primary"><?= $d['jenis'] ?></span><span class="text-yellow"> Nomor <?= $d['nomor'] ?></span></a>
-                                                    </div>
-                                                    <div class="col-auto">
-                                                        <?php
-                                                        if ($d['status'] === 'BERLAKU') {
-                                                            $text = 'text-success';
-                                                            $icon = '
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-circle-check">
-                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                                <path d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z" />
-                                                            </svg>';
-                                                        } else {
-                                                            $text = 'text-danger';
-                                                            $icon = '
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-circle-x">
-                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                                <path d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-6.489 5.8a1 1 0 0 0 -1.218 1.567l1.292 1.293l-1.292 1.293l-.083 .094a1 1 0 0 0 1.497 1.32l1.293 -1.292l1.293 1.292l.094 .083a1 1 0 0 0 1.32 -1.497l-1.292 -1.293l1.292 -1.293l.083 -.094a1 1 0 0 0 -1.497 -1.32l-1.293 1.292l-1.293 -1.292l-.094 -.083z" />
-                                                            </svg>
-                                                            ';
-                                                        }
-                                                        ?>
-                                                        <a class="badge badge-outline <?= $text ?> fw-normal badge-pill">
-                                                            <?= $icon ?>
-                                                            <?= $d['status'] ?>
-                                                        </a>
+                                                        <a class="mb-0" href="?page=peraturan-detail&id=<?= $d['id'] ?>"><span class="text-primary"><?= $d['jenis'] ?></span></a>
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col">
-                                                        <span class="mb-0"><?= htmlspecialchars($d['judul']) ?></span>
+                                                        <span class="mb-0 h3"><?= htmlspecialchars($d['judul']) ?></span>
                                                     </div>
                                                 </div>
                                                 <div class="row">

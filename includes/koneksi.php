@@ -3,11 +3,18 @@
 // KONEKSI DATABASE (PDO)
 // ================================
 
-// Konfigurasi database
-$host = 'localhost';
-$db   = 'sipadu';
-$user = 'root';
-$pass = '';
+// Konfigurasi database lokal
+// $host = 'localhost';
+// $db   = 'sipadu';
+// $user = 'root';
+// $pass = '';
+// $charset = 'utf8mb4';
+
+// Konfigurasi database termux ke server db infinityfree
+$host = 'sql12.freesqldatabase.com';
+$db   = 'sql12815967';
+$user = 'sql12815967';
+$pass = 'CrDhIVdFUn';
 $charset = 'utf8mb4';
 
 try {

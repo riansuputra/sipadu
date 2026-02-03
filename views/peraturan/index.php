@@ -31,6 +31,25 @@ ob_start();
 // endforeach;
 
 // echo '</pre>';
+$tahun = $_GET['tahun'] ?? null;
+$jenis = $_GET['jenis'] ?? null;
+
+$deskripsi = 'Menampilkan seluruh data';
+
+if ($tahun || $jenis) {
+
+    $parts = [];
+
+    if ($tahun) {
+        $parts[] = "tahun '<strong>" . htmlspecialchars($tahun) . "</strong>'";
+    }
+
+    if ($jenis) {
+        $parts[] = "jenis informasi '<strong>" . htmlspecialchars(ucwords(strtolower($jenis))) . "</strong>'";
+    }
+
+    $deskripsi = 'Filter data peraturan ' . implode(' dan ', $parts);
+}
 ?>
 
 <div class="page-header d-print-none" aria-label="Page header">
@@ -77,6 +96,7 @@ ob_start();
                             <div class="row w-full">
                                 <div class="col">
                                     <h3 class="card-title mb-0">Tabel Peraturan</h3>
+                                    <p class="text-secondary m-0"><?= $deskripsi ?></p>
                                 </div>
                                 <div class="col-md-auto col-sm-12">
                                     <div class="ms-auto d-flex flex-wrap btn-list">
@@ -88,31 +108,61 @@ ob_start();
                                                     <path d="M21 21l-6 -6"></path>
                                                 </svg>
                                             </span>
-                                            <input id="advanced-table-search" type="text" class="form-control" autocomplete="off">
+                                            <input id="advanced-table-search" type="text" class="form-control" autocomplete="off" placeholder="Cari Data Peraturan">
                                         </div>
-                                        <a href="#" class="btn btn-icon" aria-label="Button">
+                                    </div>
+                                </div>
+                                <div class="col-md-auto col-sm-12">
+                                    <div class="ms-auto d-flex flex-wrap btn-list">
+                                        <form method="get">
+                                            <div class="row">
 
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
-                                                <path d="M5 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path>
-                                                <path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path>
-                                                <path d="M19 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path>
-                                            </svg>
-                                        </a>
+                                                <input type="hidden" name="page" value="dip">
+                                                <div class="col-auto">
+                                                    <select name="tahun" class="form-select w-auto">
+                                                        <option value="">Semua Tahun</option>
+                                                        <?php for ($t = date('Y'); $t >= 2015; $t--): ?>
+                                                            <option value="<?= $t ?>"
+                                                                <?= ($_GET['tahun'] ?? '') == $t ? 'selected' : '' ?>>
+                                                                <?= $t ?>
+                                                            </option>
+                                                        <?php endfor; ?>
+                                                    </select>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <select name="jenis" class="form-select w-auto">
+                                                        <option value="">Semua Jenis</option>
+                                                        <option value="BERKALA" <?= ($_GET['jenis'] ?? '') == 'BERKALA' ? 'selected' : '' ?>>Berkala</option>
+                                                        <option value="SERTA MERTA" <?= ($_GET['jenis'] ?? '') == 'SERTA MERTA' ? 'selected' : '' ?>>Serta Merta</option>
+                                                        <option value="SETIAP SAAT" <?= ($_GET['jenis'] ?? '') == 'SETIAP SAAT' ? 'selected' : '' ?>>Setiap Saat</option>
+                                                        <option value="DIKECUALIKAN" <?= ($_GET['jenis'] ?? '') == 'DIKECUALIKAN' ? 'selected' : '' ?>>Dikecualikan</option>
+                                                    </select>
 
-                                        <select id="filter-jenis" class="form-select w-auto">
-                                            <option value="" disabled selected>-- Pilih Status --</option>
-                                            <option value="">Semua</option>
-                                            <option value="@Berlaku@">Berlaku</option>
-                                            <option value="@Tidak Berlaku@">Tidak Berlaku</option>
-                                        </select>
-                                        <a href="#" class="btn">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-history">
-                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                <path d="M12 8l0 4l2 2" />
-                                                <path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5" />
-                                            </svg>
-                                            Riwayat DIP
-                                        </a>
+                                                </div>
+                                                <div class="col-auto ms-auto">
+                                                    <button class="btn btn-primary">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-search">
+                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                            <path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+                                                            <path d="M21 21l-6 -6" />
+                                                        </svg>
+                                                        Filter
+                                                    </button>
+                                                    <a href="?page=dip" class="btn btn-secondary">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                            <path d="M4 7l16 0" />
+                                                            <path d="M10 11l0 6" />
+                                                            <path d="M14 11l0 6" />
+                                                            <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                                                            <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                                                        </svg>
+                                                        Reset
+                                                    </a>
+                                                </div>
+
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -131,17 +181,8 @@ ob_start();
                                             <th>
                                                 <button class="table-sort d-flex justify-content-between" data-sort="sort-jenis">Jenis</button>
                                             </th>
-                                            <th hidden>
-                                                <button class="table-sort d-flex justify-content-between" data-sort="sort-status-hid">Status-hid</button>
-                                            </th>
                                             <th class="w-1">
                                                 <button class="table-sort d-flex justify-content-between" data-sort="sort-tahun">Tahun Terbit</button>
-                                            </th>
-                                            <th class="w-1">
-                                                <button class="table-sort d-flex justify-content-between" data-sort="sort-subjek">Subjek</button>
-                                            </th>
-                                            <th>
-                                                <button class="table-sort d-flex justify-content-between" data-sort="sort-status">Status</button>
                                             </th>
                                             <th>
                                                 <button class="table-sort d-flex justify-content-between" data-sort="sort-file">File</button>
@@ -164,24 +205,8 @@ ob_start();
                                                 <td class="sort-jenis">
                                                     <?= htmlspecialchars($d['jenis'] ?? '-') ?> (<?= htmlspecialchars($d['kode_jenis'] ?? '-') ?>)
                                                 </td>
-                                                <td class="sort-status-hid" hidden>
-                                                    @<?= $d['status'] ?>@
-                                                </td>
                                                 <td class="sort-tahun">
                                                     <?= htmlspecialchars($d['tahun_terbit'] ?? '-') ?>
-                                                </td>
-                                                <td class="sort-subjek">
-                                                    <?= htmlspecialchars($d['subjek'] ?? '-') ?>
-                                                </td>
-                                                <td class="sort-status">
-                                                    <?php
-                                                    if ($d['status'] === 'BERLAKU') {
-                                                        $bg = 'bg-success-lt';
-                                                    } else {
-                                                        $bg = 'bg-danger-lt';
-                                                    }
-                                                    ?>
-                                                    <span class="badge <?= $bg ?>"><?= htmlspecialchars(ucwords(strtolower($d['status']))) ?></span>
                                                 </td>
                                                 <td class="sort-file">
                                                     <?php
@@ -248,24 +273,20 @@ ob_start();
                                                         }
 
                                                     ?>
-                                                        <a href='/sipadu/<?= $path ?>' target='_blank'>
-
-
-
+                                                        <a href='/sipadu/<?= $path ?>' target='_blank' class="btn btn-outline-primary">
                                                             <?= $icon ?>
-                                                            <?= shortname($f['nama'], 50) ?>
+                                                            <?= shortname($f['nama'], 30) ?>
                                                         </a>
                                                         <br>
                                                     <?php endforeach; ?>
                                                 </td>
                                                 <td>
                                                     <div class="btn-group w-100">
-                                                        <a href="" class="text-green me-1">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-download">
+                                                        <a href="" class="text-primary me-1">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-eye" data-bs-toggle="tooltip" data-bs-placement="top" title="Detail">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                                <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
-                                                                <path d="M7 11l5 5l5 -5" />
-                                                                <path d="M12 4l0 12" />
+                                                                <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                                                                <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
                                                             </svg>
                                                         </a>
                                                         <a href="" class="text-yellow me-1">

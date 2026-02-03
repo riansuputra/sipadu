@@ -33,9 +33,49 @@ class PeraturanModel
             ON p.id = pf.peraturan_id
 
         GROUP BY p.id
-        ORDER BY p.created_at DESC
+        ORDER BY p.tahun_terbit DESC, p.created_at DESC
     ");
         $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getFiltered($tahun = null, $jenis = null)
+    {
+        $sql = "
+        SELECT 
+            p.*,
+            j.nama AS jenis,
+            j.kode AS kode_jenis,
+            GROUP_CONCAT(
+                CONCAT(pf.id, '|', pf.nama_file, '|', pf.path_file, '|', pf.tipe_file) 
+                SEPARATOR '##'
+            ) AS files
+        FROM peraturan p
+        LEFT JOIN jenis_peraturan j ON p.jenis_id = j.id
+        LEFT JOIN peraturan_file pf ON p.id = pf.p_id
+        WHERE p.is_active = 1
+    ";
+
+        $params = [];
+
+        if (!empty($tahun)) {
+            $sql .= " AND p.tahun_terbit = ?";
+            $params[] = $tahun;
+        }
+
+        if (!empty($jenis)) {
+            $sql .= " AND kode_jenis = ?";
+            $params[] = $jenis;
+        }
+
+        $sql .= "
+        GROUP BY p.id
+        ORDER BY p.tahun DESC, p.created_at DESC
+    ";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -66,17 +106,8 @@ class PeraturanModel
                 jenis_id,
                 tahun_terbit,
                 tempat_penetapan,
-                tanggal_penetapan,
-                tanggal_pengundangan,
-                sumber,
-                bahasa,
-                status,
-                lokasi,
-                bidang_hukum,
-                subjek,
-                pemrakarsa,
                 penandatangan
-            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            ) VALUES (?,?,?,?,?,?,?)
         ");
 
         $stmt->execute([
@@ -86,15 +117,6 @@ class PeraturanModel
             $data['jenis_id'],
             $data['tahun_terbit'],
             $data['tempat_penetapan'],
-            $data['tanggal_penetapan'],
-            $data['tanggal_pengundangan'],
-            $data['sumber'],
-            $data['bahasa'],
-            $data['status'],
-            $data['lokasi'],
-            $data['bidang_hukum'],
-            $data['subjek'],
-            $data['pemrakarsa'],
             $data['penandatangan']
         ]);
 
@@ -111,15 +133,6 @@ class PeraturanModel
                 jenis_id = ?,
                 tahun_terbit = ?,
                 tempat_penetapan = ?,
-                tanggal_penetapan = ?,
-                tanggal_pengundangan = ?,
-                sumber = ?,
-                bahasa = ?,
-                status = ?,
-                lokasi = ?,
-                bidang_hukum = ?,
-                subjek = ?,
-                pemrakarsa = ?,
                 penandatangan = ?,
             WHERE id = ?
         ");
@@ -131,15 +144,6 @@ class PeraturanModel
             $data['jenis_id'],
             $data['tahun_terbit'],
             $data['tempat_penetapan'],
-            $data['tanggal_penetapan'],
-            $data['tanggal_pengundangan'],
-            $data['sumber'],
-            $data['bahasa'],
-            $data['status'],
-            $data['lokasi'],
-            $data['bidang_hukum'],
-            $data['subjek'],
-            $data['pemrakarsa'],
             $data['penandatangan'],
         ]);
     }
@@ -194,6 +198,12 @@ class PeraturanModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function deleteFileById($fileId)
+    {
+        $stmt = $this->db->prepare("
+            DELETE FROM peraturan_file WHERE id = ?
+        ");
+    }
 
     public function deleteFiles($id)
     {

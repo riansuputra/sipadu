@@ -35,7 +35,7 @@ ob_start();
 
 
             <div class="col-sm-6 col-lg-3 p-3">
-                <a href=""
+                <a href="<?= BASE_URL ?>/?page=publikasi-paud"
                     class="card card-link card-link-pop">
 
                     <div class="img-responsive img-responsive-21x9 card-img-top"
@@ -43,7 +43,7 @@ ob_start();
                     </div>
 
                     <div class="card-body text-center mb-0">
-                        Test
+                        Publikasi
                     </div>
                 </a>
             </div>

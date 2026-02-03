@@ -34,6 +34,12 @@ class JenisPeraturanController
 
     public function store()
     {
+        // echo "<pre>";
+        // print_r($_POST);
+        // print_r($_FILES);
+        // echo "</pre>";
+        // die();
+
         authOnly();
         global $pdo;
         $user = currentUser();
@@ -41,21 +47,21 @@ class JenisPeraturanController
 
         $errors = [];
 
-        if (empty($_POST['kode']))
-            $errors[] = "Kode wajib diisi";
+        // if (empty($_POST['kode']))
+        //     $errors[] = "Kode wajib diisi";
 
-        if (empty($_POST['nama']))
-            $errors[] = "Nama wajib diisi";
+        // if (empty($_POST['nama']))
+        //     $errors[] = "Nama wajib diisi";
 
-        if ($errors) {
-            $_SESSION['flash'] = [
-                'status' => 'error',
-                'message' => implode("<br>", $errors)
-            ];
+        // if ($errors) {
+        //     $_SESSION['flash'] = [
+        //         'status' => 'error',
+        //         'message' => implode("<br>", $errors)
+        //     ];
 
-            header("Location: ?page=tambah-jenis-peraturan");
-            exit;
-        }
+        //     header("Location: ?page=tambah-jenis-peraturan");
+        //     exit;
+        // }
 
         $model = new JenisPeraturanModel($pdo);
         $data = $_POST;

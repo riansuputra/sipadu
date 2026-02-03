@@ -1,14 +1,28 @@
 <?php
 function tgl_sekarang()
 {
-    $formatter = new IntlDateFormatter(
-        'id_ID',
-        IntlDateFormatter::LONG,
-        IntlDateFormatter::NONE
-    );
+    $bulan = [
+        1 => 'Januari',
+        'Februari',
+        'Maret',
+        'April',
+        'Mei',
+        'Juni',
+        'Juli',
+        'Agustus',
+        'September',
+        'Oktober',
+        'November',
+        'Desember'
+    ];
 
-    return $formatter->format(new DateTime());
+    $tgl   = date('d');
+    $bln   = (int) date('m');
+    $thn   = date('Y');
+
+    return $tgl . ' ' . $bulan[$bln] . ' ' . $thn;
 }
+
 
 function shortName($text, $limit = 20)
 {

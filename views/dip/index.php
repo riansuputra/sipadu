@@ -31,7 +31,28 @@ ob_start();
 
 // endforeach;
 
-echo '</pre>';
+// echo '</pre>';
+
+
+$tahun = $_GET['tahun'] ?? null;
+$jenis = $_GET['jenis'] ?? null;
+
+$deskripsi = 'Menampilkan seluruh data';
+
+if ($tahun || $jenis) {
+
+    $parts = [];
+
+    if ($tahun) {
+        $parts[] = "tahun '<strong>" . htmlspecialchars($tahun) . "</strong>'";
+    }
+
+    if ($jenis) {
+        $parts[] = "jenis informasi '<strong>" . htmlspecialchars(ucwords(strtolower($jenis))) . "</strong>'";
+    }
+
+    $deskripsi = 'Filter data DIP ' . implode(' dan ', $parts);
+}
 ?>
 
 <div class="page-header d-print-none" aria-label="Page header">
@@ -72,53 +93,12 @@ echo '</pre>';
         <div class="row row-deck row-cards ">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-body">
-                        <form method="get">
-
-                            <input type="hidden" name="page" value="dip">
-
-                            <div class="col-md-3">
-                                <select name="tahun" class="form-select">
-                                    <option value="">Semua Tahun</option>
-                                    <?php for ($t = date('Y'); $t >= 2015; $t--): ?>
-                                        <option value="<?= $t ?>"
-                                            <?= ($_GET['tahun'] ?? '') == $t ? 'selected' : '' ?>>
-                                            <?= $t ?>
-                                        </option>
-                                    <?php endfor; ?>
-                                </select>
-                            </div>
-
-                            <div class="col-md-4">
-                                <select name="jenis" class="form-select">
-                                    <option value="">Semua Jenis</option>
-                                    <?php foreach ($jenisList as $j): ?>
-                                        <option value="<?= $j['id'] ?>"
-                                            <?= ($_GET['jenis'] ?? '') == $j['id'] ? 'selected' : '' ?>>
-                                            <?= $j['nama'] ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-
-                            <div class="col-md-2">
-                                <button class="btn btn-primary">Filter</button>
-                                <a href="?page=dip" class="btn btn-secondary">Reset</a>
-                            </div>
-
-                        </form>
-
-                    </div>
-                </div>
-            </div>
-            <div class="col-12">
-                <div class="card">
                     <div class="card-table">
                         <div class="card-header">
                             <div class="row w-full">
                                 <div class="col">
                                     <h3 class="card-title mb-0">Tabel DIP</h3>
-                                    <p class="text-secondary m-0">Data Semua DIP</p>
+                                    <p class="text-secondary m-0"><?= $deskripsi ?></p>
                                 </div>
                                 <div class="col-md-auto col-sm-12">
                                     <div class="ms-auto d-flex flex-wrap btn-list">
@@ -161,13 +141,28 @@ echo '</pre>';
                                                     </select>
 
                                                 </div>
-                                                <div class="col-auto ms-auto btn-group">
-                                                    <button class="btn btn-primary">Filter</button>
-                                                    <a href="?page=dip" class="btn btn-secondary">Reset</a>
+                                                <div class="col-auto ms-auto">
+                                                    <button class="btn btn-primary">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-search">
+                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                            <path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+                                                            <path d="M21 21l-6 -6" />
+                                                        </svg>
+                                                        Filter
+                                                    </button>
+                                                    <a href="?page=dip" class="btn btn-secondary">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                            <path d="M4 7l16 0" />
+                                                            <path d="M10 11l0 6" />
+                                                            <path d="M14 11l0 6" />
+                                                            <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                                                            <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                                                        </svg>
+                                                        Reset
+                                                    </a>
                                                 </div>
-                                                <div class="col-auto text-end">
 
-                                                </div>
                                             </div>
                                         </form>
                                     </div>
@@ -197,7 +192,7 @@ echo '</pre>';
                                             <th style="width:1%;">
                                                 <button class="table-sort d-flex justify-content-between" data-sort="sort-bentuk">Bentuk</button>
                                             </th>
-                                            <th style="width:30%;">
+                                            <th style="width:25%;">
                                                 <button class="table-sort d-flex justify-content-between" data-sort="sort-file">File</button>
                                             </th>
                                             <th style="width:1%;">
@@ -315,7 +310,7 @@ echo '</pre>';
                                                     ?>
                                                         <a href='/sipadu/<?= $path ?>' target='_blank' class="btn btn-outline-primary">
                                                             <?= $icon ?>
-                                                            <?= shortname($f["nama"], 50,) ?>
+                                                            <?= shortname($f["nama"], 30,) ?>
                                                         </a>
                                                         <br>
                                                     <?php
@@ -476,7 +471,7 @@ echo '</pre>';
                                                                         <div class="col-12 mb-0">
 
                                                                             <a href='/sipadu/<?= $path ?>' target='_blank' class="mb-1">
-                                                                                <?= $icon ?>&nbsp;<?= shortname($f["nama"], 40,) ?>
+                                                                                <?= $icon ?>&nbsp;<?= shortname($f["nama"], 20,) ?>
                                                                             </a>
                                                                             <a href="?page=dip-file&file=<?= $fid ?>&id=<?= $d['id'] ?>" class="icon icon-sm text-end mt-0" aria-label="Button" data-bs-toggle="tooltip" data-bs-placement="top" title="Download">
                                                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2fb344" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-download">
