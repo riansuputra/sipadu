@@ -129,8 +129,8 @@ class DipController
                     $errors['file'] = "File {$name} tidak diizinkan";
                 }
 
-                if ($size > 2 * 1024 * 1024) {
-                    $errors['file'] = "File {$name} lebih dari 2MB";
+                if ($size > 5 * 1024 * 1024) {
+                    $errors['file'] = "File {$name} lebih dari 5MB";
                 }
             }
         }

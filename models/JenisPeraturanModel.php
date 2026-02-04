@@ -52,7 +52,7 @@ class JenisPeraturanModel
         return $this->db->lastInsertId();
     }
 
-    public function update($data)
+    public function update($id, $data)
     {
         $stmt = $this->db->prepare("
             UPDATE jenis_peraturan SET
@@ -67,7 +67,8 @@ class JenisPeraturanModel
             $data['kode'],
             $data['nama'],
             $data['keterangan'],
-            $data['is_active']
+            $data['is_active'],
+            $id
         ]);
     }
 

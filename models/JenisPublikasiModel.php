@@ -14,6 +14,7 @@ class JenisPublikasiModel
     {
         return $this->db->query("
             SELECT * FROM jenis_publikasi
+            WHERE jenis_publikasi.is_active = 1
             ORDER BY nama ASC
         ")->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -49,7 +50,7 @@ class JenisPublikasiModel
         return $this->db->lastInsertId();
     }
 
-    public function update($data)
+    public function update($id, $data)
     {
         $stmt = $this->db->prepare("
             UPDATE jenis_publikasi SET
@@ -62,7 +63,8 @@ class JenisPublikasiModel
         return $stmt->execute([
             $data['nama'],
             $data['keterangan'],
-            $data['is_active']
+            $data['is_active'],
+            $id
         ]);
     }
 

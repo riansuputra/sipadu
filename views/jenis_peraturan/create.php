@@ -309,6 +309,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                                                         </div>
                                                                     </div>
                                                                 </div>
+                                                                <input type="text" name="id" id="id" value="<?= $d['id'] ?>" hidden>
                                                                 <div class="">
                                                                     <button type="submit" class="btn btn-success">Simpan</button>
                                                                 </div>

@@ -43,6 +43,48 @@ class PublikasiModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getFiltered($tanggalMulai = null, $tanggalSelesai = null, $jenis = null)
+    {
+        $sql = "
+        SELECT 
+            publikasi.*,
+            GROUP_CONCAT(
+                CONCAT(pf.id, '|', pf.nama_file, '|', pf.path_file, '|', pf.tipe_file) 
+                SEPARATOR '##'
+            ) AS files
+        FROM publikasi
+        LEFT JOIN publikasi_file df ON publikasi.id = df.publikasi_id
+        WHERE publikasi.is_active = 1
+    ";
+
+        $params = [];
+
+        if (!empty($tanggalMulai)) {
+            $sql .= " AND DATE(publikasi.tanggal_kegiatan) >= ?";
+            $params[] = $tanggalMulai;
+        }
+
+        if (!empty($tanggalSelesai)) {
+            $sql .= " AND DATE(publikasi.tanggal_kegiatan <= ?";
+            $params[] = $tanggalSelesai;
+        }
+
+        if (!empty($jenis)) {
+            $sql .= " AND publikasi.jenis_id = ?";
+            $params[] = $jenis;
+        }
+
+        $sql .= "
+        GROUP BY publiaksi.id
+        ORDER BY publiaksi.tanggal_kegiatan DESC, publiaksi.created_at DESC
+    ";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function getById($id)
     {
         $stmt = $this->db->prepare("

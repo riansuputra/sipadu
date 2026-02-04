@@ -41,17 +41,15 @@ class JenisPublikasiController
 
         $errors = [];
 
-        if (empty($_POST['nama']))
-            $errors[] = "Nama wajib diisi";
-
-        if ($errors) {
-            $_SESSION['flash'] = [
-                'status' => 'error',
-                'message' => implode("<br>", $errors)
-            ];
+        if (empty($_POST['nama'])) {
+            $errors['nama'] = "Jenis publikasi wajib diisi";
+        }
+        if (!empty($errors)) {
+            $_SESSION["errors"] = $errors;
+            $_SESSION["old"] = $_POST;
 
             header("Location: ?page=tambah-jenis-publikasi");
-            exit;
+            exit();
         }
 
         $model = new JenisPublikasiModel($pdo);
@@ -60,7 +58,7 @@ class JenisPublikasiController
 
         $_SESSION['flash'] = [
             'status' => 'success',
-            'message' => 'Jenis peraturan berhasil disimpan'
+            'message' => 'Jenis publikasi berhasil disimpan'
         ];
 
         header("Location: ?page=tambah-jenis-publikasi");
@@ -111,17 +109,15 @@ class JenisPublikasiController
 
         $errors = [];
 
-        if (empty($_POST['nama']))
-            $errors[] = "Nama wajib diisi";
-
-        if ($errors) {
-            $_SESSION['flash'] = [
-                'status' => 'error',
-                'message' => implode("<br>", $errors)
-            ];
+        if (empty($_POST['nama'])) {
+            $errors['nama'] = "Jenis publikasi wajib diisi";
+        }
+        if (!empty($errors)) {
+            $_SESSION["errors"] = $errors;
+            $_SESSION["old"] = $_POST;
 
             header("Location: ?page=tambah-jenis-publikasi&id=" . $_POST['id']);
-            exit;
+            exit();
         }
 
         $model = new JenisPublikasiModel($pdo);
@@ -130,10 +126,11 @@ class JenisPublikasiController
 
         $_SESSION['flash'] = [
             'status' => 'success',
-            'message' => 'Jenis peraturan berhasil diperbarui'
+            'message' => 'Jenis publikasi berhasil diperbarui'
         ];
 
         header("Location: ?page=tambah-jenis-publikasi");
+        exit();
     }
 
     public function delete()
@@ -153,7 +150,7 @@ class JenisPublikasiController
 
             $_SESSION['flash'] = [
                 'status'  => 'error',
-                'message' => 'Jenis tidak dapat dihapus karena masih digunakan di data peraturan'
+                'message' => 'Jenis tidak dapat dihapus karena masih digunakan di data publikasi'
             ];
 
             header("Location: ?page=tambah-jenis-publikasi");
@@ -164,7 +161,7 @@ class JenisPublikasiController
 
         $_SESSION['flash'] = [
             'status'  => 'success',
-            'message' => 'Jenis peraturan berhasil dinonaktifkan'
+            'message' => 'Jenis publikasi berhasil dinonaktifkan'
         ];
 
         header("Location: ?page=tambah-jenis-publikasi");

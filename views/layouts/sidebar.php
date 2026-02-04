@@ -7,8 +7,8 @@ $arsipPages = ['arsip', 'tambah-arsip'];
 $publikasiPages = ['publikasi', 'tambah-publikasi', 'tambah-jenis-publikasi'];
 $dokumenPages = ['dokumen', 'tambah-dokumen', 'tambah-jenis-dokumen'];
 $pengaturanPages = ['profil', 'manajemen-file', 'backup-data'];
-$dipPages = ['dip', 'tambah-dip', 'detail-dip'];
-$peraturanPages = ['peraturan', 'tambah-peraturan', 'detail-peraturan', 'jenis-peraturan', 'tambah-jenis-peraturan'];
+$dipPages = ['dip', 'tambah-dip', 'detail-dip', 'edit-dip'];
+$peraturanPages = ['peraturan', 'tambah-peraturan', 'detail-peraturan', 'edit-peraturan', 'jenis-peraturan', 'tambah-jenis-peraturan'];
 $pegawaiPages = ['pegawai', 'tambah-pegawai', 'detail-pegawai'];
 ?>
 
@@ -75,7 +75,7 @@ $pegawaiPages = ['pegawai', 'tambah-pegawai', 'detail-pegawai'];
             <div class="dropdown-menu <?= in_array($page, $dipPages) ? 'show' : '' ?>">
                 <div class="dropdown-menu-columns">
                     <div class="dropdown-menu-column">
-                        <a class="dropdown-item <?= $page === 'dip' ? 'active' : '' ?>" href="<?= BASE_URL ?>/?page=dip">
+                        <a class="dropdown-item <?= ($page === 'dip' || $page === 'edit-dip') ? 'active' : '' ?>" href="<?= BASE_URL ?>/?page=dip">
                             Daftar DIP
                         </a>
                         <a class="dropdown-item <?= $page === 'tambah-dip' ? 'active' : '' ?>" href="<?= BASE_URL ?>/?page=tambah-dip">
@@ -88,7 +88,7 @@ $pegawaiPages = ['pegawai', 'tambah-pegawai', 'detail-pegawai'];
                 </div>
             </div>
         </li>
-        <li class="nav-item dropdown <?= in_array($page, $dokumenPages) ? 'active' : '' ?> mb-2">
+        <!-- <li class="nav-item dropdown <?= in_array($page, $dokumenPages) ? 'active' : '' ?> mb-2">
             <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-files">
@@ -117,7 +117,7 @@ $pegawaiPages = ['pegawai', 'tambah-pegawai', 'detail-pegawai'];
                     </div>
                 </div>
             </div>
-        </li>
+        </li> -->
         <li class="nav-item dropdown <?= in_array($page, $publikasiPages) ? 'active' : '' ?> mb-2">
             <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -198,7 +198,7 @@ $pegawaiPages = ['pegawai', 'tambah-pegawai', 'detail-pegawai'];
             <div class="dropdown-menu <?= in_array($page, $peraturanPages) ? 'show' : '' ?>">
                 <div class="dropdown-menu-columns">
                     <div class="dropdown-menu-column">
-                        <a class="dropdown-item <?= $page === 'peraturan' ? 'active' : '' ?>" href="<?= BASE_URL ?>/?page=peraturan">
+                        <a class="dropdown-item <?= ($page === 'peraturan' || $page === 'edit-peraturan') ? 'active' : '' ?>" href="<?= BASE_URL ?>/?page=peraturan">
                             Daftar Peraturan
                         </a>
                         <a class="dropdown-item <?= $page === 'tambah-peraturan' ? 'active' : '' ?>" href="<?= BASE_URL ?>/?page=tambah-peraturan">

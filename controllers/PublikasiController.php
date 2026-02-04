@@ -15,10 +15,45 @@ class PublikasiController
         $user = currentUser();
         $role = currentRole();
 
+        $tanggalMulai = $_GET['tanggal_mulai'] ?? null;
+        $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
+        $jenis = $_GET['jenis'] ?? null;
+
         $model = new PublikasiModel($pdo);
-        $data = $model->getAll();
+
+        if (!empty($tanggalMulai) || !empty($tanggalSelesai) || !empty($jenis)) {
+            $data = $model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
+        } else {
+            // default
+            $data = $model->getAll();
+        }
 
         require __DIR__ . '/../views/publikasi/index.php';
+    }
+
+    public function getFiltered()
+    {
+        // ambil filter dari GET
+        $tahun = $_GET['tahun'] ?? null;
+        $jenis = $_GET['jenis'] ?? null;
+
+        // jika ada filter → pakai getFiltered
+        global $pdo;
+
+        $user = currentUser();
+        $role = currentRole();
+
+        $model = new PublikasiModel($pdo);
+        if (!empty($tahun) || !empty($jenis)) {
+            $data = $model->getFiltered($tahun, $jenis);
+        } else {
+            // default
+            $data = $model->getAll();
+        }
+
+        // kirim ke view
+        header('Location: ?page=dip');
+        exit;
     }
 
     public function create()

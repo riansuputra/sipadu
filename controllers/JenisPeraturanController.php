@@ -111,6 +111,12 @@ class JenisPeraturanController
 
     public function update()
     {
+
+        // echo "<pre>";
+        // print_r($_POST);
+        // echo "</pre>";
+        // die();
+
         authOnly();
         global $pdo;
         $user = currentUser();
@@ -118,7 +124,7 @@ class JenisPeraturanController
 
         $errors = [];
 
-        if (empty($_POST['kodde'])) {
+        if (empty($_POST['kode'])) {
             $errors['kode'] = "Singkatan jenis wajib diisi";
         }
         if (empty($_POST['nama'])) {
@@ -142,6 +148,7 @@ class JenisPeraturanController
         ];
 
         header("Location: ?page=tambah-jenis-peraturan");
+        exit();
     }
 
     public function delete()
@@ -176,5 +183,6 @@ class JenisPeraturanController
         ];
 
         header("Location: ?page=tambah-jenis-peraturan");
+        exit;
     }
 }

@@ -15,6 +15,7 @@ ob_start();
 <?php
 // echo '<pre>';
 // print_r($data);
+// print_r($jenisPeraturan);
 // foreach ($data as $dt => $d):
 //     if ($d['files']) {
 
@@ -30,7 +31,7 @@ ob_start();
 
 // endforeach;
 
-// echo '</pre>';
+echo '</pre>';
 $tahun = $_GET['tahun'] ?? null;
 $jenis = $_GET['jenis'] ?? null;
 
@@ -45,7 +46,7 @@ if ($tahun || $jenis) {
     }
 
     if ($jenis) {
-        $parts[] = "jenis informasi '<strong>" . htmlspecialchars(ucwords(strtolower($jenis))) . "</strong>'";
+        $parts[] = "jenis peraturan '<strong>" . htmlspecialchars(ucwords(strtolower($jenis))) . "</strong>'";
     }
 
     $deskripsi = 'Filter data peraturan ' . implode(' dan ', $parts);
@@ -117,7 +118,7 @@ if ($tahun || $jenis) {
                                         <form method="get">
                                             <div class="row">
 
-                                                <input type="hidden" name="page" value="dip">
+                                                <input type="hidden" name="page" value="peraturan">
                                                 <div class="col-auto">
                                                     <select name="tahun" class="form-select w-auto">
                                                         <option value="">Semua Tahun</option>
@@ -132,12 +133,14 @@ if ($tahun || $jenis) {
                                                 <div class="col-auto">
                                                     <select name="jenis" class="form-select w-auto">
                                                         <option value="">Semua Jenis</option>
-                                                        <option value="BERKALA" <?= ($_GET['jenis'] ?? '') == 'BERKALA' ? 'selected' : '' ?>>Berkala</option>
-                                                        <option value="SERTA MERTA" <?= ($_GET['jenis'] ?? '') == 'SERTA MERTA' ? 'selected' : '' ?>>Serta Merta</option>
-                                                        <option value="SETIAP SAAT" <?= ($_GET['jenis'] ?? '') == 'SETIAP SAAT' ? 'selected' : '' ?>>Setiap Saat</option>
-                                                        <option value="DIKECUALIKAN" <?= ($_GET['jenis'] ?? '') == 'DIKECUALIKAN' ? 'selected' : '' ?>>Dikecualikan</option>
+                                                        <?php foreach ($jenisPeraturan as $j): ?>
+                                                            <option
+                                                                value="<?= $j['kode'] ?>"
+                                                                <?= ($_GET['jenis'] ?? '') == $j['kode'] ? 'selected' : '' ?>>
+                                                                <?= $j['kode'] ?>
+                                                            </option>
+                                                        <?php endforeach; ?>
                                                     </select>
-
                                                 </div>
                                                 <div class="col-auto ms-auto">
                                                     <button class="btn btn-primary">
@@ -148,7 +151,7 @@ if ($tahun || $jenis) {
                                                         </svg>
                                                         Filter
                                                     </button>
-                                                    <a href="?page=dip" class="btn btn-secondary">
+                                                    <a href="?page=peraturan" class="btn btn-secondary">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
                                                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                             <path d="M4 7l16 0" />
@@ -178,11 +181,11 @@ if ($tahun || $jenis) {
                                             <th>
                                                 <button class="table-sort d-flex justify-content-between" data-sort="sort-judul">Judul</button>
                                             </th>
-                                            <th>
-                                                <button class="table-sort d-flex justify-content-between" data-sort="sort-jenis">Jenis</button>
-                                            </th>
                                             <th class="w-1">
                                                 <button class="table-sort d-flex justify-content-between" data-sort="sort-tahun">Tahun Terbit</button>
+                                            </th>
+                                            <th>
+                                                <button class="table-sort d-flex justify-content-between" data-sort="sort-jenis">Jenis</button>
                                             </th>
                                             <th>
                                                 <button class="table-sort d-flex justify-content-between" data-sort="sort-file">File</button>
@@ -201,13 +204,13 @@ if ($tahun || $jenis) {
                                                 <td class="sort-judul">
                                                     <?= htmlspecialchars($d['judul'] ?? '-') ?>
                                                 </td>
-
-                                                <td class="sort-jenis">
-                                                    <?= htmlspecialchars($d['jenis'] ?? '-') ?> (<?= htmlspecialchars($d['kode_jenis'] ?? '-') ?>)
-                                                </td>
                                                 <td class="sort-tahun">
                                                     <?= htmlspecialchars($d['tahun_terbit'] ?? '-') ?>
                                                 </td>
+                                                <td class="sort-jenis">
+                                                    <?= htmlspecialchars($d['jenis'] ?? '-') ?> (<?= htmlspecialchars($d['kode_jenis'] ?? '-') ?>)
+                                                </td>
+
                                                 <td class="sort-file">
                                                     <?php
                                                     $listFile = [];
@@ -282,24 +285,25 @@ if ($tahun || $jenis) {
                                                 </td>
                                                 <td>
                                                     <div class="btn-group w-100">
-                                                        <a href="" class="text-primary me-1">
+                                                        <a href="" class="text-primary me-1" data-bs-toggle="modal" data-bs-target="#modal-detail-<?= $d['id'] ?>">
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-eye" data-bs-toggle="tooltip" data-bs-placement="top" title="Detail">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                 <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
                                                                 <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
                                                             </svg>
                                                         </a>
-                                                        <a href="" class="text-yellow me-1">
-
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-edit">
+                                                        <a href="?page=edit-peraturan&id=<?= $d["id"] ?>" class="text-yellow me-1">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                 <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
                                                                 <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415" />
                                                                 <path d="M16 5l3 3" />
                                                             </svg>
                                                         </a>
-                                                        <a href="" class="text-red">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+                                                        <a type="button" class="text-red" onclick="confirmDelete(
+                                                                '<?= BASE_URL ?>?page=peraturan-delete&id=<?= $d['id'] ?>'
+                                                            )">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                 <path d="M4 7l16 0" />
                                                                 <path d="M10 11l0 6" />
@@ -312,6 +316,134 @@ if ($tahun || $jenis) {
 
                                                 </td>
                                             </tr>
+
+                                            <div class="modal modal-blur fade" id="modal-detail-<?= $d['id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="card-header">
+                                                            <h3 class="card-title">Detail Peraturan</h3>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+
+                                                            <dl class="row">
+                                                                <dt class="col-4 text-muted mb-3">Judul</dt>
+                                                                <dt class="col-1 mb-3 col-auto text-end">:</dt>
+                                                                <dd class="col-7 text-bold mb-3"><strong><?= $d['judul'] ?? '-' ?></strong></dd>
+                                                                <dt class="col-4 text-muted mb-3">Tajuk Entri Utama</dt>
+                                                                <dt class="col-1 mb-3 col-auto text-end">:</dt>
+                                                                <dd class="col-7 text-bold mb-3"><strong><?= $d['teu'] ?? '-' ?></strong></dd>
+                                                                <dt class="col-4 text-muted mb-3">Nomor</dt>
+                                                                <dt class="col-1 mb-3 col-auto text-end">:</dt>
+                                                                <dd class="col-7 text-bold mb-3"><strong><?= $d['nomor'] ?? '-' ?></strong></dd>
+                                                                <dt class="col-4 text-muted mb-3">Tahun</dt>
+                                                                <dt class="col-1 mb-3 col-auto text-end">:</dt>
+                                                                <dd class="col-7 text-bold mb-3"><strong>Tahun <?= $d['tahun_terbit'] ?? '-' ?></strong></dd>
+                                                                <dt class="col-4 text-muted mb-3">Jenis</dt>
+                                                                <dt class="col-1 mb-3 col-auto text-end">:</dt>
+                                                                <dd class="col-7 text-bold mb-3"><strong><?= $d['jenis'] ?></strong></dd>
+                                                                <dt class="col-4 text-muted mb-3">Singkatan Jenis</dt>
+                                                                <dt class="col-1 mb-3 col-auto text-end">:</dt>
+                                                                <dd class="col-7 text-bold mb-3"><strong><?= $d['kode_jenis'] ?? '-' ?></strong></dd>
+                                                                <dt class="col-4 text-muted mb-3">Tempat Penetapan</dt>
+                                                                <dt class="col-1 mb-3 col-auto text-end">:</dt>
+                                                                <dd class="col-7 text-bold mb-3"><strong><?= $d['tempat_penetapan'] ?? '-' ?></strong></dd>
+                                                                <dt class="col-4 text-muted mb-3">Penandatangan</dt>
+                                                                <dt class="col-1 mb-3 col-auto text-end">:</dt>
+                                                                <dd class="col-7 text-bold mb-3"><strong><?= $d['penandatangan'] ?? '-' ?></strong></dd>
+                                                                <dt class="col-4 text-muted">File</dt>
+                                                                <dt class="col-1 col-auto text-end">:</dt>
+                                                                <dd class="col-7 text-bold">
+                                                                    <?php
+                                                                    $listFile = [];
+
+                                                                    if (!empty($d["files"])) {
+                                                                        $files = explode("##", $d["files"],);
+
+                                                                        foreach ($files as $f) {
+                                                                            $part = explode("|", $f,);
+
+                                                                            if (count($part) === 4) {
+                                                                                [
+                                                                                    $id,
+                                                                                    $nama,
+                                                                                    $path,
+                                                                                    $tipe,
+                                                                                ] = $part;
+
+                                                                                $listFile[] = [
+                                                                                    "id" => htmlspecialchars($id,),
+                                                                                    "nama" => htmlspecialchars($nama,),
+                                                                                    "path" => htmlspecialchars($path,),
+                                                                                    "tipe" => htmlspecialchars($tipe,),
+                                                                                ];
+                                                                            }
+                                                                        }
+                                                                    }
+
+                                                                    // tampilkan
+                                                                    foreach ($listFile as $f):
+                                                                        $ext = strtolower(pathinfo($f["nama"], PATHINFO_EXTENSION,),);
+                                                                        // SVG inline
+                                                                        $fid = $f["id"];
+                                                                        if ($ext === "pdf") {
+                                                                            $icon = '
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red icon icon-tabler icons-tabler-outline icon-tabler-file-type-pdf">
+                                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                                            <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                                                                            <path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v4" />
+                                                                            <path d="M5 18h1.5a1.5 1.5 0 0 0 0 -3h-1.5v6" />
+                                                                            <path d="M17 18h2" />
+                                                                            <path d="M20 15h-3v6" />
+                                                                            <path d="M11 15v6h1a2 2 0 0 0 2 -2v-2a2 2 0 0 0 -2 -2h-1" />
+                                                                        </svg>';
+                                                                        } elseif ($ext === "jpg") {
+                                                                            // image
+                                                                            $icon = '
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow icon icon-tabler icons-tabler-outline icon-tabler-file-type-jpg">
+                                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                                            <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                                                                            <path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v4" />
+                                                                            <path d="M11 18h1.5a1.5 1.5 0 0 0 0 -3h-1.5v6" />
+                                                                            <path d="M20 15h-1a2 2 0 0 0 -2 2v2a2 2 0 0 0 2 2h1v-3" />
+                                                                            <path d="M5 15h3v4.5a1.5 1.5 0 0 1 -3 0" />
+                                                                        </svg>';
+                                                                        } else {
+                                                                            $icon = '
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-secondary icon icon-tabler icons-tabler-outline icon-tabler-file-type-png">
+                                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                                            <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                                                                            <path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v4" />
+                                                                            <path d="M20 15h-1a2 2 0 0 0 -2 2v2a2 2 0 0 0 2 2h1v-3" />
+                                                                            <path d="M5 18h1.5a1.5 1.5 0 0 0 0 -3h-1.5v6" />
+                                                                            <path d="M11 21v-6l3 6v-6" />
+                                                                        </svg>';
+                                                                        }
+                                                                    ?>
+                                                                        <div class="col-12 mb-0">
+
+                                                                            <a href='/sipadu/<?= $path ?>' target='_blank' class="mb-1">
+                                                                                <?= $icon ?>&nbsp;<?= shortname($f["nama"], 20,) ?>
+                                                                            </a>
+                                                                            <a href="?page=dip-file&file=<?= $fid ?>&id=<?= $d['id'] ?>" class="icon icon-sm text-end mt-0" aria-label="Button" data-bs-toggle="tooltip" data-bs-placement="top" title="Download">
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2fb344" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-download">
+                                                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                                                    <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
+                                                                                    <path d="M7 11l5 5l5 -5" />
+                                                                                    <path d="M12 4l0 12" />
+                                                                                </svg>
+                                                                            </a>
+                                                                        </div>
+                                                                    <?php
+                                                                    endforeach;
+                                                                    ?>
+                                                                </dd>
+                                                            </dl>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         <?php endforeach; ?>
 
                                     </tbody>
@@ -352,30 +484,17 @@ if ($tahun || $jenis) {
                 "data-sort": "sort-no",
                 name: "No"
             },
-
             {
                 "data-sort": "sort-judul",
                 name: "Judul"
-            },
-            {
-                "data-sort": "sort-jenis",
-                name: "Jenis"
-            },
-            {
-                "data-sort": "sort-status-hid",
-                name: "Status-hid"
             },
             {
                 "data-sort": "sort-tahun",
                 name: "Tahun Terbit"
             },
             {
-                "data-sort": "sort-subjek",
-                name: "Subjek"
-            },
-            {
-                "data-sort": "sort-status",
-                name: "Status"
+                "data-sort": "sort-jenis",
+                name: "Jenis"
             },
             {
                 "data-sort": "sort-file",
@@ -431,17 +550,41 @@ if ($tahun || $jenis) {
 </script>
 
 <script>
-    document.querySelector('#filter-jenis').addEventListener('change', function() {
-        const val = this.value;
-        const list = window.tabler_list["advanced-table"];
+    function confirmDelete(url, label = '') {
 
-        if (val === '') {
-            list.search('');
-        } else {
-            list.search(val, ['sort-status-hid']);
-        }
-    });
+        Swal.fire({
+            title: 'Yakin ingin menghapus?',
+            html: label ?
+                `Data <strong>${label}</strong> akan dihapus permanen` : 'Data akan dihapus permanen',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, hapus',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+                window.location.href = url;
+            }
+
+        });
+    }
 </script>
+<?php if (isset($_SESSION['flash'])): ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            Swal.fire({
+                icon: '<?= $_SESSION['flash']['status'] ?>',
+                title: <?= $_SESSION['flash']['status'] === 'success'
+                            ? "'Berhasil!'"
+                            : "'Gagal!'" ?>,
+                text: <?= json_encode($_SESSION['flash']['message']) ?>
+            });
+
+        });
+    </script>
+    <?php unset($_SESSION['flash']); ?>
+<?php endif; ?>
 
 
 <?php

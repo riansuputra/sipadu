@@ -4,7 +4,7 @@
 // ================================
 
 // Judul
-$title = "Tambah Peraturan";
+$title = "Edit Peraturan";
 
 
 
@@ -17,7 +17,9 @@ ob_start();
 
 <?php
 // echo '<pre>';
-// print_r($user);  
+// print_r($user);
+// print_r($files);
+
 // echo '</pre>';
 $errors = $_SESSION['errors'] ?? [];
 $old    = $_SESSION['old'] ?? [];
@@ -31,7 +33,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
             <div class="col">
                 <!-- Page pre-title -->
                 <div class="page-pretitle">Peraturan</div>
-                <h2 class="page-title">Tambah Peraturan</h2>
+                <h2 class="page-title">Edit Peraturan</h2>
             </div>
         </div>
     </div>
@@ -42,10 +44,10 @@ unset($_SESSION['errors'], $_SESSION['old']);
     <div class="container-xl">
         <div class="row row-cards">
 
-            <div class="col-xl-6 col-sm-6">
-                <form class="card" method="POST" action="?page=peraturan-store" enctype="multipart/form-data">
+            <div class="col-sm-12 col-lg-6">
+                <form class="card" method="POST" action="?page=peraturan-update&id=<?= $peraturan['id'] ?>" enctype="multipart/form-data">
                     <div class="card-header">
-                        <h3 class="card-title">Form Tambah Peraturan</h3>
+                        <h3 class="card-title">Form Edit Peraturan</h3>
                         <div class="card-actions">
                             <a class="btn btn-primary" href="?page=peraturan"><!-- Download SVG icon from http://tabler.io/icons/icon/chevron-left -->
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
@@ -61,14 +63,21 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                 <div class="mb-3 row">
                                     <label class="col-3 col-form-label required">Jenis Peraturan</label>
                                     <div class="col">
-                                        <select class="form-select <?= isset($errors['jenis_id']) ? 'is-invalid' : '' ?>" name="jenis_id" id="jenis_id">
-                                            <option value="" disabled <?= empty($old['jenis_id']) ? 'selected' : '' ?>>-- Pilih Jenis Peraturan --</option>
+                                        <select class="form-select <?= isset($errors['jenis_id']) ? 'is-invalid' : '' ?>"
+                                            name="jenis_id"
+                                            id="jenis_id">
+                                            <option value="" disabled <?= empty($peraturan['jenis_id']) ? 'selected' : '' ?>>
+                                                -- Pilih Jenis Peraturan --
+                                            </option>
+
                                             <?php foreach ($jenis as $j): ?>
-                                                <option value="<?= $j['id'] ?>" <?= ($old['jenis_id'] ?? '') == $j['id'] ? 'selected' : '' ?>>
+                                                <option value="<?= $j['id'] ?>"
+                                                    <?= ($peraturan['jenis_id'] ?? '') == $j['id'] ? 'selected' : '' ?>>
                                                     <?= $j['kode'] ?> (<?= $j['nama'] ?>)
                                                 </option>
                                             <?php endforeach; ?>
                                         </select>
+
                                         <div class="invalid-feedback">
                                             <?= $errors['jenis_id'] ?? '' ?>
                                         </div>
@@ -82,7 +91,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                             id="judul"
                                             rows="3"
                                             placeholder="Judul..."
-                                            class="form-control <?= isset($errors['judul']) ? 'is-invalid' : '' ?>"><?= $old['judul'] ?></textarea>
+                                            class="form-control <?= isset($errors['judul']) ? 'is-invalid' : '' ?>"><?= $peraturan['judul'] ?? $old['judul'] ?? '' ?></textarea>
                                         <div class="invalid-feedback">
                                             <?= $errors['judul'] ?? '' ?>
                                         </div>
@@ -96,7 +105,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                             name="nomor"
                                             id="nomor"
                                             placeholder="Nomor..."
-                                            value="<?= $old['nomor'] ?>"
+                                            value="<?= $peraturan['nomor'] ?? $old['nomor'] ?>"
                                             class="form-control <?= isset($errors['nomor']) ? 'is-invalid' : '' ?>">
                                         <div class="invalid-feedback">
                                             <?= $errors['nomor'] ?? '' ?>
@@ -111,7 +120,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                             name="teu"
                                             id="teu"
                                             placeholder="Tajuk Entri Utama..."
-                                            value="<?= $old['teu'] ?>"
+                                            value="<?= $peraturan['teu'] ?? $old['teu'] ?>"
                                             class="form-control <?= isset($errors['teu']) ? 'is-invalid' : '' ?>">
                                         <div class="invalid-feedback">
                                             <?= $errors['teu'] ?? '' ?>
@@ -121,10 +130,18 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                 <div class="mb-3 row">
                                     <label class="col-3 col-form-label required">Tahun Terbit</label>
                                     <div class="col">
-                                        <select name="tahun_terbit" id="tahun_terbit" class="form-select <?= isset($errors['jenis_id']) ? 'is-invalid' : '' ?>">
-                                            <option value="" disabled <?= empty($old['tahun_terbit']) ? 'selected' : '' ?>>-- Pilih Tahun Terbit --</option>
+                                        <select name="tahun_terbit"
+                                            id="tahun_terbit"
+                                            class="form-select <?= isset($errors['tahun_terbit']) ? 'is-invalid' : '' ?>">
+                                            <option value="" disabled <?= empty($peraturan['tahun_terbit']) ? 'selected' : '' ?>>
+                                                -- Pilih Tahun Terbit --
+                                            </option>
+
                                             <?php for ($i = date('Y'); $i >= 1990; $i--): ?>
-                                                <option value="<?= $i ?>" <?= ($old['tahun_terbit'] ?? '') == $i ? 'selected' : '' ?>><?= $i ?></option>
+                                                <option value="<?= $i ?>"
+                                                    <?= ($peraturan['tahun_terbit'] ?? '') == $i ? 'selected' : '' ?>>
+                                                    <?= $i ?>
+                                                </option>
                                             <?php endfor; ?>
                                         </select>
                                         <div class="invalid-feedback">
@@ -140,7 +157,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                             name="tempat_penetapan"
                                             id="tempat_penetapan"
                                             placeholder="Tempat Penetapan..."
-                                            value="<?= $old['tempat_penetapan'] ?>"
+                                            value="<?= $peraturan['tempat_penetapan'] ?? $old['tempat_penetapan'] ?>"
                                             class="form-control <?= isset($errors['tempat_penetapan']) ? 'is-invalid' : '' ?>">
                                         <div class="invalid-feedback">
                                             <?= $errors['tempat_penetapan'] ?? '' ?>
@@ -155,7 +172,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                             name="penandatangan"
                                             id="penandatangan"
                                             placeholder="Penandatangan..."
-                                            value="<?= $old['penandatangan'] ?>"
+                                            value="<?= $peraturan['penandatangan'] ?? $old['penandatangan'] ?>"
                                             class="form-control <?= isset($errors['penandatangan']) ? 'is-invalid' : '' ?>">
                                         <div class="invalid-feedback">
                                             <?= $errors['penandatangan'] ?? '' ?>
@@ -172,13 +189,15 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                             accept=".pdf, .jpg, .png"
                                             multiple
                                             class="form-control <?= isset($errors['file']) ? 'is-invalid' : '' ?>">
-                                        <small class="form-hint">
-                                            Format: PDF, JPG, PNG (maks 5MB)
-                                        </small>
                                         <div class="invalid-feedback">
                                             <?= $errors['file'] ?? '' ?>
                                         </div>
+                                        <small class="form-hint">
+                                            Format: PDF, JPG, PNG (maks 5MB)
+                                        </small>
                                     </div>
+                                    <input type="text" name="id" id="id" value="<?= $peraturan['id'] ?>" hidden>
+                                    <input type="text" name="hapus_file" id="hapus_file" hidden>
                                 </div>
                             </div>
                         </div>
@@ -188,14 +207,42 @@ unset($_SESSION['errors'], $_SESSION['old']);
                     </div>
                 </form>
             </div>
-            <div class="col-sm-6">
-                <div class="card" id="preview-card" style="display: none;">
-                    <div class="card-header">
-                        <h3 class="card-title">Preview File</h3>
-                    </div>
+            <div class="col-sm-12 col-lg-6">
+                <div class="row">
+                    <?php if (!empty($files)): ?>
+                        <div class="card mb-2" id="old-file-card">
+                            <div class="card-header h3">File Tersimpan</div>
+                            <div class="card-body" id="old-file-list">
 
-                    <div class="card-body">
-                        <div id="preview-list"></div>
+                                <?php foreach ($files as $f): ?>
+                                    <div class="border rounded p-2 mb-2 d-flex justify-content-between align-items-center"
+                                        id="old-file-<?= $f["id"] ?>">
+
+                                        <a href="<?= BASE_URL .
+                                                        "/" .
+                                                        $f["path_file"] ?>" target="_blank">
+                                            <?= $f["nama_file"] ?>
+                                        </a>
+
+                                        <button type="button"
+                                            class="btn btn-danger btn-sm"
+                                            onclick="hapusFileLama(<?= $f["id"] ?>)">
+                                            Hapus
+                                        </button>
+                                    </div>
+                                <?php endforeach; ?>
+
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                    <div class="card" id="preview-card" style="display: none;">
+                        <div class="card-header">
+                            <h3 class="card-title">Preview File</h3>
+                        </div>
+
+                        <div class="card-body">
+                            <div id="preview-list"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -204,6 +251,35 @@ unset($_SESSION['errors'], $_SESSION['old']);
 </div>
 
 
+<script>
+    let fileLamaDihapus = [];
+
+    function hapusFileLama(id) {
+
+        if (!confirm('Hapus file ini?')) return;
+
+        if (!fileLamaDihapus.includes(id)) {
+            fileLamaDihapus.push(id);
+        }
+
+        document.getElementById('hapus_file').value =
+            fileLamaDihapus.join(',');
+
+        // hapus elemen file
+        const fileEl = document.getElementById('old-file-' + id);
+        if (fileEl) fileEl.remove();
+
+        // ==========================
+        // JIKA FILE HABIS → HILANGKAN CARD
+        // ==========================
+        const list = document.getElementById('old-file-list');
+
+        if (list.children.length === 0) {
+            const card = document.getElementById('old-file-card');
+            if (card) card.remove();
+        }
+    }
+</script>
 
 
 <script>
@@ -375,6 +451,36 @@ unset($_SESSION['errors'], $_SESSION['old']);
 
     <?php unset($_SESSION['flash']); ?>
 <?php endif; ?>
+
+<script>
+    function hapusFileLama(id) {
+
+        Swal.fire({
+            title: 'Hapus file?',
+            text: 'File akan dihapus saat data disimpan',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, hapus',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+
+            if (!result.isConfirmed) return;
+
+            fileLamaDihapus.push(id);
+            document.getElementById('hapus_file').value =
+                fileLamaDihapus.join(',');
+
+            const el = document.getElementById('old-file-' + id);
+            if (el) el.remove();
+
+            // jika kosong → card hilang
+            const list = document.getElementById('old-file-list');
+            if (list.children.length === 0) {
+                document.getElementById('old-file-card')?.remove();
+            }
+        });
+    }
+</script>
 
 <?php
 // Simpan konten ke variabel

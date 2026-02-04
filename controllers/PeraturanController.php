@@ -17,6 +17,9 @@ class PeraturanController
         $tahun = $_GET['tahun'] ?? null;
         $jenis = $_GET['jenis'] ?? null;
 
+        $modeljenis = new JenisPeraturanModel($pdo);
+        $jenisPeraturan = $modeljenis->getAll();
+
         $model = new PeraturanModel($pdo);
         if (!empty($tahun) || !empty($jenis)) {
             $data = $model->getFiltered($tahun, $jenis);
@@ -26,6 +29,33 @@ class PeraturanController
         }
 
         require __DIR__ . '/../views/peraturan/index.php';
+    }
+
+    public function getFiltered()
+    {
+        // ambil filter dari GET
+        $tahun = $_GET['tahun'] ?? null;
+        $jenis = $_GET['jenis'] ?? null;
+
+        // jika ada filter → pakai getFiltered
+        global $pdo;
+
+        $user = currentUser();
+        $role = currentRole();
+
+
+
+        $model = new PeraturanModel($pdo);
+        if (!empty($tahun) || !empty($jenis)) {
+            $data = $model->getFiltered($tahun, $jenis);
+        } else {
+            // default
+            $data = $model->getAll();
+        }
+
+        // kirim ke view
+        header('Location: ?page=peraturan');
+        exit;
     }
 
     public function create()
@@ -55,24 +85,61 @@ class PeraturanController
 
         $user = currentUser();
         $role = currentRole();
-
         $errors = [];
 
-        if (empty($_POST['judul']))
-            $errors[] = "Judul wajib diisi";
+        if (empty($_POST['judul'])) {
+            $errors['judul'] = "Judul wajib diisi";
+        } elseif (strlen($_POST['judul']) < 2) {
+            $errors['judul'] = "Judul minimal 2 karakter";
+        }
+        if (empty($_POST['nomor'])) {
+            $errors['nomor'] = "Nomor wajib diisi";
+        }
+        if (empty($_POST['teu'])) {
+            $errors['teu'] = "T.E.U. wajib diisi";
+        }
+        if (empty($_POST['jenis_id'])) {
+            $errors['jenis_id'] = "Jenis wajib diisi";
+        }
+        $currentYear = (int) date('Y');
+        $inputYear   = (int) $_POST['tahun_terbit'];
 
-        if (empty($_POST['jenis_id']))
-            $errors[] = "Jenis peraturan wajib dipilih";
+        if (empty($_POST['tahun_terbit'])) {
+            $errors['tahun_terbit'] = "Tahun terbit wajib diisi";
+        } elseif ($inputYear > $currentYear) {
+            $errors['tahun_terbit'] = "Tahun terbit tidak boleh di masa depan";
+        }
+        if (empty($_POST['tempat_penetapan'])) {
+            $errors['tempat_penetapan'] = "Tempat penetapan wajib diisi";
+        }
+        if (empty($_POST['penandatangan'])) {
+            $errors['penandatangan'] = "Penandatangan wajib diisi";
+        }
+        if (!empty($_FILES["file"]["name"][0])) {
 
+            $allowed = ["pdf", "jpg", "jpeg", "png"];
+
+            foreach ($_FILES["file"]["name"] as $i => $name) {
+                $size = $_FILES["file"]["size"][$i];
+                $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+
+                if (!in_array($ext, $allowed)) {
+                    $errors['file'] = "File {$name} tidak diizinkan";
+                }
+
+                if ($size > 5 * 1024 * 1024) {
+                    $errors['file'] = "File {$name} lebih dari 5MB";
+                }
+            }
+        }
         if (!empty($errors)) {
-            $_SESSION['flash'] = [
-                'status'  => 'error',
-                'message' => implode("<br>", $errors)
-            ];
+            $_SESSION["errors"] = $errors;
+            $_SESSION["old"] = $_POST;
 
             header("Location: ?page=tambah-peraturan");
-            exit;
+            exit();
         }
+
 
         $model = new PeraturanModel($pdo);
 
@@ -154,30 +221,77 @@ class PeraturanController
         $peraturan = $model->getById($id);
         $files = $model->getFiles($id);
 
+        $modeljenis = new JenisPeraturanModel($pdo);
+        $jenis = $modeljenis->getAll();
+
         require __DIR__ . '/../views/peraturan/edit.php';
     }
 
     public function update()
     {
+        // echo "<pre>";
+        // print_r($_POST);
+        // echo "</pre>";
+        // die();
+
         authOnly();
         global $pdo;
 
         $errors = [];
 
-        if (empty($_POST['judul']))
-            $errors[] = "Judul wajib diisi";
+        $errors = [];
 
-        if (empty($_POST['jenis_id']))
-            $errors[] = "Jenis peraturan wajib dipilih";
+        if (empty($_POST['judul'])) {
+            $errors['judul'] = "Judul wajib diisi";
+        } elseif (strlen($_POST['judul']) < 2) {
+            $errors['judul'] = "Judul minimal 2 karakter";
+        }
+        if (empty($_POST['nomor'])) {
+            $errors['nomor'] = "Nomor wajib diisi";
+        }
+        if (empty($_POST['teu'])) {
+            $errors['teu'] = "T.E.U. wajib diisi";
+        }
+        if (empty($_POST['jenis_id'])) {
+            $errors['jenis_id'] = "Jenis wajib diisi";
+        }
+        $currentYear = (int) date('Y');
+        $inputYear   = (int) $_POST['tahun_terbit'];
 
+        if (empty($_POST['tahun_terbit'])) {
+            $errors['tahun_terbit'] = "Tahun terbit wajib diisi";
+        } elseif ($inputYear > $currentYear) {
+            $errors['tahun_terbit'] = "Tahun terbit tidak boleh di masa depan";
+        }
+        if (empty($_POST['tempat_penetapan'])) {
+            $errors['tempat_penetapan'] = "Tempat penetapan wajib diisi";
+        }
+        if (empty($_POST['penandatangan'])) {
+            $errors['penandatangan'] = "Penandatangan wajib diisi";
+        }
+        if (!empty($_FILES["file"]["name"][0])) {
+
+            $allowed = ["pdf", "jpg", "jpeg", "png"];
+
+            foreach ($_FILES["file"]["name"] as $i => $name) {
+                $size = $_FILES["file"]["size"][$i];
+                $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+
+                if (!in_array($ext, $allowed)) {
+                    $errors['file'] = "File {$name} tidak diizinkan";
+                }
+
+                if ($size > 5 * 1024 * 1024) {
+                    $errors['file'] = "File {$name} lebih dari 5MB";
+                }
+            }
+        }
         if (!empty($errors)) {
-            $_SESSION['flash'] = [
-                'status'  => 'error',
-                'message' => implode("<br>", $errors)
-            ];
+            $_SESSION["errors"] = $errors;
+            $_SESSION["old"] = $_POST;
 
-            header("Location: ?page=edit-peraturan&id=" . $_POST['id']);
-            exit;
+            header("Location: ?page=edit-peraturan&id=" . $_POST["id"]);
+            exit();
         }
 
         $model = new PeraturanModel($pdo);
@@ -185,6 +299,13 @@ class PeraturanController
         $data = $_POST;
 
         $model->update($_POST['id'], $data);
+
+        if (!empty($_POST["hapus_file"])) {
+            $ids = explode(",", $_POST["hapus_file"]);
+            foreach ($ids as $id) {
+                $model->deleteFileById($id);
+            }
+        }
 
         // ============= HANDLE UPLOAD FILE BARU ==============
         if (!empty($_FILES['file']['name'][0])) {
@@ -234,7 +355,13 @@ class PeraturanController
         $model = new PeraturanModel($pdo);
         $model->delete($_GET['id']);
 
+        $_SESSION['flash'] = [
+            'status'  => 'success',
+            'message' => 'Data berhasil dihapus'
+        ];
+
         header("Location: ?page=peraturan");
+        exit;
     }
 
     public function publicIndex()

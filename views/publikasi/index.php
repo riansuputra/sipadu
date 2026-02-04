@@ -31,25 +31,32 @@ ob_start();
 // endforeach;
 
 // echo '</pre>';
-$tahun = $_GET['tahun'] ?? null;
-$jenis = $_GET['jenis'] ?? null;
+$tanggalMulai   = $_GET['tanggal_mulai'] ?? null;
+$tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
+$jenis          = $_GET['jenis'] ?? null;
 
 $deskripsi = 'Menampilkan seluruh data';
 
-if ($tahun || $jenis) {
+if ($tanggalMulai || $tanggalSelesai || $jenis) {
 
     $parts = [];
 
-    if ($tahun) {
-        $parts[] = "tahun '<strong>" . htmlspecialchars($tahun) . "</strong>'";
+    if ($tanggalMulai && $tanggalSelesai) {
+        $parts[] = "tanggal <strong>" . htmlspecialchars($tanggalMulai) .
+            "</strong> sampai <strong>" . htmlspecialchars($tanggalSelesai) . "</strong>";
+    } elseif ($tanggalMulai) {
+        $parts[] = "tanggal <strong>" . htmlspecialchars($tanggalMulai) . "</strong>";
     }
 
     if ($jenis) {
-        $parts[] = "jenis informasi '<strong>" . htmlspecialchars(ucwords(strtolower($jenis))) . "</strong>'";
+        $parts[] = "jenis informasi '<strong>" .
+            htmlspecialchars(ucwords(strtolower($jenis))) .
+            "</strong>'";
     }
 
     $deskripsi = 'Filter data DIP ' . implode(' dan ', $parts);
 }
+
 ?>
 
 <div class="page-header d-print-none" aria-label="Page header">
@@ -117,7 +124,22 @@ if ($tahun || $jenis) {
                                         <form method="get">
                                             <div class="row">
 
-                                                <input type="hidden" name="page" value="dip">
+                                                <input type="hidden" name="page" value="publikasi">
+
+                                                <div class="col-auto">
+                                                    <input type="date"
+                                                        name="tanggal_mulai"
+                                                        class="form-control"
+                                                        value="<?= htmlspecialchars($_GET['tanggal_mulai'] ?? '') ?>">
+                                                </div>
+
+                                                <div class="col-auto">
+                                                    <input type="date"
+                                                        name="tanggal_selesai"
+                                                        class="form-control"
+                                                        value="<?= htmlspecialchars($_GET['tanggal_selesai'] ?? '') ?>">
+                                                </div>
+
                                                 <div class="col-auto">
                                                     <select name="tahun" class="form-select w-auto">
                                                         <option value="">Semua Tahun</option>

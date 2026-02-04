@@ -31,7 +31,7 @@ class PeraturanModel
 
         LEFT JOIN peraturan_file pf 
             ON p.id = pf.peraturan_id
-
+        WHERE p.is_active = 1
         GROUP BY p.id
         ORDER BY p.tahun_terbit DESC, p.created_at DESC
     ");
@@ -46,13 +46,14 @@ class PeraturanModel
             p.*,
             j.nama AS jenis,
             j.kode AS kode_jenis,
+            j.id,
             GROUP_CONCAT(
                 CONCAT(pf.id, '|', pf.nama_file, '|', pf.path_file, '|', pf.tipe_file) 
                 SEPARATOR '##'
             ) AS files
         FROM peraturan p
         LEFT JOIN jenis_peraturan j ON p.jenis_id = j.id
-        LEFT JOIN peraturan_file pf ON p.id = pf.p_id
+        LEFT JOIN peraturan_file pf ON p.id = pf.peraturan_id
         WHERE p.is_active = 1
     ";
 
@@ -64,13 +65,13 @@ class PeraturanModel
         }
 
         if (!empty($jenis)) {
-            $sql .= " AND kode_jenis = ?";
+            $sql .= " AND j.kode = ?";
             $params[] = $jenis;
         }
 
         $sql .= "
         GROUP BY p.id
-        ORDER BY p.tahun DESC, p.created_at DESC
+        ORDER BY p.tahun_terbit DESC, p.created_at DESC
     ";
 
         $stmt = $this->db->prepare($sql);
@@ -133,7 +134,7 @@ class PeraturanModel
                 jenis_id = ?,
                 tahun_terbit = ?,
                 tempat_penetapan = ?,
-                penandatangan = ?,
+                penandatangan = ?
             WHERE id = ?
         ");
 
@@ -145,6 +146,7 @@ class PeraturanModel
             $data['tahun_terbit'],
             $data['tempat_penetapan'],
             $data['penandatangan'],
+            $id
         ]);
     }
 
@@ -203,6 +205,8 @@ class PeraturanModel
         $stmt = $this->db->prepare("
             DELETE FROM peraturan_file WHERE id = ?
         ");
+
+        return $stmt->execute([$fileId]);
     }
 
     public function deleteFiles($id)

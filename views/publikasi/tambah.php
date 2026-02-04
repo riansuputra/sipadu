@@ -16,6 +16,11 @@ ob_start();
 // echo '<pre>';
 // print_r($user);  
 // echo '</pre>';
+$errors = $_SESSION['errors'] ?? [];
+$old    = $_SESSION['old'] ?? [];
+
+// 🔥 HAPUS SETELAH DIPAKAI
+unset($_SESSION['errors'], $_SESSION['old']);
 ?>
 
 <div class="page-header d-print-none" aria-label="Page header">
@@ -40,7 +45,7 @@ ob_start();
                     <div class="card-header">
                         <h3 class="card-title">Form Tambah Publikasi</h3>
                         <div class="card-actions">
-                            <a class="btn btn-outline-primary"><!-- Download SVG icon from http://tabler.io/icons/icon/chevron-left -->
+                            <a class="btn btn-primary"><!-- Download SVG icon from http://tabler.io/icons/icon/chevron-left -->
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
                                     <path d="M15 6l-6 6l6 6"></path>
                                 </svg>
@@ -52,7 +57,11 @@ ob_start();
                         <div class="mb-3 row">
                             <label class="col-3 col-form-label required">Judul</label>
                             <div class="col">
-                                <input type="text" class="form-control" aria-describedby="emailHelp" placeholder="Enter email">
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    aria-describedby="emailHelp" 
+                                    placeholder="Enter email">
                             </div>
                         </div>
                         <div class="mb-3 row">
