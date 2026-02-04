@@ -19,6 +19,11 @@ ob_start();
 // echo '<pre>';
 // print_r($data);
 // echo '</pre>';
+$errors = $_SESSION['errors'] ?? [];
+$old    = $_SESSION['old'] ?? [];
+
+// 🔥 HAPUS SETELAH DIPAKAI
+unset($_SESSION['errors'], $_SESSION['old']);
 ?>
 
 <div class="page-header d-print-none" aria-label="Page header">
@@ -43,7 +48,7 @@ ob_start();
                     <div class="card-header">
                         <h3 class="card-title">Form Tambah Jenis Peraturan</h3>
                         <div class="card-actions">
-                            <a class="btn btn-outline-primary" href="?page=tambah-peraturan"><!-- Download SVG icon from http://tabler.io/icons/icon/chevron-left -->
+                            <a class="btn btn-primary" href="?page=tambah-peraturan"><!-- Download SVG icon from http://tabler.io/icons/icon/chevron-left -->
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
                                     <path d="M15 6l-6 6l6 6"></path>
                                 </svg>
@@ -54,25 +59,51 @@ ob_start();
                     <div class="card-body">
                         <div class="form-fieldset">
                             <div class="mb-3 row">
-                                <label class="col-3 col-form-label required">Singkatan Jenis</label>
+                                <label class="col-3 col-form-label required">Singkatan Jenis :</label>
                                 <div class="col">
-                                    <input type="text" name="kode" id="kode" class="form-control" placeholder="Singkatan Jenis...">
+                                    <input
+                                        type="text"
+                                        name="kode"
+                                        id="kode"
+                                        placeholder="Singkatan Jenis..."
+                                        value="<?= $old['kode'] ?>"
+                                        class="form-control <?= isset($errors['kode']) ? 'is-invalid' : '' ?>">
+                                    <div class="invalid-feedback">
+                                        <?= $errors['kode'] ?? '' ?>
+                                    </div>
                                 </div>
                             </div>
                             <div class="mb-3 row">
-                                <label class="col-3 col-form-label required">Jenis Peraturan</label>
+                                <label class="col-3 col-form-label required">Jenis Peraturan :</label>
                                 <div class="col">
-                                    <input type="text" name="nama" id="nama" class="form-control" placeholder="Jenis Peraturan...">
+                                    <input
+                                        type="text"
+                                        name="nama"
+                                        id="nama"
+                                        placeholder="Jenis Peraturan..."
+                                        value="<?= $old['nama'] ?>"
+                                        class="form-control <?= isset($errors['nama']) ? 'is-invalid' : '' ?>">
+                                    <div class="invalid-feedback">
+                                        <?= $errors['nama'] ?? '' ?>
+                                    </div>
                                 </div>
                             </div>
                             <div class="mb-3 row">
-                                <label class="col-3 col-form-label">Keterangan</label>
+                                <label class="col-3 col-form-label">Keterangan :</label>
                                 <div class="col">
-                                    <textarea class="form-control" name="keterangan" id="keterangan" rows="3" placeholder="Keterangan..."></textarea>
+                                    <textarea
+                                        name="keterangan"
+                                        id="keterangan"
+                                        rows="3"
+                                        placeholder="Keterangan..."
+                                        class="form-control <?= isset($errors['keterangan']) ? 'is-invalid' : '' ?>"><?= $old['keterangan'] ?? '' ?></textarea>
+                                    <div class="invalid-feedback">
+                                        <?= $errors['keterangan'] ?? '' ?>
+                                    </div>
                                 </div>
                             </div>
                             <div class="mb-3 row">
-                                <label class="col-3 col-form-label required">Tampilkan</label>
+                                <label class="col-3 col-form-label required">Tampilkan :</label>
                                 <div class="col">
                                     <label class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" name="is_active" id="is_active" value="1" checked="">
@@ -86,7 +117,7 @@ ob_start();
                             </div>
                         </div>
                         <div class="">
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <button type="submit" class="btn btn-success">Simpan</button>
                         </div>
                     </div>
                 </form>
@@ -128,7 +159,7 @@ ob_start();
                                                 <button class="table-sort d-flex justify-content-between" data-sort="sort-kode">Singkatan Jenis</button>
                                             </th>
                                             <th>
-                                                <button class="table-sort d-flex justify-content-between" data-sort="sort-judul">Jenis Peraturan</button>
+                                                <button class="table-sort d-flex justify-content-between" data-sort="sort-jenis">Jenis Peraturan</button>
                                             </th>
                                             <th class="w-1">
                                                 <button class="table-sort d-flex justify-content-between" data-sort="sort-aksi">Aksi</button>
@@ -145,29 +176,30 @@ ob_start();
                                                     <?= htmlspecialchars($d['kode'] ?? '-') ?>
 
                                                 </td>
-                                                <td class="sort-nama">
+                                                <td class="sort-jenis">
                                                     <?= htmlspecialchars($d['nama'] ?? '-') ?>
                                                 </td>
                                                 <td>
                                                     <div class="btn-group w-100">
-                                                        <a href="" class="text-primary me-2">
+                                                        <a href="" class="text-primary me-2" data-bs-toggle="modal" data-bs-target="#modal-detail-<?= $d['id'] ?>">
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-eye" data-bs-toggle="tooltip" data-bs-placement="top" title="Detail">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                 <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
                                                                 <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
                                                             </svg>
                                                         </a>
-                                                        <a href="" class="text-yellow me-2">
-
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-edit">
+                                                        <a href="" class="text-yellow me-2" data-bs-toggle="modal" data-bs-target="#modal-edit-<?= $d['id'] ?>">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                 <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
                                                                 <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415" />
                                                                 <path d="M16 5l3 3" />
                                                             </svg>
                                                         </a>
-                                                        <a href="" class="text-red me-2">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+                                                        <a type="button" class="text-red" onclick="confirmDelete(
+                                                                '<?= BASE_URL ?>?page=jenis-peraturan-delete&id=<?= $d['id'] ?>'
+                                                            )">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                 <path d="M4 7l16 0" />
                                                                 <path d="M10 11l0 6" />
@@ -180,6 +212,111 @@ ob_start();
 
                                                 </td>
                                             </tr>
+
+                                            <div class="modal modal-blur fade" id="modal-detail-<?= $d['id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="card-header">
+                                                            <h3 class="card-title">Detail Jenis Peraturan</h3>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+
+                                                            <dl class="row">
+                                                                <dt class="col-4 text-muted mb-3">Singkatan Jenis</dt>
+                                                                <dt class="col-1 mb-3 col-auto text-end">:</dt>
+                                                                <dd class="col-7 text-bold mb-3"><strong><?= $d['kode'] ?? '-' ?></strong></dd>
+                                                                <dt class="col-4 text-muted mb-3">Jenis Peraturan</dt>
+                                                                <dt class="col-1 mb-3 col-auto text-end">:</dt>
+                                                                <dd class="col-7 text-bold mb-3"><strong><?= $d['nama'] ?? '-' ?></strong></dd>
+                                                                <dt class="col-4 text-muted mb-3">Keterangan</dt>
+                                                                <dt class="col-1 mb-3 col-auto text-end">:</dt>
+                                                                <dd class="col-7 text-bold mb-3"><strong><?= $d['keterangan'] ?? '-' ?></strong></dd>
+                                                            </dl>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="modal modal-blur fade" id="modal-edit-<?= $d['id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="card-header">
+                                                            <h3 class="card-title">Edit Jenis Peraturan</h3>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form class="card" method="POST" action="?page=jenis-peraturan-update&id=<?= $d['id'] ?>" enctype="multipart/form-data">
+                                                                <div class="form-fieldset">
+                                                                    <div class="mb-3 row">
+                                                                        <label class="col-3 col-form-label required">Singkatan Jenis :</label>
+                                                                        <div class="col">
+                                                                            <input
+                                                                                type="text"
+                                                                                name="kode"
+                                                                                id="kode"
+                                                                                placeholder="Singkatan Jenis..."
+                                                                                value="<?= $d['kode'] ?? $old['kode'] ?? '' ?>"
+                                                                                class="form-control <?= isset($errors['kode']) ? 'is-invalid' : '' ?>">
+                                                                            <div class="invalid-feedback">
+                                                                                <?= $errors['kode'] ?? '' ?>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="mb-3 row">
+                                                                        <label class="col-3 col-form-label required">Jenis Peraturan :</label>
+                                                                        <div class="col">
+                                                                            <input
+                                                                                type="text"
+                                                                                name="nama"
+                                                                                id="nama"
+                                                                                placeholder="Jenis Peraturan..."
+                                                                                value="<?= $d['nama'] ?? $old['nama'] ?? '' ?>"
+                                                                                class="form-control <?= isset($errors['nama']) ? 'is-invalid' : '' ?>">
+                                                                            <div class="invalid-feedback">
+                                                                                <?= $errors['nama'] ?? '' ?>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="mb-3 row">
+                                                                        <label class="col-3 col-form-label">Keterangan :</label>
+                                                                        <div class="col">
+                                                                            <textarea
+                                                                                name="keterangan"
+                                                                                id="keterangan"
+                                                                                rows="3"
+                                                                                placeholder="Keterangan..."
+                                                                                class="form-control <?= isset($errors['keterangan']) ? 'is-invalid' : '' ?>"><?= $d['keterangan'] ?? $old['keterangan'] ?? '' ?></textarea>
+                                                                            <div class="invalid-feedback">
+                                                                                <?= $errors['keterangan'] ?? '' ?>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="mb-3 row">
+                                                                        <label class="col-3 col-form-label required">Tampilkan :</label>
+                                                                        <?php $is_active = $old['is_active'] ?? $d['is_active']; ?>
+                                                                        <div class="col">
+                                                                            <label class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio" name="is_active" id="is_active" value="1" <?= $is_active == 1 ? 'checked' : '' ?>>
+                                                                                <span class="form-check-label">Ya</span>
+                                                                            </label>
+                                                                            <label class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio" name="is_active" id="is_active" value="0" <?= $is_active == 0 ? 'checked' : '' ?>>
+                                                                                <span class="form-check-label">Tidak</span>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="">
+                                                                    <button type="submit" class="btn btn-success">Simpan</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         <?php endforeach; ?>
 
                                     </tbody>
@@ -275,52 +412,6 @@ ob_start();
     <?php unset($_SESSION['flash']); ?>
 <?php endif; ?>
 
-
-<script>
-    document.querySelector("form").addEventListener("submit", function(e) {
-
-        const judul = document.getElementById("judul_informasi");
-        const ringkasan = document.getElementById("ringkasan");
-        const jenis = document.getElementById("jenis_informasi");
-        const bentuk = document.getElementById("bentuk_informasi");
-        const tanggal = document.getElementById("tanggal_pembuatan");
-        const file = document.getElementById("file");
-
-        let errors = [];
-
-        if (!judul.value.trim())
-            errors.push("Judul wajib diisi");
-
-        if (ringkasan.value.trim().length < 10)
-            errors.push("Ringkasan minimal 10 karakter");
-
-        if (!jenis.value)
-            errors.push("Pilih jenis informasi");
-
-        if (!bentuk.value)
-            errors.push("Pilih bentuk informasi");
-
-        if (!tanggal.value)
-            errors.push("Tanggal wajib diisi");
-
-        if (file.files.length === 0)
-            errors.push("Minimal upload 1 file");
-
-        if (errors.length > 0) {
-
-            e.preventDefault();
-
-            Swal.fire({
-                icon: 'error',
-                title: 'Validasi Gagal',
-                html: errors.join("<br>")
-            });
-
-        }
-
-    });
-</script>
-
 <script>
     const advancedTable = {
         headers: [{
@@ -332,12 +423,8 @@ ob_start();
                 name: "Singkatan Jenis"
             },
             {
-                "data-sort": "sort-nama",
-                name: "Nama"
-            },
-            {
-                "data-sort": "sort-keterangan",
-                name: "Keterangan"
+                "data-sort": "sort-jenis",
+                name: "Jenis Peraturan"
             },
             {
                 "data-sort": "sort-aksi",
@@ -375,6 +462,43 @@ ob_start();
         }
     });
 </script>
+
+<script>
+    function confirmDelete(url, label = '') {
+
+        Swal.fire({
+            title: 'Yakin ingin menghapus?',
+            html: label ?
+                `Data <strong>${label}</strong> akan dihapus permanen` : 'Data akan dihapus permanen',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, hapus',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+                window.location.href = url;
+            }
+
+        });
+    }
+</script>
+<?php if (isset($_SESSION['flash'])): ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            Swal.fire({
+                icon: '<?= $_SESSION['flash']['status'] ?>',
+                title: <?= $_SESSION['flash']['status'] === 'success'
+                            ? "'Berhasil!'"
+                            : "'Gagal!'" ?>,
+                text: <?= json_encode($_SESSION['flash']['message']) ?>
+            });
+
+        });
+    </script>
+    <?php unset($_SESSION['flash']); ?>
+<?php endif; ?>
 
 
 <?php

@@ -14,6 +14,7 @@ class JenisPeraturanModel
     {
         return $this->db->query("
             SELECT * FROM jenis_peraturan
+            WHERE jenis_peraturan.is_active = 1
             ORDER BY nama ASC
         ")->fetchAll(PDO::FETCH_ASSOC);
     }

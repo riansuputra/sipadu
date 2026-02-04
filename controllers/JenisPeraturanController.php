@@ -47,21 +47,19 @@ class JenisPeraturanController
 
         $errors = [];
 
-        // if (empty($_POST['kode']))
-        //     $errors[] = "Kode wajib diisi";
+        if (empty($_POST['kode'])) {
+            $errors['kode'] = "Singkatan jenis wajib diisi";
+        }
+        if (empty($_POST['nama'])) {
+            $errors['nama'] = "Jenis peraturan wajib diisi";
+        }
+        if (!empty($errors)) {
+            $_SESSION["errors"] = $errors;
+            $_SESSION["old"] = $_POST;
 
-        // if (empty($_POST['nama']))
-        //     $errors[] = "Nama wajib diisi";
-
-        // if ($errors) {
-        //     $_SESSION['flash'] = [
-        //         'status' => 'error',
-        //         'message' => implode("<br>", $errors)
-        //     ];
-
-        //     header("Location: ?page=tambah-jenis-peraturan");
-        //     exit;
-        // }
+            header("Location: ?page=tambah-jenis-peraturan");
+            exit();
+        }
 
         $model = new JenisPeraturanModel($pdo);
         $data = $_POST;
@@ -120,20 +118,18 @@ class JenisPeraturanController
 
         $errors = [];
 
-        if (empty($_POST['kode']))
-            $errors[] = "Kode wajib diisi";
-
-        if (empty($_POST['nama']))
-            $errors[] = "Nama wajib diisi";
-
-        if ($errors) {
-            $_SESSION['flash'] = [
-                'status' => 'error',
-                'message' => implode("<br>", $errors)
-            ];
+        if (empty($_POST['kodde'])) {
+            $errors['kode'] = "Singkatan jenis wajib diisi";
+        }
+        if (empty($_POST['nama'])) {
+            $errors['nama'] = "Jenis peraturan wajib diisi";
+        }
+        if (!empty($errors)) {
+            $_SESSION["errors"] = $errors;
+            $_SESSION["old"] = $_POST;
 
             header("Location: ?page=tambah-jenis-peraturan&id=" . $_POST['id']);
-            exit;
+            exit();
         }
 
         $model = new JenisPeraturanModel($pdo);
