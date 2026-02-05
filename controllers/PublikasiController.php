@@ -88,25 +88,58 @@ class PublikasiController
 
         $errors = [];
 
-        if (empty($_FILES['file']['name'][0])) {
-            $errors[] = "Minimal upload 1 file";
-        } else {
+        if (empty($_POST['judul'])) {
+            $errors['judul'] = "Judul wajib diisi";
+        } elseif (strlen($_POST['judul']) < 2) {
+            $errors['judul'] = "Judul minimal 2 karakter";
+        }
+        if (!empty($_POST['deskripsi']) && strlen($_POST['deskripsi']) < 1) {
+            $errors['deskripsi'] = "Deskripsi minimal 1 karakter";
+        }
+        $currentDate = date('Y-m-d');
+        $inputDate   = $_POST['tanggal_kegiatan'] ?? '';
 
-            $allowed = ['pdf', 'jpg', 'jpeg', 'png'];
+        if (empty($inputDate)) {
+            $errors['tanggal_kegiatan'] = "Tanggal kegiatan wajib diisi";
+        } elseif ($inputDate > $currentDate) {
+            $errors['tanggal_kegiatan'] = "Tanggal kegiatan tidak boleh di masa depan";
+        }
 
-            foreach ($_FILES['file']['name'] as $i => $name) {
+        if (empty($_POST['lokasi'])) {
+            $errors['lokasi'] = "Lokasi kegiatan wajib diisi";
+        }
+        if (empty($_POST['jenis_id'])) {
+            $errors['jenis_id'] = "Jenis wajib diisi";
+        }
+        if (empty($_POST['penulis'])) {
+            $errors['penulis'] = "Penulis wajib diisi";
+        }
+        if (empty($_POST['kabupaten'])) {
+            $errors['kabupaten'] = "Kabupaten/Kota wajib diisi";
+        }
+        if (!empty($_FILES["file"]["name"][0])) {
 
-                $size = $_FILES['file']['size'][$i];
-                $ext  = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+            $allowed = ["pdf", "jpg", "jpeg", "png"];
+
+            foreach ($_FILES["file"]["name"] as $i => $name) {
+                $size = $_FILES["file"]["size"][$i];
+                $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
 
                 if (!in_array($ext, $allowed)) {
-                    $errors[] = "File {$name} tidak diizinkan";
+                    $errors['file'] = "File {$name} tidak diizinkan";
                 }
 
-                if ($size > 2 * 1024 * 1024) {
-                    $errors[] = "File {$name} lebih dari 2MB";
+                if ($size > 5 * 1024 * 1024) {
+                    $errors['file'] = "File {$name} lebih dari 5MB";
                 }
             }
+        }
+        if (!empty($errors)) {
+            $_SESSION["errors"] = $errors;
+            $_SESSION["old"] = $_POST;
+
+            header("Location: ?page=tambah-publikasi");
+            exit();
         }
 
         $model = new PublikasiModel($pdo);
@@ -118,52 +151,31 @@ class PublikasiController
         $publikasiId = $model->insert($data);
 
         // proses upload file jika ada
-        if (!empty($_FILES['file']['name'])) {
+        if (!empty($_FILES['file']['name'][0])) {
 
-            $dir = __DIR__ . '/../uploads/publikasi/';
+            $dir = __DIR__ . '/../uploads/peraturan/';
 
-            if (!is_dir($dir)) {
+            if (!is_dir($dir))
                 mkdir($dir, 0777, true);
-            }
 
-            foreach ($_FILES['file']['name'] as $i => $namaAsli) {
+            foreach ($_FILES['file']['name'] as $i => $nama) {
 
-                // skip kalau kosong
-                if (!$namaAsli) continue;
+                if (!$nama) continue;
 
-                $tmp   = $_FILES['file']['tmp_name'][$i];
-                $type  = $_FILES['file']['type'][$i];
-                $size  = $_FILES['file']['size'][$i];
+                $tmp  = $_FILES['file']['tmp_name'][$i];
+                $type = $_FILES['file']['type'][$i];
+                $size = $_FILES['file']['size'][$i];
 
-                // nama aman
-                $namaBaru = time() . '_' . $i . '_' .
-                    preg_replace('/[^a-zA-Z0-9._-]/', '_', $namaAsli);
+                $namaBaru = time() . '_' . $i . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $nama);
 
-                $path = $dir . $namaBaru;
+                move_uploaded_file($tmp, $dir . $namaBaru);
 
-                // filter tipe
-                $allowed = [
-                    'application/pdf',
-                    'image/png',
-                    'image/jpeg'
-                ];
-
-                if (!in_array($type, $allowed)) {
-                    continue;
-                }
-
-                $upload = move_uploaded_file($tmp, $path);
-
-                if ($upload) {
-
-                    // simpan ke tabel dip_file
-                    $model->insertFile($publikasiId, [
-                        'nama_file'   => $namaAsli,
-                        'path_file'   => 'uploads/publikasi/' . $namaBaru,
-                        'tipe'   => $type,
-                        'ukuran_file' => $size
-                    ]);
-                }
+                $model->insertFile($publikasiId, [
+                    'nama_file'   => $nama,
+                    'path_file'   => 'uploads/peraturan/' . $namaBaru,
+                    'tipe_file'   => $type,
+                    'ukuran_file' => $size
+                ]);
             }
         }
 
@@ -179,6 +191,12 @@ class PublikasiController
 
     public function show()
     {
+        echo "<pre>";
+        print_r($_POST);
+        print_r($_FILES);
+        echo "</pre>";
+        die();
+
         authOnly();
 
         global $pdo;
@@ -212,6 +230,9 @@ class PublikasiController
         $publikasi = $model->getById($id);
         $files = $model->getFiles($id);
 
+        $modeljenis = new JenisPublikasiModel($pdo);
+        $jenis = $modeljenis->getAll();
+
         require __DIR__ . '/../views/publikasi/edit.php';
     }
 
@@ -225,52 +246,72 @@ class PublikasiController
 
         $errors = [];
 
-        // ==============================
-        // VALIDASI FILE (jika ada)
-        // ==============================
-        if (!empty($_FILES['file']['name'][0])) {
+        if (empty($_POST['judul'])) {
+            $errors['judul'] = "Judul wajib diisi";
+        } elseif (strlen($_POST['judul']) < 2) {
+            $errors['judul'] = "Judul minimal 2 karakter";
+        }
+        if (!empty($_POST['deskripsi']) && strlen($_POST['deskripsi']) < 1) {
+            $errors['deskripsi'] = "Deskripsi minimal 1 karakter";
+        }
+        $currentDate = date('Y-m-d');
+        $inputDate   = $_POST['tanggal_kegiatan'] ?? '';
 
-            $allowedExt  = ['pdf', 'jpg', 'jpeg', 'png'];
-            $allowedMime = [
-                'application/pdf',
-                'image/png',
-                'image/jpeg'
-            ];
+        if (empty($inputDate)) {
+            $errors['tanggal_kegiatan'] = "Tanggal kegiatan wajib diisi";
+        } elseif ($inputDate > $currentDate) {
+            $errors['tanggal_kegiatan'] = "Tanggal kegiatan tidak boleh di masa depan";
+        }
 
-            foreach ($_FILES['file']['name'] as $i => $name) {
+        if (empty($_POST['lokasi'])) {
+            $errors['lokasi'] = "Lokasi kegiatan wajib diisi";
+        }
+        if (empty($_POST['jenis_id'])) {
+            $errors['jenis_id'] = "Jenis wajib diisi";
+        }
+        if (empty($_POST['penulis'])) {
+            $errors['penulis'] = "Penulis wajib diisi";
+        }
+        if (empty($_POST['kabupaten'])) {
+            $errors['kabupaten'] = "Kabupaten/Kota wajib diisi";
+        }
+        if (!empty($_FILES["file"]["name"][0])) {
 
-                if (!$name) continue;
+            $allowed = ["pdf", "jpg", "jpeg", "png"];
 
-                $size = $_FILES['file']['size'][$i];
-                $type = $_FILES['file']['type'][$i];
-                $ext  = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+            foreach ($_FILES["file"]["name"] as $i => $name) {
+                $size = $_FILES["file"]["size"][$i];
+                $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
 
-                if (!in_array($ext, $allowedExt)) {
-                    $errors[] = "File {$name} tidak diizinkan";
+                if (!in_array($ext, $allowed)) {
+                    $errors['file'] = "File {$name} tidak diizinkan";
                 }
 
-                if (!in_array($type, $allowedMime)) {
-                    $errors[] = "Tipe file {$name} tidak sesuai";
-                }
-
-                if ($size > 2 * 1024 * 1024) {
-                    $errors[] = "File {$name} lebih dari 2MB";
+                if ($size > 5 * 1024 * 1024) {
+                    $errors['file'] = "File {$name} lebih dari 5MB";
                 }
             }
         }
 
-        // ==============================
-        // JIKA ADA ERROR
-        // ==============================
+        // if (!empty($errors)) {
+        //     echo "<pre>";
+        //     print_r($errors);
+        //     echo "</pre>";
+        //     die();
+        // } else {
+        //     echo "<pre>";
+        //     print_r($_POST);
+        //     echo "</pre>";
+        //     die();
+        // }
+
+
         if (!empty($errors)) {
-            $_SESSION['flash'] = [
-                'status'  => 'error',
-                'errors'  => array_values($errors),
-                'message' => 'Gagal update data'
-            ];
+            $_SESSION["errors"] = $errors;
+            $_SESSION["old"] = $_POST;
 
             header("Location: ?page=edit-publikasi&id=" . $_POST['id']);
-            exit;
+            exit();
         }
 
         $model = new PublikasiModel($pdo);
@@ -282,6 +323,13 @@ class PublikasiController
         $data['diubah_oleh'] = currentUser()['id'];
 
         $model->update($_POST['id'], $data);
+
+        if (!empty($_POST["hapus_file"])) {
+            $ids = explode(",", $_POST["hapus_file"]);
+            foreach ($ids as $id) {
+                $model->deleteFileById($id);
+            }
+        }
 
         // ==============================
         // PROSES UPLOAD FILE BARU
@@ -343,6 +391,12 @@ class PublikasiController
         $model = new PublikasiModel($pdo);
         $model->delete($_GET['id']);
 
+        $_SESSION['flash'] = [
+            'status'  => 'success',
+            'message' => 'Data berhasil dihapus'
+        ];
+
         header("Location: ?page=publikasi");
+        exit;
     }
 }

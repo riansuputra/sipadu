@@ -276,7 +276,7 @@ if ($tahun || $jenis) {
                                                         }
 
                                                     ?>
-                                                        <a href='/sipadu/<?= $path ?>' target='_blank' class="btn btn-outline-primary">
+                                                        <a href='<?= BASE_URL ?>/<?= $path ?>' target='_blank' class="btn btn-outline-primary">
                                                             <?= $icon ?>
                                                             <?= shortname($f['nama'], 30) ?>
                                                         </a>
@@ -422,8 +422,7 @@ if ($tahun || $jenis) {
                                                                         }
                                                                     ?>
                                                                         <div class="col-12 mb-0">
-
-                                                                            <a href='/sipadu/<?= $path ?>' target='_blank' class="mb-1">
+                                                                            <a href='<?= BASE_URL ?>/<?= $path ?>' target='_blank' class="mb-1">
                                                                                 <?= $icon ?>&nbsp;<?= shortname($f["nama"], 20,) ?>
                                                                             </a>
                                                                             <a href="?page=dip-file&file=<?= $fid ?>&id=<?= $d['id'] ?>" class="icon icon-sm text-end mt-0" aria-label="Button" data-bs-toggle="tooltip" data-bs-placement="top" title="Download">

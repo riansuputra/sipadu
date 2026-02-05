@@ -14,7 +14,7 @@ $headerImage = $headerImage ?? 'http://localhost:8000/public/assets/img/banner.j
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
     <!-- Title -->
-    <title><?= $title ?> | SIPADU</title>
+    <title><?= $title ?> - SIPADU</title>
 
     <!-- CSS Global  -->
     <link href="<?= BASE_URL ?>/public/assets/css/tabler.min.css?1684106062" rel="stylesheet" />

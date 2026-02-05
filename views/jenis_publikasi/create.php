@@ -66,7 +66,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                         name="nama"
                                         id="nama"
                                         placeholder="Jenis Publikasi..."
-                                        value="<?= $old['nama'] ?>"
+                                        value="<?= $old['nama'] ?? '' ?>"
                                         class="form-control <?= isset($errors['nama']) ? 'is-invalid' : '' ?>">
                                     <div class="invalid-feedback">
                                         <?= $errors['nama'] ?? '' ?>

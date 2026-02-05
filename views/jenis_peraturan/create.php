@@ -66,7 +66,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                         name="kode"
                                         id="kode"
                                         placeholder="Singkatan Jenis..."
-                                        value="<?= $old['kode'] ?>"
+                                        value="<?= $old['kode'] ?? '' ?>"
                                         class="form-control <?= isset($errors['kode']) ? 'is-invalid' : '' ?>">
                                     <div class="invalid-feedback">
                                         <?= $errors['kode'] ?? '' ?>
@@ -81,7 +81,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                         name="nama"
                                         id="nama"
                                         placeholder="Jenis Peraturan..."
-                                        value="<?= $old['nama'] ?>"
+                                        value="<?= $old['nama'] ?? '' ?>"
                                         class="form-control <?= isset($errors['nama']) ? 'is-invalid' : '' ?>">
                                     <div class="invalid-feedback">
                                         <?= $errors['nama'] ?? '' ?>

@@ -607,19 +607,6 @@ if ($tahun || $jenis) {
 </script>
 
 <script>
-    document.querySelector('#filter-jenis').addEventListener('change', function() {
-        const val = this.value;
-        const list = window.tabler_list["advanced-table"];
-
-        if (val === '') {
-            list.search('');
-        } else {
-            list.search(val, ['sort-jenis']);
-        }
-    });
-</script>
-
-<script>
     function confirmDelete(url, label = '') {
 
         Swal.fire({

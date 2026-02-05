@@ -237,7 +237,8 @@ class PeraturanController
         authOnly();
         global $pdo;
 
-        $errors = [];
+        $user = currentUser();
+        $role = currentRole();
 
         $errors = [];
 

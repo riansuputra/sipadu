@@ -4,7 +4,7 @@
 // ================================
 
 // Judul
-$title = "Edit Peraturan";
+$title = "Edit Publikasi";
 
 
 
@@ -16,14 +16,15 @@ ob_start();
 
 
 <?php
-// echo '<pre>';
-// print_r($user);
-// print_r($files);
-
-// echo '</pre>';
+// echo "<pre>";
+// print_r($publikasi);
+// print_r($_FILES);
+// echo "</pre>";
+// die();
 $errors = $_SESSION['errors'] ?? [];
 $old    = $_SESSION['old'] ?? [];
 
+// 🔥 HAPUS SETELAH DIPAKAI
 unset($_SESSION['errors'], $_SESSION['old']);
 ?>
 
@@ -32,8 +33,8 @@ unset($_SESSION['errors'], $_SESSION['old']);
         <div class="row g-2 align-items-center">
             <div class="col">
                 <!-- Page pre-title -->
-                <div class="page-pretitle">Peraturan</div>
-                <h2 class="page-title">Edit Peraturan</h2>
+                <div class="page-pretitle">Publikasi</div>
+                <h2 class="page-title">Edit Publikasi</h2>
             </div>
         </div>
     </div>
@@ -42,163 +43,155 @@ unset($_SESSION['errors'], $_SESSION['old']);
 <div class="page-body" id="page-content" style="display:none;">
 
     <div class="container-xl">
-        <div class="row row-cards">
+        <div class="row row-cards ">
 
             <div class="col-sm-12 col-lg-6">
-                <form class="card" method="POST" action="?page=peraturan-update&id=<?= $peraturan['id'] ?>" enctype="multipart/form-data">
+                <form class="card" method="POST" action="?page=publikasi-update&id=<?= $publikasi['id'] ?>" enctype="multipart/form-data">
                     <div class="card-header">
-                        <h3 class="card-title">Form Edit Peraturan</h3>
+                        <h3 class="card-title">Form Edit Publikasi</h3>
                         <div class="card-actions">
-                            <a class="btn btn-primary" href="?page=peraturan"><!-- Download SVG icon from http://tabler.io/icons/icon/chevron-left -->
+                            <a class="btn btn-primary" href="?page=dip"><!-- Download SVG icon from http://tabler.io/icons/icon/chevron-left -->
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
                                     <path d="M15 6l-6 6l6 6"></path>
                                 </svg>
-                                Lihat Daftar Peraturan
+                                Daftar Publikasi
                             </a>
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="row">
-                            <div class="form-fieldset col-sm-12">
-                                <div class="mb-3 row">
-                                    <label class="col-3 col-form-label required">Jenis Peraturan</label>
-                                    <div class="col">
-                                        <select class="form-select <?= isset($errors['jenis_id']) ? 'is-invalid' : '' ?>"
-                                            name="jenis_id"
-                                            id="jenis_id">
-                                            <option value="" disabled <?= empty($peraturan['jenis_id']) ? 'selected' : '' ?>>
-                                                -- Pilih Jenis Peraturan --
+                        <div class="form-fieldset">
+                            <div class="mb-3 row">
+                                <label class="col-3 col-form-label required">Judul Publikasi</label>
+                                <div class="col">
+                                    <input
+                                        type="text"
+                                        name="judul"
+                                        id="judul"
+                                        placeholder="Judul Publikasi..."
+                                        value="<?= $publikasi['judul'] ?? $old['judul'] ?? '' ?>"
+                                        class="form-control <?= isset($errors['judul']) ? 'is-invalid' : '' ?>">
+                                    <div class="invalid-feedback">
+                                        <?= $errors['judul'] ?? '' ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-3 col-form-label">Deskripsi</label>
+                                <div class="col">
+                                    <textarea
+                                        name="deskripsi"
+                                        id="deskripsi"
+                                        rows="3"
+                                        placeholder="Deskripsi.."
+                                        class="form-control <?= isset($errors['deskripsi']) ? 'is-invalid' : '' ?>"><?= $publikasi['deskripsi'] ?? $old['deskripsi'] ?? '' ?></textarea>
+                                    <div class="invalid-feedback">
+                                        <?= $errors['deskripsi'] ?? '' ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-3 col-form-label required">Tanggal :</label>
+                                <div class="col">
+                                    <input
+                                        type="date"
+                                        name="tanggal_kegiatan"
+                                        id="tanggal_kegiatan"
+                                        value="<?= $publikasi['tanggal_kegiatan'] ?? $old['tanggal_kegiatan'] ?? date('Y-m-d') ?>"
+                                        class="form-control <?= isset($errors['tanggal_kegiatan']) ? 'is-invalid' : '' ?>">
+                                    <div class="invalid-feedback">
+                                        <?= $errors['tanggal_kegiatan'] ?? '' ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-3 col-form-label required">Lokasi</label>
+                                <div class="col">
+                                    <input
+                                        type="text"
+                                        name="lokasi"
+                                        id="lokasi"
+                                        placeholder="Lokasi..."
+                                        value="<?= $publikasi['lokasi'] ?? $old['lokasi'] ?? '' ?>"
+                                        class="form-control <?= isset($errors['lokasi']) ? 'is-invalid' : '' ?>">
+                                    <div class="invalid-feedback">
+                                        <?= $errors['lokasi'] ?? '' ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-3 col-form-label required">Jenis</label>
+                                <div class="col">
+                                    <select class="form-select <?= isset($errors['jenis_id']) ? 'is-invalid' : '' ?>" name="jenis_id" id="jenis_id">
+                                        <option value="" disabled <?= empty($publikasi['jenis_id']) ? 'selected' : '' ?>>-- Pilih Jenis --</option>
+                                        <?php foreach ($jenis as $j): ?>
+                                            <option value="<?= $j['id'] ?>" <?= ($publikasi['jenis_id'] ?? '') == $j['id'] ? 'selected' : '' ?>>
+                                                <?= $j['nama'] ?>
                                             </option>
-
-                                            <?php foreach ($jenis as $j): ?>
-                                                <option value="<?= $j['id'] ?>" <?= ($peraturan['jenis_id'] ?? '') == $j['id'] ? 'selected' : '' ?>>
-                                                    <?= $j['kode'] ?> (<?= $j['nama'] ?>)
-                                                </option>
-                                            <?php endforeach; ?>
-                                        </select>
-
+                                        <?php endforeach; ?>
                                         <div class="invalid-feedback">
                                             <?= $errors['jenis_id'] ?? '' ?>
                                         </div>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-3 col-form-label required">Penulis</label>
+                                <div class="col">
+                                    <input
+                                        type="text"
+                                        name="penulis"
+                                        id="penulis"
+                                        placeholder="Penulis..."
+                                        value="<?= $publikasi['penulis'] ?? $old['penulis'] ?? '' ?>"
+                                        class="form-control <?= isset($errors['penulis']) ? 'is-invalid' : '' ?>">
+                                    <div class="invalid-feedback">
+                                        <?= $errors['penulis'] ?? '' ?>
                                     </div>
                                 </div>
-                                <div class="mb-3 row">
-                                    <label class="col-3 col-form-label required">Judul : </label>
-                                    <div class="col">
-                                        <textarea
-                                            name="judul"
-                                            id="judul"
-                                            rows="3"
-                                            placeholder="Judul..."
-                                            class="form-control <?= isset($errors['judul']) ? 'is-invalid' : '' ?>"><?= $peraturan['judul'] ?? $old['judul'] ?? '' ?></textarea>
-                                        <div class="invalid-feedback">
-                                            <?= $errors['judul'] ?? '' ?>
-                                        </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-3 col-form-label required">Kabupaten/Kota</label>
+                                <div class="col">
+                                    <input
+                                        type="text"
+                                        name="kabupaten"
+                                        id="kabupaten"
+                                        placeholder="Kabupaten/Kota..."
+                                        value="<?= $publikasi['kabupaten'] ?? $old['kabupaten'] ?? '' ?>"
+                                        class="form-control <?= isset($errors['kabupaten']) ? 'is-invalid' : '' ?>">
+                                    <div class="invalid-feedback">
+                                        <?= $errors['kabupaten'] ?? '' ?>
                                     </div>
                                 </div>
-                                <div class="mb-3 row">
-                                    <label class="col-3 col-form-label required">Nomor</label>
-                                    <div class="col">
-                                        <input
-                                            type="text"
-                                            name="nomor"
-                                            id="nomor"
-                                            placeholder="Nomor..."
-                                            value="<?= $peraturan['nomor'] ?? $old['nomor'] ?>"
-                                            class="form-control <?= isset($errors['nomor']) ? 'is-invalid' : '' ?>">
-                                        <div class="invalid-feedback">
-                                            <?= $errors['nomor'] ?? '' ?>
-                                        </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-3 col-form-label">File</label>
+                                <div class="col">
+                                    <input type="file" class="form-control <?= isset($errors['file']) ? 'is-invalid' : '' ?>" name="file[]" id="file" accept=".pdf, .jpg, .png" multiple>
+                                    <small class="form-hint">
+                                        Format: PDF, JPG, PNG (Untuk video, silakan masukkan link video di bawah)
+                                    </small>
+                                    <div class="invalid-feedback">
+                                        <?= $errors['file'] ?? '' ?>
                                     </div>
                                 </div>
-                                <div class="mb-3 row">
-                                    <label class="col-3 col-form-label required">Tahun Terbit</label>
-                                    <div class="col">
-                                        <select name="tahun_terbit"
-                                            id="tahun_terbit"
-                                            class="form-select <?= isset($errors['tahun_terbit']) ? 'is-invalid' : '' ?>">
-                                            <option value="" disabled <?= empty($peraturan['tahun_terbit']) ? 'selected' : '' ?>>
-                                                -- Pilih Tahun Terbit --
-                                            </option>
-
-                                            <?php for ($i = date('Y'); $i >= 1990; $i--): ?>
-                                                <option value="<?= $i ?>"
-                                                    <?= ($peraturan['tahun_terbit'] ?? '') == $i ? 'selected' : '' ?>>
-                                                    <?= $i ?>
-                                                </option>
-                                            <?php endfor; ?>
-                                        </select>
-                                        <div class="invalid-feedback">
-                                            <?= $errors['tahun_terbit'] ?? '' ?>
-                                        </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-3 col-form-label">Link</label>
+                                <div class="col">
+                                    <input
+                                        type="text"
+                                        name="link"
+                                        id="link"
+                                        placeholder="Link..."
+                                        value="<?= $publikasi['link'] ?? $old['link'] ?? '' ?>"
+                                        class="form-control <?= isset($errors['link']) ? 'is-invalid' : '' ?>">
+                                    <div class="invalid-feedback">
+                                        <?= $errors['link'] ?? '' ?>
                                     </div>
                                 </div>
-                                <div class="mb-3 row">
-                                    <label class="col-3 col-form-label required">T.E.U</label>
-                                    <div class="col">
-                                        <input
-                                            type="text"
-                                            name="teu"
-                                            id="teu"
-                                            placeholder="Tajuk Entri Utama..."
-                                            value="<?= $peraturan['teu'] ?? $old['teu'] ?>"
-                                            class="form-control <?= isset($errors['teu']) ? 'is-invalid' : '' ?>">
-                                        <div class="invalid-feedback">
-                                            <?= $errors['teu'] ?? '' ?>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="mb-3 row">
-                                    <label class="col-3 col-form-label required">Tempat Penetapan</label>
-                                    <div class="col">
-                                        <input
-                                            type="text"
-                                            name="tempat_penetapan"
-                                            id="tempat_penetapan"
-                                            placeholder="Tempat Penetapan..."
-                                            value="<?= $peraturan['tempat_penetapan'] ?? $old['tempat_penetapan'] ?>"
-                                            class="form-control <?= isset($errors['tempat_penetapan']) ? 'is-invalid' : '' ?>">
-                                        <div class="invalid-feedback">
-                                            <?= $errors['tempat_penetapan'] ?? '' ?>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mb-3 row">
-                                    <label class="col-3 col-form-label required">Penandatangan</label>
-                                    <div class="col">
-                                        <input
-                                            type="text"
-                                            name="penandatangan"
-                                            id="penandatangan"
-                                            placeholder="Penandatangan..."
-                                            value="<?= $peraturan['penandatangan'] ?? $old['penandatangan'] ?>"
-                                            class="form-control <?= isset($errors['penandatangan']) ? 'is-invalid' : '' ?>">
-                                        <div class="invalid-feedback">
-                                            <?= $errors['penandatangan'] ?? '' ?>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mb-3 row">
-                                    <label class="col-3 col-form-label">File</label>
-                                    <div class="col">
-                                        <input
-                                            type="file"
-                                            name="file[]"
-                                            id="file"
-                                            accept=".pdf, .jpg, .png"
-                                            multiple
-                                            class="form-control <?= isset($errors['file']) ? 'is-invalid' : '' ?>">
-                                        <div class="invalid-feedback">
-                                            <?= $errors['file'] ?? '' ?>
-                                        </div>
-                                        <small class="form-hint">
-                                            Format: PDF, JPG, PNG (maks 5MB)
-                                        </small>
-                                    </div>
-                                    <input type="text" name="id" id="id" value="<?= $peraturan['id'] ?>" hidden>
-                                    <input type="text" name="hapus_file" id="hapus_file" hidden>
-                                </div>
+                                <input type="text" name="id" id="id" value="<?= $publikasi['id'] ?>" hidden>
+                                <input type="text" name="hapus_file" id="hapus_file" hidden>
                             </div>
                         </div>
                         <div class="">
@@ -249,7 +242,6 @@ unset($_SESSION['errors'], $_SESSION['old']);
         </div>
     </div>
 </div>
-
 
 <script>
     let fileLamaDihapus = [];
@@ -429,9 +421,9 @@ unset($_SESSION['errors'], $_SESSION['old']);
                 }).then((result) => {
 
                     if (result.isConfirmed) {
-                        window.location = "?page=tambah-peraturan";
+                        window.location = "?page=tambah-publikasi";
                     } else {
-                        window.location = "?page=peraturan";
+                        window.location = "?page=publikasi";
                     }
 
                 });

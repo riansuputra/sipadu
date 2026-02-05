@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 
 ?>
@@ -10,7 +10,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title><?= $title ?> | SIPADU</title>
+    <title><?= $title ?> - SIPADU</title>
     <link href="<?= BASE_URL ?>/public/assets/css/tabler.min.css?1684106062" rel="stylesheet" />
     <link href="<?= BASE_URL ?>/public/assets/css/tabler-vendors.min.css?1684106062" rel="stylesheet" />
     <link href="<?= BASE_URL ?>/public/assets/dist/css/demo.min.css?1684106062" rel="stylesheet" />
@@ -92,7 +92,7 @@
                 </button>
                 <div class="navbar-nav flex-row order-md-first">
                     <div class="nav-item dropdown">
-                        
+
                     </div>
                 </div>
                 <div class="navbar-nav flex-row order-md-last">

@@ -22,8 +22,9 @@ class PublikasiModel
             p.*,
             pj.pokja_tipe AS tim,
             pj.pokja_nama AS nama_tim,
+            j.nama AS jenis,
             GROUP_CONCAT(
-                CONCAT(pf.id, '|', pf.nama_file, '|', pf.path_file, '|', pf.tipe)
+                CONCAT(pf.id, '|', pf.nama_file, '|', pf.path_file, '|', pf.tipe_file)
                 SEPARATOR '##'
             ) AS files
 
@@ -32,11 +33,14 @@ class PublikasiModel
             LEFT JOIN pokja pj 
                 ON p.pokja_id = pj.id
 
+            LEFT JOIN jenis_publikasi j 
+                ON p.jenis_id = j.id
+
             LEFT JOIN publikasi_file pf 
                 ON p.id = pf.publikasi_id
-
+            WHERE p.is_published = 1
             GROUP BY p.id
-            ORDER BY p.created_at DESC
+            ORDER BY p.tanggal_kegiatan DESC, p.created_at DESC
         ");
 
         $stmt->execute();
@@ -53,8 +57,8 @@ class PublikasiModel
                 SEPARATOR '##'
             ) AS files
         FROM publikasi
-        LEFT JOIN publikasi_file df ON publikasi.id = df.publikasi_id
-        WHERE publikasi.is_active = 1
+        LEFT JOIN publikasi_file pf ON publikasi.id = pf.publikasi_id
+        WHERE publikasi.is_published = 1
     ";
 
         $params = [];
@@ -65,7 +69,7 @@ class PublikasiModel
         }
 
         if (!empty($tanggalSelesai)) {
-            $sql .= " AND DATE(publikasi.tanggal_kegiatan <= ?";
+            $sql .= " AND DATE(publikasi.tanggal_kegiatan) <= ?";
             $params[] = $tanggalSelesai;
         }
 
@@ -75,8 +79,8 @@ class PublikasiModel
         }
 
         $sql .= "
-        GROUP BY publiaksi.id
-        ORDER BY publiaksi.tanggal_kegiatan DESC, publiaksi.created_at DESC
+        GROUP BY publikasi.id
+        ORDER BY publikasi.tanggal_kegiatan DESC, publikasi.created_at DESC
     ";
 
         $stmt = $this->db->prepare($sql);
@@ -88,7 +92,10 @@ class PublikasiModel
     public function getById($id)
     {
         $stmt = $this->db->prepare("
-            SELECT * FROM publikasi WHERE id = ?
+        SELECT p.*, j.nama as jenis
+            FROM publikasi p
+            LEFT JOIN jenis_publikasi j ON p.jenis_id = j.id
+            WHERE p.id = ?
         ");
 
         $stmt->execute([$id]);
@@ -145,8 +152,7 @@ class PublikasiModel
                 jenis_id = ?,
                 penulis = ?,
                 kabupaten = ?,
-                link = ?,
-                pokja_id = ?
+                link = ?
             WHERE id = ?
         ");
 
@@ -159,7 +165,6 @@ class PublikasiModel
             $data['penulis'],
             $data['kabupaten'],
             $data['link'],
-            $data['pokja_id'],
             $id
         ]);
     }
@@ -176,36 +181,56 @@ class PublikasiModel
     // ----------------------------------------------------
     // Simpan file publikasi (SESUAI TABEL publikasi_file)
     // ----------------------------------------------------
-    public function insertFile($publikasi_id, $file)
+    public function insertFile($id, $file)
     {
         $stmt = $this->db->prepare("
             INSERT INTO publikasi_file (
                 publikasi_id,
-                tipe, 
                 nama_file, 
-                path_file
-            ) VALUES (?,?,?,?)
+                tipe_file, 
+                path_file,
+                ukuran_file
+            ) VALUES (?,?,?,?,?)
         ");
 
         return $stmt->execute([
-            $publikasi_id,
-            $file['tipe'],
+            $id,
             $file['nama_file'],
-            $file['path_file']
+            $file['tipe_file'],
+            $file['path_file'],
+            $file['ukuran_file']
         ]);
     }
 
     // ----------------------------------------------------
     // Ambil file berdasarkan publikasi
     // ----------------------------------------------------
-    public function getFiles($publikasi_id)
+    public function getFiles($id)
     {
         $stmt = $this->db->prepare("
             SELECT * FROM publikasi_file WHERE publikasi_id = ?
         ");
 
-        $stmt->execute([$publikasi_id]);
+        $stmt->execute([$id]);
         return $stmt->fetchAll();
+    }
+
+    public function deleteFileById($fileId)
+    {
+        $stmt = $this->db->prepare("
+            DELETE FROM publikasi_file WHERE id = ?
+        ");
+
+        return $stmt->execute([$fileId]);
+    }
+
+    public function getFileById($id)
+    {
+        $stmt = $this->db->prepare("
+        SELECT * FROM publikasi_file WHERE id = ?
+    ");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     // ----------------------------------------------------

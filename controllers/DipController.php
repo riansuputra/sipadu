@@ -114,9 +114,9 @@ class DipController
         } elseif ($inputYear > $currentYear) {
             $errors['tahun_pembuatan'] = "Tahun pembuatan tidak boleh di masa depan";
         }
-        if (empty($_POST['retensi_arsip'])) {
-            $errors['retensi_arsip'] = "Retensi arsip wajib diisi";
-        }
+        // if (empty($_POST['retensi_arsip'])) {
+        //     $errors['retensi_arsip'] = "Retensi arsip wajib diisi";
+        // }
         if (!empty($_FILES["file"]["name"][0])) {
 
             $allowed = ["pdf", "jpg", "jpeg", "png"];
@@ -297,9 +297,9 @@ class DipController
         } elseif ($inputYear > $currentYear) {
             $errors['tahun_pembuatan'] = "Tahun pembuatan tidak boleh di masa depan";
         }
-        if (empty($_POST['retensi_arsip'])) {
-            $errors['retensi_arsip'] = "Retensi arsip wajib diisi";
-        }
+        // if (empty($_POST['retensi_arsip'])) {
+        //     $errors['retensi_arsip'] = "Retensi arsip wajib diisi";
+        // }
         if (!empty($_FILES["file"]["name"][0])) {
 
             $allowed = ["pdf", "jpg", "jpeg", "png"];
@@ -442,8 +442,16 @@ class DipController
         $user = currentUser();
         $role = currentRole();
 
+        $tahun = $_GET['tahun'] ?? null;
+        $jenis = $_GET['jenis'] ?? null;
+
         $model = new DipModel($pdo);
-        $data = $model->getAll();
+        if (!empty($tahun) || !empty($jenis)) {
+            $data = $model->getFiltered($tahun, $jenis);
+        } else {
+            // default
+            $data = $model->getAll();
+        }
 
         require __DIR__ . "/../views/dip/publicIndex.php";
     }

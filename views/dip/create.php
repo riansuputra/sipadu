@@ -42,7 +42,6 @@ unset($_SESSION['errors'], $_SESSION['old']);
 
     <div class="container-xl">
         <div class="row row-deck row-cards ">
-
             <div class="col-sm-12 col-lg-6">
                 <form class="card" method="POST" action="?page=dip-store" enctype="multipart/form-data">
                     <div class="card-header">

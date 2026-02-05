@@ -82,7 +82,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                             id="judul"
                                             rows="3"
                                             placeholder="Judul..."
-                                            class="form-control <?= isset($errors['judul']) ? 'is-invalid' : '' ?>"><?= $old['judul'] ?></textarea>
+                                            class="form-control <?= isset($errors['judul']) ? 'is-invalid' : '' ?>"><?= $old['judul'] ?? '' ?></textarea>
                                         <div class="invalid-feedback">
                                             <?= $errors['judul'] ?? '' ?>
                                         </div>
@@ -96,25 +96,10 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                             name="nomor"
                                             id="nomor"
                                             placeholder="Nomor..."
-                                            value="<?= $old['nomor'] ?>"
+                                            value="<?= $old['nomor'] ?? '' ?>"
                                             class="form-control <?= isset($errors['nomor']) ? 'is-invalid' : '' ?>">
                                         <div class="invalid-feedback">
                                             <?= $errors['nomor'] ?? '' ?>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mb-3 row">
-                                    <label class="col-3 col-form-label required">T.E.U</label>
-                                    <div class="col">
-                                        <input
-                                            type="text"
-                                            name="teu"
-                                            id="teu"
-                                            placeholder="Tajuk Entri Utama..."
-                                            value="<?= $old['teu'] ?>"
-                                            class="form-control <?= isset($errors['teu']) ? 'is-invalid' : '' ?>">
-                                        <div class="invalid-feedback">
-                                            <?= $errors['teu'] ?? '' ?>
                                         </div>
                                     </div>
                                 </div>
@@ -133,6 +118,22 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                     </div>
                                 </div>
                                 <div class="mb-3 row">
+                                    <label class="col-3 col-form-label required">T.E.U</label>
+                                    <div class="col">
+                                        <input
+                                            type="text"
+                                            name="teu"
+                                            id="teu"
+                                            placeholder="Tajuk Entri Utama..."
+                                            value="<?= $old['teu'] ?? '' ?>"
+                                            class="form-control <?= isset($errors['teu']) ? 'is-invalid' : '' ?>">
+                                        <div class="invalid-feedback">
+                                            <?= $errors['teu'] ?? '' ?>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3 row">
                                     <label class="col-3 col-form-label required">Tempat Penetapan</label>
                                     <div class="col">
                                         <input
@@ -140,7 +141,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                             name="tempat_penetapan"
                                             id="tempat_penetapan"
                                             placeholder="Tempat Penetapan..."
-                                            value="<?= $old['tempat_penetapan'] ?>"
+                                            value="<?= $old['tempat_penetapan'] ?? '' ?>"
                                             class="form-control <?= isset($errors['tempat_penetapan']) ? 'is-invalid' : '' ?>">
                                         <div class="invalid-feedback">
                                             <?= $errors['tempat_penetapan'] ?? '' ?>
@@ -155,7 +156,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                             name="penandatangan"
                                             id="penandatangan"
                                             placeholder="Penandatangan..."
-                                            value="<?= $old['penandatangan'] ?>"
+                                            value="<?= $old['penandatangan'] ?? '' ?>"
                                             class="form-control <?= isset($errors['penandatangan']) ? 'is-invalid' : '' ?>">
                                         <div class="invalid-feedback">
                                             <?= $errors['penandatangan'] ?? '' ?>

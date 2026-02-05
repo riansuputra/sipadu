@@ -62,7 +62,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                     id="nama_informasi"
                                     placeholder="Nama Informasi..."
                                     rows="3"
-                                    class="form-control <?= isset($errors['nama_informasi']) ? 'is-invalid' : '' ?>"><?= $dip['nama_informasi'] ?? $old['nama_informasi'] ?></textarea>
+                                    class="form-control <?= isset($errors['nama_informasi']) ? 'is-invalid' : '' ?>"><?= $dip['nama_informasi'] ?? $old['nama_informasi'] ?? '' ?></textarea>
                                 <div class="invalid-feedback">
                                     <?= $errors['nama_informasi'] ?? '' ?>
                                 </div>
@@ -72,7 +72,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                 <input type="text"
                                     name="unit_penyedia"
                                     id="unit_penyedia"
-                                    value="<?= $dip['unit_penyedia'] ?? $old['unit_penyedia'] ?>"
+                                    value="<?= $dip['unit_penyedia'] ?? $old['unit_penyedia'] ?? '' ?>"
                                     placeholder="Unit Kerja yang Menyediakan..."
                                     class="form-control <?= isset($errors['unit_penyedia']) ? 'is-invalid' : '' ?>">
                                 <div class="invalid-feedback">
@@ -84,7 +84,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                 <input type="text"
                                     name="penanggung_jawab"
                                     id="penanggung_jawab"
-                                    value="<?= $dip['penanggung_jawab'] ?? $old['penanggung_jawab'] ?>"
+                                    value="<?= $dip['penanggung_jawab'] ?? $old['penanggung_jawab'] ?? '' ?>"
                                     placeholder="Penanggung Jawab Informasi..."
                                     class="form-control <?= isset($errors['penanggung_jawab']) ? 'is-invalid' : '' ?>">
                                 <div class="invalid-feedback">
@@ -109,7 +109,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                         <input type="text"
                                             name="tempat_pembuatan"
                                             id="tempat_pembuatan"
-                                            value="<?= $dip['tempat_pembuatan'] ?? $old['tempat_pembuatan'] ?>"
+                                            value="<?= $dip['tempat_pembuatan'] ?? $old['tempat_pembuatan'] ?? '' ?>"
                                             placeholder="Tempat Pembuatan..."
                                             class="form-control <?= isset($errors['tempat_pembuatan']) ? 'is-invalid' : '' ?>">
                                         <div class="invalid-feedback">

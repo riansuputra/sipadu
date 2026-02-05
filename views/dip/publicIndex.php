@@ -85,7 +85,7 @@ if ($tahun || $jenis) {
                                         <form method="get">
                                             <div class="row">
 
-                                                <input type="hidden" name="page" value="dip">
+                                                <input type="hidden" name="page" value="dip-publik">
                                                 <div class="col-auto">
                                                     <select name="tahun" class="form-select w-auto">
                                                         <option value="">Semua Tahun</option>
@@ -116,7 +116,7 @@ if ($tahun || $jenis) {
                                                         </svg>
                                                         Filter
                                                     </button>
-                                                    <a href="?page=dip" class="btn btn-secondary">
+                                                    <a href="?page=dip-publik" class="btn btn-secondary">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
                                                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                             <path d="M4 7l16 0" />
@@ -548,19 +548,6 @@ if ($tahun || $jenis) {
             spinner.style.display = "none";
             pageContent.style.display = "block";
         });
-    });
-</script>
-
-<script>
-    document.querySelector('#filter-jenis').addEventListener('change', function() {
-        const val = this.value;
-        const list = window.tabler_list["advanced-table"];
-
-        if (val === '') {
-            list.search('');
-        } else {
-            list.search(val, ['sort-jenis']);
-        }
     });
 </script>
 
