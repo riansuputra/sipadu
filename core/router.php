@@ -123,7 +123,7 @@ function routeRequest()
             $controller->delete();
             break;
 
-        // Jenis Publikasi =======================================
+        // Jenis Dokuumen =======================================
         case 'jenis-dokumen':
             authOnly();
             require __DIR__ . '/../controllers/JenisDokumenController.php';
@@ -273,6 +273,13 @@ function routeRequest()
             $controller->delete();
             break;
 
+        case 'publikasi-publik':
+            authOnly();
+            require __DIR__ . '/../controllers/PublikasiController.php';
+            $controller = new PublikasiController();
+            $controller->publicIndex();
+            break;
+
         // Jenis Publikasi =======================================
         case 'jenis-publikasi':
             authOnly();
@@ -377,6 +384,18 @@ function routeRequest()
             require __DIR__ . '/../controllers/DipController.php';
             $controller = new DipController();
             $controller->downloadFile();
+            break;
+
+        case 'dip-print-filter':
+            require __DIR__ . '/../controllers/DipController.php';
+            $controller = new DipController();
+            $controller->printFilter();
+            break;
+
+        case 'dip-print':
+            require __DIR__ . '/../controllers/DipController.php';
+            $controller = new DipController();
+            $controller->print();
             break;
 
         // DIP ======================================

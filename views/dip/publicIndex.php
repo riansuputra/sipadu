@@ -297,8 +297,7 @@ if ($tahun || $jenis) {
                                                 </td>
                                             </tr>
 
-
-                                            <div class="modal modal-blur fade" id="modal-detail-<?= $d['id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
+                                            <div class="modal fade" id="modal-detail-<?= $d['id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
                                                 <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                                                     <div class="modal-content">
                                                         <div class="card-header">
@@ -437,12 +436,16 @@ if ($tahun || $jenis) {
                                                     </div>
                                                 </div>
                                             </div>
+
                                         <?php endforeach; ?>
 
 
                                     </tbody>
                                 </table>
                             </div>
+
+
+
                             <div class="card-footer d-flex align-items-center">
                                 <div class="dropdown">
                                     <a class="btn dropdown-toggle" data-bs-toggle="dropdown">
@@ -464,6 +467,9 @@ if ($tahun || $jenis) {
                                 </ul>
                             </div>
                         </div>
+
+
+
                     </div>
                 </div>
             </div>
@@ -471,6 +477,10 @@ if ($tahun || $jenis) {
         </div>
     </div>
 </div>
+
+<?php foreach ($data as $dt => $d): ?>
+
+<?php endforeach; ?>
 
 <script>
     const advancedTable = {

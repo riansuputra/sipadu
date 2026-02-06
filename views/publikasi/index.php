@@ -140,17 +140,7 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
                                                         value="<?= htmlspecialchars($_GET['tanggal_selesai'] ?? '') ?>">
                                                 </div>
 
-                                                <div class="col-auto">
-                                                    <select name="tahun" class="form-select w-auto">
-                                                        <option value="">Semua Tahun</option>
-                                                        <?php for ($t = date('Y'); $t >= 2015; $t--): ?>
-                                                            <option value="<?= $t ?>"
-                                                                <?= ($_GET['tahun'] ?? '') == $t ? 'selected' : '' ?>>
-                                                                <?= $t ?>
-                                                            </option>
-                                                        <?php endfor; ?>
-                                                    </select>
-                                                </div>
+
                                                 <div class="col-auto">
                                                     <select name="jenis" class="form-select w-auto">
                                                         <option value="">Semua Jenis</option>

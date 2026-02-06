@@ -245,6 +245,51 @@ class DipController
         require __DIR__ . "/../views/dip/edit.php";
     }
 
+    public function printFilter()
+    {
+        authOnly();
+
+        global $pdo;
+
+        $user = currentUser();
+        $role = currentRole();
+
+        require __DIR__ . "/../views/dip/printFilter.php";
+        exit;
+    }
+
+    public function print()
+    {
+        authOnly();
+
+        global $pdo;
+
+        $user = currentUser();
+        $role = currentRole();
+
+        $dipModel = new DipModel($pdo);
+
+
+        $tahun = $_GET['tahun'] ?? null;
+        $jenis = $_GET['jenis'] ?? [];
+
+        if (!is_array($jenis)) {
+            $jenis = [$jenis];
+        }
+
+        $data = $dipModel->getForPrint($tahun, $jenis);
+
+        // grouping per jenis
+        $grouped = [];
+        foreach ($data as $d) {
+            $grouped[$d['jenis_informasi']][] = $d;
+        }
+
+
+        require __DIR__ . "/../views/dip/print.php";
+        exit;
+    }
+
     public function update()
     {
         authOnly();

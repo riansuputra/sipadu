@@ -229,4 +229,47 @@ class DipModel
 
         return $stmt->execute([$dipId]);
     }
+
+    public function getForPrint($tahun = null, $jenis = [])
+    {
+        $where = [];
+        $params = [];
+
+        if ($tahun) {
+            $where[] = 'dip.tahun_pembuatan = ?';
+            $params[] = $tahun;
+        }
+
+        if (!empty($jenis)) {
+            $in = implode(',', array_fill(0, count($jenis), '?'));
+            $where[] = "dip.jenis_informasi IN ($in)";
+            $params = array_merge($params, $jenis);
+        }
+
+        $sql = "
+        SELECT 
+            dip.*,
+            GROUP_CONCAT(
+                CONCAT(df.id, '|', df.nama_file, '|', df.path_file)
+                SEPARATOR '##'
+            ) AS files
+        FROM dip
+        LEFT JOIN dip_file df ON dip.id = df.dip_id
+        WHERE dip.is_active = 1
+    ";
+
+        if ($where) {
+            $sql .= ' AND ' . implode(' AND ', $where);
+        }
+
+        $sql .= "
+        GROUP BY dip.id
+        ORDER BY dip.jenis_informasi, dip.nama_informasi
+    ";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

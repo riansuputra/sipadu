@@ -15,21 +15,32 @@ class PublikasiController
         $user = currentUser();
         $role = currentRole();
 
+        $pokjaId = $user['pokja_id'] ?? null;
+
         $tanggalMulai = $_GET['tanggal_mulai'] ?? null;
         $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
         $jenis = $_GET['jenis'] ?? null;
 
         $model = new PublikasiModel($pdo);
 
-        if (!empty($tanggalMulai) || !empty($tanggalSelesai) || !empty($jenis)) {
-            $data = $model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
-        } else {
-            // default
-            $data = $model->getAll();
-        }
+        $data = $model->getByRole(
+            $role,
+            $pokjaId,
+            $tanggalMulai,
+            $tanggalSelesai,
+            $jenis
+        );
+
+        // if (!empty($tanggalMulai) || !empty($tanggalSelesai) || !empty($jenis)) {
+        //     $data = $model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
+        // } else {
+        //     $data = $model->getAll();
+        // }
 
         require __DIR__ . '/../views/publikasi/index.php';
     }
+
+
 
     public function getFiltered()
     {
@@ -398,5 +409,30 @@ class PublikasiController
 
         header("Location: ?page=publikasi");
         exit;
+    }
+
+    public function publicIndex()
+    {
+        authOnly();
+
+        global $pdo;
+
+        $user = currentUser();
+        $role = currentRole();
+
+        $tanggalMulai = $_GET['tanggal_mulai'] ?? null;
+        $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
+        $jenis = $_GET['jenis'] ?? null;
+
+        $model = new PublikasiModel($pdo);
+
+        if (!empty($tanggalMulai) || !empty($tanggalSelesai) || !empty($jenis)) {
+            $data = $model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
+        } else {
+            // default
+            $data = $model->getAll();
+        }
+
+        require __DIR__ . '/../views/publikasi/publicIndex.php';
     }
 }

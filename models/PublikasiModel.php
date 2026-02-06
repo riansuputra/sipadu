@@ -47,6 +47,65 @@ class PublikasiModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getByRole(
+        $role,
+        $pokjaId = null,
+        $tanggalMulai = null,
+        $tanggalSelesai = null,
+        $jenis = null
+    ) {
+        $sql = "
+SELECT
+p.*,
+pj.pokja_tipe AS tim,
+pj.pokja_nama AS nama_tim,
+j.nama AS jenis,
+GROUP_CONCAT(
+CONCAT(pf.id, '|', pf.nama_file, '|', pf.path_file, '|', pf.tipe_file)
+SEPARATOR '##'
+) AS files
+FROM publikasi p
+LEFT JOIN pokja pj ON p.pokja_id = pj.id
+LEFT JOIN jenis_publikasi j ON p.jenis_id = j.id
+LEFT JOIN publikasi_file pf ON p.id = pf.publikasi_id
+WHERE p.is_published = 1
+";
+        $params = [];
+        /* =====================================================
+🔐 BATASI DATA BERDASARKAN ROLE
+===================================================== */
+        if (!in_array($role, ['superadmin', 'pimpinan'])) {
+            // admin & staf → hanya pokja sendiri
+            $sql .= " AND p.pokja_id = ?";
+            $params[] = $pokjaId;
+        }
+        /* =====================================================
+📅 FILTER TANGGAL
+===================================================== */
+        if (!empty($tanggalMulai)) {
+            $sql .= " AND DATE(p.tanggal_kegiatan) >= ?";
+            $params[] = $tanggalMulai;
+        }
+        if (!empty($tanggalSelesai)) {
+            $sql .= " AND DATE(p.tanggal_kegiatan) <= ?";
+            $params[] = $tanggalSelesai;
+        }
+        /* =====================================================
+🏷 FILTER JENIS
+===================================================== */
+        if (!empty($jenis)) {
+            $sql .= " AND p.jenis_id = ?";
+            $params[] = $jenis;
+        }
+        $sql .= "
+GROUP BY p.id
+ORDER BY p.tanggal_kegiatan DESC, p.created_at DESC
+";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function getFiltered($tanggalMulai = null, $tanggalSelesai = null, $jenis = null)
     {
         $sql = "
