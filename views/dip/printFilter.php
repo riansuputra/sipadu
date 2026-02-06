@@ -4,7 +4,7 @@
 // ================================
 
 // Judul
-$title = "DIP";
+$title = "Cetak DIP";
 
 // Mulai buffer konten
 ob_start();
@@ -34,25 +34,6 @@ ob_start();
 // echo '</pre>';
 
 
-$tahun = $_GET['tahun'] ?? null;
-$jenis = $_GET['jenis'] ?? null;
-
-$deskripsi = 'Menampilkan seluruh data';
-
-if ($tahun || $jenis) {
-
-    $parts = [];
-
-    if ($tahun) {
-        $parts[] = "tahun '<strong>" . htmlspecialchars($tahun) . "</strong>'";
-    }
-
-    if ($jenis) {
-        $parts[] = "jenis informasi '<strong>" . htmlspecialchars(ucwords(strtolower($jenis))) . "</strong>'";
-    }
-
-    $deskripsi = 'Filter data DIP ' . implode(' dan ', $parts);
-}
 ?>
 
 <div class="page-header d-print-none" aria-label="Page header">
@@ -61,27 +42,7 @@ if ($tahun || $jenis) {
             <div class="col">
                 <!-- Page pre-title -->
                 <div class="page-pretitle">DIP</div>
-                <h2 class="page-title">Daftar DIP</h2>
-            </div>
-            <!-- Page title actions -->
-            <div class="col-auto ms-auto d-print-none">
-                <div class="btn-list">
-                    <a href="<?= BASE_URL ?>/?page=tambah-dip" class="btn btn-primary btn-5 d-none d-sm-inline-block">
-
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">
-                            <path d="M12 5l0 14"></path>
-                            <path d="M5 12l14 0"></path>
-                        </svg>
-                        Tambah DIP
-                    </a>
-                    <a href="<?= BASE_URL ?>/?page=tambah-dip" class="btn btn-primary btn-6 d-sm-none btn-icon">
-
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">
-                            <path d="M12 5l0 14"></path>
-                            <path d="M5 12l14 0"></path>
-                        </svg>
-                    </a>
-                </div>
+                <h2 class="page-title">Cetak DIP</h2>
             </div>
         </div>
     </div>
@@ -91,36 +52,145 @@ if ($tahun || $jenis) {
 
     <div class="container-xl">
         <div class="row row-deck row-cards ">
-            <div class="col-12">
-
-                <form method="GET" action="">
-                    <input type="hidden" name="page" value="dip-print">
-
-                    <div class="mb-3">
-                        <label>Tahun</label>
-                        <select name="tahun" class="form-control">
-                            <option value="">-- Semua Tahun --</option>
-                            <?php for ($y = date('Y'); $y >= 2015; $y--): ?>
-                                <option value="<?= $y ?>"><?= $y ?></option>
-                            <?php endfor; ?>
-                        </select>
+            <div class="col-sm-12 col-lg-6">
+                <form class="card" method="POST" action="?page=dip-print" target="_blank">
+                    <div class="card-header">
+                        <h3 class="card-title">FIlter Data Cetak DIP</h3>
                     </div>
+                    <div class="card-body">
+                        <label class="form-label">Pilih Data DIP :</label>
+                        <div class="form-fieldset">
+                            <div class="mb-3">
+                                <label class="form-label required">Tahun :</label>
+                                <select name="tahun" id="tahun" class="form-select <?= isset($errors['tahun']) ? 'is-invalid' : '' ?>">
+                                    <option value="" disabled <?= empty($old['tahun']) ? 'selected' : '' ?>>Semua</option>
+                                    <?php for ($i = date('Y'); $i >= 2000; $i--): ?>
+                                        <option value="<?= $i ?>" <?= ($old['tahun'] ?? '') == $i ? 'selected' : '' ?>><?= $i ?></option>
+                                    <?php endfor; ?>
+                                </select>
+                                <div class="invalid-feedback">
+                                    <?= $errors['tahun'] ?? '' ?>
+                                </div>
+                            </div>
+                            <div class="">
+                                <label class="form-label required">Jenis Informasi : <em class="text-secondary">(Tahan Ctrl untuk memilih lebih dari satu jenis)</em></label>
+                                <select class="form-select <?= isset($errors['jenis']) ? 'is-invalid' : '' ?>"
+                                    name="jenis[]"
+                                    id="jenis" multiple>
+                                    <option value="BERKALA" <?= ($old['jenis'] ?? '') == 'BERKALA' ? 'selected' : '' ?>>Berkala</option>
+                                    <option value="SERTA MERTA" <?= ($old['jenis'] ?? '') == 'SERTA MERTA' ? 'selected' : '' ?>>Serta Merta</option>
+                                    <option value="SETIAP SAAT" <?= ($old['jenis'] ?? '') == 'SETIAP SAAT' ? 'selected' : '' ?>>Setiap Saat</option>
+                                    <option value="DIKECUALIKAN" <?= ($old['jenis'] ?? '') == 'DIKECUALIKAN' ? 'selected' : '' ?>>Dikecualikan</option>
+                                </select>
+                                <small class="form-hint">
 
-                    <div class="mb-3">
-                        <label>Jenis Informasi</label>
-                        <select name="jenis[]" class="form-control" multiple>
-                            <option value="berkala">Berkala</option>
-                            <option value="serta merta">Serta Merta</option>
-                            <option value="setiap saat">Setiap Saat</option>
-                            <option value="dikecualikan">Dikecualikan</option>
-                        </select>
-                        <small>Tekan CTRL untuk memilih lebih dari satu</small>
+                                </small>
+                                <div class="invalid-feedback">
+                                    <?= $errors['jenis_informasi'] ?? '' ?>
+                                </div>
+
+                            </div>
+                        </div>
+                        <label class="form-label">Form Isian Surat</label>
+
+                        <div class="form-fieldset">
+                            <div class="mb-3">
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="form-label required">Nomor Surat :</label>
+                                        <input type="text"
+                                            name="nomor_surat"
+                                            id="nomor_surat"
+                                            value="<?= $old['nomor_surat'] ?? '' ?>"
+                                            placeholder="Unit Kerja yang Menyediakan..."
+                                            class="form-control <?= isset($errors['nomor_surat']) ? 'is-invalid' : '' ?>">
+                                        <div class="invalid-feedback">
+                                            <?= $errors['nomor_surat'] ?? '' ?>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <label class="form-label">Tanggal Surat :</label>
+                                        <input type="date"
+                                            name="tanggal_surat"
+                                            id="tanggal_surat"
+                                            value="<?= $old['tanggal_surat'] ?? '' ?>"
+                                            placeholder="Penanggung Jawab Informasi..."
+                                            class="form-control <?= isset($errors['tanggal_surat']) ? 'is-invalid' : '' ?>">
+                                        <div class="invalid-feedback">
+                                            <?= $errors['tanggal_surat'] ?? '' ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label required">Tentang :</label>
+                                <textarea
+                                    name="tentang"
+                                    id="tentang"
+                                    placeholder="Tentang..."
+                                    rows="3"
+                                    class="form-control <?= isset($errors['tentang']) ? 'is-invalid' : '' ?>"><?= $old['tentang'] ?? '' ?></textarea>
+                                <div class="invalid-feedback">
+                                    <?= $errors['tentang'] ?? '' ?>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Nama Penandatangan :</label>
+                                <input type="text"
+                                    name="nama_ttd"
+                                    id="nama_ttd"
+                                    value="<?= $old['nama_ttd'] ?? '' ?>"
+                                    placeholder="Penanggung Jawab Informasi..."
+                                    class="form-control <?= isset($errors['nama_ttd']) ? 'is-invalid' : '' ?>">
+                                <div class="invalid-feedback">
+                                    <?= $errors['nama_ttd'] ?? '' ?>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">NIP Penandatangan :</label>
+                                <input type="text"
+                                    name="nip_ttd"
+                                    id="nip_ttd"
+                                    value="<?= $old['nip_ttd'] ?? '' ?>"
+                                    placeholder="Penanggung Jawab Informasi..."
+                                    class="form-control <?= isset($errors['nip_ttd']) ? 'is-invalid' : '' ?>">
+                                <div class="invalid-feedback">
+                                    <?= $errors['nip_ttd'] ?? '' ?>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Jabatan :</label>
+                                <input type="text"
+                                    name="jabatan_ttd"
+                                    id="jabatan_ttd"
+                                    value="<?= $old['jabatan_ttd'] ?? '' ?>"
+                                    placeholder="Penanggung Jawab Informasi..."
+                                    class="form-control <?= isset($errors['jabatan_ttd']) ? 'is-invalid' : '' ?>">
+                                <div class="invalid-feedback">
+                                    <?= $errors['jabatan_ttd'] ?? '' ?>
+                                </div>
+                            </div>
+                            <div class="">
+                                <label class="form-label required">Tahun di Judul :</label>
+                                <select name="tahun_judul" id="tahun_judul" class="form-select <?= isset($errors['tahun_judul']) ? 'is-invalid' : '' ?>">
+                                    <option value="" disabled <?= empty($old['tahun_judul']) ? 'selected' : '' ?>>-- Pilih Tahun --</option>
+                                    <?php for ($i = date('Y'); $i >= 2000; $i--): ?>
+                                        <option value="<?= $i ?>" <?= ($old['tahun_judul'] ?? '') == $i ? 'selected' : '' ?>><?= $i ?></option>
+                                    <?php endfor; ?>
+                                </select>
+                                <div class="invalid-feedback">
+                                    <?= $errors['tahun_pembuatan'] ?? '' ?>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="">
+                            <button type="submit" class="btn btn-success">Simpan</button>
+                        </div>
                     </div>
-
-                    <button type="submit" class="btn btn-primary">
-                        Tampilkan & Cetak
-                    </button>
                 </form>
+
+
+
             </div>
 
         </div>

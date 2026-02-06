@@ -21,6 +21,15 @@ class PublikasiController
         $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
         $jenis = $_GET['jenis'] ?? null;
 
+        // echo "<pre>";
+        // print_r($_POST);
+        // print_r($_GET['jenis']);
+        // echo "</pre>";
+        // die();
+
+        $modeljenis = new JenisPublikasiModel($pdo);
+        $jenisInput = $modeljenis->getAll();
+
         $model = new PublikasiModel($pdo);
 
         $data = $model->getByRole(

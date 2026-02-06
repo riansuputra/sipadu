@@ -142,12 +142,13 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
 
 
                                                 <div class="col-auto">
-                                                    <select name="jenis" class="form-select w-auto">
+                                                    <select class="form-select w-auto" name="jenis" id="jenis">
                                                         <option value="">Semua Jenis</option>
-                                                        <option value="BERKALA" <?= ($_GET['jenis'] ?? '') == 'BERKALA' ? 'selected' : '' ?>>Berkala</option>
-                                                        <option value="SERTA MERTA" <?= ($_GET['jenis'] ?? '') == 'SERTA MERTA' ? 'selected' : '' ?>>Serta Merta</option>
-                                                        <option value="SETIAP SAAT" <?= ($_GET['jenis'] ?? '') == 'SETIAP SAAT' ? 'selected' : '' ?>>Setiap Saat</option>
-                                                        <option value="DIKECUALIKAN" <?= ($_GET['jenis'] ?? '') == 'DIKECUALIKAN' ? 'selected' : '' ?>>Dikecualikan</option>
+                                                        <?php foreach ($jenisInput as $j): ?>
+                                                            <option value="<?= $j['nama'] ?>" <?= ($_GET['jenis'] ?? '') == $j['nama'] ? 'selected' : '' ?>>
+                                                                <?= $j['nama'] ?>
+                                                            </option>
+                                                        <?php endforeach; ?>
                                                     </select>
 
                                                 </div>

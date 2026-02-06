@@ -35,36 +35,28 @@ class DipModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getFiltered($tahun = null, $jenis = null)
+    public function getFiltered($tahun = null, $jenis = [])
     {
         $sql = "
-        SELECT 
-            dip.*,
-            GROUP_CONCAT(
-                CONCAT(df.id, '|', df.nama_file, '|', df.path_file, '|', df.tipe_file) 
-                SEPARATOR '##'
-            ) AS files
+        SELECT dip.*
         FROM dip
-        LEFT JOIN dip_file df ON dip.id = df.dip_id
         WHERE dip.is_active = 1
     ";
 
         $params = [];
 
-        if (!empty($tahun)) {
+        if ($tahun) {
             $sql .= " AND dip.tahun_pembuatan = ?";
             $params[] = $tahun;
         }
 
         if (!empty($jenis)) {
-            $sql .= " AND dip.jenis_informasi = ?";
-            $params[] = $jenis;
+            $in = implode(',', array_fill(0, count($jenis), '?'));
+            $sql .= " AND dip.jenis_informasi IN ($in)";
+            $params = array_merge($params, $jenis);
         }
 
-        $sql .= "
-        GROUP BY dip.id
-        ORDER BY dip.tahun_pembuatan DESC, dip.created_at DESC
-    ";
+        $sql .= " ORDER BY dip.jenis_informasi, dip.nama_informasi";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($params);

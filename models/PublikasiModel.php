@@ -94,7 +94,7 @@ WHERE p.is_published = 1
 🏷 FILTER JENIS
 ===================================================== */
         if (!empty($jenis)) {
-            $sql .= " AND p.jenis_id = ?";
+            $sql .= " AND j.nama = ?";
             $params[] = $jenis;
         }
         $sql .= "

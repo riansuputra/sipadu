@@ -245,49 +245,88 @@ class DipController
         require __DIR__ . "/../views/dip/edit.php";
     }
 
-    public function printFilter()
+    public static function printFilter()
     {
-        authOnly();
 
+
+        authOnly();
         global $pdo;
 
         $user = currentUser();
         $role = currentRole();
 
-        require __DIR__ . "/../views/dip/printFilter.php";
-        exit;
-    }
-
-    public function print()
-    {
-        authOnly();
-
-        global $pdo;
-
-        $user = currentUser();
-        $role = currentRole();
-
-        $dipModel = new DipModel($pdo);
-
+        $model = new DipModel($pdo);
 
         $tahun = $_GET['tahun'] ?? null;
-        $jenis = $_GET['jenis'] ?? [];
+        $jenis = $_GET['jenis'] ?? []; // bisa array
 
         if (!is_array($jenis)) {
             $jenis = [$jenis];
         }
 
-        $data = $dipModel->getForPrint($tahun, $jenis);
-
-        // grouping per jenis
-        $grouped = [];
-        foreach ($data as $d) {
-            $grouped[$d['jenis_informasi']][] = $d;
+        $data = [];
+        if ($tahun || !empty($jenis)) {
+            $data = $model->getFiltered($tahun, $jenis);
         }
 
+        require __DIR__ . '/../views/dip/printFilter.php';
+    }
 
-        require __DIR__ . "/../views/dip/print.php";
-        exit;
+    public static function print()
+    {
+        // echo "<pre>";
+        // print_r($_POST);
+        // print_r($_FILES);
+        // echo "</pre>";
+        // die();
+        authOnly();
+        global $pdo;
+
+        $user = currentUser();
+        $role = currentRole();
+
+        $model = new DipModel($pdo);
+
+        // ==========================
+        // AMBIL FILTER DATA
+        // ==========================
+        $tahun_data  = $_POST['tahun'] ?? null;
+        $jenis       = $_POST['jenis'] ?? [];
+
+        if (!is_array($jenis)) {
+            $jenis = [$jenis];
+        }
+
+        // ==========================
+        // AMBIL DATA SURAT
+        // ==========================
+        $nomor_surat   = $_POST['nomor_surat'] ?? '';
+        $tanggal_surat = $_POST['tanggal_surat'] ?? '';
+        $tentang       = $_POST['tentang'] ?? '';
+        $tahun_judul   = $_POST['tahun_judul'] ?? date('Y');
+
+        $jabatan_ttd   = $_POST['jabatan_ttd'] ?? '';
+        $nama_ttd      = $_POST['nama_ttd'] ?? '';
+        $nip_ttd       = $_POST['nip_ttd'] ?? '';
+
+        // ==========================
+        // AMBIL DATA DIP
+        // ==========================
+        $data = $model->getFiltered($tahun_data, $jenis);
+
+        // ==========================
+        // GROUPING DATA PER JENIS
+        // ==========================
+        $dataGrouped = [];
+
+        foreach ($data as $d) {
+            $dataGrouped[$d['jenis_informasi']][] = $d;
+        }
+
+        // ==========================
+        // LOAD VIEW CETAK
+        // ==========================
+        require __DIR__ . '/../views/dip/print.php';
     }
 
     public function update()

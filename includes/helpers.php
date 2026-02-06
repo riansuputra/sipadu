@@ -16,7 +16,7 @@ function tgl_sekarang()
         'Desember'
     ];
 
-    $tgl   = date('d');
+    $tgl   = (int) date('d');
     $bln   = (int) date('m');
     $thn   = date('Y');
 

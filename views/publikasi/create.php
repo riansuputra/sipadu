@@ -126,10 +126,10 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                                 <?= $j['nama'] ?>
                                             </option>
                                         <?php endforeach; ?>
-                                        <div class="invalid-feedback">
-                                            <?= $errors['jenis_id'] ?? '' ?>
-                                        </div>
                                     </select>
+                                    <div class="invalid-feedback">
+                                        <?= $errors['jenis_id'] ?? '' ?>
+                                    </div>
                                 </div>
                             </div>
                             <div class="mb-3 row">
