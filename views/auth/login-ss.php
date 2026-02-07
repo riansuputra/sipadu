@@ -153,52 +153,94 @@ $headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/banner
 </head>
 
 <body>
-    <script src="<?= BASE_URL ?>/public/assets/dist/js/demo-theme.min.js?1684106062"></script>
-    <div class="page">
+    <div class="page page-center">
+        <div class="container container-normal">
+            <div class="row align-items-center">
+                <div class="row row-deck row-cards">
 
-        <!-- Header Banner SIPADU -->
-
-        <?php
-        // ----------------------------
-        // HEADER (hanya jika login)
-        // ----------------------------
-        if (isLoggedIn()) {
-            require __DIR__ . '/header.php';
-        }
-        ?>
-
-        <header class="navbar navbar-expand-md d-print-none header-banner">
-            <!-- teks tengah -->
-            <div class="banner-content">
-                <h1 class="banner-title">Halaman Utama</h1>
-                <hr class="m-0">
-                <div class="banner-subtitle">SIPADU BPMP Provinsi Bali</div>
-            </div>
-        </header>
-
-
-        <div class="page-wrapper" style="background-image: url(http://localhost/sipadu/public/assets/img/vector.svg); background-repeat: repeat;">
-
-            <!-- Loader -->
-            <div class="container container-slim my-auto" id="spinner" style="display:none;">
-                <div class="text-center">
-                    <div class=" mb-3">loading</div>
-                    <div class="progress progress-sm">
-                        <div class="progress-bar progress-bar-indeterminate"></div>
+                    <div class="col-sm-12 col-lg-4 m-0 p-0">
+                        <div class="card card-lg">
+                            <div class="card-body">
+                                <h2 class=" h2 text-center mb-4">Login to your account</h2>
+                                <form action="./" method="get" autocomplete="off" novalidate="">
+                                    <div class="mb-3">
+                                        <label class="form-label">Email address</label>
+                                        <input type="email" class="form-control" placeholder="your@email.com" autocomplete="off">
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="form-label">
+                                            Password
+                                            <span class="form-label-description">
+                                                <a href="./forgot-password.html">I forgot password</a>
+                                            </span>
+                                        </label>
+                                        <div class="input-group input-group-flat">
+                                            <input type="password" class="form-control" placeholder="Your password" autocomplete="off">
+                                            <span class="input-group-text">
+                                                <a href="#" class="link-secondary" data-bs-toggle="tooltip" aria-label="Show password" data-bs-original-title="Show password"><!-- Download SVG icon from http://tabler.io/icons/icon/eye -->
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
+                                                        <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"></path>
+                                                        <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"></path>
+                                                    </svg></a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="form-check">
+                                            <input type="checkbox" class="form-check-input">
+                                            <span class="form-check-label">Remember me on this device</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-footer">
+                                        <button type="submit" class="btn btn-primary w-100">Sign in</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-lg-8 m-0 p-0">
+                        <img src="http://localhost/sipadu/public/assets/img/images.jpg" alt="" class="w-100">
                     </div>
                 </div>
             </div>
-
-            <!-- Isi konten -->
-            <?= $content ?>
         </div>
+    </div>
 
-        <?php
-        // ----------------------------
-        // FOOTER
-        // ----------------------------
-        require __DIR__ . '/footer.php';
-        ?>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const spinner = document.getElementById("spinner");
+            const pageContent = document.getElementById("page-content");
+
+            window.addEventListener("load", function() {
+                spinner.style.display = "none";
+                pageContent.style.display = "block";
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#togglePassword').click(function() {
+                var passwordInput = $('#password');
+                if (passwordInput.attr('type') === 'password') {
+                    passwordInput.attr('type', 'text');
+                } else {
+                    passwordInput.attr('type', 'password');
+                }
+            });
+        });
+    </script>
+
+    <div class="page-wrapper">
+
+        <!-- Loader -->
+        <div class="container container-slim my-auto" id="spinner" style="display:none;">
+            <div class="text-center">
+                <div class=" mb-3">loading</div>
+                <div class="progress progress-sm">
+                    <div class="progress-bar progress-bar-indeterminate"></div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- JS Global -->

@@ -22,12 +22,19 @@ ob_start();
 
 
         <div class="row row-cards">
-            <div class="col-12 ms-2 mb-0">
-                <ol class="breadcrumb text-center" aria-label="breadcrumbs">
-                    <li class="breadcrumb-item active">
-                        <a href="#">Dashboard</a>
-                    </li>
-                </ol>
+            <div class="col-12 mb-0">
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb text-center" aria-label="breadcrumbs">
+                            <li class="breadcrumb-item active">
+                                <a href="tests" class="h3 mb-0">
+                                    🏠︎&nbsp;&nbsp;Dashboard
+                                </a>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+
             </div>
             <?php foreach ($modules as $module): ?>
 
@@ -58,7 +65,7 @@ ob_start();
                 // echo '</pre>';
                 ?>
 
-                <div class="col-sm-6 col-lg-3 p-3">
+                <div class="col-sm-6 col-lg-3 p-1">
                     <a href="<?= $href ?>"
                         class="card card-link card-link-pop"
                         <?= !$hasAccess ? "onclick=\"noAccessAlert()\"" : "" ?>
@@ -68,7 +75,7 @@ ob_start();
                             style="background-image: url('public/assets/img/<?= htmlspecialchars($module['gambar']) ?>')">
                         </div>
 
-                        <div class="card-body text-center mb-0">
+                        <div class="card-body text-center fw-bold mb-0">
                             <?= htmlspecialchars($module['judul']) ?>
                         </div>
                     </a>
