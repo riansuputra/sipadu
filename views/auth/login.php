@@ -3,8 +3,6 @@
 // LAYOUT UTAMA APLIKASI
 // ================================
 $title = "Masuk";
-
-$headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/banner.webp';
 ?>
 
 <!DOCTYPE html>
@@ -19,13 +17,13 @@ $headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/banner
     <title><?= $title ?> - SIPADU</title>
 
     <!-- CSS Global  -->
-    <link href="<?= BASE_URL ?>/public/assets/css/tabler.min.css?1684106062" rel="stylesheet" />
-    <link href="<?= BASE_URL ?>/public/assets/css/tabler-vendors.min.css?1684106062" rel="stylesheet" />
-    <link href="<?= BASE_URL ?>/public/assets/dist/css/demo.min.css?1684106062" rel="stylesheet" />
-    <link href="<?= BASE_URL ?>/public/assets/dist/css/tabler-flags.min.css?1684106062" rel="stylesheet" />
+    <link href="<?= url('public/assets/css/tabler.min.css') ?>" rel="stylesheet" />
+    <link href="<?= url('public/assets/css/tabler-vendors.min.css') ?>" rel="stylesheet" />
+    <link href="<?= url('public/assets/dist/css/demo.min.css') ?>" rel="stylesheet" />
+    <link href="<?= url('public/assets/dist/css/tabler-flags.min.css') ?>" rel="stylesheet" />
 
     <!-- Icon -->
-    <link rel="icon" type="image/png" href="<?= BASE_URL ?>/public/assets/img/logo-bpmp.webp" />
+    <link rel="icon" type="image/png" href="<?= url('public/assets/img/logo-bpmp.webp') ?>" />
 
     <style>
         @import url('https://rsms.me/inter/inter.css');
@@ -101,7 +99,7 @@ $headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/banner
 </head>
 
 <body class="d-flex flex-column bg-white" style="background-image: url(http://localhost/sipadu/public/assets/img/vector.svg); background-repeat: repeat;">
-    <script src="<?= BASE_URL ?>/public/assets/dist/js/demo-theme.min.js?1684106062"></script>
+    <script src="<?= url('public/assets/dist/js/demo-theme.min.js') ?>"></script>
     <div class="row g-0 flex-fill">
 
         <div class="col-12 col-lg-6 col-xl-8 d-none d-lg-block">
@@ -132,7 +130,7 @@ $headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/banner
                 <div class="card">
                     <div class="card-body">
                         <h2 class="h2 text-center mt-3 mb-5">Masuk ke SIPADU</h2>
-                        <form action="<?= BASE_URL ?>/?page=login-process" method="post" autocomplete="off" novalidate="">
+                        <form action="<?= url('?page=login-process') ?>" method="post" autocomplete="off" novalidate="">
                             <div class="mb-3">
                                 <label class="form-label">Nama Pengguna</label>
                                 <input type="text" id="username" name="username" class="form-control" placeholder="Masukkan nama pengguna..." autocomplete="off">
@@ -166,10 +164,10 @@ $headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/banner
     </div>
 
     <!-- JS Global -->
-    <script src="<?= BASE_URL ?>/public/assets/dist/libs/list.js/dist/list.min.js?1759774804" defer=""></script>
-    <script src="<?= BASE_URL ?>/public/assets/dist/libs/apexcharts/dist/apexcharts.min.js?1684106062" defer></script>
-    <script src="<?= BASE_URL ?>/public/assets/js/tabler.min.js?1684106062" defer></script>
-    <script src="<?= BASE_URL ?>/public/assets/dist/libs/tom-select/dist/js/tom-select.base.min.js?1684106062" defer></script>
+    <script src="<?= url('public/assets/dist/libs/list.js/dist/list.min.js') ?>" defer=""></script>
+    <script src="<?= url('public/assets/dist/libs/apexcharts/dist/apexcharts.min.js') ?>" defer></script>
+    <script src="<?= url('public/assets/js/tabler.min.js') ?>" defer></script>
+    <script src="<?= url('public/assets/dist/libs/tom-select/dist/js/tom-select.base.min.js') ?>" defer></script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {

@@ -53,7 +53,7 @@ ob_start();
     <div class="container-xl">
         <div class="row row-deck row-cards ">
             <div class="col-sm-12 col-lg-6">
-                <form class="card" method="POST" action="?page=dip-print" target="_blank">
+                <form class="card" method="POST" action="<?= url('?page=dip-print')  ?>" target="_blank">
                     <div class="card-header">
                         <h3 class="card-title">FIlter Data Cetak DIP</h3>
                     </div>
@@ -103,7 +103,7 @@ ob_start();
                                             id="nomor_surat"
                                             value="<?= $old['nomor_surat'] ?? '' ?>"
                                             placeholder="Unit Kerja yang Menyediakan..."
-                                            class="form-control <?= isset($errors['nomor_surat']) ? 'is-invalid' : '' ?>">
+                                            class="form-control <?= isset($errors['nomor_surat']) ? 'is-invalid' : '' ?>" autocomplete="off">
                                         <div class="invalid-feedback">
                                             <?= $errors['nomor_surat'] ?? '' ?>
                                         </div>
@@ -141,7 +141,7 @@ ob_start();
                                     id="nama_ttd"
                                     value="<?= $old['nama_ttd'] ?? '' ?>"
                                     placeholder="Penanggung Jawab Informasi..."
-                                    class="form-control <?= isset($errors['nama_ttd']) ? 'is-invalid' : '' ?>">
+                                    class="form-control <?= isset($errors['nama_ttd']) ? 'is-invalid' : '' ?>" autocomplete="off">
                                 <div class="invalid-feedback">
                                     <?= $errors['nama_ttd'] ?? '' ?>
                                 </div>
@@ -153,7 +153,7 @@ ob_start();
                                     id="nip_ttd"
                                     value="<?= $old['nip_ttd'] ?? '' ?>"
                                     placeholder="Penanggung Jawab Informasi..."
-                                    class="form-control <?= isset($errors['nip_ttd']) ? 'is-invalid' : '' ?>">
+                                    class="form-control <?= isset($errors['nip_ttd']) ? 'is-invalid' : '' ?>" autocomplete="off">
                                 <div class="invalid-feedback">
                                     <?= $errors['nip_ttd'] ?? '' ?>
                                 </div>
@@ -165,7 +165,7 @@ ob_start();
                                     id="jabatan_ttd"
                                     value="<?= $old['jabatan_ttd'] ?? '' ?>"
                                     placeholder="Penanggung Jawab Informasi..."
-                                    class="form-control <?= isset($errors['jabatan_ttd']) ? 'is-invalid' : '' ?>">
+                                    class="form-control <?= isset($errors['jabatan_ttd']) ? 'is-invalid' : '' ?>" autocomplete="off">
                                 <div class="invalid-feedback">
                                     <?= $errors['jabatan_ttd'] ?? '' ?>
                                 </div>

@@ -5,6 +5,8 @@
 
 // Judul
 $title = "Peraturan";
+$bannerTitle = "Peraturan";
+$bannerSubtitle = "SIPADU BPMP Provinsi Bali";
 
 // echo '<pre>';
 // print_r($data);
@@ -20,15 +22,23 @@ ob_start();
 
 
         <div class="row row-cards">
-            <div class="col-12 ms-2 mb-0">
-                <ol class="breadcrumb text-center" aria-label="breadcrumbs">
-                    <li class="breadcrumb-item">
-                        <a href="#">Dashboard</a>
-                    </li>
-                    <li class="breadcrumb-item active">
-                        <a href="#">Peraturan</a>
-                    </li>
-                </ol>
+            <div class="col-12 mb-0">
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb text-center" aria-label="breadcrumbs">
+                            <li class="breadcrumb-item">
+                                <a href="<?= url('?page=dashboard') ?>" class="h3 mb-0">
+                                    🏠︎&nbsp;&nbsp;Dashboard
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                <a href="<?= url('?page=peraturan-publik') ?>" class="h3 mb-0">
+                                    Peraturan
+                                </a>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
             </div>
 
             <div class="col-12">
@@ -100,7 +110,7 @@ ob_start();
                                         <path d="M21 21l-6 -6" />
                                     </svg>Cari
                                 </button>
-                                <a href="?page=peraturan-publik" class="btn btn-1 btn-secondary">
+                                <a href="<?= url('?page=peraturan-publik') ?>" class="btn btn-1 btn-secondary">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                         <path d="M4 7l16 0" />
@@ -139,7 +149,7 @@ ob_start();
                                             <div class="card-body ps-0">
                                                 <div class="row">
                                                     <div class="col">
-                                                        <a class="mb-0" href="?page=peraturan-detail&id=<?= $d['id'] ?>"><span class="text-primary"><?= $d['jenis'] ?></span></a>
+                                                        <a class="mb-0" href="<?= url('?page=peraturan-detail&id=' . $d['id']) ?>"><span class="text-primary"><?= $d['jenis'] ?></span></a>
                                                     </div>
                                                 </div>
                                                 <div class="row">

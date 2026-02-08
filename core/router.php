@@ -46,6 +46,24 @@ function routeRequest()
             (new DashboardController())->index();
             break;
 
+        case 'pegawai-publik':
+            authOnly(); // wajib login
+            require __DIR__ . '/../controllers/DashboardController.php';
+            (new DashboardController())->index();
+            break;
+
+        case 'arsip-publik':
+            authOnly(); // wajib login
+            require __DIR__ . '/../controllers/DashboardController.php';
+            (new DashboardController())->index();
+            break;
+
+        case 'zi-wbbm-publik':
+            authOnly(); // wajib login
+            require __DIR__ . '/../controllers/DashboardController.php';
+            (new DashboardController())->index();
+            break;
+
         // Tim Kerja =================================
         case 'paud':
             authOnly(); // wajib login
@@ -542,6 +560,12 @@ function routeRequest()
             authOnly(); // wajib login
             require __DIR__ . '/../controllers/PengaturanController.php';
             (new PengaturanController())->manajemenFile();
+            break;
+
+        case 'profil':
+            authOnly(); // wajib login
+            require __DIR__ . '/../controllers/PengaturanController.php';
+            (new PengaturanController())->profil();
             break;
 
         // Default ========================================

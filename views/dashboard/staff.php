@@ -5,6 +5,8 @@
 
 // Judul
 $title = "Dashboard";
+$bannerTitle = "Halaman Utama";
+$bannerSubtitle = "SIPADU BPMP Provinsi Bali";
 
 // echo '<pre>';
 // print_r($moduleModel);

@@ -44,11 +44,11 @@ unset($_SESSION['errors'], $_SESSION['old']);
         <div class="row row-deck row-cards ">
 
             <div class="col-sm-12 col-lg-6">
-                <form class="card" method="POST" action="?page=publikasi-store" enctype="multipart/form-data">
+                <form class="card" method="POST" action="<?= url('?page=publikasi-store')  ?>" enctype="multipart/form-data">
                     <div class="card-header">
                         <h3 class="card-title">Form Tambah Publikasi</h3>
                         <div class="card-actions">
-                            <a class="btn btn-primary" href="?page=publikasi"><!-- Download SVG icon from http://tabler.io/icons/icon/chevron-left -->
+                            <a class="btn btn-primary" href="<?= url('?page=publikasi')  ?>"><!-- Download SVG icon from http://tabler.io/icons/icon/chevron-left -->
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
                                     <path d="M15 6l-6 6l6 6"></path>
                                 </svg>
@@ -67,7 +67,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                         id="judul"
                                         placeholder="Judul Publikasi..."
                                         value="<?= $old['judul'] ?? '' ?>"
-                                        class="form-control <?= isset($errors['judul']) ? 'is-invalid' : '' ?>">
+                                        class="form-control <?= isset($errors['judul']) ? 'is-invalid' : '' ?>" autocomplete="off">
                                     <div class="invalid-feedback">
                                         <?= $errors['judul'] ?? '' ?>
                                     </div>
@@ -81,7 +81,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                         id="deskripsi"
                                         rows="3"
                                         placeholder="Deskripsi.."
-                                        class="form-control <?= isset($errors['deskripsi']) ? 'is-invalid' : '' ?>"><?= $old['deskripsi'] ?? '' ?></textarea>
+                                        class="form-control <?= isset($errors['deskripsi']) ? 'is-invalid' : '' ?>" autocomplete="off"><?= $old['deskripsi'] ?? '' ?></textarea>
                                     <div class="invalid-feedback">
                                         <?= $errors['deskripsi'] ?? '' ?>
                                     </div>
@@ -110,7 +110,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                         id="lokasi"
                                         placeholder="Lokasi..."
                                         value="<?= $old['lokasi'] ?? '' ?>"
-                                        class="form-control <?= isset($errors['lokasi']) ? 'is-invalid' : '' ?>">
+                                        class="form-control <?= isset($errors['lokasi']) ? 'is-invalid' : '' ?>" autocomplete="off">
                                     <div class="invalid-feedback">
                                         <?= $errors['lokasi'] ?? '' ?>
                                     </div>
@@ -141,7 +141,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                         id="penulis"
                                         placeholder="Penulis..."
                                         value="<?= $old['penulis'] ?? '' ?>"
-                                        class="form-control <?= isset($errors['penulis']) ? 'is-invalid' : '' ?>">
+                                        class="form-control <?= isset($errors['penulis']) ? 'is-invalid' : '' ?>" autocomplete="off">
                                     <div class="invalid-feedback">
                                         <?= $errors['penulis'] ?? '' ?>
                                     </div>
@@ -156,7 +156,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                         id="kabupaten"
                                         placeholder="Kabupaten/Kota..."
                                         value="<?= $old['kabupaten'] ?? '' ?>"
-                                        class="form-control <?= isset($errors['kabupaten']) ? 'is-invalid' : '' ?>">
+                                        class="form-control <?= isset($errors['kabupaten']) ? 'is-invalid' : '' ?>" autocomplete="off">
                                     <div class="invalid-feedback">
                                         <?= $errors['kabupaten'] ?? '' ?>
                                     </div>
@@ -183,7 +183,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                         id="link"
                                         placeholder="Link..."
                                         value="<?= $old['link'] ?? '' ?>"
-                                        class="form-control <?= isset($errors['link']) ? 'is-invalid' : '' ?>">
+                                        class="form-control <?= isset($errors['link']) ? 'is-invalid' : '' ?>" autocomplete="off">
                                     <div class="invalid-feedback">
                                         <?= $errors['link'] ?? '' ?>
                                     </div>
@@ -364,9 +364,9 @@ unset($_SESSION['errors'], $_SESSION['old']);
                 }).then((result) => {
 
                     if (result.isConfirmed) {
-                        window.location = "?page=tambah-publikasi";
+                        window.location.href = "<?= url('?page=tambah-publikasi') ?>";
                     } else {
-                        window.location = "?page=publikasi";
+                        window.location.href = "<?= url('?page=publikasi') ?>";
                     }
 
                 });

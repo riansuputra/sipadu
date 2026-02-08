@@ -18,4 +18,8 @@ define('MAINTENANCE_PAGES', [
     // 'arsip-create',
     // 'pegawai-create'
     // 'peraturan'
+    'arsip-publik',
+    'zi-wbbm-publik',
+    'pengaturan-profile',
+    'pegawai-publik'
 ]);

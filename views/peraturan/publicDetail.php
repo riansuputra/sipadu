@@ -5,6 +5,8 @@
 
 // Judul
 $title = "Detail Peraturan";
+$bannerTitle = "Detail Peraturan";
+$bannerSubtitle = "SIPADU BPMP Provinsi Bali";
 
 // echo '<pre>';
 // print_r($data);
@@ -21,18 +23,28 @@ ob_start();
 
 
         <div class="row row-cards">
-            <div class="col-12 ms-2 mb-0">
-                <ol class="breadcrumb text-center" aria-label="breadcrumbs">
-                    <li class="breadcrumb-item">
-                        <a href="#">Dashboard</a>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <a href="#">Peraturan</a>
-                    </li>
-                    <li class="breadcrumb-item active">
-                        <a href="#">Detail Peraturan</a>
-                    </li>
-                </ol>
+            <div class="col-12 mb-0">
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb text-center" aria-label="breadcrumbs">
+                            <li class="breadcrumb-item">
+                                <a href="<?= url('?page=dashboard') ?>" class="h3 mb-0">
+                                    🏠︎&nbsp;&nbsp;Dashboard
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="<?= url('?page=peraturan-publik') ?>" class="h3 mb-0">
+                                    Peraturan
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                <a href="tests" class="h3 mb-0">
+                                    Detail Peraturan
+                                </a>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
             </div>
 
             <div class="col-12">
@@ -131,11 +143,11 @@ ob_start();
                                             <td style="width:1%">:</td>
                                             <td class="fw-bold">
                                                 <?php foreach ($files as $f): ?>
-                                                    <a href='<?= BASE_URL ?>/<?= $f['path_file'] ?>' target='_blank' class="btn btn-outline-primary btn-5 mb-2">
+                                                    <a href='<?= url($f['path_file'])  ?>' target='_blank' class="btn btn-outline-primary btn-5 mb-2">
                                                         <?= $icon ?>
                                                         <?= shortname($f["nama_file"], 50,) ?>
                                                     </a>
-                                                    <a href="?page=peraturan-file&file=<?= $f['id'] ?>&id=<?= $data['id'] ?>" class="btn btn-success btn-icon btn-5 mb-2">
+                                                    <a href="<?= url('?page=peraturan-file&file=' . $f['id'] . '&id=' . $d['id']) ?>" class="btn btn-success btn-icon btn-5 mb-2">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-download">
                                                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                             <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />

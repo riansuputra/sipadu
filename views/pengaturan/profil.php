@@ -4,7 +4,7 @@
 // ================================
 
 // Judul
-$title = "Arsip";
+$title = "Profil";
 
 
 // Mulai buffer konten

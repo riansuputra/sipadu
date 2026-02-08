@@ -25,7 +25,7 @@ function authOnly()
 {
     // Jika belum login, lempar ke login
     if (!isLoggedIn()) {
-        header('Location: ' . BASE_URL . '/?page=login');
+        header('Location: ' . url('?page=login'));
         exit;
     }
 }

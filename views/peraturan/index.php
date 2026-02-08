@@ -64,7 +64,7 @@ if ($tahun || $jenis) {
             <!-- Page title actions -->
             <div class="col-auto ms-auto d-print-none">
                 <div class="btn-list">
-                    <a href="<?= BASE_URL ?>/?page=tambah-peraturan" class="btn btn-primary btn-5 d-none d-sm-inline-block">
+                    <a href="<?= url('?page=tambah-peraturan') ?>" class="btn btn-primary btn-5 d-none d-sm-inline-block">
 
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">
                             <path d="M12 5l0 14"></path>
@@ -72,7 +72,7 @@ if ($tahun || $jenis) {
                         </svg>
                         Tambah Peraturan
                     </a>
-                    <a href="#" class="btn btn-primary btn-6 d-sm-none btn-icon">
+                    <a href="<?= url('?page=tambah-peraturan') ?>" class="btn btn-primary btn-6 d-sm-none btn-icon">
 
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">
                             <path d="M12 5l0 14"></path>
@@ -151,7 +151,7 @@ if ($tahun || $jenis) {
                                                         </svg>
                                                         Filter
                                                     </button>
-                                                    <a href="?page=peraturan" class="btn btn-secondary">
+                                                    <a href="<?= url('?page=peraturan') ?>" class="btn btn-secondary">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
                                                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                             <path d="M4 7l16 0" />
@@ -276,7 +276,7 @@ if ($tahun || $jenis) {
                                                         }
 
                                                     ?>
-                                                        <a href='<?= BASE_URL ?>/<?= $path ?>' target='_blank' class="btn btn-outline-primary">
+                                                        <a href='<?= url($path) ?>' target='_blank' class="btn btn-outline-primary">
                                                             <?= $icon ?>
                                                             <?= shortname($f['nama'], 3) ?>
                                                         </a>
@@ -292,7 +292,7 @@ if ($tahun || $jenis) {
                                                                 <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
                                                             </svg>
                                                         </a>
-                                                        <a href="?page=edit-peraturan&id=<?= $d["id"] ?>" class="text-yellow me-1">
+                                                        <a href="<?= url('?page=edit-peraturan&id=' . $d["id"]) ?>" class="text-yellow me-1">
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                 <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
@@ -301,7 +301,7 @@ if ($tahun || $jenis) {
                                                             </svg>
                                                         </a>
                                                         <a type="button" class="text-red" onclick="confirmDelete(
-                                                                '<?= BASE_URL ?>?page=peraturan-delete&id=<?= $d['id'] ?>'
+                                                                '<?= url('?page=peraturan-delete&id=' . $d['id']) ?>'
                                                             )">
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -422,10 +422,10 @@ if ($tahun || $jenis) {
                                                                         }
                                                                     ?>
                                                                         <div class="col-12 mb-0">
-                                                                            <a href='<?= BASE_URL ?>/<?= $path ?>' target='_blank' class="mb-1">
+                                                                            <a href='<?= url($path) ?>' target='_blank' class="mb-1">
                                                                                 <?= $icon ?>&nbsp;<?= shortname($f["nama"], 20,) ?>
                                                                             </a>
-                                                                            <a href="?page=dip-file&file=<?= $fid ?>&id=<?= $d['id'] ?>" class="icon icon-sm text-end mt-0" aria-label="Button" data-bs-toggle="tooltip" data-bs-placement="top" title="Download">
+                                                                            <a href="<?= url('?page=peraturan-file&file=' . $fid . '&id=' . $d['id']) ?>" class="icon icon-sm text-end mt-0" aria-label="Button" data-bs-toggle="tooltip" data-bs-placement="top" title="Download">
                                                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2fb344" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-download">
                                                                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                                     <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />

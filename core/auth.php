@@ -42,7 +42,7 @@ function logout()
     session_destroy();
 
     // Redirect ke login
-    header('Location: ' . BASE_URL . '/?page=login');
+    header('Location: ' . url('?page=login'));
     exit;
 }
 
@@ -74,6 +74,6 @@ function currentPokja()
 function redirectByRole()
 {
     // Semua role masuk ke dashboard yang sama
-    header('Location: ' . BASE_URL . '/?page=dashboard');
+    header('Location: ' . url('?page=dashboard'));
     exit;
 }

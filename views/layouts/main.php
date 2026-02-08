@@ -2,7 +2,7 @@
 // ================================
 // LAYOUT UTAMA APLIKASI
 // ================================
-$headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/banner.webp';
+$headerImage = $headerImage ?? url('public/assets/img/banner.webp');
 ?>
 
 <!DOCTYPE html>
@@ -17,13 +17,13 @@ $headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/banner
     <title><?= $title ?> - SIPADU</title>
 
     <!-- CSS Global  -->
-    <link href="<?= BASE_URL ?>/public/assets/css/tabler.min.css?1684106062" rel="stylesheet" />
-    <link href="<?= BASE_URL ?>/public/assets/css/tabler-vendors.min.css?1684106062" rel="stylesheet" />
-    <link href="<?= BASE_URL ?>/public/assets/dist/css/demo.min.css?1684106062" rel="stylesheet" />
-    <link href="<?= BASE_URL ?>/public/assets/dist/css/tabler-flags.min.css?1684106062" rel="stylesheet" />
+    <link href="<?= url('public/assets/css/tabler.min.css') ?>" rel="stylesheet" />
+    <link href="<?= url('public/assets/css/tabler-vendors.min.css') ?>" rel="stylesheet" />
+    <link href="<?= url('public/assets/dist/css/demo.min.css') ?>" rel="stylesheet" />
+    <link href="<?= url('public/assets/dist/css/tabler-flags.min.css') ?>" rel="stylesheet" />
 
     <!-- Icon -->
-    <link rel="icon" type="image/png" href="<?= BASE_URL ?>/public/assets/img/logo-bpmp.webp" />
+    <link rel="icon" type="image/png" href="<?= url('public/assets/img/logo-bpmp.webp') ?>" />
 
     <style>
         @import url('https://rsms.me/inter/inter.css');
@@ -149,7 +149,8 @@ $headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/banner
 </head>
 
 <body>
-    <script src="<?= BASE_URL ?>/public/assets/dist/js/demo-theme.min.js?1684106062"></script>
+    <script src="<?= url('public/assets/dist/js/demo-theme.min.js') ?>"></script>
+
     <div class="page">
 
         <!-- Header Banner SIPADU -->
@@ -166,14 +167,14 @@ $headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/banner
         <header class="navbar navbar-expand-md d-print-none header-banner">
             <!-- teks tengah -->
             <div class="banner-content">
-                <h1 class="banner-title">Halaman Utama</h1>
+                <h1 class="banner-title"><?= $bannerTitle ?></h1>
                 <hr class="m-0">
-                <div class="banner-subtitle">SIPADU BPMP Provinsi Bali</div>
+                <div class="banner-subtitle"><?= $bannerSubtitle ?></div>
             </div>
         </header>
 
 
-        <div class="page-wrapper" style="background-image: url(http://localhost/sipadu/public/assets/img/vector.svg); background-repeat: repeat;">
+        <div class="page-wrapper" style="background-image: url(<?= url('public/assets/img/vector.svg') ?>); background-repeat: repeat;">
 
             <!-- Loader -->
             <div class="container container-slim my-auto" id="spinner" style="display:none;">
@@ -198,10 +199,10 @@ $headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/banner
     </div>
 
     <!-- JS Global -->
-    <script src="<?= BASE_URL ?>/public/assets/dist/libs/list.js/dist/list.min.js?1759774804" defer=""></script>
-    <script src="<?= BASE_URL ?>/public/assets/dist/libs/apexcharts/dist/apexcharts.min.js?1684106062" defer></script>
-    <script src="<?= BASE_URL ?>/public/assets/js/tabler.min.js?1684106062" defer></script>
-    <script src="<?= BASE_URL ?>/public/assets/dist/libs/tom-select/dist/js/tom-select.base.min.js?1684106062" defer></script>
+    <script src="<?= url('public/assets/dist/libs/list.js/dist/list.min.js') ?>" defer=""></script>
+    <script src="<?= url('public/assets/dist/libs/apexcharts/dist/apexcharts.min.js') ?>" defer></script>
+    <script src="<?= url('public/assets/js/tabler.min.js') ?>" defer></script>
+    <script src="<?= url('public/assets/dist/libs/tom-select/dist/js/tom-select.base.min.js') ?>" defer></script>
 </body>
 
 </html>

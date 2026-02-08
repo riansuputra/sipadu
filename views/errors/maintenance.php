@@ -19,10 +19,10 @@ $headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/banner
     <title><?= $title ?> - SIPADU</title>
 
     <!-- CSS Global  -->
-    <link href="<?= BASE_URL ?>/public/assets/css/tabler.min.css?1684106062" rel="stylesheet" />
-    <link href="<?= BASE_URL ?>/public/assets/css/tabler-vendors.min.css?1684106062" rel="stylesheet" />
-    <link href="<?= BASE_URL ?>/public/assets/dist/css/demo.min.css?1684106062" rel="stylesheet" />
-    <link href="<?= BASE_URL ?>/public/assets/dist/css/tabler-flags.min.css?1684106062" rel="stylesheet" />
+    <link href="<?= url('public/assets/css/tabler.min.css') ?>" rel="stylesheet" />
+    <link href="<?= url('public/assets/css/tabler-vendors.min.css') ?>" rel="stylesheet" />
+    <link href="<?= url('public/assets/dist/css/demo.min.css') ?>" rel="stylesheet" />
+    <link href="<?= url('public/assets/dist/css/tabler-flags.min.css') ?>" rel="stylesheet" />
 
     <!-- Icon -->
     <link rel="icon" type="image/png" href="<?= BASE_URL ?>/public/assets/img/logo-bpmp.webp" />
@@ -101,7 +101,8 @@ $headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/banner
 </head>
 
 <body class="d-flex flex-column bg-white">
-    <script src="<?= BASE_URL ?>/public/assets/dist/js/demo-theme.min.js?1684106062"></script>
+    <script src="<?= url('public/assets/dist/js/demo-theme.min.js') ?>"></script>
+
     <div class="row g-0 flex-fill">
 
         <div class="col-12 d-flex flex-column justify-content-center">
@@ -183,7 +184,7 @@ $headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/banner
                     <p class="empty-subtitle text-secondary">Saat ini situs belum dapat diakses karena masih dalam tahap pengembangan.</p>
                     <p class="empty-subtitle text-secondary">Terima kasih atas pengertiannya.</p>
                     <div class="empty-action">
-                        <a href="<?= BASE_URL ?>/?page=dashboard" class="btn btn-primary btn-4">
+                        <a href="<?= url('?page=dashboard') ?>" class="btn btn-primary btn-4">
                             <!-- Download SVG icon from http://tabler.io/icons/icon/arrow-left -->
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">
                                 <path d="M5 12l14 0"></path>
@@ -199,10 +200,10 @@ $headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/banner
     </div>
 
     <!-- JS Global -->
-    <script src="<?= BASE_URL ?>/public/assets/dist/libs/list.js/dist/list.min.js?1759774804" defer=""></script>
-    <script src="<?= BASE_URL ?>/public/assets/dist/libs/apexcharts/dist/apexcharts.min.js?1684106062" defer></script>
-    <script src="<?= BASE_URL ?>/public/assets/js/tabler.min.js?1684106062" defer></script>
-    <script src="<?= BASE_URL ?>/public/assets/dist/libs/tom-select/dist/js/tom-select.base.min.js?1684106062" defer></script>
+    <script src="<?= url('public/assets/dist/libs/list.js/dist/list.min.js') ?>" defer=""></script>
+    <script src="<?= url('public/assets/dist/libs/apexcharts/dist/apexcharts.min.js') ?>" defer></script>
+    <script src="<?= url('public/assets/js/tabler.min.js') ?>" defer></script>
+    <script src="<?= url('public/assets/dist/libs/tom-select/dist/js/tom-select.base.min.js') ?>" defer></script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {

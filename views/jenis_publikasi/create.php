@@ -44,11 +44,11 @@ unset($_SESSION['errors'], $_SESSION['old']);
         <div class="row row-cards ">
 
             <div class="col-sm-12 col-lg-6">
-                <form class="card" method="POST" action="?page=jenis-publikasi-store" enctype="multipart/form-data">
+                <form class="card" method="POST" action="<?= url('?page=jenis-publikasi-store')  ?>" enctype="multipart/form-data">
                     <div class="card-header">
                         <h3 class="card-title">Form Tambah Jenis Publikasi</h3>
                         <div class="card-actions">
-                            <a class="btn btn-primary" href="?page=tambah-publikasi"><!-- Download SVG icon from http://tabler.io/icons/icon/chevron-left -->
+                            <a class="btn btn-primary" href="<?= url('?page=tambah-publikasi')  ?>"><!-- Download SVG icon from http://tabler.io/icons/icon/chevron-left -->
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
                                     <path d="M15 6l-6 6l6 6"></path>
                                 </svg>
@@ -67,7 +67,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                         id="nama"
                                         placeholder="Jenis Publikasi..."
                                         value="<?= $old['nama'] ?? '' ?>"
-                                        class="form-control <?= isset($errors['nama']) ? 'is-invalid' : '' ?>">
+                                        class="form-control <?= isset($errors['nama']) ? 'is-invalid' : '' ?>" autocomplete="off">
                                     <div class="invalid-feedback">
                                         <?= $errors['nama'] ?? '' ?>
                                     </div>
@@ -81,7 +81,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                         name="keterangan"
                                         id="keterangan"
                                         rows="3"
-                                        class="form-control"><?= isset($errors['keterangan']) ? 'is-invalid' : '' ?><?= $old['keterangan'] ?? '' ?></textarea>
+                                        class="form-control <?= isset($errors['keterangan']) ? 'is-invalid' : '' ?>" autocomplete="off"><?= $old['keterangan'] ?? '' ?></textarea>
                                     <div class="invalid-feedback">
                                         <?= $errors['keterangan'] ?? '' ?>
                                     </div>
@@ -168,7 +168,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                                             </svg>
                                                         </a>
                                                         <a type="button" class="text-red" onclick="confirmDelete(
-                                                                '<?= BASE_URL ?>?page=jenis-publikasi-delete&id=<?= $d['id'] ?>'
+                                                                '<?= url('?page=jenis-publikasi-delete&id=' . $d['id']) ?>'
                                                             )">
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -193,7 +193,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                                                 aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <form class="card" method="POST" action="?page=jenis-publikasi-update&id=<?= $d['id'] ?>" enctype="multipart/form-data">
+                                                            <form class="card" method="POST" action="<?= url('?page=jenis-publikasi-update&id=' . $d['id']) ?>" enctype="multipart/form-data">
                                                                 <div class="form-fieldset">
                                                                     <div class="mb-3 row">
                                                                         <label class="col-3 col-form-label required">Jenis Publikasi :</label>
@@ -318,9 +318,9 @@ unset($_SESSION['errors'], $_SESSION['old']);
                 }).then((result) => {
 
                     if (result.isConfirmed) {
-                        window.location = "?page=tambah-jenis-publikasi";
+                        window.location.href = "<?= url('?page=tambah-jenis-publikasi') ?>";
                     } else {
-                        window.location = "?page=publikasi";
+                        window.location.href = "<?= url('?page=publikasi') ?>";
                     }
 
                 });

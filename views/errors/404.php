@@ -19,13 +19,13 @@ $headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/banner
     <title><?= $title ?> - SIPADU</title>
 
     <!-- CSS Global  -->
-    <link href="<?= BASE_URL ?>/public/assets/css/tabler.min.css?1684106062" rel="stylesheet" />
-    <link href="<?= BASE_URL ?>/public/assets/css/tabler-vendors.min.css?1684106062" rel="stylesheet" />
-    <link href="<?= BASE_URL ?>/public/assets/dist/css/demo.min.css?1684106062" rel="stylesheet" />
-    <link href="<?= BASE_URL ?>/public/assets/dist/css/tabler-flags.min.css?1684106062" rel="stylesheet" />
+    <link href="<?= url('public/assets/css/tabler.min.css') ?>" rel="stylesheet" />
+    <link href="<?= url('public/assets/css/tabler-vendors.min.css') ?>" rel="stylesheet" />
+    <link href="<?= url('public/assets/dist/css/demo.min.css') ?>" rel="stylesheet" />
+    <link href="<?= url('public/assets/dist/css/tabler-flags.min.css') ?>" rel="stylesheet" />
 
     <!-- Icon -->
-    <link rel="icon" type="image/png" href="<?= BASE_URL ?>/public/assets/img/logo-bpmp.webp" />
+    <link rel="icon" type="image/png" href="<?= url('public/assets/img/logo-bpmp.webp') ?>" />
 
     <style>
         @import url('https://rsms.me/inter/inter.css');
@@ -37,60 +37,6 @@ $headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/banner
         body {
             font-feature-settings: "cv03", "cv04", "cv11";
         }
-
-        .login-photo {
-            position: relative;
-            min-height: 100vh;
-        }
-
-        .login-bg {
-            background-size: cover;
-            background-position: center;
-            height: 100%;
-            min-height: 100vh;
-        }
-
-        /* overlay bawah */
-        .login-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-
-            height: 18%;
-            /* ±30% tinggi gambar */
-            padding: 32px;
-
-            background: linear-gradient(to top,
-                    rgba(6, 111, 209, 0.85),
-                    rgba(6, 111, 209, 0.65));
-
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-
-            color: #fff;
-        }
-
-        /* judul */
-        .login-title {
-            font-size: 52px;
-            font-weight: 800;
-            margin-bottom: 8px;
-            font-style: italic;
-            letter-spacing: 0.5px;
-
-            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
-        }
-
-        /* subtitle */
-        .login-subtitle {
-            font-size: 20px;
-            max-width: 520px;
-            line-height: 1.5;
-
-            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
-        }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
@@ -101,7 +47,7 @@ $headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/banner
 </head>
 
 <body class="d-flex flex-column bg-white">
-    <script src="<?= BASE_URL ?>/public/assets/dist/js/demo-theme.min.js?1684106062"></script>
+    <script src="<?= url('public/assets/dist/js/demo-theme.min.js') ?>"></script>
     <div class="row g-0 flex-fill">
 
         <div class="col-12 d-flex flex-column justify-content-center">
@@ -205,7 +151,7 @@ $headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/banner
                     <p class="empty-title">Halaman yang Anda cari tidak tersedia.</p>
                     <p class="empty-subtitle text-secondary">Silakan kembali ke halaman utama.</p>
                     <div class="empty-action">
-                        <a href="<?= BASE_URL ?>/?page=dashboard" class="btn btn-primary btn-4">
+                        <a href="<?= url('?page=dashboard') ?>" class="btn btn-primary btn-4">
                             <!-- Download SVG icon from http://tabler.io/icons/icon/arrow-left -->
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">
                                 <path d="M5 12l14 0"></path>
@@ -221,10 +167,10 @@ $headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/banner
     </div>
 
     <!-- JS Global -->
-    <script src="<?= BASE_URL ?>/public/assets/dist/libs/list.js/dist/list.min.js?1759774804" defer=""></script>
-    <script src="<?= BASE_URL ?>/public/assets/dist/libs/apexcharts/dist/apexcharts.min.js?1684106062" defer></script>
-    <script src="<?= BASE_URL ?>/public/assets/js/tabler.min.js?1684106062" defer></script>
-    <script src="<?= BASE_URL ?>/public/assets/dist/libs/tom-select/dist/js/tom-select.base.min.js?1684106062" defer></script>
+    <script src="<?= url('public/assets/dist/libs/list.js/dist/list.min.js') ?>" defer=""></script>
+    <script src="<?= url('public/assets/dist/libs/apexcharts/dist/apexcharts.min.js') ?>" defer></script>
+    <script src="<?= url('public/assets/js/tabler.min.js') ?>" defer></script>
+    <script src="<?= url('public/assets/dist/libs/tom-select/dist/js/tom-select.base.min.js') ?>" defer></script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -234,18 +180,6 @@ $headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/banner
             window.addEventListener("load", function() {
                 spinner.style.display = "none";
                 pageContent.style.display = "block";
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function() {
-            $('#togglePassword').click(function() {
-                var passwordInput = $('#password');
-                if (passwordInput.attr('type') === 'password') {
-                    passwordInput.attr('type', 'text');
-                } else {
-                    passwordInput.attr('type', 'password');
-                }
             });
         });
     </script>

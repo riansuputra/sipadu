@@ -5,6 +5,8 @@
 
 // Judul
 $title = "PAUD";
+$bannerTitle = "Tim Kerja PAUD";
+$bannerSubtitle = "SIPADU BPMP Provinsi Bali";
 
 // echo '<pre>';
 // print_r($moduleModel);
@@ -22,80 +24,88 @@ ob_start();
 
 
         <div class="row row-cards">
-            <div class="col-12 ms-2 mb-0">
-                <ol class="breadcrumb text-center" aria-label="breadcrumbs">
-                    <li class="breadcrumb-item">
-                        <a href="#">Dashboard</a>
-                    </li>
-                    <li class="breadcrumb-item active">
-                        <a href="#">Paud</a>
-                    </li>
-                </ol>
+            <div class="col-12 mb-0">
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb text-center" aria-label="breadcrumbs">
+                            <li class="breadcrumb-item">
+                                <a href="<?= url('?page=dashboard') ?>" class="h3 mb-0">
+                                    🏠︎&nbsp;&nbsp;Dashboard
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                <a href="tests" class="h3 mb-0">
+                                    PAUD
+                                </a>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
             </div>
 
 
-            <div class="col-sm-6 col-lg-3 p-3">
-                <a href="<?= BASE_URL ?>/?page=publikasi-paud"
+            <div class="col-sm-6 col-lg-3 p-1">
+                <a href="<?= url('?page=publikasi-publik') ?>"
                     class="card card-link card-link-pop">
 
                     <div class="img-responsive img-responsive-21x9 card-img-top"
-                        style="background-image: url('public/assets/img/publikasi.webp')">
+                        style="background-image: url('<?= url('public/assets/img/publikasi.webp') ?>')">
                     </div>
 
-                    <div class="card-body text-center mb-0">
+                    <div class="card-body text-center fw-bold mb-0">
                         Publikasi
                     </div>
                 </a>
             </div>
-            <div class="col-sm-6 col-lg-3 p-3">
-                <a href=""
+            <div class="col-sm-6 col-lg-3 p-1">
+                <a href="#"
                     class="card card-link card-link-pop">
 
                     <div class="img-responsive img-responsive-21x9 card-img-top"
-                        style="background-image: url('public/assets/img/template.webp')">
+                        style="background-image: url('<?= url('public/assets/img/template.webp') ?>')">
                     </div>
 
                     <div class="card-body text-center mb-0">
-                        Test
+                        &nbsp;
                     </div>
                 </a>
             </div>
-            <div class="col-sm-6 col-lg-3 p-3">
-                <a href=""
+            <div class="col-sm-6 col-lg-3 p-1">
+                <a href="#"
                     class="card card-link card-link-pop">
 
                     <div class="img-responsive img-responsive-21x9 card-img-top"
-                        style="background-image: url('public/assets/img/template.webp')">
+                        style="background-image: url('<?= url('public/assets/img/template.webp') ?>')">
                     </div>
 
                     <div class="card-body text-center mb-0">
-                        Test
+                        &nbsp;
                     </div>
                 </a>
             </div>
-            <div class="col-sm-6 col-lg-3 p-3">
-                <a href=""
+            <div class="col-sm-6 col-lg-3 p-1">
+                <a href="#"
                     class="card card-link card-link-pop">
 
                     <div class="img-responsive img-responsive-21x9 card-img-top"
-                        style="background-image: url('public/assets/img/template.webp')">
+                        style="background-image: url('<?= url('public/assets/img/template.webp') ?>')">
                     </div>
 
                     <div class="card-body text-center mb-0">
-                        Test
+                        &nbsp;
                     </div>
                 </a>
             </div>
-            <div class="col-sm-6 col-lg-3 p-3">
-                <a href=""
+            <div class="col-sm-6 col-lg-3 p-1">
+                <a href="#"
                     class="card card-link card-link-pop">
 
                     <div class="img-responsive img-responsive-21x9 card-img-top"
-                        style="background-image: url('public/assets/img/template.webp')">
+                        style="background-image: url('<?= url('public/assets/img/template.webp') ?>')">
                     </div>
 
                     <div class="card-body text-center mb-0">
-                        Test
+                        &nbsp;
                     </div>
                 </a>
             </div>
