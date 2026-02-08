@@ -278,7 +278,7 @@ if ($tahun || $jenis) {
                                                     ?>
                                                         <a href='<?= BASE_URL ?>/<?= $path ?>' target='_blank' class="btn btn-outline-primary">
                                                             <?= $icon ?>
-                                                            <?= shortname($f['nama'], 30) ?>
+                                                            <?= shortname($f['nama'], 3) ?>
                                                         </a>
                                                         <br>
                                                     <?php endforeach; ?>

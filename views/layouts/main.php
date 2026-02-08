@@ -2,7 +2,7 @@
 // ================================
 // LAYOUT UTAMA APLIKASI
 // ================================
-$headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/banner.svg';
+$headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/sign.png';
 ?>
 
 <!DOCTYPE html>
@@ -49,7 +49,6 @@ $headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/banner
             align-items: center;
             justify-content: center;
 
-            color: #fff;
         }
 
         /* overlay biar teks kebaca */
@@ -57,7 +56,6 @@ $headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/banner
             content: "";
             position: absolute;
             inset: 0;
-            background: rgba(0, 0, 0, 0.4);
         }
 
         /* icon pojok kiri atas */
@@ -105,8 +103,6 @@ $headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/banner
             object-fit: contain;
         }
 
-
-
         /* konten tengah */
         .banner-content {
             position: relative;
@@ -118,14 +114,14 @@ $headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/banner
             font-size: 50px;
             font-weight: 700;
             margin-bottom: 10px;
-            text-shadow: 0 0 6px rgba(0, 0, 0, 0.35);
+            text-shadow: 0 0 8px rgba(0, 0, 0, 0.35);
         }
 
         .banner-subtitle {
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 500;
             margin-top: 5px;
-            text-shadow: 0 0 6px rgba(0, 0, 0, 0.35);
+            text-shadow: 0 0 8px rgba(0, 0, 0, 0.35);
         }
 
 
