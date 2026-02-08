@@ -62,6 +62,7 @@ ob_start();
                 // print_r($hasAccess);
                 // print_r($user['role_id']);
                 // print_r($module['link']);
+                // print_r($module['gambar']);
                 // echo '</pre>';
                 ?>
 

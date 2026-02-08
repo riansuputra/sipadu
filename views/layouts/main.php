@@ -2,7 +2,7 @@
 // ================================
 // LAYOUT UTAMA APLIKASI
 // ================================
-$headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/sign.png';
+$headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/banner.webp';
 ?>
 
 <!DOCTYPE html>
@@ -23,7 +23,7 @@ $headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/sign.p
     <link href="<?= BASE_URL ?>/public/assets/dist/css/tabler-flags.min.css?1684106062" rel="stylesheet" />
 
     <!-- Icon -->
-    <link rel="icon" type="image/png" href="<?= BASE_URL ?>/public/assets/img/logo-bpmp.png" />
+    <link rel="icon" type="image/png" href="<?= BASE_URL ?>/public/assets/img/logo-bpmp.webp" />
 
     <style>
         @import url('https://rsms.me/inter/inter.css');

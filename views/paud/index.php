@@ -39,7 +39,7 @@ ob_start();
                     class="card card-link card-link-pop">
 
                     <div class="img-responsive img-responsive-21x9 card-img-top"
-                        style="background-image: url('public/assets/img/img-template.jpg')">
+                        style="background-image: url('public/assets/img/publikasi.webp')">
                     </div>
 
                     <div class="card-body text-center mb-0">
@@ -52,7 +52,7 @@ ob_start();
                     class="card card-link card-link-pop">
 
                     <div class="img-responsive img-responsive-21x9 card-img-top"
-                        style="background-image: url('public/assets/img/img-template.jpg')">
+                        style="background-image: url('public/assets/img/template.webp')">
                     </div>
 
                     <div class="card-body text-center mb-0">
@@ -65,7 +65,7 @@ ob_start();
                     class="card card-link card-link-pop">
 
                     <div class="img-responsive img-responsive-21x9 card-img-top"
-                        style="background-image: url('public/assets/img/img-template.jpg')">
+                        style="background-image: url('public/assets/img/template.webp')">
                     </div>
 
                     <div class="card-body text-center mb-0">
@@ -78,7 +78,7 @@ ob_start();
                     class="card card-link card-link-pop">
 
                     <div class="img-responsive img-responsive-21x9 card-img-top"
-                        style="background-image: url('public/assets/img/img-template.jpg')">
+                        style="background-image: url('public/assets/img/template.webp')">
                     </div>
 
                     <div class="card-body text-center mb-0">
@@ -91,7 +91,7 @@ ob_start();
                     class="card card-link card-link-pop">
 
                     <div class="img-responsive img-responsive-21x9 card-img-top"
-                        style="background-image: url('public/assets/img/img-template.jpg')">
+                        style="background-image: url('public/assets/img/template.webp')">
                     </div>
 
                     <div class="card-body text-center mb-0">

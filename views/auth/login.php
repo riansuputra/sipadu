@@ -25,7 +25,7 @@ $headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/banner
     <link href="<?= BASE_URL ?>/public/assets/dist/css/tabler-flags.min.css?1684106062" rel="stylesheet" />
 
     <!-- Icon -->
-    <link rel="icon" type="image/png" href="<?= BASE_URL ?>/public/assets/img/logo-bpmp.png" />
+    <link rel="icon" type="image/png" href="<?= BASE_URL ?>/public/assets/img/logo-bpmp.webp" />
 
     <style>
         @import url('https://rsms.me/inter/inter.css');
@@ -108,7 +108,7 @@ $headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/banner
             <div class="login-photo">
                 <!-- background foto -->
                 <div class="login-bg"
-                    style="background-image: url(http://localhost/sipadu/public/assets/img/dsf.png)">
+                    style="background-image: url(http://localhost/sipadu/public/assets/img/login-img.webp)">
                 </div>
                 <!-- overlay bawah -->
                 <div class="login-overlay">
@@ -127,7 +127,7 @@ $headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/banner
         <div class="col-12 col-lg-6 col-xl-4 border-top-wide d-flex flex-column justify-content-center">
             <div class="container container-tight mb-7 px-lg-5">
                 <div class="text-center mb-4">
-                    <img src="http://localhost/sipadu/public/assets/img/bpmp.webp" alt="" style="height: 150px; width: auto;">
+                    <img src="http://localhost/sipadu/public/assets/img/bpmp-tengah.webp" alt="" style="height: 150px; width: auto;">
                 </div>
                 <hr>
                 <h2 class="h3 text-center mb-5">Masuk ke SIPADU</h2>
