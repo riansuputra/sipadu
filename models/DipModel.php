@@ -1,19 +1,14 @@
 <?php
-// ================================
-// MODEL DIP
-// ================================
 
 class DipModel
 {
     protected $db;
 
-    // koneksi database
     public function __construct($pdo)
     {
         $this->db = $pdo;
     }
 
-    // Ambil semua data DIP
     public function getAll()
     {
         $stmt = $this->db->prepare("
@@ -29,7 +24,6 @@ class DipModel
             GROUP BY dip.id
             ORDER BY dip.tahun_pembuatan DESC, dip.created_at DESC
         ");
-
 
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -64,8 +58,6 @@ class DipModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-
-    // Ambil detail DIP
     public function getById($id)
     {
         $stmt = $this->db->prepare("
@@ -76,9 +68,12 @@ class DipModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // Simpan DIP baru
     public function insert($data)
     {
+        if (empty($data['created_by']) || !is_numeric($data['created_by'])) {
+            return false;
+        }
+
         $stmt = $this->db->prepare("
             INSERT INTO dip (
                 jenis_informasi,
@@ -89,7 +84,7 @@ class DipModel
                 tempat_pembuatan,
                 bentuk_informasi,
                 retensi_arsip,
-                dibuat_oleh
+                created_by
             ) VALUES (?,?,?,?,?,?,?,?,?)
         ");
 
@@ -102,15 +97,22 @@ class DipModel
             $data['tempat_pembuatan'],
             $data['bentuk_informasi'],
             $data['retensi_arsip'],
-            $data['dibuat_oleh']
+            (int) $data['created_by']
         ]);
 
         return $this->db->lastInsertId();
     }
 
-    // Update DIP
     public function update($id, $data)
     {
+        if (empty($data['updated_by']) || !is_numeric($data['updated_by'])) {
+            return false;
+        }
+
+        if (empty($id) || !is_numeric($id)) {
+            return false;
+        }
+
         $stmt = $this->db->prepare("
             UPDATE dip SET
                 jenis_informasi = ?,
@@ -120,7 +122,9 @@ class DipModel
                 tahun_pembuatan = ?,
                 tempat_pembuatan = ?,
                 bentuk_informasi = ?,
-                retensi_arsip = ?
+                retensi_arsip = ?,
+                updated_at = NOW(),
+                updated_by = ?
             WHERE id = ?
         ");
 
@@ -133,21 +137,35 @@ class DipModel
             $data['tempat_pembuatan'],
             $data['bentuk_informasi'],
             $data['retensi_arsip'],
-            $id
+            (int) $data['updated_by'],
+            (int) $id
         ]);
     }
 
-    // Hapus DIP (soft delete)
-    public function delete($id)
+    public function delete($id, $deletedBy)
     {
+        if (empty($data['deleted_by']) || !is_numeric($data['deleted_by'])) {
+            return false;
+        }
+
+        if (empty($id) || !is_numeric($id)) {
+            return false;
+        }
+
         $stmt = $this->db->prepare("
-            UPDATE dip SET is_active = 0 WHERE id = ?
+            UPDATE dip SET
+                is_active  = 0,
+                deleted_at = NOW(),
+                deleted_by = ?
+            WHERE id = ?
         ");
 
-        return $stmt->execute([$id]);
+        return $stmt->execute([
+            (int) $deletedBy,
+            (int) $id
+        ]);
     }
 
-    // Simpan file DIP
     public function insertFile($dipId, $file)
     {
         $stmt = $this->db->prepare("
@@ -169,7 +187,6 @@ class DipModel
         ]);
     }
 
-    // Ambil file berdasarkan DIP
     public function getFiles($dipId)
     {
         $stmt = $this->db->prepare("
@@ -184,25 +201,21 @@ class DipModel
     public function getFileById($id)
     {
         $stmt = $this->db->prepare("
-        SELECT * FROM dip_file WHERE id = ?
-    ");
+            SELECT * FROM dip_file WHERE id = ?
+        ");
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // ==============================
-    // HAPUS FILE BERDASARKAN ID FILE
-    // ==============================
     public function deleteFileById($fileId)
     {
         $stmt = $this->db->prepare("
-        DELETE FROM dip_file
-        WHERE id = ?
-    ");
+            DELETE FROM dip_file
+            WHERE id = ?
+        ");
 
         return $stmt->execute([$fileId]);
     }
-
 
     public function deleteFiles($dipId)
     {
@@ -239,25 +252,25 @@ class DipModel
         }
 
         $sql = "
-        SELECT 
-            dip.*,
-            GROUP_CONCAT(
-                CONCAT(df.id, '|', df.nama_file, '|', df.path_file)
-                SEPARATOR '##'
-            ) AS files
-        FROM dip
-        LEFT JOIN dip_file df ON dip.id = df.dip_id
-        WHERE dip.is_active = 1
-    ";
+            SELECT 
+                dip.*,
+                GROUP_CONCAT(
+                    CONCAT(df.id, '|', df.nama_file, '|', df.path_file)
+                    SEPARATOR '##'
+                ) AS files
+            FROM dip
+            LEFT JOIN dip_file df ON dip.id = df.dip_id
+            WHERE dip.is_active = 1
+        ";
 
         if ($where) {
             $sql .= ' AND ' . implode(' AND ', $where);
         }
 
         $sql .= "
-        GROUP BY dip.id
-        ORDER BY dip.jenis_informasi, dip.nama_informasi
-    ";
+            GROUP BY dip.id
+            ORDER BY dip.jenis_informasi, dip.nama_informasi
+        ";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($params);

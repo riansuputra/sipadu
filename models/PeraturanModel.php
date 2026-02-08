@@ -26,7 +26,7 @@ class PeraturanModel
 
         FROM peraturan p
 
-        LEFT JOIN jenis_peraturan j 
+        LEFT JOIN peraturan_jenis j 
             ON p.jenis_id = j.id
 
         LEFT JOIN peraturan_file pf 
@@ -52,7 +52,7 @@ class PeraturanModel
                 SEPARATOR '##'
             ) AS files
         FROM peraturan p
-        LEFT JOIN jenis_peraturan j ON p.jenis_id = j.id
+        LEFT JOIN peraturan_jenis j ON p.jenis_id = j.id
         LEFT JOIN peraturan_file pf ON p.id = pf.peraturan_id
         WHERE p.is_active = 1
     ";
@@ -89,7 +89,7 @@ class PeraturanModel
         $stmt = $this->db->prepare("
             SELECT p.*, j.nama as jenis, j.kode as kode
             FROM peraturan p
-            LEFT JOIN jenis_peraturan j ON p.jenis_id = j.id
+            LEFT JOIN peraturan_jenis j ON p.jenis_id = j.id
             WHERE p.id = ?
         ");
 
@@ -99,26 +99,32 @@ class PeraturanModel
 
     public function insert($data)
     {
+        if (empty($data['created_by']) || !is_numeric($data['created_by'])) {
+            return false;
+        }
+
         $stmt = $this->db->prepare("
             INSERT INTO peraturan (
                 judul,
                 nomor,
-                teu,
+                lembaga,
                 jenis_id,
                 tahun_terbit,
                 tempat_penetapan,
-                penandatangan
-            ) VALUES (?,?,?,?,?,?,?)
+                penandatangan,
+                created_by
+            ) VALUES (?,?,?,?,?,?,?,?)
         ");
 
         $stmt->execute([
             $data['judul'],
             $data['nomor'],
-            $data['teu'],
+            $data['lembaga'],
             $data['jenis_id'],
             $data['tahun_terbit'],
             $data['tempat_penetapan'],
-            $data['penandatangan']
+            $data['penandatangan'],
+            (int) $data['created_by']
         ]);
 
         return $this->db->lastInsertId();
@@ -126,37 +132,63 @@ class PeraturanModel
 
     public function update($id, $data)
     {
+        if (empty($data['updated_by']) || !is_numeric($data['updated_by'])) {
+            return false;
+        }
+
+        if (empty($id) || !is_numeric($id)) {
+            return false;
+        }
+
         $stmt = $this->db->prepare("
             UPDATE peraturan SET
                 judul = ?,
                 nomor = ?,
-                teu = ?,
+                lembaga = ?,
                 jenis_id = ?,
                 tahun_terbit = ?,
                 tempat_penetapan = ?,
-                penandatangan = ?
+                penandatangan = ?,
+                updated_at = NOW(),
+                updated_by = ?
             WHERE id = ?
         ");
 
         return $stmt->execute([
             $data['judul'],
             $data['nomor'],
-            $data['teu'],
+            $data['lembaga'],
             $data['jenis_id'],
             $data['tahun_terbit'],
             $data['tempat_penetapan'],
             $data['penandatangan'],
-            $id
+            (int) $data['updated_by'],
+            (int) $id
         ]);
     }
 
-    public function delete($id)
+    public function delete($id, $deletedBy)
     {
+        if (empty($data['deleted_by']) || !is_numeric($data['deleted_by'])) {
+            return false;
+        }
+
+        if (empty($id) || !is_numeric($id)) {
+            return false;
+        }
+
         $stmt = $this->db->prepare("
-            UPDATE peraturan SET is_active = 0 WHERE id = ?
+            UPDATE peraturan SET 
+                is_active = 0,
+                deleted_at = NOW(),
+                deleted_by = ? 
+            WHERE id = ?
         ");
 
-        return $stmt->execute([$id]);
+        return $stmt->execute([
+            (int) $deletedBy,
+            (int) $id
+        ]);
     }
 
     public function insertFile($id, $file)
@@ -242,7 +274,7 @@ class PeraturanModel
         SEPARATOR '##'
     ) AS files
 FROM peraturan p
-LEFT JOIN jenis_peraturan j ON p.jenis_id = j.id
+LEFT JOIN peraturan_jenis j ON p.jenis_id = j.id
 LEFT JOIN peraturan_file pf ON p.id = pf.peraturan_id
 WHERE p.is_active = 1
 -- + kondisi filter dinamis
@@ -322,7 +354,7 @@ ORDER BY p.created_at DESC
                 SEPARATOR '##'
             ) AS files
         FROM peraturan p
-        LEFT JOIN jenis_peraturan j ON p.jenis_id = j.id
+        LEFT JOIN peraturan_jenis j ON p.jenis_id = j.id
         LEFT JOIN peraturan_file pf ON p.id = pf.peraturan_id
         WHERE p.is_active = 1
     ";

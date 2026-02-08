@@ -1,6 +1,6 @@
 <?php
 
-class JenisDokumenModel
+class PublikasiJenisModel
 {
     protected $db;
 
@@ -13,7 +13,8 @@ class JenisDokumenModel
     public function getAll()
     {
         return $this->db->query("
-            SELECT * FROM jenis_dokumen
+            SELECT * FROM publikasi_jenis
+            WHERE publikasi_jenis.is_active = 1
             ORDER BY nama ASC
         ")->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -21,7 +22,7 @@ class JenisDokumenModel
     public function getById($id)
     {
         $stmt = $this->db->prepare("
-            SELECT * FROM jenis_dokumen
+            SELECT * FROM publikasi_jenis
             WHERE id = ?
         ");
 
@@ -33,36 +34,37 @@ class JenisDokumenModel
     public function insert($data)
     {
         $stmt = $this->db->prepare("
-            INSERT INTO jenis_dokumen (
+            INSERT INTO publikasi_jenis (
                 nama, 
-                deskripsi, 
+                keterangan, 
                 is_active
             ) VALUES (?, ?, ?)
         ");
 
         $stmt->execute([
             $data['nama'],
-            $data['deskripsi'],
+            $data['keterangan'],
             $data['is_active']
         ]);
 
         return $this->db->lastInsertId();
     }
 
-    public function update($data)
+    public function update($id, $data)
     {
         $stmt = $this->db->prepare("
-            UPDATE jenis_dokumen SET
+            UPDATE publikasi_jenis SET
                 nama = ?, 
-                deskripsi = ?, 
+                keterangan = ?, 
                 is_active = ? 
             WHERE id = ? 
         ");
 
         return $stmt->execute([
             $data['nama'],
-            $data['deskripsi'],
-            $data['is_active']
+            $data['keterangan'],
+            $data['is_active'],
+            $id
         ]);
     }
 
@@ -70,7 +72,7 @@ class JenisDokumenModel
     {
         $stmt = $this->db->prepare("
         SELECT COUNT(*) 
-        FROM peraturan 
+        FROM publikasi 
         WHERE jenis_id = ?
     ");
 
@@ -83,7 +85,7 @@ class JenisDokumenModel
     public function delete($id)
     {
         $stmt = $this->db->prepare("
-            UPDATE jenis_dokumen SET is_active = 0 WHERE id = ?
+            UPDATE publikasi_jenis SET is_active = 0 WHERE id = ?
         ");
 
         return $stmt->execute([$id]);

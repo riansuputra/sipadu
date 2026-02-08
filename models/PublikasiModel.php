@@ -1,20 +1,14 @@
 <?php
-// ======================================================
-// MODEL PUBLIKASI SESUAI STRUKTUR TABEL
-// ======================================================
+
 class PublikasiModel
 {
     protected $db;
 
-    // constructor koneksi
     public function __construct($pdo)
     {
         $this->db = $pdo;
     }
 
-    // ----------------------------------------------------
-    // Ambil semua publikasi
-    // ----------------------------------------------------
     public function getAll()
     {
         $stmt = $this->db->prepare("
@@ -33,12 +27,12 @@ class PublikasiModel
             LEFT JOIN pokja pj 
                 ON p.pokja_id = pj.id
 
-            LEFT JOIN jenis_publikasi j 
+            LEFT JOIN publikasi_jenis j 
                 ON p.jenis_id = j.id
 
             LEFT JOIN publikasi_file pf 
                 ON p.id = pf.publikasi_id
-            WHERE p.is_published = 1
+            WHERE p.is_active = 1
             GROUP BY p.id
             ORDER BY p.tanggal_kegiatan DESC, p.created_at DESC
         ");
@@ -47,41 +41,32 @@ class PublikasiModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getByRole(
-        $role,
-        $pokjaId = null,
-        $tanggalMulai = null,
-        $tanggalSelesai = null,
-        $jenis = null
-    ) {
+    public function getByRole($role, $pokjaId = null, $tanggalMulai = null, $tanggalSelesai = null, $jenis = null)
+    {
         $sql = "
-SELECT
-p.*,
-pj.pokja_tipe AS tim,
-pj.pokja_nama AS nama_tim,
-j.nama AS jenis,
-GROUP_CONCAT(
-CONCAT(pf.id, '|', pf.nama_file, '|', pf.path_file, '|', pf.tipe_file)
-SEPARATOR '##'
-) AS files
-FROM publikasi p
-LEFT JOIN pokja pj ON p.pokja_id = pj.id
-LEFT JOIN jenis_publikasi j ON p.jenis_id = j.id
-LEFT JOIN publikasi_file pf ON p.id = pf.publikasi_id
-WHERE p.is_published = 1
-";
+            SELECT
+                p.*,
+                pj.pokja_tipe AS tim,
+                pj.pokja_nama AS nama_tim,
+                j.nama AS jenis,
+                GROUP_CONCAT(
+                CONCAT(pf.id, '|', pf.nama_file, '|', pf.path_file, '|', pf.tipe_file)
+                SEPARATOR '##'
+                ) AS files
+            FROM publikasi p
+            LEFT JOIN pokja pj ON p.pokja_id = pj.id
+            LEFT JOIN publikasi_jenis j ON p.jenis_id = j.id
+            LEFT JOIN publikasi_file pf ON p.id = pf.publikasi_id
+            WHERE p.is_active = 1
+            ";
         $params = [];
-        /* =====================================================
-🔐 BATASI DATA BERDASARKAN ROLE
-===================================================== */
+
         if (!in_array($role, ['superadmin', 'pimpinan'])) {
             // admin & staf → hanya pokja sendiri
             $sql .= " AND p.pokja_id = ?";
             $params[] = $pokjaId;
         }
-        /* =====================================================
-📅 FILTER TANGGAL
-===================================================== */
+
         if (!empty($tanggalMulai)) {
             $sql .= " AND DATE(p.tanggal_kegiatan) >= ?";
             $params[] = $tanggalMulai;
@@ -90,17 +75,15 @@ WHERE p.is_published = 1
             $sql .= " AND DATE(p.tanggal_kegiatan) <= ?";
             $params[] = $tanggalSelesai;
         }
-        /* =====================================================
-🏷 FILTER JENIS
-===================================================== */
+
         if (!empty($jenis)) {
             $sql .= " AND j.nama = ?";
             $params[] = $jenis;
         }
         $sql .= "
-GROUP BY p.id
-ORDER BY p.tanggal_kegiatan DESC, p.created_at DESC
-";
+            GROUP BY p.id
+            ORDER BY p.tanggal_kegiatan DESC, p.created_at DESC
+        ";
         $stmt = $this->db->prepare($sql);
         $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -109,16 +92,16 @@ ORDER BY p.tanggal_kegiatan DESC, p.created_at DESC
     public function getFiltered($tanggalMulai = null, $tanggalSelesai = null, $jenis = null)
     {
         $sql = "
-        SELECT 
-            publikasi.*,
-            GROUP_CONCAT(
-                CONCAT(pf.id, '|', pf.nama_file, '|', pf.path_file, '|', pf.tipe_file) 
-                SEPARATOR '##'
-            ) AS files
-        FROM publikasi
-        LEFT JOIN publikasi_file pf ON publikasi.id = pf.publikasi_id
-        WHERE publikasi.is_published = 1
-    ";
+            SELECT 
+                publikasi.*,
+                GROUP_CONCAT(
+                    CONCAT(pf.id, '|', pf.nama_file, '|', pf.path_file, '|', pf.tipe_file) 
+                    SEPARATOR '##'
+                ) AS files
+            FROM publikasi
+            LEFT JOIN publikasi_file pf ON publikasi.id = pf.publikasi_id
+            WHERE publikasi.is_active = 1
+        ";
 
         $params = [];
 
@@ -138,9 +121,9 @@ ORDER BY p.tanggal_kegiatan DESC, p.created_at DESC
         }
 
         $sql .= "
-        GROUP BY publikasi.id
-        ORDER BY publikasi.tanggal_kegiatan DESC, publikasi.created_at DESC
-    ";
+            GROUP BY publikasi.id
+            ORDER BY publikasi.tanggal_kegiatan DESC, publikasi.created_at DESC
+        ";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($params);
@@ -153,7 +136,7 @@ ORDER BY p.tanggal_kegiatan DESC, p.created_at DESC
         $stmt = $this->db->prepare("
         SELECT p.*, j.nama as jenis
             FROM publikasi p
-            LEFT JOIN jenis_publikasi j ON p.jenis_id = j.id
+            LEFT JOIN publikasi_jenis j ON p.jenis_id = j.id
             WHERE p.id = ?
         ");
 
@@ -161,11 +144,12 @@ ORDER BY p.tanggal_kegiatan DESC, p.created_at DESC
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // ----------------------------------------------------
-    // Simpan publikasi
-    // ----------------------------------------------------
     public function insert($data)
     {
+        if (empty($data['created_by']) || !is_numeric($data['created_by'])) {
+            return false;
+        }
+
         $stmt = $this->db->prepare("
             INSERT INTO publikasi (
                 judul, 
@@ -177,7 +161,7 @@ ORDER BY p.tanggal_kegiatan DESC, p.created_at DESC
                 penulis, 
                 kabupaten, 
                 link, 
-                dibuat_oleh
+                created_by
             ) VALUES (?,?,?,?,?,?,?,?,?,?)
         ");
 
@@ -191,17 +175,22 @@ ORDER BY p.tanggal_kegiatan DESC, p.created_at DESC
             $data['penulis'],
             $data['kabupaten'],
             $data['link'],
-            $data['dibuat_oleh']
+            (int) $data['created_by']
         ]);
 
         return $this->db->lastInsertId();
     }
 
-    // ----------------------------------------------------
-    // Update publikasi
-    // ----------------------------------------------------
     public function update($id, $data)
     {
+        if (empty($data['updated_by']) || !is_numeric($data['updated_by'])) {
+            return false;
+        }
+
+        if (empty($id) || !is_numeric($id)) {
+            return false;
+        }
+
         $stmt = $this->db->prepare("
             UPDATE publikasi SET
                 judul = ?,
@@ -211,7 +200,9 @@ ORDER BY p.tanggal_kegiatan DESC, p.created_at DESC
                 jenis_id = ?,
                 penulis = ?,
                 kabupaten = ?,
-                link = ?
+                link = ?,
+                updated_at = NOW(),
+                updated_by = ?
             WHERE id = ?
         ");
 
@@ -224,17 +215,33 @@ ORDER BY p.tanggal_kegiatan DESC, p.created_at DESC
             $data['penulis'],
             $data['kabupaten'],
             $data['link'],
-            $id
+            (int) $data['updated_by'],
+            (int) $id
         ]);
     }
 
-    public function delete($id)
+    public function delete($id, $deletedBy)
     {
+        if (empty($data['deleted_by']) || !is_numeric($data['deleted_by'])) {
+            return false;
+        }
+
+        if (empty($id) || !is_numeric($id)) {
+            return false;
+        }
+
         $stmt = $this->db->prepare("
-            UPDATE publikasi SET is_published = 0 WHERE id = ?
+            UPDATE publikasi SET 
+                is_active = 0,
+                deleted_at = NOW(),
+                deleted_by = ?
+            WHERE id = ?
         ");
 
-        return $stmt->execute([$id]);
+        return $stmt->execute([
+            (int) $deletedBy,
+            (int) $id
+        ]);
     }
 
     // ----------------------------------------------------

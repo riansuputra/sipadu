@@ -283,19 +283,19 @@ CREATE TABLE `modul` (
 -- Dumping data untuk tabel `modul`
 --
 
-INSERT INTO `modul` (`id`, `judul`, `deskripsi`, `link`, `gambar`, `urutan`, `is_active`, `is_global`, `created_at`, `updated_at`) VALUES
-(1, 'Tim Kerja PAUD', 'Tim Kerja PAUD', 'paud', 'paud.png', 1, 1, 0, '2026-01-08 02:54:01', '2026-01-08 02:54:01'),
-(2, 'Tim Kerja SD', 'Tim Kerja SD', 'sd', 'sd.png', 2, 1, 0, '2026-01-08 02:54:01', '2026-01-08 02:54:01'),
-(3, 'Tim Kerja SMP', 'Tim Kerja SMP', 'smp', 'smp.png', 3, 1, 0, '2026-01-08 02:54:01', '2026-01-08 02:54:01'),
-(4, 'Tim Kerja SMA', 'Tim Kerja SMA', 'sma', 'sma.png', 4, 1, 0, '2026-01-08 02:54:01', '2026-01-08 02:54:01'),
-(5, 'Tim Widyaprada', 'Tim Widyaprada', 'widyaprada', 'widyaprada.png', 5, 1, 0, '2026-01-08 02:54:01', '2026-01-29 02:03:21'),
-(6, 'Data Kepegawaian', 'Data Kepegawaian', 'kepegawaian', 'kepegawaian.png', 6, 1, 1, '2026-01-08 02:54:01', '2026-01-08 02:54:01'),
-(7, 'SiPPeDE', 'SiPPeDE', 'https://sippede.lpmpbali.id/', 'sippede.png', 7, 1, 1, '2026-01-08 02:54:01', '2026-01-08 02:54:01'),
-(8, 'Peraturan', 'Peraturan', 'peraturan-publik', 'peraturan.png', 8, 1, 1, '2026-01-08 02:54:01', '2026-01-21 01:17:36'),
-(9, 'Arsip', 'Arsip', 'arsip', 'arsip.png', 9, 1, 1, '2026-01-08 02:54:01', '2026-01-08 02:54:01'),
-(10, 'ZI-WBBM', 'ZI-WBBM', 'zi-wbbm', 'zi-wbbm.png', 10, 1, 1, '2026-01-08 02:54:01', '2026-01-08 02:54:01'),
-(11, 'DIP', 'Daftar Informasi Publik', 'dip-publik', 'dip.png', 11, 1, 1, '2026-01-08 02:54:01', '2026-01-08 02:54:01'),
-(12, 'Pimpinan', 'Pimpinan', 'pimpinan', '', 1, 0, 0, '2026-01-08 02:54:01', '2026-01-12 00:42:17');
+INSERT INTO `modul` (`judul`, `deskripsi`, `link`, `gambar`, `urutan`, `is_active`, `is_global`, `created_at`, `updated_at`) VALUES
+('Tim Kerja PAUD', 'Tim Kerja PAUD', 'paud', 'paud.png', 1, 1, 0, '2026-01-08 02:54:01', '2026-01-08 02:54:01'),
+('Tim Kerja SD', 'Tim Kerja SD', 'sd', 'sd.png', 2, 1, 0, '2026-01-08 02:54:01', '2026-01-08 02:54:01'),
+('Tim Kerja SMP', 'Tim Kerja SMP', 'smp', 'smp.png', 3, 1, 0, '2026-01-08 02:54:01', '2026-01-08 02:54:01'),
+('Tim Kerja SMA', 'Tim Kerja SMA', 'sma', 'sma.png', 4, 1, 0, '2026-01-08 02:54:01', '2026-01-08 02:54:01'),
+('Tim Widyaprada', 'Tim Widyaprada', 'widyaprada', 'widyaprada.png', 5, 1, 0, '2026-01-08 02:54:01', '2026-01-29 02:03:21'),
+('Data Kepegawaian', 'Data Kepegawaian', 'kepegawaian', 'kepegawaian.png', 6, 1, 1, '2026-01-08 02:54:01', '2026-01-08 02:54:01'),
+('SiPPeDE', 'SiPPeDE', 'https://sippede.lpmpbali.id/', 'sippede.png', 7, 1, 1, '2026-01-08 02:54:01', '2026-01-08 02:54:01'),
+('Peraturan', 'Peraturan', 'peraturan-publik', 'peraturan.png', 8, 1, 1, '2026-01-08 02:54:01', '2026-01-21 01:17:36'),
+('Arsip', 'Arsip', 'arsip', 'arsip.png', 9, 1, 1, '2026-01-08 02:54:01', '2026-01-08 02:54:01'),
+('ZI-WBBM', 'ZI-WBBM', 'zi-wbbm', 'zi-wbbm.png', 10, 1, 1, '2026-01-08 02:54:01', '2026-01-08 02:54:01'),
+('DIP', 'Daftar Informasi Publik', 'dip-publik', 'dip.png', 11, 1, 1, '2026-01-08 02:54:01', '2026-01-08 02:54:01'),
+('Pimpinan', 'Pimpinan', 'pimpinan', '', 1, 0, 0, '2026-01-08 02:54:01', '2026-01-12 00:42:17');
 
 -- --------------------------------------------------------
 
@@ -313,12 +313,12 @@ CREATE TABLE `modul_pokja` (
 -- Dumping data untuk tabel `modul_pokja`
 --
 
-INSERT INTO `modul_pokja` (`id`, `modul_id`, `pokja_id`) VALUES
-(1, 1, 1),
-(2, 2, 2),
-(3, 3, 3),
-(4, 4, 4),
-(5, 5, 5);
+INSERT INTO `modul_pokja` (`modul_id`, `pokja_id`) VALUES
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 5);
 
 -- --------------------------------------------------------
 
@@ -340,53 +340,53 @@ CREATE TABLE `modul_role` (
 -- Dumping data untuk tabel `modul_role`
 --
 
-INSERT INTO `modul_role` (`id`, `modul_id`, `role_id`, `can_view`, `can_create`, `can_edit`, `can_delete`) VALUES
-(97, 1, 1, 1, 0, 0, 0),
-(98, 1, 2, 1, 0, 0, 0),
-(99, 1, 3, 1, 0, 0, 0),
-(100, 1, 4, 1, 0, 0, 0),
-(101, 2, 1, 1, 0, 0, 0),
-(102, 2, 2, 1, 0, 0, 0),
-(103, 2, 3, 1, 0, 0, 0),
-(104, 2, 4, 1, 0, 0, 0),
-(105, 3, 1, 1, 0, 0, 0),
-(106, 3, 2, 1, 0, 0, 0),
-(107, 3, 3, 1, 0, 0, 0),
-(108, 3, 4, 1, 0, 0, 0),
-(109, 4, 1, 1, 0, 0, 0),
-(110, 4, 2, 1, 0, 0, 0),
-(111, 4, 3, 1, 0, 0, 0),
-(112, 4, 4, 1, 0, 0, 0),
-(113, 5, 1, 1, 0, 0, 0),
-(114, 5, 2, 1, 0, 0, 0),
-(115, 5, 3, 1, 0, 0, 0),
-(116, 5, 4, 1, 0, 0, 0),
-(117, 6, 1, 1, 0, 0, 0),
-(118, 6, 2, 1, 0, 0, 0),
-(119, 6, 3, 1, 0, 0, 0),
-(120, 6, 4, 1, 0, 0, 0),
-(121, 7, 1, 1, 0, 0, 0),
-(122, 7, 2, 1, 0, 0, 0),
-(123, 7, 3, 1, 0, 0, 0),
-(124, 7, 4, 1, 0, 0, 0),
-(125, 8, 1, 1, 0, 0, 0),
-(126, 8, 2, 1, 0, 0, 0),
-(127, 8, 3, 1, 0, 0, 0),
-(128, 8, 4, 1, 0, 0, 0),
-(129, 9, 1, 1, 0, 0, 0),
-(130, 9, 2, 1, 0, 0, 0),
-(131, 9, 3, 1, 0, 0, 0),
-(132, 9, 4, 1, 0, 0, 0),
-(133, 10, 1, 1, 0, 0, 0),
-(134, 10, 2, 1, 0, 0, 0),
-(135, 10, 3, 1, 0, 0, 0),
-(136, 10, 4, 1, 0, 0, 0),
-(137, 11, 1, 1, 0, 0, 0),
-(138, 11, 2, 1, 0, 0, 0),
-(139, 11, 3, 1, 0, 0, 0),
-(140, 11, 4, 1, 0, 0, 0),
-(141, 12, 1, 1, 0, 0, 0),
-(142, 12, 2, 1, 0, 0, 0);
+INSERT INTO `modul_role` (`modul_id`, `role_id`, `can_view`, `can_create`, `can_edit`, `can_delete`) VALUES
+(1, 1, 1, 0, 0, 0),
+(1, 2, 1, 0, 0, 0),
+(1, 3, 1, 0, 0, 0),
+(1, 4, 1, 0, 0, 0),
+(2, 1, 1, 0, 0, 0),
+(2, 2, 1, 0, 0, 0),
+(2, 3, 1, 0, 0, 0),
+(2, 4, 1, 0, 0, 0),
+(3, 1, 1, 0, 0, 0),
+(3, 2, 1, 0, 0, 0),
+(3, 3, 1, 0, 0, 0),
+(3, 4, 1, 0, 0, 0),
+(4, 1, 1, 0, 0, 0),
+(4, 2, 1, 0, 0, 0),
+(4, 3, 1, 0, 0, 0),
+(4, 4, 1, 0, 0, 0),
+(5, 1, 1, 0, 0, 0),
+(5, 2, 1, 0, 0, 0),
+(5, 3, 1, 0, 0, 0),
+(5, 4, 1, 0, 0, 0),
+(6, 1, 1, 0, 0, 0),
+(6, 2, 1, 0, 0, 0),
+(6, 3, 1, 0, 0, 0),
+(6, 4, 1, 0, 0, 0),
+(7, 1, 1, 0, 0, 0),
+(7, 2, 1, 0, 0, 0),
+(7, 3, 1, 0, 0, 0),
+(7, 4, 1, 0, 0, 0),
+(8, 1, 1, 0, 0, 0),
+(8, 2, 1, 0, 0, 0),
+(8, 3, 1, 0, 0, 0),
+(8, 4, 1, 0, 0, 0),
+(9, 1, 1, 0, 0, 0),
+(9, 2, 1, 0, 0, 0),
+(9, 3, 1, 0, 0, 0),
+(9, 4, 1, 0, 0, 0),
+(10, 1, 1, 0, 0, 0),
+(10, 2, 1, 0, 0, 0),
+(10, 3, 1, 0, 0, 0),
+(10, 4, 1, 0, 0, 0),
+(11, 1, 1, 0, 0, 0),
+(11, 2, 1, 0, 0, 0),
+(11, 3, 1, 0, 0, 0),
+(11, 4, 1, 0, 0, 0),
+(12, 1, 1, 0, 0, 0),
+(12, 2, 1, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -510,19 +510,20 @@ CREATE TABLE `pokja` (
 -- Dumping data untuk tabel `pokja`
 --
 
-INSERT INTO `pokja` (`id`, `pokja_tipe`, `pokja_nama`) VALUES
-(1, 'Tim', 'PAUD'),
-(2, 'Tim', 'SD'),
-(3, 'Tim', 'SMP'),
-(4, 'Tim', 'SMA'),
-(5, 'Tim', 'Widyaprada'),
-(6, 'Unit', 'Kepegawaian'),
-(7, 'Unit', 'Perencanaan'),
-(8, 'Unit', 'Keuangan'),
-(9, 'Unit', 'Publikasi'),
-(10, 'Unit', 'Arsiparis'),
-(11, 'Unit', 'Pustakawan'),
-(12, 'Unit', 'Perlengkapan');
+INSERT INTO `pokja` (`pokja_tipe`, `pokja_nama`) VALUES
+('Tim', 'PAUD'),
+('Tim', 'SD'),
+('Tim', 'SMP'),
+('Tim', 'SMA'),
+('Tim', 'Widyaprada'),
+('Unit', 'Kepegawaian'),
+('Unit', 'Perencanaan'),
+('Unit', 'Keuangan'),
+('Unit', 'Publikasi'),
+('Unit', 'Arsiparis'),
+('Unit', 'Pustakawan'),
+('Unit', 'Perlengkapan'),
+('Unit', 'Admin');
 
 -- --------------------------------------------------------
 
@@ -588,11 +589,11 @@ CREATE TABLE `role` (
 -- Dumping data untuk tabel `role`
 --
 
-INSERT INTO `role` (`id`, `kode_role`, `nama_role`) VALUES
-(1, 'Superadmin', 'Super Admin'),
-(2, 'Admin', 'Admin Tim Kerja'),
-(3, 'Pimpinan', 'Pimpinan'),
-(4, 'Staff', 'Staff');
+INSERT INTO `role` (`kode_role`, `nama_role`) VALUES
+('Superadmin', 'Super Admin'),
+('Admin', 'Admin Tim Kerja'),
+('Pimpinan', 'Pimpinan'),
+('Staff', 'Staff');
 
 -- --------------------------------------------------------
 
@@ -648,33 +649,33 @@ CREATE TABLE `users` (
 -- Dumping data untuk tabel `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `password_hash`, `nama_lengkap`, `role_id`, `pokja_id`, `is_active`, `created_at`) VALUES
-(15, 'timpaud', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Tim PAUD', 4, 1, 1, '2026-01-08 06:52:38'),
-(16, 'adminpaud', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Admin PAUD', 2, 1, 1, '2026-01-08 06:52:38'),
-(17, 'timsd', '$2y$10$8kU2AqPZJ9D8L5N8V4B3YOFVJtH3z4Xq2pY1FJ8mE6wA2q', 'Tim SD', 4, 2, 1, '2026-01-08 06:52:38'),
-(18, 'adminsd', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Admin SD', 2, 2, 1, '2026-01-08 06:52:38'),
-(19, 'timsmp', '$2y$10$5Hq4E9N1RZ7K0P3U1xB4p2O0KZkq6YF7F2T1P8V7QK', 'Tim SMP', 4, 3, 1, '2026-01-08 06:52:38'),
-(20, 'adminsmp', '$2y$10$1J9P8N6Z0T3E7pU1kR2XQx4V8mY7F9D1Z6U5L8A', 'Admin SMP', 2, 3, 1, '2026-01-08 06:52:38'),
-(21, 'timsma', '$2y$10$P8R1k5D6JZQ7X1Z0C9E2H8qO4x6F5T7L9U3Z', 'Tim SMA', 4, 4, 1, '2026-01-08 06:52:38'),
-(22, 'adminsma', '$2y$10$4E2H5R6P7Z0FJ1N8V9YkQxT3C6D8K1A7', 'Admin SMA', 2, 4, 1, '2026-01-08 06:52:38'),
-(23, 'timwp', '$2y$10$Z6P4R1F7K8D5T9Q0HNY3J', 'Tim Widyaprada', 4, 5, 1, '2026-01-08 06:52:38'),
-(24, 'admintimwp', '$2y$10$K9F4D7Z6R1P8T0QHNY3J', 'Admin Tim Widyaprada', 2, 5, 1, '2026-01-08 06:52:38'),
-(25, 'kepegawaian', '$2y$10$8D7P1T6VJ4ZK0Y5Q2H9F3R8A6N', 'Unit Kepegawaian', 4, 6, 1, '2026-01-08 06:52:38'),
-(26, 'adminkepegawaian', '$2y$10$J4QZ5T6F9A3R2K0H8P7Y1VXN', 'Admin Kepegawaian', 2, 6, 1, '2026-01-08 06:52:38'),
-(27, 'perencanaan', '$2y$10$Z4R7Y8D5P1A0J6H3TQ9NFK2', 'Unit Perencanaan', 4, 7, 1, '2026-01-08 06:52:38'),
-(28, 'adminperencanaan', '$2y$10$7ZQ8T5F1N9JH0D3K4P6RAY2', 'Admin Perencanaan', 2, 7, 1, '2026-01-08 06:52:38'),
-(29, 'keuangan', '$2y$10$F1T0K4ZP5Q6J3H7N2Y8R9D', 'Unit Keuangan', 4, 8, 1, '2026-01-08 06:52:38'),
-(30, 'adminkeuangan', '$2y$10$PZ5R9J1D2T4H0K6F7N8YQ3', 'Admin Keuangan', 2, 8, 1, '2026-01-08 06:52:38'),
-(31, 'publikasi', '$2y$10$N5Z1H4QJ8T6P7D0Y9R3K2F', 'Unit Publikasi', 4, 9, 1, '2026-01-08 06:52:38'),
-(32, 'adminpublikasi', '$2y$10$H6P0T3KZ8R1J7F9D5NQ2Y4', 'Admin Publikasi', 2, 9, 1, '2026-01-08 06:52:38'),
-(33, 'arsiparis', '$2y$10$Q7D5F1ZK9H6P4T8R0JNY3', 'Arsiparis', 4, 10, 1, '2026-01-08 06:52:38'),
-(34, 'adminarsiparis', '$2y$10$Z9K7P5F1D4T8R6H0JNY3Q', 'Admin Arsiparis', 2, 10, 1, '2026-01-08 06:52:38'),
-(35, 'pustakawan', '$2y$10$R6ZK5F4H9D7P1T8Q0JNY3', 'Pustakawan', 4, 11, 1, '2026-01-08 06:52:38'),
-(36, 'adminpustakawan', '$2y$10$D8Z4K7R6F5P1T0H9JNY3Q', 'Admin Pustakawan', 2, 11, 1, '2026-01-08 06:52:38'),
-(37, 'perlengkapan', '$2y$10$R7D4T8H9P6K1Z0FJ5QNY3', 'Unit Perlengkapan', 4, 12, 1, '2026-01-08 06:52:38'),
-(38, 'adminperlengkapan', '$2y$10$T4K8PZ6R0F7D1Q5J9N3HY', 'Admin Perlengkapan', 2, 12, 1, '2026-01-08 06:52:38'),
-(39, 'pimpinan', '$2y$10$Q1P8R6JZ9D4H7F5T0N3KY', 'Pimpinan', 3, NULL, 1, '2026-01-08 06:52:38'),
-(40, 'superadmin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Super Admin', 1, NULL, 1, '2026-01-08 06:52:38');
+INSERT INTO `users` (`username`, `password_hash`, `nama_lengkap`, `role_id`, `pokja_id`, `is_active`, `created_at`) VALUES
+('timpaud', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Tim PAUD', 4, 1, 1, '2026-01-08 06:52:38'),
+('adminpaud', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Admin PAUD', 2, 1, 1, '2026-01-08 06:52:38'),
+('timsd', '$2y$10$8kU2AqPZJ9D8L5N8V4B3YOFVJtH3z4Xq2pY1FJ8mE6wA2q', 'Tim SD', 4, 2, 1, '2026-01-08 06:52:38'),
+('adminsd', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Admin SD', 2, 2, 1, '2026-01-08 06:52:38'),
+('timsmp', '$2y$10$5Hq4E9N1RZ7K0P3U1xB4p2O0KZkq6YF7F2T1P8V7QK', 'Tim SMP', 4, 3, 1, '2026-01-08 06:52:38'),
+('adminsmp', '$2y$10$1J9P8N6Z0T3E7pU1kR2XQx4V8mY7F9D1Z6U5L8A', 'Admin SMP', 2, 3, 1, '2026-01-08 06:52:38'),
+('timsma', '$2y$10$P8R1k5D6JZQ7X1Z0C9E2H8qO4x6F5T7L9U3Z', 'Tim SMA', 4, 4, 1, '2026-01-08 06:52:38'),
+('adminsma', '$2y$10$4E2H5R6P7Z0FJ1N8V9YkQxT3C6D8K1A7', 'Admin SMA', 2, 4, 1, '2026-01-08 06:52:38'),
+('timwp', '$2y$10$Z6P4R1F7K8D5T9Q0HNY3J', 'Tim Widyaprada', 4, 5, 1, '2026-01-08 06:52:38'),
+('admintimwp', '$2y$10$K9F4D7Z6R1P8T0QHNY3J', 'Admin Tim Widyaprada', 2, 5, 1, '2026-01-08 06:52:38'),
+('kepegawaian', '$2y$10$8D7P1T6VJ4ZK0Y5Q2H9F3R8A6N', 'Unit Kepegawaian', 4, 6, 1, '2026-01-08 06:52:38'),
+('adminkepegawaian', '$2y$10$J4QZ5T6F9A3R2K0H8P7Y1VXN', 'Admin Kepegawaian', 2, 6, 1, '2026-01-08 06:52:38'),
+('perencanaan', '$2y$10$Z4R7Y8D5P1A0J6H3TQ9NFK2', 'Unit Perencanaan', 4, 7, 1, '2026-01-08 06:52:38'),
+('adminperencanaan', '$2y$10$7ZQ8T5F1N9JH0D3K4P6RAY2', 'Admin Perencanaan', 2, 7, 1, '2026-01-08 06:52:38'),
+('keuangan', '$2y$10$F1T0K4ZP5Q6J3H7N2Y8R9D', 'Unit Keuangan', 4, 8, 1, '2026-01-08 06:52:38'),
+('adminkeuangan', '$2y$10$PZ5R9J1D2T4H0K6F7N8YQ3', 'Admin Keuangan', 2, 8, 1, '2026-01-08 06:52:38'),
+('publikasi', '$2y$10$N5Z1H4QJ8T6P7D0Y9R3K2F', 'Unit Publikasi', 4, 9, 1, '2026-01-08 06:52:38'),
+('adminpublikasi', '$2y$10$H6P0T3KZ8R1J7F9D5NQ2Y4', 'Admin Publikasi', 2, 9, 1, '2026-01-08 06:52:38'),
+('arsiparis', '$2y$10$Q7D5F1ZK9H6P4T8R0JNY3', 'Arsiparis', 4, 10, 1, '2026-01-08 06:52:38'),
+('adminarsiparis', '$2y$10$Z9K7P5F1D4T8R6H0JNY3Q', 'Admin Arsiparis', 2, 10, 1, '2026-01-08 06:52:38'),
+('pustakawan', '$2y$10$R6ZK5F4H9D7P1T8Q0JNY3', 'Pustakawan', 4, 11, 1, '2026-01-08 06:52:38'),
+('adminpustakawan', '$2y$10$D8Z4K7R6F5P1T0H9JNY3Q', 'Admin Pustakawan', 2, 11, 1, '2026-01-08 06:52:38'),
+('perlengkapan', '$2y$10$R7D4T8H9P6K1Z0FJ5QNY3', 'Unit Perlengkapan', 4, 12, 1, '2026-01-08 06:52:38'),
+('adminperlengkapan', '$2y$10$T4K8PZ6R0F7D1Q5J9N3HY', 'Admin Perlengkapan', 2, 12, 1, '2026-01-08 06:52:38'),
+('pimpinan', '$2y$10$Q1P8R6JZ9D4H7F5T0N3KY', 'Pimpinan', 3, NULL, 1, '2026-01-08 06:52:38'),
+('superadmin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Super Admin', 1, NULL, 1, '2026-01-08 06:52:38');
 
 --
 -- Indexes for dumped tables

@@ -100,7 +100,7 @@ $headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/banner
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
-<body class="d-flex flex-column bg-white">
+<body class="d-flex flex-column bg-white" style="background-image: url(http://localhost/sipadu/public/assets/img/vector.svg); background-repeat: repeat;">
     <script src="<?= BASE_URL ?>/public/assets/dist/js/demo-theme.min.js?1684106062"></script>
     <div class="row g-0 flex-fill">
 
@@ -125,40 +125,42 @@ $headerImage = $headerImage ?? 'http://localhost/sipadu/public/assets/img/banner
         </div>
 
         <div class="col-12 col-lg-6 col-xl-4 border-top-wide d-flex flex-column justify-content-center">
-            <div class="container container-tight mb-7 px-lg-5">
+            <div class="container container-tight mb-7">
                 <div class="text-center mb-4">
                     <img src="http://localhost/sipadu/public/assets/img/bpmp-tengah.webp" alt="" style="height: 150px; width: auto;">
                 </div>
-                <hr>
-                <h2 class="h3 text-center mb-5">Masuk ke SIPADU</h2>
-                <form action="<?= BASE_URL ?>/?page=login-process" method="post" autocomplete="off" novalidate="">
-                    <div class="mb-3">
-                        <label class="form-label">Nama Pengguna</label>
-                        <input type="text" id="username" name="username" class="form-control" placeholder="Masukkan nama pengguna..." autocomplete="off">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="h2 text-center mt-3 mb-5">Masuk ke SIPADU</h2>
+                        <form action="<?= BASE_URL ?>/?page=login-process" method="post" autocomplete="off" novalidate="">
+                            <div class="mb-3">
+                                <label class="form-label">Nama Pengguna</label>
+                                <input type="text" id="username" name="username" class="form-control" placeholder="Masukkan nama pengguna..." autocomplete="off">
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label">
+                                    Kata Sandi
+                                </label>
+                                <div class="input-group input-group-flat">
+                                    <input type="password" id="password" name="password" class="form-control" placeholder="Masukkan kata sandi..." autocomplete="off">
+                                    <span class="input-group-text" id="togglePassword">
+                                        <a class="link-secondary" data-bs-toggle="tooltip" aria-label="Show password" data-bs-original-title="Lihat sandi"><!-- Download SVG icon from http://tabler.io/icons/icon/eye -->
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
+                                                <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"></path>
+                                                <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"></path>
+                                            </svg></a>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                &nbsp;
+                            </div>
+                            <div class="form-footer">
+                                <button type="submit" class="btn btn-primary w-100 mb-3">Masuk</button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="mb-2">
-                        <label class="form-label">
-                            Kata Sandi
-                        </label>
-                        <div class="input-group input-group-flat">
-                            <input type="password" id="password" name="password" class="form-control" placeholder="Masukkan kata sandi..." autocomplete="off">
-                            <span class="input-group-text" id="togglePassword">
-                                <a class="link-secondary" data-bs-toggle="tooltip" aria-label="Show password" data-bs-original-title="Lihat sandi"><!-- Download SVG icon from http://tabler.io/icons/icon/eye -->
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
-                                        <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"></path>
-                                        <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"></path>
-                                    </svg></a>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="mb-2">
-                        &nbsp;
-                    </div>
-                    <div class="form-footer">
-                        <button type="submit" class="btn btn-primary w-100">Masuk</button>
-                    </div>
-                </form>
-                <hr class="mt-5">
+                </div>
             </div>
         </div>
     </div>

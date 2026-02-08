@@ -12,6 +12,9 @@ class DipController
         global $pdo;
 
         $user = currentUser();
+        if (!$user || empty($user['id'])) {
+            die("User tidak valid");
+        }
         $role = currentRole();
 
         $tahun = $_GET['tahun'] ?? null;
@@ -21,36 +24,10 @@ class DipController
         if (!empty($tahun) || !empty($jenis)) {
             $data = $model->getFiltered($tahun, $jenis);
         } else {
-            // default
             $data = $model->getAll();
         }
 
         require __DIR__ . "/../views/dip/index.php";
-    }
-
-    public function getFiltered()
-    {
-        // ambil filter dari GET
-        $tahun = $_GET['tahun'] ?? null;
-        $jenis = $_GET['jenis'] ?? null;
-
-        // jika ada filter → pakai getFiltered
-        global $pdo;
-
-        $user = currentUser();
-        $role = currentRole();
-
-        $model = new DipModel($pdo);
-        if (!empty($tahun) || !empty($jenis)) {
-            $data = $model->getFiltered($tahun, $jenis);
-        } else {
-            // default
-            $data = $model->getAll();
-        }
-
-        // kirim ke view
-        header('Location: ?page=dip');
-        exit;
     }
 
     public function create()
@@ -58,6 +35,9 @@ class DipController
         authOnly();
 
         $user = currentUser();
+        if (!$user || empty($user['id'])) {
+            die("User tidak valid");
+        }
         $role = currentRole();
 
         require __DIR__ . "/../views/dip/create.php";
@@ -75,6 +55,9 @@ class DipController
         global $pdo;
 
         $user = currentUser();
+        if (!$user || empty($user['id'])) {
+            die("User tidak valid");
+        }
         $role = currentRole();
 
         $errors = [];
@@ -145,7 +128,7 @@ class DipController
         $model = new DipModel($pdo);
 
         $data = $_POST;
-        $data["dibuat_oleh"] = currentUser()["id"];
+        $data["created_by"] = $user['id'];
 
         $dipId = $model->insert($data);
 
@@ -198,6 +181,15 @@ class DipController
             }
         }
 
+        logActivity([
+            'user_id'      => $user['id'],
+            'role_id'      => $user['role_id'],
+            'action'       => 'create',
+            'entity_type'  => 'dip',
+            'entity_id'    => $dipId,
+            'description'  => 'Menambahkan data DIP'
+        ]);
+
         $_SESSION["flash"] = [
             "status" => "success",
             "message" => "Data DIP berhasil disimpan",
@@ -214,6 +206,9 @@ class DipController
         global $pdo;
 
         $user = currentUser();
+        if (!$user || empty($user['id'])) {
+            die("User tidak valid");
+        }
         $role = currentRole();
 
         $model = new DipModel($pdo);
@@ -233,6 +228,9 @@ class DipController
         global $pdo;
 
         $user = currentUser();
+        if (!$user || empty($user['id'])) {
+            die("User tidak valid");
+        }
         $role = currentRole();
 
         $model = new DipModel($pdo);
@@ -253,6 +251,9 @@ class DipController
         global $pdo;
 
         $user = currentUser();
+        if (!$user || empty($user['id'])) {
+            die("User tidak valid");
+        }
         $role = currentRole();
 
         $model = new DipModel($pdo);
@@ -283,6 +284,9 @@ class DipController
         global $pdo;
 
         $user = currentUser();
+        if (!$user || empty($user['id'])) {
+            die("User tidak valid");
+        }
         $role = currentRole();
 
         $model = new DipModel($pdo);
@@ -342,6 +346,9 @@ class DipController
         // die();
 
         $user = currentUser();
+        if (!$user || empty($user['id'])) {
+            die("User tidak valid");
+        }
         $role = currentRole();
 
         $errors = [];
@@ -413,7 +420,7 @@ class DipController
         $model = new DipModel($pdo);
 
         $data = $_POST;
-        $data["dibuat_oleh"] = currentUser()["id"];
+        $data["updated_by"] = $user['id'];
 
         // echo "<pre>";
         // print_r($data);
@@ -480,6 +487,15 @@ class DipController
             }
         }
 
+        logActivity([
+            'user_id'      => $user['id'],
+            'role_id'      => $user['role_id'],
+            'action'       => 'update',
+            'entity_type'  => 'dip',
+            'entity_id'    => $_POST["id"],
+            'description'  => 'Mengubah data DIP'
+        ]);
+
         $_SESSION["flash"] = [
             "status" => "success",
             "message" => "Data DIP berhasil diperbarui",
@@ -489,7 +505,6 @@ class DipController
         exit();
     }
 
-    // hapus
     public function delete()
     {
         // echo "<pre>";
@@ -498,24 +513,51 @@ class DipController
         // die();
         // authOnly();
 
+        authOnly();
         global $pdo;
 
+        if (empty($_GET['id'])) {
+            $_SESSION['flash'] = [
+                'status'  => 'error',
+                'message' => 'ID tidak ditemukan'
+            ];
+            header('Location: ?page=dip');
+            exit;
+        }
+
         $user = currentUser();
+        if (!$user || empty($user['id'])) {
+            die("User tidak valid");
+        }
         $role = currentRole();
 
         $model = new DipModel($pdo);
-        $model->delete($_GET["id"]);
+        $result = $model->delete($_GET['id'], $user['id']);
 
-        $_SESSION['flash'] = [
-            'status'  => 'success',
-            'message' => 'Data berhasil dihapus'
-        ];
+        if (!$result) {
+            $_SESSION['flash'] = [
+                'status'  => 'error',
+                'message' => 'Gagal menghapus data'
+            ];
+        } else {
+            logActivity([
+                'user_id'      => $user['id'],
+                'role_id'      => $user['role_id'],
+                'action'       => 'delete',
+                'entity_type'  => 'dip',
+                'entity_id'    => $_GET["id"],
+                'description'  => 'Menghapus data DIP'
+            ]);
+
+            $_SESSION['flash'] = [
+                'status'  => 'success',
+                'message' => 'Data berhasil dihapus'
+            ];
+        }
 
         header('Location: ?page=dip');
         exit;
     }
-
-
 
     public function publicIndex()
     {
@@ -524,6 +566,9 @@ class DipController
         global $pdo;
 
         $user = currentUser();
+        if (!$user || empty($user['id'])) {
+            die("User tidak valid");
+        }
         $role = currentRole();
 
         $tahun = $_GET['tahun'] ?? null;

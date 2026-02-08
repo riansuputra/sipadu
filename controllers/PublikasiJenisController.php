@@ -1,9 +1,9 @@
 <?php
 
-require_once __DIR__ . '/../models/JenisDokumenModel.php';
+require_once __DIR__ . '/../models/PublikasiJenisModel.php';
 require_once __DIR__ . '/../core/auth.php';
 
-class JenisDokumenController
+class PublikasiJenisController
 {
     public function index()
     {
@@ -13,10 +13,10 @@ class JenisDokumenController
         $user = currentUser();
         $role = currentRole();
 
-        $model = new JenisDokumenModel($pdo);
+        $model = new PublikasiJenisModel($pdo);
         $data  = $model->getAll();
 
-        require __DIR__ . '/../views/jenis_dokumen/index.php';
+        require __DIR__ . '/../views/jenis_publikasi/index.php';
     }
 
     public function create()
@@ -27,9 +27,9 @@ class JenisDokumenController
         $user = currentUser();
         $role = currentRole();
 
-        $model = new JenisDokumenModel($pdo);
+        $model = new PublikasiJenisModel($pdo);
         $data  = $model->getAll();
-        require __DIR__ . '/../views/jenis_dokumen/create.php';
+        require __DIR__ . '/../views/jenis_publikasi/create.php';
     }
 
     public function store()
@@ -41,29 +41,27 @@ class JenisDokumenController
 
         $errors = [];
 
-        if (empty($_POST['nama']))
-            $errors[] = "Nama wajib diisi";
+        if (empty($_POST['nama'])) {
+            $errors['nama'] = "Jenis publikasi wajib diisi";
+        }
+        if (!empty($errors)) {
+            $_SESSION["errors"] = $errors;
+            $_SESSION["old"] = $_POST;
 
-        if ($errors) {
-            $_SESSION['flash'] = [
-                'status' => 'error',
-                'message' => implode("<br>", $errors)
-            ];
-
-            header("Location: ?page=tambah-jenis-dokumen");
-            exit;
+            header("Location: ?page=tambah-jenis-publikasi");
+            exit();
         }
 
-        $model = new JenisDokumenModel($pdo);
+        $model = new PublikasiJenisModel($pdo);
         $data = $_POST;
         $jenis = $model->insert($data);
 
         $_SESSION['flash'] = [
             'status' => 'success',
-            'message' => 'Jenis dokumen berhasil disimpan'
+            'message' => 'Jenis publikasi berhasil disimpan'
         ];
 
-        header("Location: ?page=tambah-jenis-dokumen");
+        header("Location: ?page=tambah-jenis-publikasi");
     }
 
     public function show()
@@ -75,13 +73,13 @@ class JenisDokumenController
         $user = currentUser();
         $role = currentRole();
 
-        $model = new JenisDokumenModel($pdo);
+        $model = new PublikasiJenisModel($pdo);
 
         $id = $_GET['id'];
 
         $jenis = $model->getById($id);
 
-        require __DIR__ . '/../views/jenis_dokumen/create.php';
+        require __DIR__ . '/../views/jenis_publikasi/create.php';
     }
 
     public function edit()
@@ -93,13 +91,13 @@ class JenisDokumenController
         $user = currentUser();
         $role = currentRole();
 
-        $model = new JenisDokumenModel($pdo);
+        $model = new PublikasiJenisModel($pdo);
 
         $id = $_GET['id'];
 
         $publikasi = $model->getById($id);
 
-        require __DIR__ . '/../views/jenis_dokumen/edit.php';
+        require __DIR__ . '/../views/jenis_publikasi/edit.php';
     }
 
     public function update()
@@ -111,32 +109,28 @@ class JenisDokumenController
 
         $errors = [];
 
-        if (empty($_POST['kode']))
-            $errors[] = "Kode wajib diisi";
+        if (empty($_POST['nama'])) {
+            $errors['nama'] = "Jenis publikasi wajib diisi";
+        }
+        if (!empty($errors)) {
+            $_SESSION["errors"] = $errors;
+            $_SESSION["old"] = $_POST;
 
-        if (empty($_POST['nama']))
-            $errors[] = "Nama wajib diisi";
-
-        if ($errors) {
-            $_SESSION['flash'] = [
-                'status' => 'error',
-                'message' => implode("<br>", $errors)
-            ];
-
-            header("Location: ?page=tambah-jenis-dokumen&id=" . $_POST['id']);
-            exit;
+            header("Location: ?page=tambah-jenis-publikasi&id=" . $_POST['id']);
+            exit();
         }
 
-        $model = new JenisDokumenModel($pdo);
+        $model = new PublikasiJenisModel($pdo);
         $data = $_POST;
         $model->update($_POST['id'], $data);
 
         $_SESSION['flash'] = [
             'status' => 'success',
-            'message' => 'Jenis dokumen berhasil diperbarui'
+            'message' => 'Jenis publikasi berhasil diperbarui'
         ];
 
-        header("Location: ?page=tambah-jenis-dokumen");
+        header("Location: ?page=tambah-jenis-publikasi");
+        exit();
     }
 
     public function delete()
@@ -147,7 +141,7 @@ class JenisDokumenController
         $user = currentUser();
         $role = currentRole();
 
-        $model = new JenisDokumenModel($pdo);
+        $model = new PublikasiJenisModel($pdo);
 
         $id = $_GET['id'];
 
@@ -156,10 +150,10 @@ class JenisDokumenController
 
             $_SESSION['flash'] = [
                 'status'  => 'error',
-                'message' => 'Jenis tidak dapat dihapus karena masih digunakan di data dokumen'
+                'message' => 'Jenis tidak dapat dihapus karena masih digunakan di data publikasi'
             ];
 
-            header("Location: ?page=tambah-jenis-dokumen");
+            header("Location: ?page=tambah-jenis-publikasi");
             exit;
         }
 
@@ -167,9 +161,9 @@ class JenisDokumenController
 
         $_SESSION['flash'] = [
             'status'  => 'success',
-            'message' => 'Jenis dokumen berhasil dinonaktifkan'
+            'message' => 'Jenis publikasi berhasil dinonaktifkan'
         ];
 
-        header("Location: ?page=tambah-jenis-dokumen");
+        header("Location: ?page=tambah-jenis-publikasi");
     }
 }

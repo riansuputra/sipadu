@@ -1,7 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../models/PublikasiModel.php';
-require_once __DIR__ . '/../models/JenisPublikasiModel.php';
+require_once __DIR__ . '/../models/PublikasiJenisModel.php';
 require_once __DIR__ . '/../core/auth.php';
 
 class PublikasiController
@@ -13,6 +13,9 @@ class PublikasiController
         global $pdo;
 
         $user = currentUser();
+        if (!$user || empty($user['id'])) {
+            die("User tidak valid");
+        }
         $role = currentRole();
 
         $pokjaId = $user['pokja_id'] ?? null;
@@ -27,7 +30,7 @@ class PublikasiController
         // echo "</pre>";
         // die();
 
-        $modeljenis = new JenisPublikasiModel($pdo);
+        $modeljenis = new PublikasiJenisModel($pdo);
         $jenisInput = $modeljenis->getAll();
 
         $model = new PublikasiModel($pdo);
@@ -61,6 +64,9 @@ class PublikasiController
         global $pdo;
 
         $user = currentUser();
+        if (!$user || empty($user['id'])) {
+            die("User tidak valid");
+        }
         $role = currentRole();
 
         $model = new PublikasiModel($pdo);
@@ -82,9 +88,12 @@ class PublikasiController
 
         global $pdo;
         $user = currentUser();
+        if (!$user || empty($user['id'])) {
+            die("User tidak valid");
+        }
         $role = currentRole();
 
-        $modeljenis = new JenisPublikasiModel($pdo);
+        $modeljenis = new PublikasiJenisModel($pdo);
         $jenis = $modeljenis->getAll();
 
         require __DIR__ . '/../views/publikasi/create.php';
@@ -103,6 +112,9 @@ class PublikasiController
         // die();
 
         $user = currentUser();
+        if (!$user || empty($user['id'])) {
+            die("User tidak valid");
+        }
         $role = currentRole();
         $pokja = currentPokja();
 
@@ -165,7 +177,7 @@ class PublikasiController
         $model = new PublikasiModel($pdo);
 
         $data = $_POST;
-        $data['dibuat_oleh'] = currentUser()['id'];
+        $data['created_by'] = $user['id'];
         $data['pokja_id'] = $pokja;
 
         $publikasiId = $model->insert($data);
@@ -199,6 +211,15 @@ class PublikasiController
             }
         }
 
+        logActivity([
+            'user_id'      => $user['id'],
+            'role_id'      => $user['role_id'],
+            'action'       => 'create',
+            'entity_type'  => 'publikasi',
+            'entity_id'    => $publikasiId,
+            'description'  => 'Menambahkan data Publikasi'
+        ]);
+
         $_SESSION['flash'] = [
             'status' => 'success',
             'errors' => array_values($errors),
@@ -222,6 +243,9 @@ class PublikasiController
         global $pdo;
 
         $user = currentUser();
+        if (!$user || empty($user['id'])) {
+            die("User tidak valid");
+        }
         $role = currentRole();
 
         $model = new PublikasiModel($pdo);
@@ -241,6 +265,9 @@ class PublikasiController
         global $pdo;
 
         $user = currentUser();
+        if (!$user || empty($user['id'])) {
+            die("User tidak valid");
+        }
         $role = currentRole();
 
         $model = new PublikasiModel($pdo);
@@ -250,7 +277,7 @@ class PublikasiController
         $publikasi = $model->getById($id);
         $files = $model->getFiles($id);
 
-        $modeljenis = new JenisPublikasiModel($pdo);
+        $modeljenis = new PublikasiJenisModel($pdo);
         $jenis = $modeljenis->getAll();
 
         require __DIR__ . '/../views/publikasi/edit.php';
@@ -262,6 +289,9 @@ class PublikasiController
         global $pdo;
 
         $user = currentUser();
+        if (!$user || empty($user['id'])) {
+            die("User tidak valid");
+        }
         $role = currentRole();
 
         $errors = [];
@@ -340,7 +370,7 @@ class PublikasiController
         // UPDATE DATA UTAMA
         // ==============================
         $data = $_POST;
-        $data['diubah_oleh'] = currentUser()['id'];
+        $data['updated_by'] = $user['id'];
 
         $model->update($_POST['id'], $data);
 
@@ -389,6 +419,15 @@ class PublikasiController
             }
         }
 
+        logActivity([
+            'user_id'      => $user['id'],
+            'role_id'      => $user['role_id'],
+            'action'       => 'update',
+            'entity_type'  => 'publikasi',
+            'entity_id'    => $_POST["id"],
+            'description'  => 'Mengubah data Publikasi'
+        ]);
+
         $_SESSION['flash'] = [
             'status'  => 'success',
             'message' => 'Data Publikasi berhasil diperbarui'
@@ -405,16 +444,44 @@ class PublikasiController
 
         global $pdo;
 
+        if (empty($_GET['id'])) {
+            $_SESSION['flash'] = [
+                'status'  => 'error',
+                'message' => 'ID tidak ditemukan'
+            ];
+            header('Location: ?page=publikasi');
+            exit;
+        }
+
         $user = currentUser();
+        if (!$user || empty($user['id'])) {
+            die("User tidak valid");
+        }
         $role = currentRole();
 
         $model = new PublikasiModel($pdo);
-        $model->delete($_GET['id']);
+        $result = $model->delete($_GET['id'], $user['id']);
 
-        $_SESSION['flash'] = [
-            'status'  => 'success',
-            'message' => 'Data berhasil dihapus'
-        ];
+        if (!$result) {
+            $_SESSION['flash'] = [
+                'status'  => 'error',
+                'message' => 'Gagal menghapus data'
+            ];
+        } else {
+            logActivity([
+                'user_id'      => $user['id'],
+                'role_id'      => $user['role_id'],
+                'action'       => 'delete',
+                'entity_type'  => 'publikasi',
+                'entity_id'    => $_GET["id"],
+                'description'  => 'Menghapus data Publikasi'
+            ]);
+
+            $_SESSION['flash'] = [
+                'status'  => 'success',
+                'message' => 'Data berhasil dihapus'
+            ];
+        }
 
         header("Location: ?page=publikasi");
         exit;
@@ -427,6 +494,9 @@ class PublikasiController
         global $pdo;
 
         $user = currentUser();
+        if (!$user || empty($user['id'])) {
+            die("User tidak valid");
+        }
         $role = currentRole();
 
         $tanggalMulai = $_GET['tanggal_mulai'] ?? null;

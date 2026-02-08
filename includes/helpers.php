@@ -92,3 +92,34 @@ function showMaintenance()
     require __DIR__ . '/../views/errors/maintenance.php';
     exit;
 }
+
+function logActivity(array $data)
+{
+    global $pdo;
+
+    if (empty($data['user_id']) || empty($data['action']) || empty($data['entity_type'])) {
+        return;
+    }
+
+    $stmt = $pdo->prepare("
+        INSERT INTO activity_log
+        (user_id, role_id, action, entity_type, entity_id, description, ip_address, user_agent)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    ");
+
+    $stmt->execute([
+        (int) $data['user_id'],
+        $data['role_id'] ?? null,
+        $data['action'],
+        $data['entity_type'],
+        $data['entity_id'] ?? null,
+        $data['description'] ?? null,
+        $_SERVER['REMOTE_ADDR'] ?? null,
+        $_SERVER['HTTP_USER_AGENT'] ?? null
+    ]);
+}
+
+function url(string $path = ''): string
+{
+    return BASE_URL . '/' . ltrim($path, '/');
+}

@@ -1,9 +1,9 @@
 <?php
 
-require_once __DIR__ . '/../models/JenisPeraturanModel.php';
+require_once __DIR__ . '/../models/PeraturanJenisModel.php';
 require_once __DIR__ . '/../core/auth.php';
 
-class JenisPeraturanController
+class PeraturanJenisController
 {
     public function index()
     {
@@ -13,7 +13,7 @@ class JenisPeraturanController
         $user = currentUser();
         $role = currentRole();
 
-        $model = new JenisPeraturanModel($pdo);
+        $model = new PeraturanJenisModel($pdo);
         $data  = $model->getAll();
 
         require __DIR__ . '/../views/jenis_peraturan/index.php';
@@ -27,7 +27,7 @@ class JenisPeraturanController
         $user = currentUser();
         $role = currentRole();
 
-        $model = new JenisPeraturanModel($pdo);
+        $model = new PeraturanJenisModel($pdo);
         $data  = $model->getAll();
         require __DIR__ . '/../views/jenis_peraturan/create.php';
     }
@@ -61,7 +61,7 @@ class JenisPeraturanController
             exit();
         }
 
-        $model = new JenisPeraturanModel($pdo);
+        $model = new PeraturanJenisModel($pdo);
         $data = $_POST;
         $jenis = $model->insert($data);
 
@@ -82,7 +82,7 @@ class JenisPeraturanController
         $user = currentUser();
         $role = currentRole();
 
-        $model = new JenisPeraturanModel($pdo);
+        $model = new PeraturanJenisModel($pdo);
 
         $id = $_GET['id'];
 
@@ -100,7 +100,7 @@ class JenisPeraturanController
         $user = currentUser();
         $role = currentRole();
 
-        $model = new JenisPeraturanModel($pdo);
+        $model = new PeraturanJenisModel($pdo);
 
         $id = $_GET['id'];
 
@@ -138,7 +138,7 @@ class JenisPeraturanController
             exit();
         }
 
-        $model = new JenisPeraturanModel($pdo);
+        $model = new PeraturanJenisModel($pdo);
         $data = $_POST;
         $model->update($_POST['id'], $data);
 
@@ -159,7 +159,7 @@ class JenisPeraturanController
         $user = currentUser();
         $role = currentRole();
 
-        $model = new JenisPeraturanModel($pdo);
+        $model = new PeraturanJenisModel($pdo);
 
         $id = $_GET['id'];
 

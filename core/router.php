@@ -127,56 +127,6 @@ function routeRequest()
             $controller->delete();
             break;
 
-        // Jenis Dokuumen =======================================
-        case 'jenis-dokumen':
-            authOnly();
-            require __DIR__ . '/../controllers/JenisDokumenController.php';
-            $controller = new JenisDokumenController();
-            $controller->index();
-            break;
-
-        case 'tambah-jenis-dokumen':
-            authOnly();
-            require __DIR__ . '/../controllers/JenisDokumenController.php';
-            $controller = new JenisDokumenController();
-            $controller->create();
-            break;
-
-        case 'jenis-dokumen-store':
-            authOnly();
-            require __DIR__ . '/../controllers/JenisDokumenController.php';
-            $controller = new JenisDokumenController();
-            $controller->store();
-            break;
-
-        case 'detail-jenis-dokumen':
-            authOnly();
-            require __DIR__ . '/../controllers/JenisDokumenController.php';
-            $controller = new JenisDokumenController();
-            $controller->show();
-            break;
-
-        case 'edit-jenis-dokumen':
-            authOnly();
-            require __DIR__ . '/../controllers/JenisDokumenController.php';
-            $controller = new JenisDokumenController();
-            $controller->edit();
-            break;
-
-        case 'jenis-dokumen-update':
-            authOnly();
-            require __DIR__ . '/../controllers/JenisDokumenController.php';
-            $controller = new JenisDokumenController();
-            $controller->update();
-            break;
-
-        case 'jenis-dokumen-delete':
-            authOnly();
-            require __DIR__ . '/../controllers/JenisDokumenController.php';
-            $controller = new JenisDokumenController();
-            $controller->delete();
-            break;
-
         // Arsip ==========================================
         case 'arsip':
             authOnly();
@@ -287,50 +237,50 @@ function routeRequest()
         // Jenis Publikasi =======================================
         case 'jenis-publikasi':
             authOnly();
-            require __DIR__ . '/../controllers/JenisPublikasiController.php';
-            $controller = new JenisPublikasiController();
+            require __DIR__ . '/../controllers/PublikasiJenisController.php';
+            $controller = new PublikasiJenisController();
             $controller->index();
             break;
 
         case 'tambah-jenis-publikasi':
             authOnly();
-            require __DIR__ . '/../controllers/JenisPublikasiController.php';
-            $controller = new JenisPublikasiController();
+            require __DIR__ . '/../controllers/PublikasiJenisController.php';
+            $controller = new PublikasiJenisController();
             $controller->create();
             break;
 
         case 'jenis-publikasi-store':
             authOnly();
-            require __DIR__ . '/../controllers/JenisPublikasiController.php';
-            $controller = new JenisPublikasiController();
+            require __DIR__ . '/../controllers/PublikasiJenisController.php';
+            $controller = new PublikasiJenisController();
             $controller->store();
             break;
 
         case 'detail-jenis-publikasi':
             authOnly();
-            require __DIR__ . '/../controllers/JenisPublikasiController.php';
-            $controller = new JenisPublikasiController();
+            require __DIR__ . '/../controllers/PublikasiJenisController.php';
+            $controller = new PublikasiJenisController();
             $controller->show();
             break;
 
         case 'edit-jenis-publikasi':
             authOnly();
-            require __DIR__ . '/../controllers/JenisPublikasiController.php';
-            $controller = new JenisPublikasiController();
+            require __DIR__ . '/../controllers/PublikasiJenisController.php';
+            $controller = new PublikasiJenisController();
             $controller->edit();
             break;
 
         case 'jenis-publikasi-update':
             authOnly();
-            require __DIR__ . '/../controllers/JenisPublikasiController.php';
-            $controller = new JenisPublikasiController();
+            require __DIR__ . '/../controllers/PublikasiJenisController.php';
+            $controller = new PublikasiJenisController();
             $controller->update();
             break;
 
         case 'jenis-publikasi-delete':
             authOnly();
-            require __DIR__ . '/../controllers/JenisPublikasiController.php';
-            $controller = new JenisPublikasiController();
+            require __DIR__ . '/../controllers/PublikasiJenisController.php';
+            $controller = new PublikasiJenisController();
             $controller->delete();
             break;
 
@@ -484,50 +434,50 @@ function routeRequest()
         // Jenis Peraturan =================================
         case 'jenis-peraturan':
             authOnly();
-            require __DIR__ . '/../controllers/JenisPeraturanController.php';
-            $controller = new JenisPeraturanController();
+            require __DIR__ . '/../controllers/PeraturanJenisController.php';
+            $controller = new PeraturanJenisController();
             $controller->index();
             break;
 
         case 'tambah-jenis-peraturan':
             authOnly();
-            require __DIR__ . '/../controllers/JenisPeraturanController.php';
-            $controller = new JenisPeraturanController();
+            require __DIR__ . '/../controllers/PeraturanJenisController.php';
+            $controller = new PeraturanJenisController();
             $controller->create();
             break;
 
         case 'jenis-peraturan-store':
             authOnly();
-            require __DIR__ . '/../controllers/JenisPeraturanController.php';
-            $controller = new JenisPeraturanController();
+            require __DIR__ . '/../controllers/PeraturanJenisController.php';
+            $controller = new PeraturanJenisController();
             $controller->store();
             break;
 
         case 'detail-jenis-peraturan':
             authOnly();
-            require __DIR__ . '/../controllers/JenisPeraturanController.php';
-            $controller = new JenisPeraturanController();
+            require __DIR__ . '/../controllers/PeraturanJenisController.php';
+            $controller = new PeraturanJenisController();
             $controller->show();
             break;
 
         case 'edit-jenis-peraturan':
             authOnly();
-            require __DIR__ . '/../controllers/JenisPeraturanController.php';
-            $controller = new JenisPeraturanController();
+            require __DIR__ . '/../controllers/PeraturanJenisController.php';
+            $controller = new PeraturanJenisController();
             $controller->edit();
             break;
 
         case 'jenis-peraturan-update':
             authOnly();
-            require __DIR__ . '/../controllers/JenisPeraturanController.php';
-            $controller = new JenisPeraturanController();
+            require __DIR__ . '/../controllers/PeraturanJenisController.php';
+            $controller = new PeraturanJenisController();
             $controller->update();
             break;
 
         case 'jenis-peraturan-delete':
             authOnly();
-            require __DIR__ . '/../controllers/JenisPeraturanController.php';
-            $controller = new JenisPeraturanController();
+            require __DIR__ . '/../controllers/PeraturanJenisController.php';
+            $controller = new PeraturanJenisController();
             $controller->delete();
             break;
 

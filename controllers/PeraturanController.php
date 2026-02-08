@@ -1,7 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../models/PeraturanModel.php';
-require_once __DIR__ . '/../models/JenisPeraturanModel.php';
+require_once __DIR__ . '/../models/PeraturanJenisModel.php';
 require_once __DIR__ . '/../core/auth.php';
 
 class PeraturanController
@@ -12,12 +12,15 @@ class PeraturanController
 
         global $pdo;
         $user = currentUser();
+        if (!$user || empty($user['id'])) {
+            die("User tidak valid");
+        }
         $role = currentRole();
 
         $tahun = $_GET['tahun'] ?? null;
         $jenis = $_GET['jenis'] ?? null;
 
-        $modeljenis = new JenisPeraturanModel($pdo);
+        $modeljenis = new PeraturanJenisModel($pdo);
         $jenisPeraturan = $modeljenis->getAll();
 
         $model = new PeraturanModel($pdo);
@@ -41,6 +44,9 @@ class PeraturanController
         global $pdo;
 
         $user = currentUser();
+        if (!$user || empty($user['id'])) {
+            die("User tidak valid");
+        }
         $role = currentRole();
 
 
@@ -64,9 +70,12 @@ class PeraturanController
 
         global $pdo;
         $user = currentUser();
+        if (!$user || empty($user['id'])) {
+            die("User tidak valid");
+        }
         $role = currentRole();
 
-        $modeljenis = new JenisPeraturanModel($pdo);
+        $modeljenis = new PeraturanJenisModel($pdo);
         $jenis = $modeljenis->getAll();
 
         require __DIR__ . '/../views/peraturan/create.php';
@@ -84,6 +93,9 @@ class PeraturanController
         // die();
 
         $user = currentUser();
+        if (!$user || empty($user['id'])) {
+            die("User tidak valid");
+        }
         $role = currentRole();
         $errors = [];
 
@@ -144,6 +156,8 @@ class PeraturanController
         $model = new PeraturanModel($pdo);
 
         $data = $_POST;
+        $data["created_by"] = $user['id'];
+
         $id = $model->insert($data);
 
         // ============= UPLOAD FILE ==============
@@ -175,6 +189,15 @@ class PeraturanController
             }
         }
 
+        logActivity([
+            'user_id'      => $user['id'],
+            'role_id'      => $user['role_id'],
+            'action'       => 'create',
+            'entity_type'  => 'peraturan',
+            'entity_id'    => $id,
+            'description'  => 'Menambahkan data Peraturan'
+        ]);
+
         $_SESSION['flash'] = [
             'status'  => 'success',
             'message' => 'Peraturan berhasil disimpan'
@@ -191,6 +214,9 @@ class PeraturanController
         global $pdo;
 
         $user = currentUser();
+        if (!$user || empty($user['id'])) {
+            die("User tidak valid");
+        }
         $role = currentRole();
 
         $model = new PeraturanModel($pdo);
@@ -212,6 +238,9 @@ class PeraturanController
         global $pdo;
 
         $user = currentUser();
+        if (!$user || empty($user['id'])) {
+            die("User tidak valid");
+        }
         $role = currentRole();
 
         $model = new PeraturanModel($pdo);
@@ -221,7 +250,7 @@ class PeraturanController
         $peraturan = $model->getById($id);
         $files = $model->getFiles($id);
 
-        $modeljenis = new JenisPeraturanModel($pdo);
+        $modeljenis = new PeraturanJenisModel($pdo);
         $jenis = $modeljenis->getAll();
 
         require __DIR__ . '/../views/peraturan/edit.php';
@@ -238,6 +267,9 @@ class PeraturanController
         global $pdo;
 
         $user = currentUser();
+        if (!$user || empty($user['id'])) {
+            die("User tidak valid");
+        }
         $role = currentRole();
 
         $errors = [];
@@ -298,6 +330,8 @@ class PeraturanController
         $model = new PeraturanModel($pdo);
 
         $data = $_POST;
+        $data["updated_by"] = $user['id'];
+
 
         $model->update($_POST['id'], $data);
 
@@ -338,6 +372,15 @@ class PeraturanController
             }
         }
 
+        logActivity([
+            'user_id'      => $user['id'],
+            'role_id'      => $user['role_id'],
+            'action'       => 'update',
+            'entity_type'  => 'peraturan',
+            'entity_id'    => $_POST["id"],
+            'description'  => 'Mengubah data Peraturan'
+        ]);
+
         $_SESSION['flash'] = [
             'status'  => 'success',
             'message' => 'Peraturan berhasil diperbarui'
@@ -351,15 +394,35 @@ class PeraturanController
         authOnly();
         global $pdo;
         $user = currentUser();
+        if (!$user || empty($user['id'])) {
+            die("User tidak valid");
+        }
         $role = currentRole();
 
         $model = new PeraturanModel($pdo);
-        $model->delete($_GET['id']);
+        $result = $model->delete($_GET['id'], $user['id']);
 
-        $_SESSION['flash'] = [
-            'status'  => 'success',
-            'message' => 'Data berhasil dihapus'
-        ];
+
+        if (!$result) {
+            $_SESSION['flash'] = [
+                'status'  => 'error',
+                'message' => 'Gagal menghapus data'
+            ];
+        } else {
+            logActivity([
+                'user_id'      => $user['id'],
+                'role_id'      => $user['role_id'],
+                'action'       => 'delete',
+                'entity_type'  => 'peraturan',
+                'entity_id'    => $_GET["id"],
+                'description'  => 'Menghapus data Peraturan'
+            ]);
+
+            $_SESSION['flash'] = [
+                'status'  => 'success',
+                'message' => 'Data berhasil dihapus'
+            ];
+        }
 
         header("Location: ?page=peraturan");
         exit;
@@ -370,7 +433,7 @@ class PeraturanController
         global $pdo;
         $model = new PeraturanModel($pdo);
 
-        $modeljenis = new JenisPeraturanModel($pdo);
+        $modeljenis = new PeraturanJenisModel($pdo);
         $jenis = $modeljenis->getAll();
 
         $limit = 5; // data per halaman

@@ -5,7 +5,7 @@
 
 // Konfigurasi database lokal
 $host = 'localhost';
-$db   = 'sipadu';
+$db   = 'db_sipadu';
 $user = 'root';
 $pass = '';
 $charset = 'utf8mb4';

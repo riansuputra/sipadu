@@ -1,6 +1,6 @@
 <?php
 
-class JenisPeraturanModel
+class PeraturanJenisModel
 {
     protected $db;
 
@@ -13,8 +13,8 @@ class JenisPeraturanModel
     public function getAll()
     {
         return $this->db->query("
-            SELECT * FROM jenis_peraturan
-            WHERE jenis_peraturan.is_active = 1
+            SELECT * FROM peraturan_jenis
+            WHERE peraturan_jenis.is_active = 1
             ORDER BY nama ASC
         ")->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -22,7 +22,7 @@ class JenisPeraturanModel
     public function getById($id)
     {
         $stmt = $this->db->prepare("
-            SELECT * FROM jenis_peraturan
+            SELECT * FROM peraturan_jenis
             WHERE id = ?
         ");
 
@@ -34,7 +34,7 @@ class JenisPeraturanModel
     public function insert($data)
     {
         $stmt = $this->db->prepare("
-            INSERT INTO jenis_peraturan (
+            INSERT INTO peraturan_jenis (
                 kode, 
                 nama, 
                 keterangan, 
@@ -55,7 +55,7 @@ class JenisPeraturanModel
     public function update($id, $data)
     {
         $stmt = $this->db->prepare("
-            UPDATE jenis_peraturan SET
+            UPDATE peraturan_jenis SET
                 kode = ?, 
                 nama = ?, 
                 keterangan = ?, 
@@ -89,7 +89,7 @@ class JenisPeraturanModel
     public function delete($id)
     {
         $stmt = $this->db->prepare("
-            UPDATE jenis_peraturan SET is_active = 0 WHERE id = ?
+            UPDATE peraturan_jenis SET is_active = 0 WHERE id = ?
         ");
 
         return $stmt->execute([$id]);
