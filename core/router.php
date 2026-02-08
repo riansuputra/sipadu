@@ -11,6 +11,10 @@ function routeRequest()
     // ----------------------------
     $page = $_GET['page'] ?? 'login';
 
+    if (isMaintenance($page)) {
+        showMaintenance();
+    }
+
     // ----------------------------
     // Routing halaman
     // ----------------------------
@@ -592,8 +596,7 @@ function routeRequest()
 
         // Default ========================================
         default:
-            http_response_code(404);
-            echo 'Halaman tidak ditemukan';
+            abort404();
             break;
     }
 }

@@ -67,3 +67,28 @@ function statusPensiunSingkat($tanggalLahir, $usiaPensiun = 58)
 
     return "{$diff->m} bln ({$tahunPensiun})";
 }
+
+function abort404()
+{
+    http_response_code(404);
+    require __DIR__ . '/../views/errors/404.php';
+    exit;
+}
+
+function abort403()
+{
+    http_response_code(403);
+    require __DIR__ . '/../views/errors/403.php';
+    exit;
+}
+
+function isMaintenance(string $page): bool
+{
+    return in_array($page, MAINTENANCE_PAGES);
+}
+
+function showMaintenance()
+{
+    require __DIR__ . '/../views/errors/maintenance.php';
+    exit;
+}
