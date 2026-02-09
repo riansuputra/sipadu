@@ -48,7 +48,7 @@ class PublikasiJenisController
             $_SESSION["errors"] = $errors;
             $_SESSION["old"] = $_POST;
 
-            header("Location: ?page=tambah-jenis-publikasi");
+            header("Location: " . url('?page=tambah-jenis-publikasi'));
             exit();
         }
 
@@ -61,7 +61,7 @@ class PublikasiJenisController
             'message' => 'Jenis publikasi berhasil disimpan'
         ];
 
-        header("Location: ?page=tambah-jenis-publikasi");
+        header("Location: " . url('?page=tambah-jenis-publikasi'));
     }
 
     public function show()
@@ -116,7 +116,7 @@ class PublikasiJenisController
             $_SESSION["errors"] = $errors;
             $_SESSION["old"] = $_POST;
 
-            header("Location: ?page=tambah-jenis-publikasi&id=" . $_POST['id']);
+            header("Location: " . url('?page=tambah-jenis-publikasi&id=' . $_POST['id']));
             exit();
         }
 
@@ -129,7 +129,7 @@ class PublikasiJenisController
             'message' => 'Jenis publikasi berhasil diperbarui'
         ];
 
-        header("Location: ?page=tambah-jenis-publikasi");
+        header("Location: " . url('?page=tambah-jenis-publikasi'));
         exit();
     }
 
@@ -153,7 +153,7 @@ class PublikasiJenisController
                 'message' => 'Jenis tidak dapat dihapus karena masih digunakan di data publikasi'
             ];
 
-            header("Location: ?page=tambah-jenis-publikasi");
+            header("Location: " . url('?page=tambah-jenis-publikasi'));
             exit;
         }
 
@@ -164,6 +164,6 @@ class PublikasiJenisController
             'message' => 'Jenis publikasi berhasil dinonaktifkan'
         ];
 
-        header("Location: ?page=tambah-jenis-publikasi");
+        header("Location: " . url('?page=tambah-jenis-publikasi'));
     }
 }

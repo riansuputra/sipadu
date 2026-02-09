@@ -54,7 +54,7 @@ class ArsipController
                 'message' => implode("<br>", $errors)
             ];
 
-            header("Location: ?page=tambah-arsip");
+            header("Location: " . url('?page=tambah-arsip'));
             exit;
         }
 
@@ -99,7 +99,7 @@ class ArsipController
             'message' => 'Arsip berhasil disimpan'
         ];
 
-        header("Location: ?page=tambah-arsip");
+        header("Location: " . url('?page=tambah-arsip'));
         exit;
     }
 
@@ -163,7 +163,7 @@ class ArsipController
                 'message' => implode("<br>", $errors)
             ];
 
-            header("Location: ?page=edit-arsip&id=" . $_POST['id']);
+            header("Location: " . url('?page=edit-arsip&id=' . $_POST['id']));
             exit;
         }
 
@@ -207,7 +207,7 @@ class ArsipController
             'message' => 'Arsip berhasil disimpan'
         ];
 
-        header("Location: ?page=tambah-arsip");
+        header("Location: " . url('?page=tambah-arsip'));
         exit;
     }
 
@@ -221,6 +221,6 @@ class ArsipController
         $model = new ArsipModel($pdo);
         $model->delete($_GET['id']);
 
-        header("Location: ?page=arsip");
+        header("Location: " . url('?page=arsip'));
     }
 }

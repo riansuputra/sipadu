@@ -49,8 +49,6 @@ class PeraturanController
         }
         $role = currentRole();
 
-
-
         $model = new PeraturanModel($pdo);
         if (!empty($tahun) || !empty($jenis)) {
             $data = $model->getFiltered($tahun, $jenis);
@@ -60,7 +58,7 @@ class PeraturanController
         }
 
         // kirim ke view
-        header('Location: ?page=peraturan');
+        header('Location: ' . url(' ?page=peraturan'));
         exit;
     }
 
@@ -148,7 +146,7 @@ class PeraturanController
             $_SESSION["errors"] = $errors;
             $_SESSION["old"] = $_POST;
 
-            header("Location: ?page=tambah-peraturan");
+            header("Location: " . url('?page=tambah-peraturan'));
             exit();
         }
 
@@ -203,7 +201,7 @@ class PeraturanController
             'message' => 'Peraturan berhasil disimpan'
         ];
 
-        header("Location: ?page=tambah-peraturan");
+        header("Location: " . url('?page=tambah-peraturan'));
         exit;
     }
 
@@ -323,7 +321,7 @@ class PeraturanController
             $_SESSION["errors"] = $errors;
             $_SESSION["old"] = $_POST;
 
-            header("Location: ?page=edit-peraturan&id=" . $_POST["id"]);
+            header("Location: " . url('?page=edit-peraturan&id=' . $_POST["id"]));
             exit();
         }
 
@@ -386,7 +384,7 @@ class PeraturanController
             'message' => 'Peraturan berhasil diperbarui'
         ];
 
-        header("Location: ?page=peraturan");
+        header("Location: " . url('?page=peraturan'));
     }
 
     public function delete()
@@ -424,7 +422,7 @@ class PeraturanController
             ];
         }
 
-        header("Location: ?page=peraturan");
+        header("Location: " . url('?page=peraturan'));
         exit;
     }
 

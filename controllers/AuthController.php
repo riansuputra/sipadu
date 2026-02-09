@@ -48,11 +48,9 @@ class AuthController
             $_SESSION['errors'] = $errors;
             $_SESSION['old'] = $_POST;
 
-            header('Location: ' . BASE_URL . '/?page=login');
+            header('Location: ' . url('?page=login'));
             exit;
         }
-
-
 
         // ----------------------------
         // QUERY USER
@@ -87,7 +85,7 @@ class AuthController
             ];
             $_SESSION['old'] = ['username' => $username];
 
-            header('Location: ' . BASE_URL . '/?page=login');
+            header('Location: ' . url('?page=login'));
             exit;
         }
 

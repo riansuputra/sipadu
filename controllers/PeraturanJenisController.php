@@ -57,7 +57,7 @@ class PeraturanJenisController
             $_SESSION["errors"] = $errors;
             $_SESSION["old"] = $_POST;
 
-            header("Location: ?page=tambah-jenis-peraturan");
+            header("Location: " . url('?page=tambah-jenis-peraturan'));
             exit();
         }
 
@@ -70,7 +70,7 @@ class PeraturanJenisController
             'message' => 'Jenis peraturan berhasil disimpan'
         ];
 
-        header("Location: ?page=tambah-jenis-peraturan");
+        header("Location: " . url('?page=tambah-jenis-peraturan'));
     }
 
     public function show()
@@ -134,7 +134,7 @@ class PeraturanJenisController
             $_SESSION["errors"] = $errors;
             $_SESSION["old"] = $_POST;
 
-            header("Location: ?page=tambah-jenis-peraturan&id=" . $_POST['id']);
+            header("Location: " . url('?page=tambah-jenis-peraturan&id=' . $_POST['id']));
             exit();
         }
 
@@ -147,7 +147,7 @@ class PeraturanJenisController
             'message' => 'Jenis peraturan berhasil diperbarui'
         ];
 
-        header("Location: ?page=tambah-jenis-peraturan");
+        header("Location: " . url('?page=tambah-jenis-peraturan'));
         exit();
     }
 
@@ -171,7 +171,7 @@ class PeraturanJenisController
                 'message' => 'Jenis tidak dapat dihapus karena masih digunakan di data peraturan'
             ];
 
-            header("Location: ?page=tambah-jenis-peraturan");
+            header("Location: " . url('?page=tambah-jenis-peraturan'));
             exit;
         }
 
@@ -182,7 +182,7 @@ class PeraturanJenisController
             'message' => 'Jenis peraturan berhasil dinonaktifkan'
         ];
 
-        header("Location: ?page=tambah-jenis-peraturan");
+        header("Location: " . url('?page=tambah-jenis-peraturan'));
         exit;
     }
 }

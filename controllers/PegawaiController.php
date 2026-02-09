@@ -111,7 +111,7 @@ class PegawaiController
                 'message' => implode("<br>", $errors)
             ];
 
-            header("Location: ?page=tambah-pegawai");
+            header("Location: " . url('?page=tambah-pegawai'));
             exit;
         }
 
@@ -163,7 +163,7 @@ class PegawaiController
             'message' => 'Data Pegawai berhasil disimpan'
         ];
 
-        header("Location: ?page=tambah-pegawai");
+        header("Location: " . url('?page=tambah-pegawai'));
         exit;
     }
 
@@ -262,7 +262,7 @@ class PegawaiController
                 'message' => implode("<br>", $errors)
             ];
 
-            header("Location: ?page=edit-pegawai&id=" . $_POST['id']);
+            header("Location: " . url('?page=edit-pegawai&id=' . $_POST['id']));
             exit;
         }
 
@@ -309,7 +309,7 @@ class PegawaiController
             'message' => 'Data Pegawai berhasil diperbarui'
         ];
 
-        header("Location: ?page=pegawai");
+        header("Location: " . url('?page=pegawai'));
         exit;
     }
 
@@ -327,6 +327,6 @@ class PegawaiController
         $model = new PegawaiModel($pdo);
         $model->delete($_GET['id']);
 
-        header("Location: ?page=pegawai");
+        header("Location: " . url('?page=pegawai'));
     }
 }

@@ -121,7 +121,7 @@ class DipController
             $_SESSION["errors"] = $errors;
             $_SESSION["old"] = $_POST;
 
-            header("Location: ?page=tambah-dip");
+            header("Location: " . url('?page=tambah-dip'));
             exit();
         }
 
@@ -195,7 +195,7 @@ class DipController
             "message" => "Data DIP berhasil disimpan",
         ];
 
-        header("Location: ?page=tambah-dip");
+        header("Location: " . url('?page=tambah-dip'));
         exit();
     }
 
@@ -413,7 +413,7 @@ class DipController
             $_SESSION["errors"] = $errors;
             $_SESSION["old"] = $_POST;
 
-            header("Location: ?page=edit-dip&id=" . $_POST["id"]);
+            header("Location: " . url('?page=edit-dip&id=' . $_POST["id"]));
             exit();
         }
 
@@ -501,7 +501,7 @@ class DipController
             "message" => "Data DIP berhasil diperbarui",
         ];
 
-        header("Location: ?page=edit-dip&id=" . $_POST["id"]);
+        header("Location: " . url('?page=edit-dip&id=' . $_POST["id"]));
         exit();
     }
 
@@ -521,7 +521,7 @@ class DipController
                 'status'  => 'error',
                 'message' => 'ID tidak ditemukan'
             ];
-            header('Location: ?page=dip');
+            header('Location: ' . url('?page=dip'));
             exit;
         }
 
@@ -555,7 +555,7 @@ class DipController
             ];
         }
 
-        header('Location: ?page=dip');
+        header('Location: ' . url('?page=dip'));
         exit;
     }
 

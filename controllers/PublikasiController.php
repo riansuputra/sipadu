@@ -78,7 +78,7 @@ class PublikasiController
         }
 
         // kirim ke view
-        header('Location: ?page=dip');
+        header('Location: ' . url('?page=publikasi'));
         exit;
     }
 
@@ -170,7 +170,7 @@ class PublikasiController
             $_SESSION["errors"] = $errors;
             $_SESSION["old"] = $_POST;
 
-            header("Location: ?page=tambah-publikasi");
+            header("Location: " . url('?page=tambah-publikasi'));
             exit();
         }
 
@@ -226,7 +226,7 @@ class PublikasiController
             'message' => 'Data Publikasi berhasil disimpan'
         ];
 
-        header("Location: ?page=tambah-publikasi");
+        header("Location: " . url('?page=tambah-publikasi'));
         exit;
     }
 
@@ -360,7 +360,7 @@ class PublikasiController
             $_SESSION["errors"] = $errors;
             $_SESSION["old"] = $_POST;
 
-            header("Location: ?page=edit-publikasi&id=" . $_POST['id']);
+            header("Location: " . url('?page=edit-publikasi&id=' . $_POST['id']));
             exit();
         }
 
@@ -433,7 +433,7 @@ class PublikasiController
             'message' => 'Data Publikasi berhasil diperbarui'
         ];
 
-        header("Location: ?page=publikasi");
+        header("Location: " . url('?page=publikasi'));
         exit;
     }
 
@@ -449,7 +449,7 @@ class PublikasiController
                 'status'  => 'error',
                 'message' => 'ID tidak ditemukan'
             ];
-            header('Location: ?page=publikasi');
+            header('Location: ' . url('?page=publikasi'));
             exit;
         }
 
@@ -483,7 +483,7 @@ class PublikasiController
             ];
         }
 
-        header("Location: ?page=publikasi");
+        header("Location: " . url("?page=publikasi"));
         exit;
     }
 
