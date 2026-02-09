@@ -30,15 +30,29 @@ class AuthController
         global $pdo;
 
         // Ambil input
-        $username = $_POST['username'] ?? '';
-        $password = $_POST['password'] ?? '';
+        $username = trim($_POST['username'] ?? '');
+        $password = trim($_POST['password'] ?? '');
+
+        $errors = [];
 
         // Validasi sederhana
-        if ($username === '' || $password === '') {
-            $_SESSION['error'] = 'Username dan password wajib diisi';
+        if (empty($username)) {
+            $errors['username'] = "Username wajib diisi.";
+        }
+
+        if (empty($password)) {
+            $errors['password'] = 'Password wajib diisi.';
+        }
+
+        if (!empty($errors)) {
+            $_SESSION['errors'] = $errors;
+            $_SESSION['old'] = $_POST;
+
             header('Location: ' . BASE_URL . '/?page=login');
             exit;
         }
+
+
 
         // ----------------------------
         // QUERY USER
@@ -68,7 +82,11 @@ class AuthController
         // CEK USER & PASSWORD
         // ----------------------------
         if (!$user || !password_verify($password, $user['password_hash'])) {
-            $_SESSION['error'] = 'Username atau password salah';
+            $_SESSION['errors'] = [
+                '_global' => 'Username atau password salah.'
+            ];
+            $_SESSION['old'] = ['username' => $username];
+
             header('Location: ' . BASE_URL . '/?page=login');
             exit;
         }
