@@ -144,14 +144,6 @@ class DipModel
 
     public function delete($id, $deletedBy)
     {
-        if (empty($data['deleted_by']) || !is_numeric($data['deleted_by'])) {
-            return false;
-        }
-
-        if (empty($id) || !is_numeric($id)) {
-            return false;
-        }
-
         $stmt = $this->db->prepare("
             UPDATE dip SET
                 is_active  = 0,

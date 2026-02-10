@@ -294,7 +294,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="mb-3 row">
+                                                                    <div class="mb-3 row" hidden>
                                                                         <label class="col-3 col-form-label required">Tampilkan :</label>
                                                                         <?php $is_active = $old['is_active'] ?? $d['is_active']; ?>
                                                                         <div class="col">

@@ -104,9 +104,9 @@ ob_start();
                                             <td class="fw-bold"><?= htmlspecialchars($data['judul'] ?? '-') ?></td>
                                         </tr>
                                         <tr>
-                                            <td style="width:15%">Tajuk Entri Utama</td>
+                                            <td style="width:15%">Lembaga Penerbit</td>
                                             <td style="width:1%">:</td>
-                                            <td class="fw-bold"><?= htmlspecialchars($data['teu'] ?? '-') ?></td>
+                                            <td class="fw-bold"><?= htmlspecialchars($data['lembaga'] ?? '-') ?></td>
                                         </tr>
                                         <tr>
                                             <td style="width:15%">Nomor</td>
@@ -144,7 +144,6 @@ ob_start();
                                             <td class="fw-bold">
                                                 <?php foreach ($files as $f): ?>
                                                     <a href='<?= url($f['path_file'])  ?>' target='_blank' class="btn btn-outline-primary btn-5 mb-2">
-                                                        <?= $icon ?>
                                                         <?= shortname($f["nama_file"], 50,) ?>
                                                     </a>
                                                     <a href="<?= url('?page=peraturan-file&file=' . $f['id'] . '&id=' . $d['id']) ?>" class="btn btn-success btn-icon btn-5 mb-2">

@@ -61,12 +61,14 @@ class PublikasiModel
             ";
         $params = [];
 
-        if (!in_array($role, ['superadmin', 'pimpinan'])) {
-            // admin & staf → hanya pokja sendiri
+        if (
+            !in_array($role, ['Superadmin', 'Pimpinan']) &&
+            $pokjaId != 9
+        ) {
+            // Admin & Staff NON-Publikasi → hanya pokja sendiri
             $sql .= " AND p.pokja_id = ?";
             $params[] = $pokjaId;
         }
-
         if (!empty($tanggalMulai)) {
             $sql .= " AND DATE(p.tanggal_kegiatan) >= ?";
             $params[] = $tanggalMulai;
@@ -222,14 +224,6 @@ class PublikasiModel
 
     public function delete($id, $deletedBy)
     {
-        if (empty($data['deleted_by']) || !is_numeric($data['deleted_by'])) {
-            return false;
-        }
-
-        if (empty($id) || !is_numeric($id)) {
-            return false;
-        }
-
         $stmt = $this->db->prepare("
             UPDATE publikasi SET 
                 is_active = 0,

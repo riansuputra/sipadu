@@ -133,7 +133,7 @@
                 </div>
         </header>
 
-        <div class="page-wrapper">
+        <div class="page-wrapper" style="background-image: url(<?= url('public/assets/img/vector.svg') ?>); background-repeat: repeat;">
             <div class="container container-slim my-auto" id="spinner" style="display:none;">
                 <div class="text-center">
                     <div class=" mb-3">layout.loading</div>

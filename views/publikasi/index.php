@@ -200,7 +200,7 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
                                             <th class="w-1">
                                                 <button class="table-sort d-flex justify-content-between" data-sort="sort-pokja">Unit/Tim</button>
                                             </th>
-                                            <th>
+                                            <th class="w-1">
                                                 <button class="table-sort d-flex justify-content-between" data-sort="sort-file">File / Link</button>
                                             </th>
                                             <th class="w-1">
@@ -225,40 +225,41 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
                                                     <?= htmlspecialchars($d['lokasi'] ?? '-') ?>
                                                 </td>
                                                 <td class="sort-pokja">
-                                                    <?= htmlspecialchars(ucwords(strtolower($d['nama_tim'] ?? '-'))) ?>
+                                                    <?= htmlspecialchars($d['nama_tim'] ?? '-') ?>
                                                 </td>
                                                 <td class="sort-file">
-                                                    <?php
-                                                    $listFile = [];
+                                                    <div class="btn-group w-100">
+                                                        <?php
+                                                        $listFile = [];
 
-                                                    if (!empty($d['files'])) {
+                                                        if (!empty($d['files'])) {
 
-                                                        $files = explode('##', $d['files']);
+                                                            $files = explode('##', $d['files']);
 
-                                                        foreach ($files as $f) {
+                                                            foreach ($files as $f) {
 
-                                                            $part = explode('|', $f);
+                                                                $part = explode('|', $f);
 
-                                                            if (count($part) === 4) {
+                                                                if (count($part) === 4) {
 
-                                                                list($id, $nama, $path, $tipe) = $part;
+                                                                    list($id, $nama, $path, $tipe) = $part;
 
-                                                                $listFile[] = [
-                                                                    'nama' => htmlspecialchars($nama),
-                                                                    'path' => htmlspecialchars($path),
-                                                                    'tipe' => htmlspecialchars($tipe)
-                                                                ];
+                                                                    $listFile[] = [
+                                                                        'nama' => htmlspecialchars($nama),
+                                                                        'path' => htmlspecialchars($path),
+                                                                        'tipe' => htmlspecialchars($tipe)
+                                                                    ];
+                                                                }
                                                             }
                                                         }
-                                                    }
 
-                                                    // tampilkan
-                                                    foreach ($listFile as $f):
-                                                        $ext = strtolower(pathinfo($f['nama'], PATHINFO_EXTENSION));
+                                                        // tampilkan
+                                                        foreach ($listFile as $f):
+                                                            $ext = strtolower(pathinfo($f['nama'], PATHINFO_EXTENSION));
 
-                                                        // SVG inline
-                                                        if ($ext === 'pdf') {
-                                                            $icon = '
+                                                            // SVG inline
+                                                            if ($ext === 'pdf') {
+                                                                $icon = '
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red icon icon-tabler icons-tabler-outline icon-tabler-file-type-pdf">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                 <path d="M14 3v4a1 1 0 0 0 1 1h4" />
@@ -268,9 +269,9 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
                                                                 <path d="M20 15h-3v6" />
                                                                 <path d="M11 15v6h1a2 2 0 0 0 2 -2v-2a2 2 0 0 0 -2 -2h-1" />
                                                             </svg>';
-                                                        } else if ($ext === 'jpg') {
-                                                            // image
-                                                            $icon = '
+                                                            } else if ($ext === 'jpg') {
+                                                                // image
+                                                                $icon = '
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow icon icon-tabler icons-tabler-outline icon-tabler-file-type-jpg">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                 <path d="M14 3v4a1 1 0 0 0 1 1h4" />
@@ -279,28 +280,24 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
                                                                 <path d="M20 15h-1a2 2 0 0 0 -2 2v2a2 2 0 0 0 2 2h1v-3" />
                                                                 <path d="M5 15h3v4.5a1.5 1.5 0 0 1 -3 0" />
                                                             </svg>';
-                                                        } else {
-                                                            $icon = '
+                                                            } else {
+                                                                $icon = '
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-secondary icon icon-tabler icons-tabler-outline icon-tabler-file-type-png">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                 <path d="M14 3v4a1 1 0 0 0 1 1h4" />
-                                                                <path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v4" />
-                                                                <path d="M20 15h-1a2 2 0 0 0 -2 2v2a2 2 0 0 0 2 2h1v-3" />
-                                                                <path d="M5 18h1.5a1.5 1.5 0 0 0 0 -3h-1.5v6" />
-                                                                <path d="M11 21v-6l3 6v-6" />
+                                                                <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2" />
                                                             </svg>';
-                                                        }
+                                                            }
 
-                                                    ?>
-                                                        <a href='<?= url($path) ?>' target='_blank'>
+                                                        ?>
+                                                            <a href='<?= url($path) ?>' target='_blank' class="me-1">
 
 
 
-                                                            <?= $icon ?>
-                                                            <?= shortname($f['nama'], 50) ?>
-                                                        </a>
-                                                        <br>
-                                                    <?php endforeach; ?>
+                                                                <?= $icon ?>
+                                                            </a>
+                                                        <?php endforeach; ?>
+                                                    </div>
                                                 </td>
                                                 <td>
                                                     <div class="btn-group w-100">
@@ -433,10 +430,7 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
                                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-secondary icon icon-tabler icons-tabler-outline icon-tabler-file-type-png">
                                                                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                             <path d="M14 3v4a1 1 0 0 0 1 1h4" />
-                                                                            <path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v4" />
-                                                                            <path d="M20 15h-1a2 2 0 0 0 -2 2v2a2 2 0 0 0 2 2h1v-3" />
-                                                                            <path d="M5 18h1.5a1.5 1.5 0 0 0 0 -3h-1.5v6" />
-                                                                            <path d="M11 21v-6l3 6v-6" />
+                                                                            <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2" />
                                                                         </svg>';
                                                                         }
                                                                     ?>

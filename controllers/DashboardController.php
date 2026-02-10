@@ -26,7 +26,7 @@ class DashboardController
         // ----------------------------
         // 3. STAFF → modul tampil di dashboard
         // ----------------------------
-        if ($mode === 'staff' && in_array($role, ['Admin', 'Superadmin'])) {
+        if ($mode === 'staff' && in_array($role, ['Admin', 'Superadmin', 'Pimpinan'])) {
             $moduleModel = new ModulModel($pdo);
 
             // ambil semua modul aktif
@@ -48,10 +48,11 @@ class DashboardController
         switch ($role) {
             case 'Superadmin':
             case 'Admin':
+            case 'Pimpinan':
+
                 require __DIR__ . '/../views/dashboard/admin.php';
                 break;
 
-            case 'Pimpinan':
             case 'Staff':
                 require __DIR__ . '/../views/dashboard/staff.php';
                 break;

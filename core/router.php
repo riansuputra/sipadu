@@ -95,56 +95,6 @@ function routeRequest()
             (new DashboardController())->widyaprada();
             break;
 
-        // Dokumen =======================================
-        case 'dokumen':
-            authOnly();
-            require __DIR__ . '/../controllers/DokumenController.php';
-            $controller = new DokumenController();
-            $controller->index();
-            break;
-
-        case 'tambah-dokumen':
-            authOnly();
-            require __DIR__ . '/../controllers/DokumenController.php';
-            $controller = new DokumenController();
-            $controller->create();
-            break;
-
-        case 'dokumen-store':
-            authOnly();
-            require __DIR__ . '/../controllers/DokumenController.php';
-            $controller = new DokumenController();
-            $controller->store();
-            break;
-
-        case 'detail-dokumen':
-            authOnly();
-            require __DIR__ . '/../controllers/DokumenController.php';
-            $controller = new DokumenController();
-            $controller->show();
-            break;
-
-        case 'edit-dokumen':
-            authOnly();
-            require __DIR__ . '/../controllers/DokumenController.php';
-            $controller = new DokumenController();
-            $controller->edit();
-            break;
-
-        case 'dokumen-update':
-            authOnly();
-            require __DIR__ . '/../controllers/DokumenController.php';
-            $controller = new DokumenController();
-            $controller->update();
-            break;
-
-        case 'dokumen-delete':
-            authOnly();
-            require __DIR__ . '/../controllers/DokumenController.php';
-            $controller = new DokumenController();
-            $controller->delete();
-            break;
-
         // Arsip ==========================================
         case 'arsip':
             authOnly();

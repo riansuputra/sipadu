@@ -14,7 +14,7 @@ ob_start();
 
 <?php
 // echo '<pre>';
-// print_r($user);  
+// print_r($user);
 // echo '</pre>';
 ?>
 

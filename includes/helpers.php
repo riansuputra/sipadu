@@ -102,7 +102,7 @@ function logActivity(array $data)
     }
 
     $stmt = $pdo->prepare("
-        INSERT INTO activity_log
+        INSERT INTO log
         (user_id, role_id, action, entity_type, entity_id, description, ip_address, user_agent)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     ");

@@ -84,16 +84,15 @@ class PeraturanController
         authOnly();
         global $pdo;
 
-        // echo "<pre>";
-        // print_r($_POST);
-        // print_r($_FILES);
-        // echo "</pre>";
-        // die();
+
 
         $user = currentUser();
         if (!$user || empty($user['id'])) {
             die("User tidak valid");
         }
+
+
+
         $role = currentRole();
         $errors = [];
 
@@ -105,8 +104,8 @@ class PeraturanController
         if (empty($_POST['nomor'])) {
             $errors['nomor'] = "Nomor wajib diisi";
         }
-        if (empty($_POST['teu'])) {
-            $errors['teu'] = "T.E.U. wajib diisi";
+        if (empty($_POST['lembaga'])) {
+            $errors['lembaga'] = "Lembaga penerbit wajib diisi";
         }
         if (empty($_POST['jenis_id'])) {
             $errors['jenis_id'] = "Jenis wajib diisi";
@@ -127,7 +126,25 @@ class PeraturanController
         }
         if (!empty($_FILES["file"]["name"][0])) {
 
-            $allowed = ["pdf", "jpg", "jpeg", "png"];
+            $allowed = [
+                'pdf',
+
+                // Dokumen
+                'doc',
+                'docx',
+                'xls',
+                'xlsx',
+                'ppt',
+                'pptx',
+                'txt',
+
+                // Gambar
+                'jpg',
+                'jpeg',
+                'png',
+                'gif',
+                'webp',
+            ];
 
             foreach ($_FILES["file"]["name"] as $i => $name) {
                 $size = $_FILES["file"]["size"][$i];
@@ -142,6 +159,15 @@ class PeraturanController
                 }
             }
         }
+
+        // echo "<pre>";
+        // print_r($_POST);
+        // print_r($_FILES);
+        // print_r($user['id']);
+        // print_r($errors);
+        // echo "</pre>";
+        // die();
+
         if (!empty($errors)) {
             $_SESSION["errors"] = $errors;
             $_SESSION["old"] = $_POST;
@@ -181,7 +207,7 @@ class PeraturanController
                 $model->insertFile($id, [
                     'nama_file'   => $nama,
                     'path_file'   => 'uploads/peraturan/' . $namaBaru,
-                    'tipe_file'   => $type,
+                    'tipe_file'   => $ext,
                     'ukuran_file' => $size
                 ]);
             }
@@ -280,8 +306,8 @@ class PeraturanController
         if (empty($_POST['nomor'])) {
             $errors['nomor'] = "Nomor wajib diisi";
         }
-        if (empty($_POST['teu'])) {
-            $errors['teu'] = "T.E.U. wajib diisi";
+        if (empty($_POST['lembaga'])) {
+            $errors['lembaga'] = "Lembaga penerbit wajib diisi";
         }
         if (empty($_POST['jenis_id'])) {
             $errors['jenis_id'] = "Jenis wajib diisi";
@@ -302,7 +328,25 @@ class PeraturanController
         }
         if (!empty($_FILES["file"]["name"][0])) {
 
-            $allowed = ["pdf", "jpg", "jpeg", "png"];
+            $allowed = [
+                'pdf',
+
+                // Dokumen
+                'doc',
+                'docx',
+                'xls',
+                'xlsx',
+                'ppt',
+                'pptx',
+                'txt',
+
+                // Gambar
+                'jpg',
+                'jpeg',
+                'png',
+                'gif',
+                'webp',
+            ];
 
             foreach ($_FILES["file"]["name"] as $i => $name) {
                 $size = $_FILES["file"]["size"][$i];
@@ -364,7 +408,7 @@ class PeraturanController
                 $model->insertFile($_POST['id'], [
                     'nama_file'   => $nama,
                     'path_file'   => 'uploads/peraturan/' . $namaBaru,
-                    'tipe_file'   => $type,
+                    'tipe_file'   => $ext,
                     'ukuran_file' => $size
                 ]);
             }

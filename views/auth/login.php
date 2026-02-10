@@ -79,7 +79,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
 
         /* judul */
         .login-title {
-            font-size: 52px;
+            font-size: 30px;
             font-weight: 800;
             margin-bottom: 8px;
             font-style: italic;
@@ -117,7 +117,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                 </div>
                 <!-- overlay bawah -->
                 <div class="login-overlay">
-                    <p class="login-subtitle mb-4">
+                    <p class="login-subtitle mb-1">
                         Selamat Datang di Laman SIPADU
                     </p>
                     <h1 class="login-title">Sistem Pengarsipan Dokumen Terpadu</h1>

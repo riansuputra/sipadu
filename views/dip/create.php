@@ -128,10 +128,10 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                             name="jenis_informasi"
                                             id="jenis_informasi">
                                             <option value="" disabled <?= empty($old['jenis_informasi']) ? 'selected' : '' ?>>-- Pilih Jenis --</option>
-                                            <option value="BERKALA" <?= ($old['jenis_informasi'] ?? '') == 'BERKALA' ? 'selected' : '' ?>>Berkala</option>
-                                            <option value="SERTA MERTA" <?= ($old['jenis_informasi'] ?? '') == 'SERTA MERTA' ? 'selected' : '' ?>>Serta Merta</option>
-                                            <option value="SETIAP SAAT" <?= ($old['jenis_informasi'] ?? '') == 'SETIAP SAAT' ? 'selected' : '' ?>>Setiap Saat</option>
-                                            <option value="DIKECUALIKAN" <?= ($old['jenis_informasi'] ?? '') == 'DIKECUALIKAN' ? 'selected' : '' ?>>Dikecualikan</option>
+                                            <option value="berkala" <?= ($old['jenis_informasi'] ?? '') == 'berkala' ? 'selected' : '' ?>>Berkala</option>
+                                            <option value="serta_merta" <?= ($old['jenis_informasi'] ?? '') == 'serta_merta' ? 'selected' : '' ?>>Serta Merta</option>
+                                            <option value="setiap_saat" <?= ($old['jenis_informasi'] ?? '') == 'setiap_saat' ? 'selected' : '' ?>>Setiap Saat</option>
+                                            <option value="dikecualikan" <?= ($old['jenis_informasi'] ?? '') == 'dikecualikan' ? 'selected' : '' ?>>Dikecualikan</option>
                                         </select>
                                         <div class="invalid-feedback">
                                             <?= $errors['jenis_informasi'] ?? '' ?>
@@ -143,9 +143,9 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                             name="bentuk_informasi"
                                             id="bentuk_informasi">
                                             <option value="" disabled <?= empty($old['bentuk_informasi']) ? 'selected' : '' ?>>-- Pilih Bentuk --</option>
-                                            <option value="HARDCOPY" <?= ($old['bentuk_informasi'] ?? '') == 'HARDCOPY' ? 'selected' : '' ?>>Hardcopy</option>
-                                            <option value="SOFTCOPY" <?= ($old['bentuk_informasi'] ?? '') == 'SOFTCOPY' ? 'selected' : '' ?>>Softcopy</option>
-                                            <option value="HARDCOPY+SOFTCOPY" <?= ($old['bentuk_informasi'] ?? '') == 'HARDCOPY+SOFTCOPY' ? 'selected' : '' ?>>Hardcopy + Softcopy</option>
+                                            <option value="hardcopy" <?= ($old['bentuk_informasi'] ?? '') == 'hardcopy' ? 'selected' : '' ?>>Hardcopy</option>
+                                            <option value="softcopy" <?= ($old['bentuk_informasi'] ?? '') == 'softcopy' ? 'selected' : '' ?>>Softcopy</option>
+                                            <option value="hardcopy_softcopy" <?= ($old['bentuk_informasi'] ?? '') == 'hardcopy_softcopy' ? 'selected' : '' ?>>Hardcopy + Softcopy</option>
                                         </select>
                                         <div class="invalid-feedback">
                                             <?= $errors['bentuk_informasi'] ?? '' ?>

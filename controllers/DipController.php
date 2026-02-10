@@ -74,11 +74,11 @@ class DipController
         if (!empty($_POST['penanggung_jawab']) && strlen($_POST['penanggung_jawab']) < 1) {
             $errors['penanggung_jawab'] = "Penanggung jawab minimal 1 karakter";
         }
-        $allowedJenis = ['BERKALA', 'SERTA MERTA', 'SETIAP SAAT', 'DIKECUALIKAN'];
+        $allowedJenis = ['berkala', 'serta_merta', 'setiap_saat', 'dikecualikan'];
         if (empty($_POST['jenis_informasi']) || !in_array($_POST['jenis_informasi'], $allowedJenis)) {
             $errors['jenis_informasi'] = "Jenis informasi tidak valid";
         }
-        $allowedBentuk = ['HARDCOPY', 'SOFTCOPY', 'HARDCOPY+SOFTCOPY'];
+        $allowedBentuk = ['hardcopy', 'softcopy', 'hardcopy_softcopy'];
         if (empty($_POST['bentuk_informasi']) || !in_array($_POST['bentuk_informasi'], $allowedBentuk)) {
             $errors['bentuk_informasi'] = "Bentuk informasi tidak valid";
         }
@@ -102,7 +102,25 @@ class DipController
         // }
         if (!empty($_FILES["file"]["name"][0])) {
 
-            $allowed = ["pdf", "jpg", "jpeg", "png"];
+            $allowed = [
+                'pdf',
+
+                // Dokumen
+                'doc',
+                'docx',
+                'xls',
+                'xlsx',
+                'ppt',
+                'pptx',
+                'txt',
+
+                // Gambar
+                'jpg',
+                'jpeg',
+                'png',
+                'gif',
+                'webp',
+            ];
 
             foreach ($_FILES["file"]["name"] as $i => $name) {
                 $size = $_FILES["file"]["size"][$i];
@@ -174,7 +192,7 @@ class DipController
                     $model->insertFile($dipId, [
                         "nama_file" => $namaAsli,
                         "path_file" => "uploads/dip/" . $namaBaru,
-                        "tipe_file" => $type,
+                        "tipe_file" => $ext,
                         "ukuran_file" => $size,
                     ]);
                 }
@@ -365,11 +383,11 @@ class DipController
         if (!empty($_POST['penanggung_jawab']) && strlen($_POST['penanggung_jawab']) < 1) {
             $errors['penanggung_jawab'] = "Penanggung jawab minimal 1 karakter";
         }
-        $allowedJenis = ['BERKALA', 'SERTA MERTA', 'SETIAP SAAT', 'DIKECUALIKAN'];
+        $allowedJenis = ['berkala', 'serta_merta', 'setiap_saat', 'dikecualikan'];
         if (empty($_POST['jenis_informasi']) || !in_array($_POST['jenis_informasi'], $allowedJenis)) {
             $errors['jenis_informasi'] = "Jenis informasi tidak valid";
         }
-        $allowedBentuk = ['HARDCOPY', 'SOFTCOPY', 'HARDCOPY+SOFTCOPY'];
+        $allowedBentuk = ['hardcopy', 'softcopy', 'hardcopy_softcopy'];
         if (empty($_POST['bentuk_informasi']) || !in_array($_POST['bentuk_informasi'], $allowedBentuk)) {
             $errors['bentuk_informasi'] = "Bentuk informasi tidak valid";
         }
@@ -393,7 +411,25 @@ class DipController
         // }
         if (!empty($_FILES["file"]["name"][0])) {
 
-            $allowed = ["pdf", "jpg", "jpeg", "png"];
+            $allowed = [
+                'pdf',
+
+                // Dokumen
+                'doc',
+                'docx',
+                'xls',
+                'xlsx',
+                'ppt',
+                'pptx',
+                'txt',
+
+                // Gambar
+                'jpg',
+                'jpeg',
+                'png',
+                'gif',
+                'webp',
+            ];
 
             foreach ($_FILES["file"]["name"] as $i => $name) {
                 $size = $_FILES["file"]["size"][$i];
@@ -480,7 +516,7 @@ class DipController
                     $model->insertFile($_POST["id"], [
                         "nama_file" => $namaAsli,
                         "path_file" => "uploads/dip/" . $namaBaru,
-                        "tipe_file" => $type,
+                        "tipe_file" => $ext,
                         "ukuran_file" => $size,
                     ]);
                 }

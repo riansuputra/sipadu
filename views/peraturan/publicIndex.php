@@ -154,6 +154,11 @@ ob_start();
                                                 </div>
                                                 <div class="row">
                                                     <div class="col">
+                                                        <span class="mb-0 text-secondary h4">Nomor <?= htmlspecialchars($d['nomor']) ?>Tahun <?= htmlspecialchars($d['tahun_terbit']) ?></span>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col">
                                                         <span class="mb-0 h3"><?= htmlspecialchars($d['judul']) ?></span>
                                                     </div>
                                                 </div>

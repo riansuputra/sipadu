@@ -151,7 +151,26 @@ class PublikasiController
         }
         if (!empty($_FILES["file"]["name"][0])) {
 
-            $allowed = ["pdf", "jpg", "jpeg", "png"];
+            $allowed = [
+                'pdf',
+
+                // Dokumen
+                'doc',
+                'docx',
+                'xls',
+                'xlsx',
+                'ppt',
+                'pptx',
+                'txt',
+
+                // Gambar
+                'jpg',
+                'jpeg',
+                'png',
+                'gif',
+                'webp',
+            ];
+
 
             foreach ($_FILES["file"]["name"] as $i => $name) {
                 $size = $_FILES["file"]["size"][$i];
@@ -195,7 +214,6 @@ class PublikasiController
                 if (!$nama) continue;
 
                 $tmp  = $_FILES['file']['tmp_name'][$i];
-                $type = $_FILES['file']['type'][$i];
                 $size = $_FILES['file']['size'][$i];
 
                 $namaBaru = time() . '_' . $i . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $nama);
@@ -205,7 +223,7 @@ class PublikasiController
                 $model->insertFile($publikasiId, [
                     'nama_file'   => $nama,
                     'path_file'   => 'uploads/peraturan/' . $namaBaru,
-                    'tipe_file'   => $type,
+                    'tipe_file'   => $ext,
                     'ukuran_file' => $size
                 ]);
             }
@@ -327,7 +345,26 @@ class PublikasiController
         }
         if (!empty($_FILES["file"]["name"][0])) {
 
-            $allowed = ["pdf", "jpg", "jpeg", "png"];
+            $allowed = [
+                'pdf',
+
+                // Dokumen
+                'doc',
+                'docx',
+                'xls',
+                'xlsx',
+                'ppt',
+                'pptx',
+                'txt',
+
+                // Gambar
+                'jpg',
+                'jpeg',
+                'png',
+                'gif',
+                'webp',
+            ];
+
 
             foreach ($_FILES["file"]["name"] as $i => $name) {
                 $size = $_FILES["file"]["size"][$i];
@@ -412,7 +449,7 @@ class PublikasiController
                     $model->insertFile($_POST['id'], [
                         'nama_file'   => $namaAsli,
                         'path_file'   => 'uploads/publikasi/' . $namaBaru,
-                        'tipe_file'   => $type,
+                        'tipe_file'   => $ext,
                         'ukuran_file' => $size
                     ]);
                 }

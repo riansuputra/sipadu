@@ -39,53 +39,43 @@ class ModulModel
     // Cek apakah user boleh akses modul
     public function canAccess(string $roleName, ?int $pokjaId, string $link): bool
     {
-        // --------------------------------
-        // 1. SUPERADMIN & PIMPINAN BEBAS
-        // --------------------------------
+        // SUPERADMIN & PIMPINAN BEBAS
         if (in_array($roleName, ['Superadmin', 'Pimpinan'])) {
             return true;
         }
 
-        // --------------------------------
-        // 2. CEK MODUL + ROLE
-        // --------------------------------
+        // ADMIN & STAFF → WAJIB POKJA
+        if (!$pokjaId) {
+            return false;
+        }
+
+        // Ambil modul
         $stmt = $this->db->prepare("
-        SELECT m.id, m.is_global
-        FROM modul m
-        JOIN modul_role mr ON m.id = mr.modul_id
-        JOIN role r ON mr.role_id = r.id
-        WHERE r.nama_role = ?
-          AND m.link = ?
-          AND m.is_active = 1
-        LIMIT 1
-    ");
-        $stmt->execute([$roleName, $link]);
+    SELECT id, is_global
+    FROM modul
+    WHERE link = ?
+      AND is_active = 1
+    LIMIT 1
+");
+        $stmt->execute([$link]);
         $modul = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$modul) {
             return false;
         }
 
-        // --------------------------------
-        // 3. MODUL GLOBAL → BOLEH SEMUA
-        // --------------------------------
+        // MODUL GLOBAL → BOLEH
         if ((int)$modul['is_global'] === 1) {
             return true;
         }
 
-        // --------------------------------
-        // 4. STAFF / ADMIN TIM → CEK POKJA
-        // --------------------------------
-        if (!$pokjaId) {
-            return false;
-        }
-
+        // CEK MODUL ↔ POKJA
         $stmt = $this->db->prepare("
-        SELECT COUNT(*)
-        FROM modul_pokja
-        WHERE modul_id = ?
-          AND pokja_id = ?
-    ");
+    SELECT COUNT(*)
+    FROM modul_pokja
+    WHERE modul_id = ?
+      AND pokja_id = ?
+");
         $stmt->execute([$modul['id'], $pokjaId]);
 
         return $stmt->fetchColumn() > 0;

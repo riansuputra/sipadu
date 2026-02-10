@@ -109,10 +109,10 @@ if ($tahun || $jenis) {
                                                 <div class="col-auto">
                                                     <select name="jenis" class="form-select w-auto">
                                                         <option value="">Semua Jenis</option>
-                                                        <option value="BERKALA" <?= ($_GET['jenis'] ?? '') == 'BERKALA' ? 'selected' : '' ?>>Berkala</option>
-                                                        <option value="SERTA MERTA" <?= ($_GET['jenis'] ?? '') == 'SERTA MERTA' ? 'selected' : '' ?>>Serta Merta</option>
-                                                        <option value="SETIAP SAAT" <?= ($_GET['jenis'] ?? '') == 'SETIAP SAAT' ? 'selected' : '' ?>>Setiap Saat</option>
-                                                        <option value="DIKECUALIKAN" <?= ($_GET['jenis'] ?? '') == 'DIKECUALIKAN' ? 'selected' : '' ?>>Dikecualikan</option>
+                                                        <option value="berkala" <?= ($_GET['jenis'] ?? '') == 'berkala' ? 'selected' : '' ?>>Berkala</option>
+                                                        <option value="serta_merta" <?= ($_GET['jenis'] ?? '') == 'serta_merta' ? 'selected' : '' ?>>Serta Merta</option>
+                                                        <option value="setiap_saat" <?= ($_GET['jenis'] ?? '') == 'setiap_saat' ? 'selected' : '' ?>>Setiap Saat</option>
+                                                        <option value="dikecualikan" <?= ($_GET['jenis'] ?? '') == 'dikecualikan' ? 'selected' : '' ?>>Dikecualikan</option>
                                                     </select>
 
                                                 </div>
@@ -167,7 +167,7 @@ if ($tahun || $jenis) {
                                             <th style="width:1%;">
                                                 <button class="table-sort d-flex justify-content-between" data-sort="sort-bentuk">Bentuk</button>
                                             </th>
-                                            <th style="width:25%;">
+                                            <th style="width:1%;">
                                                 <button class="table-sort d-flex justify-content-between" data-sort="sort-file">File</button>
                                             </th>
                                             <th style="width:1%;">
@@ -188,11 +188,11 @@ if ($tahun || $jenis) {
                                                     <?= htmlspecialchars($d["tahun_pembuatan"]) ?>
                                                 </td>
                                                 <td class="sort-jenis">
-                                                    <?php if ($d["jenis_informasi"] === "BERKALA") {
+                                                    <?php if ($d["jenis_informasi"] === "berkala") {
                                                         $bg = "bg-blue text-blue-fg";
-                                                    } elseif ($d["jenis_informasi"] === "SERTA MERTA") {
+                                                    } elseif ($d["jenis_informasi"] === "serta_merta") {
                                                         $bg = "bg-red text-red-fg";
-                                                    } elseif ($d["jenis_informasi"] === "SETIAP SAAT") {
+                                                    } elseif ($d["jenis_informasi"] === "setiap_saat") {
                                                         $bg = "bg-green text-green-fg";
                                                     } else {
                                                         $bg = "bg-yellow text-yellow-fg";
@@ -203,10 +203,10 @@ if ($tahun || $jenis) {
                                                     <?= htmlspecialchars($d["retensi_arsip"]) ?>
                                                 </td>
                                                 <td class="sort-bentuk">
-                                                    <?php if ($d["bentuk_informasi"] === "HARDCOPY") {
+                                                    <?php if ($d["bentuk_informasi"] === "hardcop") {
                                                         $badge =
                                                             '<span class="badge bg-dark text-dark-fg">Hardcopy</span>';
-                                                    } elseif ($d["bentuk_informasi"] === "SOFTCOPY") {
+                                                    } elseif ($d["bentuk_informasi"] === "softcopy") {
                                                         $badge =
                                                             '<span class="badge badge-outline text-dark ">Softcopy</span>';
                                                     } else {
@@ -219,38 +219,39 @@ if ($tahun || $jenis) {
                                                     </div>
                                                 </td>
                                                 <td class="sort-file">
-                                                    <?php
-                                                    $listFile = [];
+                                                    <div class="btn-group me-1">
+                                                        <?php
+                                                        $listFile = [];
 
-                                                    if (!empty($d["files"])) {
-                                                        $files = explode("##", $d["files"],);
+                                                        if (!empty($d["files"])) {
+                                                            $files = explode("##", $d["files"],);
 
-                                                        foreach ($files as $f) {
-                                                            $part = explode("|", $f,);
+                                                            foreach ($files as $f) {
+                                                                $part = explode("|", $f,);
 
-                                                            if (count($part) === 4) {
-                                                                [
-                                                                    $id,
-                                                                    $nama,
-                                                                    $path,
-                                                                    $tipe,
-                                                                ] = $part;
+                                                                if (count($part) === 4) {
+                                                                    [
+                                                                        $id,
+                                                                        $nama,
+                                                                        $path,
+                                                                        $tipe,
+                                                                    ] = $part;
 
-                                                                $listFile[] = [
-                                                                    "nama" => htmlspecialchars($nama,),
-                                                                    "path" => htmlspecialchars($path,),
-                                                                    "tipe" => htmlspecialchars($tipe,),
-                                                                ];
+                                                                    $listFile[] = [
+                                                                        "nama" => htmlspecialchars($nama,),
+                                                                        "path" => htmlspecialchars($path,),
+                                                                        "tipe" => htmlspecialchars($tipe,),
+                                                                    ];
+                                                                }
                                                             }
                                                         }
-                                                    }
 
-                                                    // tampilkan
-                                                    foreach ($listFile as $f):
-                                                        $ext = strtolower(pathinfo($f["nama"], PATHINFO_EXTENSION,),);
-                                                        // SVG inline
-                                                        if ($ext === "pdf") {
-                                                            $icon = '
+                                                        // tampilkan
+                                                        foreach ($listFile as $f):
+                                                            $ext = strtolower(pathinfo($f["nama"], PATHINFO_EXTENSION,),);
+                                                            // SVG inline
+                                                            if ($ext === "pdf") {
+                                                                $icon = '
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red icon icon-tabler icons-tabler-outline icon-tabler-file-type-pdf">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                 <path d="M14 3v4a1 1 0 0 0 1 1h4" />
@@ -260,9 +261,9 @@ if ($tahun || $jenis) {
                                                                 <path d="M20 15h-3v6" />
                                                                 <path d="M11 15v6h1a2 2 0 0 0 2 -2v-2a2 2 0 0 0 -2 -2h-1" />
                                                             </svg>';
-                                                        } elseif ($ext === "jpg") {
-                                                            // image
-                                                            $icon = '
+                                                            } elseif ($ext === "jpg") {
+                                                                // image
+                                                                $icon = '
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow icon icon-tabler icons-tabler-outline icon-tabler-file-type-jpg">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                 <path d="M14 3v4a1 1 0 0 0 1 1h4" />
@@ -271,26 +272,21 @@ if ($tahun || $jenis) {
                                                                 <path d="M20 15h-1a2 2 0 0 0 -2 2v2a2 2 0 0 0 2 2h1v-3" />
                                                                 <path d="M5 15h3v4.5a1.5 1.5 0 0 1 -3 0" />
                                                             </svg>';
-                                                        } else {
-                                                            $icon = '
+                                                            } else {
+                                                                $icon = '
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-secondary icon icon-tabler icons-tabler-outline icon-tabler-file-type-png">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                 <path d="M14 3v4a1 1 0 0 0 1 1h4" />
-                                                                <path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v4" />
-                                                                <path d="M20 15h-1a2 2 0 0 0 -2 2v2a2 2 0 0 0 2 2h1v-3" />
-                                                                <path d="M5 18h1.5a1.5 1.5 0 0 0 0 -3h-1.5v6" />
-                                                                <path d="M11 21v-6l3 6v-6" />
+                                                                <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2" />
                                                             </svg>';
-                                                        }
-                                                    ?>
-                                                        <a href='<?= url($path) ?>' target='_blank' class="btn btn-outline-primary">
-                                                            <?= $icon ?>
-                                                            <?= shortname($f["nama"], 30,) ?>
-                                                        </a>
-                                                        <br>
-                                                    <?php
-                                                    endforeach;
-                                                    ?>
+                                                            }
+                                                        ?>
+                                                            <a href='<?= url($path) ?>' target='_blank' class="me-1">
+                                                                <?= $icon ?>
+                                                            <?php
+                                                        endforeach;
+                                                            ?>
+                                                    </div>
                                                 </td>
                                                 <td>
                                                     <div class="btn-group w-100">
@@ -335,10 +331,10 @@ if ($tahun || $jenis) {
                                                                 <dt class="col-4 text-muted mb-3">Bentuk Informasi</dt>
                                                                 <dt class="col-1 mb-3 col-auto text-end">:</dt>
                                                                 <dd class="col-7 text-bold mb-3">
-                                                                    <?php if ($d["bentuk_informasi"] === "HARDCOPY") {
+                                                                    <?php if ($d["bentuk_informasi"] === "hardcopy") {
                                                                         $badge =
                                                                             '<span class="badge bg-dark text-dark-fg">Hardcopy</span>';
-                                                                    } elseif ($d["bentuk_informasi"] === "SOFTCOPY") {
+                                                                    } elseif ($d["bentuk_informasi"] === "softcopy") {
                                                                         $badge =
                                                                             '<span class="badge badge-outline text-dark ">Softcopy</span>';
                                                                     } else {
@@ -415,10 +411,7 @@ if ($tahun || $jenis) {
                                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-secondary icon icon-tabler icons-tabler-outline icon-tabler-file-type-png">
                                                                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                             <path d="M14 3v4a1 1 0 0 0 1 1h4" />
-                                                                            <path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v4" />
-                                                                            <path d="M20 15h-1a2 2 0 0 0 -2 2v2a2 2 0 0 0 2 2h1v-3" />
-                                                                            <path d="M5 18h1.5a1.5 1.5 0 0 0 0 -3h-1.5v6" />
-                                                                            <path d="M11 21v-6l3 6v-6" />
+                                                                            <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2" />
                                                                         </svg>';
                                                                         }
                                                                     ?>
