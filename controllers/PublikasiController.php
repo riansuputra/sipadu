@@ -536,6 +536,40 @@ class PublikasiController
         }
         $role = currentRole();
 
+        $pokjaId = $user['pokja_id'] ?? null;
+
+        $tanggalMulai = $_GET['tanggal_mulai'] ?? null;
+        $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
+        $jenis = $_GET['jenis'] ?? null;
+
+        $model = new PublikasiModel($pdo);
+
+
+        $data = $model->getByRole(
+            $role,
+            $pokjaId,
+            $tanggalMulai,
+            $tanggalSelesai,
+            $jenis
+        );
+
+        require __DIR__ . '/../views/publikasi/publicIndex.php';
+    }
+
+    public function publikasiIndex()
+    {
+        authOnly();
+
+        global $pdo;
+
+        $user = currentUser();
+        if (!$user || empty($user['id'])) {
+            die("User tidak valid");
+        }
+        $role = currentRole();
+
+        $pokjaId = $user['pokja_id'] ?? null;
+
         $tanggalMulai = $_GET['tanggal_mulai'] ?? null;
         $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
         $jenis = $_GET['jenis'] ?? null;

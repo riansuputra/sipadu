@@ -9,9 +9,9 @@ $bannerTitle = "Halaman Utama";
 $bannerSubtitle = "SIPADU BPMP Provinsi Bali";
 
 // echo '<pre>';
-// print_r($moduleModel);
 // print_r($user);
-// print_r($modules);
+// print_r($user['role']);
+// print_r($user['pokja_id']);
 // echo '</pre>';
 
 // Mulai buffer konten
@@ -84,7 +84,27 @@ ob_start();
                     </a>
                 </div>
 
+
             <?php endforeach; ?>
+            <?php if (
+                in_array($user['role'], ['Superadmin', 'Pimpinan']) ||
+                (in_array($user['role'], ['Admin', 'Staff']) && in_array($user['pokja_id'], [9], true))
+            ): ?>
+                <div class="col-sm-6 col-lg-3 p-1">
+                    <a href="<?= url('?page=timpublikasi')  ?>"
+                        class="card card-link card-link-pop">
+
+                        <div class="img-responsive img-responsive-21x9 card-img-top"
+                            style="background-image: url('public/assets/img/publikasi.webp')">
+                        </div>
+
+                        <div class="card-body text-center fw-bold mb-0">
+                            Publikasi
+                        </div>
+                    </a>
+                </div>
+            <?php endif; ?>
+
         </div>
     </div>
 </div>

@@ -105,7 +105,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
-<body class="d-flex flex-column bg-white" style="background-image: url(http://localhost/sipadu/public/assets/img/vector.svg); background-repeat: repeat;">
+<body class="d-flex flex-column bg-white" style="background-image: url(public/assets/img/vector.svg); background-repeat: repeat;">
     <script src="<?= url('public/assets/dist/js/demo-theme.min.js') ?>"></script>
     <div class="row g-0 flex-fill">
 
@@ -113,7 +113,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
             <div class="login-photo">
                 <!-- background foto -->
                 <div class="login-bg"
-                    style="background-image: url(http://localhost/sipadu/public/assets/img/login-img.webp)">
+                    style="background-image: url(public/assets/img/login-img.webp)">
                 </div>
                 <!-- overlay bawah -->
                 <div class="login-overlay">
@@ -132,7 +132,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
         <div class="col-12 col-lg-6 col-xl-4 border-top-wide d-flex flex-column justify-content-center">
             <div class="container container-tight mb-7">
                 <div class="text-center mb-4">
-                    <img src="http://localhost/sipadu/public/assets/img/bpmp-tengah.webp" alt="" style="height: 150px; width: auto;">
+                    <img src="public/assets/img/bpmp-tengah.webp" alt="" style="height: 150px; width: auto;">
                 </div>
                 <div class="card">
                     <div class="card-body">

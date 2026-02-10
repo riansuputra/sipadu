@@ -202,6 +202,13 @@ function routeRequest()
             $controller->publicIndex();
             break;
 
+        case 'timpublikasi':
+            authOnly();
+            require __DIR__ . '/../controllers/PublikasiController.php';
+            $controller = new PublikasiController();
+            $controller->publikasiIndex();
+            break;
+
         // Jenis Publikasi =======================================
         case 'jenis-publikasi':
             authOnly();
