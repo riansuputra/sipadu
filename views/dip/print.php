@@ -151,7 +151,16 @@
                 <!-- BARIS JENIS -->
                 <tr class="jenis-row">
                     <td colspan="7">
-                        Informasi <?= htmlspecialchars(ucwords(strtolower($jenis))) ?>
+                        <?php if ($jenis === "berkala") {
+                            $text = 'Berkala';
+                        } elseif ($jenis === "serta_merta") {
+                            $text = 'Serta Merta';
+                        } elseif ($jenis === "setiap_saat") {
+                            $text = 'Setiap Saat';
+                        } else {
+                            $text = 'Dikecualikan';
+                        } ?>
+                        Informasi <?= $text ?>
                     </td>
                 </tr>
 

@@ -47,14 +47,6 @@ unset($_SESSION['errors'], $_SESSION['old']);
                 <form class="card" method="POST" action="<?= url('?page=jenis-publikasi-store')  ?>" enctype="multipart/form-data">
                     <div class="card-header">
                         <h3 class="card-title">Form Tambah Jenis Publikasi</h3>
-                        <div class="card-actions">
-                            <a class="btn btn-primary" href="<?= url('?page=tambah-publikasi')  ?>"><!-- Download SVG icon from http://tabler.io/icons/icon/chevron-left -->
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
-                                    <path d="M15 6l-6 6l6 6"></path>
-                                </svg>
-                                Tambah Publikasi
-                            </a>
-                        </div>
                     </div>
                     <div class="card-body">
                         <div class="form-fieldset">
@@ -311,18 +303,8 @@ unset($_SESSION['errors'], $_SESSION['old']);
                     icon: 'success',
                     title: 'Berhasil!',
                     text: message,
-                    showCancelButton: true,
-                    confirmButtonText: 'Input Lagi',
-                    cancelButtonText: 'Lihat Daftar Publikasi',
-                    reverseButtons: true
-                }).then((result) => {
-
-                    if (result.isConfirmed) {
-                        window.location.href = "<?= url('?page=tambah-jenis-publikasi') ?>";
-                    } else {
-                        window.location.href = "<?= url('?page=publikasi') ?>";
-                    }
-
+                    timer: 1000,
+                    showConfirmButton: false,
                 });
 
             } else {
@@ -330,6 +312,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                 Swal.fire({
                     icon: 'error',
                     title: 'Gagal!',
+                    timer: 1500,
                     html: message
                 });
 
@@ -416,7 +399,8 @@ unset($_SESSION['errors'], $_SESSION['old']);
                 title: <?= $_SESSION['flash']['status'] === 'success'
                             ? "'Berhasil!'"
                             : "'Gagal!'" ?>,
-                text: <?= json_encode($_SESSION['flash']['message']) ?>
+                text: <?= json_encode($_SESSION['flash']['message']) ?>,
+                timer: 1500
             });
 
         });

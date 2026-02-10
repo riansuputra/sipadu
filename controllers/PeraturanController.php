@@ -199,17 +199,21 @@ class PeraturanController
                 $tmp  = $_FILES['file']['tmp_name'][$i];
                 $type = $_FILES['file']['type'][$i];
                 $size = $_FILES['file']['size'][$i];
+                $ext = strtolower(pathinfo($nama, PATHINFO_EXTENSION));
+
 
                 $namaBaru = time() . '_' . $i . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $nama);
+                $path = $dir . $namaBaru;
 
-                move_uploaded_file($tmp, $dir . $namaBaru);
+                if (move_uploaded_file($tmp, $path)) {
 
-                $model->insertFile($id, [
-                    'nama_file'   => $nama,
-                    'path_file'   => 'uploads/peraturan/' . $namaBaru,
-                    'tipe_file'   => $ext,
-                    'ukuran_file' => $size
-                ]);
+                    $model->insertFile($id, [
+                        'nama_file'   => $nama,
+                        'path_file'   => 'uploads/peraturan/' . $namaBaru,
+                        'tipe_file'   => $ext,
+                        'ukuran_file' => $size
+                    ]);
+                }
             }
         }
 
@@ -284,6 +288,7 @@ class PeraturanController
     {
         // echo "<pre>";
         // print_r($_POST);
+        // print_r($_FILES);
         // echo "</pre>";
         // die();
 
@@ -399,18 +404,21 @@ class PeraturanController
                 $tmp  = $_FILES['file']['tmp_name'][$i];
                 $type = $_FILES['file']['type'][$i];
                 $size = $_FILES['file']['size'][$i];
+                $ext = strtolower(pathinfo($nama, PATHINFO_EXTENSION));
+
 
                 $namaBaru = time() . '_' . $i . '_' .
                     preg_replace('/[^a-zA-Z0-9._-]/', '_', $nama);
+                $path = $dir . $namaBaru;
 
-                move_uploaded_file($tmp, $dir . $namaBaru);
-
-                $model->insertFile($_POST['id'], [
-                    'nama_file'   => $nama,
-                    'path_file'   => 'uploads/peraturan/' . $namaBaru,
-                    'tipe_file'   => $ext,
-                    'ukuran_file' => $size
-                ]);
+                if (move_uploaded_file($tmp, $path)) {
+                    $model->insertFile($_POST['id'], [
+                        'nama_file'   => $nama,
+                        'path_file'   => 'uploads/peraturan/' . $namaBaru,
+                        'tipe_file'   => $ext,
+                        'ukuran_file' => $size
+                    ]);
+                }
             }
         }
 

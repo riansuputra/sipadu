@@ -11,6 +11,7 @@ class DipModel
 
     public function getAll()
     {
+        $this->db->exec("SET SESSION group_concat_max_len = 100000");
         $stmt = $this->db->prepare("
             SELECT 
                 dip.*,
@@ -31,32 +32,54 @@ class DipModel
 
     public function getFiltered($tahun = null, $jenis = [])
     {
+        // penting untuk group_concat
+        $this->db->exec("SET SESSION group_concat_max_len = 100000");
+
         $sql = "
-        SELECT dip.*
+        SELECT 
+            dip.*,
+            GROUP_CONCAT(
+                CONCAT(
+                    df.id, '|',
+                    df.nama_file, '|',
+                    df.path_file, '|',
+                    df.tipe_file
+                )
+                SEPARATOR '##'
+            ) AS files
         FROM dip
+        LEFT JOIN dip_file df 
+            ON dip.id = df.dip_id
         WHERE dip.is_active = 1
     ";
 
         $params = [];
 
-        if ($tahun) {
+        // filter tahun
+        if (!empty($tahun)) {
             $sql .= " AND dip.tahun_pembuatan = ?";
             $params[] = $tahun;
         }
 
+        // filter jenis (multi)
         if (!empty($jenis)) {
             $in = implode(',', array_fill(0, count($jenis), '?'));
             $sql .= " AND dip.jenis_informasi IN ($in)";
             $params = array_merge($params, $jenis);
         }
 
-        $sql .= " ORDER BY dip.jenis_informasi, dip.nama_informasi";
+        // BARU group & order
+        $sql .= "
+        GROUP BY dip.id
+        ORDER BY dip.tahun_pembuatan DESC, dip.created_at DESC
+    ";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($params);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
 
     public function getById($id)
     {

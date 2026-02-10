@@ -48,14 +48,6 @@ unset($_SESSION['errors'], $_SESSION['old']);
                 <form class="card" method="POST" action="<?= ('?page=peraturan-update&id=' . $peraturan['id']) ?>" enctype="multipart/form-data">
                     <div class="card-header">
                         <h3 class="card-title">Form Edit Peraturan</h3>
-                        <div class="card-actions">
-                            <a class="btn btn-primary" href="<?= url('?page=peraturan') ?>"><!-- Download SVG icon from http://tabler.io/icons/icon/chevron-left -->
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
-                                    <path d="M15 6l-6 6l6 6"></path>
-                                </svg>
-                                Lihat Daftar Peraturan
-                            </a>
-                        </div>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -186,14 +178,14 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                             type="file"
                                             name="file[]"
                                             id="file"
-                                            accept=".pdf, .jpg, .png"
+                                            accept=".pdf, .jpg, .png, .jpeg, .gif, .doc, .docx, .xls, .xlsx, .ppt, .pptx"
                                             multiple
                                             class="form-control <?= isset($errors['file']) ? 'is-invalid' : '' ?>">
                                         <div class="invalid-feedback">
                                             <?= $errors['file'] ?? '' ?>
                                         </div>
                                         <small class="form-hint">
-                                            Format: PDF, JPG, PNG (maks 5MB)
+                                            Format: jpg, jpeg, png, doc, pdf, xls, ppt (maks 5MB)
                                         </small>
                                     </div>
                                     <input type="text" name="id" id="id" value="<?= $peraturan['id'] ?>" hidden>
@@ -420,18 +412,8 @@ unset($_SESSION['errors'], $_SESSION['old']);
                     icon: 'success',
                     title: 'Berhasil!',
                     text: message,
-                    showCancelButton: true,
-                    confirmButtonText: 'Input Lagi',
-                    cancelButtonText: 'Lihat Daftar',
-                    reverseButtons: true
-                }).then((result) => {
-
-                    if (result.isConfirmed) {
-                        window.location.href = "<?= url('?page=tambah-peraturan')  ?>";
-                    } else {
-                        window.location.href = "<?= url('?page=peraturan')  ?>";
-                    }
-
+                    timer: 1000,
+                    showConfirmButton: false,
                 });
 
             } else {
@@ -439,6 +421,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                 Swal.fire({
                     icon: 'error',
                     title: 'Gagal!',
+                    timer: 1500,
                     html: message
                 });
 

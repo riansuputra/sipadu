@@ -46,14 +46,6 @@ unset($_SESSION['errors'], $_SESSION['old']);
                 <form class="card" method="POST" action="<?= url('?page=peraturan-store') ?>" enctype="multipart/form-data">
                     <div class="card-header">
                         <h3 class="card-title">Form Tambah Peraturan</h3>
-                        <div class="card-actions">
-                            <a class="btn btn-primary" href="<?= url('?page=peraturan') ?>"><!-- Download SVG icon from http://tabler.io/icons/icon/chevron-left -->
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
-                                    <path d="M15 6l-6 6l6 6"></path>
-                                </svg>
-                                Lihat Daftar Peraturan
-                            </a>
-                        </div>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -106,7 +98,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                 <div class="mb-3 row">
                                     <label class="col-3 col-form-label required">Tahun Terbit</label>
                                     <div class="col">
-                                        <select name="tahun_terbit" id="tahun_terbit" class="form-select <?= isset($errors['jenis_id']) ? 'is-invalid' : '' ?>">
+                                        <select name="tahun_terbit" id="tahun_terbit" class="form-select <?= isset($errors['tahun_terbit']) ? 'is-invalid' : '' ?>">
                                             <option value="" disabled <?= empty($old['tahun_terbit']) ? 'selected' : '' ?>>-- Pilih Tahun Terbit --</option>
                                             <?php for ($i = date('Y'); $i >= 1990; $i--): ?>
                                                 <option value="<?= $i ?>" <?= ($old['tahun_terbit'] ?? '') == $i ? 'selected' : '' ?>><?= $i ?></option>
@@ -170,11 +162,11 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                             type="file"
                                             name="file[]"
                                             id="file"
-                                            accept=".pdf, .jpg, .png"
+                                            accept=".pdf, .jpg, .png, .jpeg, .gif, .doc, .docx, .xls, .xlsx, .ppt, .pptx"
                                             multiple
                                             class="form-control <?= isset($errors['file']) ? 'is-invalid' : '' ?>">
                                         <small class="form-hint">
-                                            Format: PDF, JPG, PNG (maks 5MB)
+                                            Format: jpg, jpeg, png, doc, pdf, xls, ppt (maks 5MB)
                                         </small>
                                         <div class="invalid-feedback">
                                             <?= $errors['file'] ?? '' ?>
@@ -347,18 +339,8 @@ unset($_SESSION['errors'], $_SESSION['old']);
                     icon: 'success',
                     title: 'Berhasil!',
                     text: message,
-                    showCancelButton: true,
-                    confirmButtonText: 'Input Lagi',
-                    cancelButtonText: 'Lihat Daftar',
-                    reverseButtons: true
-                }).then((result) => {
-
-                    if (result.isConfirmed) {
-                        window.location.href = "<?= url('?page=tambah-peraturan') ?>";
-                    } else {
-                        window.location.href = "<?= url('?page=peraturan') ?>";
-                    }
-
+                    timer: 1000,
+                    showConfirmButton: false,
                 });
 
             } else {
@@ -366,6 +348,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                 Swal.fire({
                     icon: 'error',
                     title: 'Gagal!',
+                    timer: 1500,
                     html: message
                 });
 

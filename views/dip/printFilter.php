@@ -64,7 +64,7 @@ ob_start();
                                 <label class="form-label required">Tahun :</label>
                                 <select name="tahun" id="tahun" class="form-select <?= isset($errors['tahun']) ? 'is-invalid' : '' ?>">
                                     <option value="" disabled <?= empty($old['tahun']) ? 'selected' : '' ?>>Semua</option>
-                                    <?php for ($i = date('Y'); $i >= 2000; $i--): ?>
+                                    <?php for ($i = date('Y'); $i >= 1990; $i--): ?>
                                         <option value="<?= $i ?>" <?= ($old['tahun'] ?? '') == $i ? 'selected' : '' ?>><?= $i ?></option>
                                     <?php endfor; ?>
                                 </select>

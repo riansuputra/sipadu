@@ -185,6 +185,7 @@ class PublikasiController
                 }
             }
         }
+
         if (!empty($errors)) {
             $_SESSION["errors"] = $errors;
             $_SESSION["old"] = $_POST;
@@ -215,17 +216,19 @@ class PublikasiController
 
                 $tmp  = $_FILES['file']['tmp_name'][$i];
                 $size = $_FILES['file']['size'][$i];
+                $ext = strtolower(pathinfo($nama, PATHINFO_EXTENSION));
 
                 $namaBaru = time() . '_' . $i . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $nama);
+                $path = $dir . $namaBaru;
 
-                move_uploaded_file($tmp, $dir . $namaBaru);
-
-                $model->insertFile($publikasiId, [
-                    'nama_file'   => $nama,
-                    'path_file'   => 'uploads/peraturan/' . $namaBaru,
-                    'tipe_file'   => $ext,
-                    'ukuran_file' => $size
-                ]);
+                if (move_uploaded_file($tmp, $path)) {
+                    $model->insertFile($publikasiId, [
+                        'nama_file'   => $nama,
+                        'path_file'   => 'uploads/peraturan/' . $namaBaru,
+                        'tipe_file'   => $ext,
+                        'ukuran_file' => $size
+                    ]);
+                }
             }
         }
 
@@ -393,6 +396,8 @@ class PublikasiController
         // }
 
 
+
+
         if (!empty($errors)) {
             $_SESSION["errors"] = $errors;
             $_SESSION["old"] = $_POST;
@@ -436,6 +441,7 @@ class PublikasiController
                 $tmp  = $_FILES['file']['tmp_name'][$i];
                 $type = $_FILES['file']['type'][$i];
                 $size = $_FILES['file']['size'][$i];
+                $ext = strtolower(pathinfo($namaAsli, PATHINFO_EXTENSION));
 
                 $namaBaru = time() . '_' . $i . '_' .
                     preg_replace('/[^a-zA-Z0-9._-]/', '_', $namaAsli);
@@ -583,6 +589,6 @@ class PublikasiController
             $data = $model->getAll();
         }
 
-        require __DIR__ . '/../views/publikasi/publicIndex.php';
+        require __DIR__ . '/../views/publikasi/timindex.php';
     }
 }

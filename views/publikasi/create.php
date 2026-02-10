@@ -47,14 +47,6 @@ unset($_SESSION['errors'], $_SESSION['old']);
                 <form class="card" method="POST" action="<?= url('?page=publikasi-store')  ?>" enctype="multipart/form-data">
                     <div class="card-header">
                         <h3 class="card-title">Form Tambah Publikasi</h3>
-                        <div class="card-actions">
-                            <a class="btn btn-primary" href="<?= url('?page=publikasi')  ?>"><!-- Download SVG icon from http://tabler.io/icons/icon/chevron-left -->
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
-                                    <path d="M15 6l-6 6l6 6"></path>
-                                </svg>
-                                Daftar Publikasi
-                            </a>
-                        </div>
                     </div>
                     <div class="card-body">
                         <div class="form-fieldset">
@@ -165,9 +157,9 @@ unset($_SESSION['errors'], $_SESSION['old']);
                             <div class="mb-3 row">
                                 <label class="col-3 col-form-label">File</label>
                                 <div class="col">
-                                    <input type="file" class="form-control <?= isset($errors['file']) ? 'is-invalid' : '' ?>" name="file[]" id="file" accept=".pdf, .jpg, .png" multiple>
+                                    <input type="file" class="form-control <?= isset($errors['file']) ? 'is-invalid' : '' ?>" name="file[]" id="file" accept=".pdf, .jpg, .png, .jpeg, .gif, .doc, .docx, .xls, .xlsx, .ppt, .pptx" multiple>
                                     <small class="form-hint">
-                                        Format: PDF, JPG, PNG (Untuk video, silakan masukkan link video di bawah)
+                                        Format: jpg, jpeg, png, doc, pdf, xls, ppt (maks 5MB, untuk video silakan masukkan link video di bawah)
                                     </small>
                                     <div class="invalid-feedback">
                                         <?= $errors['file'] ?? '' ?>
@@ -357,18 +349,8 @@ unset($_SESSION['errors'], $_SESSION['old']);
                     icon: 'success',
                     title: 'Berhasil!',
                     text: message,
-                    showCancelButton: true,
-                    confirmButtonText: 'Input Lagi',
-                    cancelButtonText: 'Lihat Daftar',
-                    reverseButtons: true
-                }).then((result) => {
-
-                    if (result.isConfirmed) {
-                        window.location.href = "<?= url('?page=tambah-publikasi') ?>";
-                    } else {
-                        window.location.href = "<?= url('?page=publikasi') ?>";
-                    }
-
+                    timer: 1000,
+                    showConfirmButton: false,
                 });
 
             } else {
@@ -376,6 +358,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                 Swal.fire({
                     icon: 'error',
                     title: 'Gagal!',
+                    timer: 1500,
                     html: message
                 });
 

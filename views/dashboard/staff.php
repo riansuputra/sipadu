@@ -38,58 +38,102 @@ ob_start();
                 </div>
 
             </div>
-            <?php foreach ($modules as $module): ?>
+            <?php if (
+                in_array($user['role'], ['Superadmin', 'Pimpinan']) ||
+                (in_array($user['role'], ['Admin', 'Staff']) && !in_array($user['pokja_id'], [9], true))
+            ): ?>
+                <?php foreach ($modules as $module): ?>
 
-                <?php
-                $hasAccess = $moduleModel->canAccess(
-                    $user['role'],
-                    $user['pokja_id'],
-                    $module['link']
-                );
+                    <?php
+                    $hasAccess = $moduleModel->canAccess(
+                        $user['role'],
+                        $user['pokja_id'],
+                        $module['link']
+                    );
 
-                $link = $module['link'];
-                $isExternal = filter_var($link, FILTER_VALIDATE_URL);
+                    $link = $module['link'];
+                    $isExternal = filter_var($link, FILTER_VALIDATE_URL);
 
-                // tentukan href
-                if (!$hasAccess) {
-                    $href = '#';
-                } elseif ($isExternal) {
-                    $href = $link;
-                } else {
-                    $href = BASE_URL . '/?page=' . $link;
-                }
+                    // tentukan href
+                    if (!$hasAccess) {
+                        $href = '#';
+                    } elseif ($isExternal) {
+                        $href = $link;
+                    } else {
+                        $href = BASE_URL . '/?page=' . $link;
+                    }
 
 
-                // echo '<pre>';
-                // print_r($hasAccess);
-                // print_r($user['role_id']);
-                // print_r($module['link']);
-                // print_r($module['gambar']);
-                // echo '</pre>';
-                ?>
+                    // echo '<pre>';
+                    // print_r($hasAccess);
+                    // print_r($user['role_id']);
+                    // print_r($module['link']);
+                    // print_r($module['gambar']);
+                    // echo '</pre>';
+                    ?>
 
+                    <div class="col-sm-6 col-lg-3 p-1">
+                        <a href="<?= $href ?>"
+                            class="card card-link card-link-pop"
+                            <?= !$hasAccess ? "onclick=\"noAccessAlert()\"" : "" ?>
+                            <?= $hasAccess && $isExternal ? 'target="_blank" rel="noopener noreferrer"' : '' ?>>
+
+                            <div class="img-responsive img-responsive-21x9 card-img-top"
+                                style="background-image: url('public/assets/img/<?= htmlspecialchars($module['gambar']) ?>')">
+                            </div>
+
+                            <div class="card-body text-center fw-bold mb-0">
+                                <?= htmlspecialchars($module['judul']) ?>
+                            </div>
+                        </a>
+                    </div>
+
+
+                <?php endforeach; ?>
+            <?php endif; ?>
+
+            <?php if (
+                (in_array($user['role'], ['Admin', 'Staff']) && in_array($user['pokja_id'], [9], true))
+            ): ?>
                 <div class="col-sm-6 col-lg-3 p-1">
-                    <a href="<?= $href ?>"
-                        class="card card-link card-link-pop"
-                        <?= !$hasAccess ? "onclick=\"noAccessAlert()\"" : "" ?>
-                        <?= $hasAccess && $isExternal ? 'target="_blank" rel="noopener noreferrer"' : '' ?>>
+                    <a href="<?= url('?page=kepegawaian')  ?>"
+                        class="card card-link card-link-pop">
 
                         <div class="img-responsive img-responsive-21x9 card-img-top"
-                            style="background-image: url('public/assets/img/<?= htmlspecialchars($module['gambar']) ?>')">
+                            style="background-image: url('public/assets/img/kepegawaian.webp')">
                         </div>
 
                         <div class="card-body text-center fw-bold mb-0">
-                            <?= htmlspecialchars($module['judul']) ?>
+                            Data Kepegawaian
                         </div>
                     </a>
                 </div>
+                <div class="col-sm-6 col-lg-3 p-1">
+                    <a href="https://sippede.lpmpbali.id/"
+                        class="card card-link card-link-pop">
 
+                        <div class="img-responsive img-responsive-21x9 card-img-top"
+                            style="background-image: url('public/assets/img/sippede.webp')">
+                        </div>
 
-            <?php endforeach; ?>
-            <?php if (
-                in_array($user['role'], ['Superadmin', 'Pimpinan']) ||
-                (in_array($user['role'], ['Admin', 'Staff']) && in_array($user['pokja_id'], [9], true))
-            ): ?>
+                        <div class="card-body text-center fw-bold mb-0">
+                            SIPPeDE
+                        </div>
+                    </a>
+                </div>
+                <div class="col-sm-6 col-lg-3 p-1">
+                    <a href="<?= url('?page=arsip-publik')  ?>"
+                        class="card card-link card-link-pop">
+
+                        <div class="img-responsive img-responsive-21x9 card-img-top"
+                            style="background-image: url('public/assets/img/arsip.webp')">
+                        </div>
+
+                        <div class="card-body text-center fw-bold mb-0">
+                            Arsip
+                        </div>
+                    </a>
+                </div>
                 <div class="col-sm-6 col-lg-3 p-1">
                     <a href="<?= url('?page=timpublikasi')  ?>"
                         class="card card-link card-link-pop">

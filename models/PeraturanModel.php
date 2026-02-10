@@ -14,6 +14,8 @@ class PeraturanModel
     // ==========================
     public function getAll()
     {
+        $this->db->exec("SET SESSION group_concat_max_len = 100000");
+
         $stmt = $this->db->prepare("
         SELECT 
             p.*,
@@ -41,6 +43,8 @@ class PeraturanModel
 
     public function getFiltered($tahun = null, $jenis = null)
     {
+        $this->db->exec("SET SESSION group_concat_max_len = 100000");
+
         $sql = "
         SELECT 
             p.*,

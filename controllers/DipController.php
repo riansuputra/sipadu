@@ -135,6 +135,10 @@ class DipController
                 }
             }
         }
+        // echo "<pre>";
+        // print_r($errors);
+        // echo "</pre>";
+        // die();
         if (!empty($errors)) {
             $_SESSION["errors"] = $errors;
             $_SESSION["old"] = $_POST;
@@ -150,50 +154,42 @@ class DipController
 
         $dipId = $model->insert($data);
 
+        // echo "<pre>";
+        // print_r(!empty($_FILES["file"]["name"]));
+        // echo "</pre>";
+        // die();
+
         // proses upload file jika ada
-        if (!empty($_FILES["file"]["name"])) {
-            $dir = __DIR__ . "/../uploads/dip/";
+        // ============= UPLOAD FILE ==============
+        if (!empty($_FILES['file']['name'][0])) {
 
-            if (!is_dir($dir)) {
+            $dir = __DIR__ . '/../uploads/dip/';
+
+            if (!is_dir($dir))
                 mkdir($dir, 0777, true);
-            }
 
-            foreach ($_FILES["file"]["name"] as $i => $namaAsli) {
-                // skip kalau kosong
-                if (!$namaAsli) {
-                    continue;
-                }
+            foreach ($_FILES['file']['name'] as $i => $nama) {
 
-                $tmp = $_FILES["file"]["tmp_name"][$i];
-                $type = $_FILES["file"]["type"][$i];
-                $size = $_FILES["file"]["size"][$i];
+                if (!$nama) continue;
 
-                // nama aman
-                $namaBaru =
-                    time() .
-                    "_" .
-                    $i .
-                    "_" .
-                    preg_replace("/[^a-zA-Z0-9._-]/", "_", $namaAsli);
+                $tmp  = $_FILES['file']['tmp_name'][$i];
+                $type = $_FILES['file']['type'][$i];
+                $size = $_FILES['file']['size'][$i];
+                $ext = strtolower(pathinfo($nama, PATHINFO_EXTENSION));
 
+                if (!in_array($ext, $allowed)) continue;
+                if ($size > 5 * 1024 * 1024) continue;
+
+
+                $namaBaru = time() . '_' . $i . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $nama);
                 $path = $dir . $namaBaru;
 
-                // filter tipe
-                $allowed = ["application/pdf", "image/png", "image/jpeg"];
-
-                if (!in_array($type, $allowed)) {
-                    continue;
-                }
-
-                $upload = move_uploaded_file($tmp, $path);
-
-                if ($upload) {
-                    // simpan ke tabel dip_file
+                if (move_uploaded_file($tmp, $path)) {
                     $model->insertFile($dipId, [
-                        "nama_file" => $namaAsli,
-                        "path_file" => "uploads/dip/" . $namaBaru,
-                        "tipe_file" => $ext,
-                        "ukuran_file" => $size,
+                        'nama_file'   => $nama,
+                        'path_file'   => 'uploads/dip/' . $namaBaru,
+                        'tipe_file'   => $ext,
+                        'ukuran_file' => $size
                     ]);
                 }
             }
@@ -467,57 +463,35 @@ class DipController
         $model->update($_POST["id"], $data);
 
         // 1. Hapus file lama
-        if (!empty($_POST["hapus_file"])) {
-            $ids = explode(",", $_POST["hapus_file"]);
-            foreach ($ids as $id) {
-                $model->deleteFileById($id);
-            }
-        }
+        if (!empty($_FILES['file']['name'][0])) {
 
-        // proses upload file jika ada
-        if (!empty($_FILES["file"]["name"])) {
-            $dir = __DIR__ . "/../uploads/dip/";
+            $dir = __DIR__ . '/../uploads/dip/';
 
-            if (!is_dir($dir)) {
+            if (!is_dir($dir))
                 mkdir($dir, 0777, true);
-            }
 
-            foreach ($_FILES["file"]["name"] as $i => $namaAsli) {
-                // skip kalau kosong
-                if (!$namaAsli) {
-                    continue;
-                }
+            foreach ($_FILES['file']['name'] as $i => $nama) {
 
-                $tmp = $_FILES["file"]["tmp_name"][$i];
-                $type = $_FILES["file"]["type"][$i];
-                $size = $_FILES["file"]["size"][$i];
+                if (!$nama) continue;
 
-                // nama aman
-                $namaBaru =
-                    time() .
-                    "_" .
-                    $i .
-                    "_" .
-                    preg_replace("/[^a-zA-Z0-9._-]/", "_", $namaAsli);
+                $tmp  = $_FILES['file']['tmp_name'][$i];
+                $type = $_FILES['file']['type'][$i];
+                $size = $_FILES['file']['size'][$i];
+                $ext = strtolower(pathinfo($nama, PATHINFO_EXTENSION));
 
+                if (!in_array($ext, $allowed)) continue;
+                if ($size > 5 * 1024 * 1024) continue;
+
+
+                $namaBaru = time() . '_' . $i . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $nama);
                 $path = $dir . $namaBaru;
 
-                // filter tipe
-                $allowed = ["application/pdf", "image/png", "image/jpeg"];
-
-                if (!in_array($type, $allowed)) {
-                    continue;
-                }
-
-                $upload = move_uploaded_file($tmp, $path);
-
-                if ($upload) {
-                    // simpan ke tabel dip_file
-                    $model->insertFile($_POST["id"], [
-                        "nama_file" => $namaAsli,
-                        "path_file" => "uploads/dip/" . $namaBaru,
-                        "tipe_file" => $ext,
-                        "ukuran_file" => $size,
+                if (move_uploaded_file($tmp, $path)) {
+                    $model->insertFile($_POST['id'], [
+                        'nama_file'   => $nama,
+                        'path_file'   => 'uploads/dip/' . $namaBaru,
+                        'tipe_file'   => $ext,
+                        'ukuran_file' => $size
                     ]);
                 }
             }
