@@ -168,14 +168,14 @@
                 foreach ($rows as $r): ?>
                     <tr>
                         <td style="text-align:center;"><?= $no++ ?></td>
-                        <td><?= htmlspecialchars($r['nama_informasi']) ?></td>
-                        <td><?= htmlspecialchars($r['unit_penyedia']) ?></td>
-                        <td><?= htmlspecialchars($r['penanggung_jawab']) ?></td>
+                        <td style="text-align: justify;"><?= htmlspecialchars($r['nama_informasi']) ?></td>
+                        <td style="text-align: justify;"><?= htmlspecialchars($r['unit_penyedia']) ?></td>
+                        <td style="text-align: justify;"><?= htmlspecialchars($r['penanggung_jawab']) ?></td>
                         <td>Tahun <?= $r['tahun_pembuatan'] ?? '-' ?>, <?= $r['tempat_pembuatan'] ?? '-' ?></td>
-                        <?php if ($r["bentuk_informasi"] === "HARDCOPY") {
+                        <?php if ($r["bentuk_informasi"] === "hardcopy") {
                             $text =
                                 'Hardcopy';
-                        } elseif ($r["bentuk_informasi"] === "SOFTCOPY") {
+                        } elseif ($r["bentuk_informasi"] === "softcopy") {
                             $text =
                                 'Softcopy';
                         } else {

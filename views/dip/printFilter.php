@@ -73,23 +73,35 @@ ob_start();
                                 </div>
                             </div>
                             <div class="">
-                                <label class="form-label required">Jenis Informasi : <em class="text-secondary">(Tahan Ctrl untuk memilih lebih dari satu jenis)</em></label>
-                                <select class="form-select <?= isset($errors['jenis']) ? 'is-invalid' : '' ?>"
-                                    name="jenis[]"
-                                    id="jenis" multiple>
-                                    <option value="BERKALA" <?= ($old['jenis'] ?? '') == 'BERKALA' ? 'selected' : '' ?>>Berkala</option>
-                                    <option value="SERTA MERTA" <?= ($old['jenis'] ?? '') == 'SERTA MERTA' ? 'selected' : '' ?>>Serta Merta</option>
-                                    <option value="SETIAP SAAT" <?= ($old['jenis'] ?? '') == 'SETIAP SAAT' ? 'selected' : '' ?>>Setiap Saat</option>
-                                    <option value="DIKECUALIKAN" <?= ($old['jenis'] ?? '') == 'DIKECUALIKAN' ? 'selected' : '' ?>>Dikecualikan</option>
-                                </select>
-                                <small class="form-hint">
+                                <label class="form-label required">Jenis Informasi :</label>
 
-                                </small>
-                                <div class="invalid-feedback">
-                                    <?= $errors['jenis_informasi'] ?? '' ?>
+                                <?php
+                                $jenisOptions = [
+                                    'BERKALA' => 'Berkala',
+                                    'SERTA MERTA' => 'Serta Merta',
+                                    'SETIAP SAAT' => 'Setiap Saat',
+                                    'DIKECUALIKAN' => 'Dikecualikan',
+                                ];
+
+                                $oldJenis = $old['jenis'] ?? []; // HARUS array
+                                ?>
+
+                                <?php foreach ($jenisOptions as $value => $label): ?>
+                                    <label class="form-check">
+                                        <input class="form-check-input <?= isset($errors['jenis']) ? 'is-invalid' : '' ?>"
+                                            type="checkbox"
+                                            name="jenis[]"
+                                            value="<?= $value ?>"
+                                            <?= in_array($value, $oldJenis) ? 'checked' : '' ?>>
+                                        <span class="form-check-label"><?= $label ?></span>
+                                    </label>
+                                <?php endforeach; ?>
+
+                                <div class="invalid-feedback d-block">
+                                    <?= $errors['jenis'] ?? '' ?>
                                 </div>
-
                             </div>
+
                         </div>
                         <label class="form-label">Form Isian Surat</label>
 
@@ -184,7 +196,7 @@ ob_start();
                             </div>
                         </div>
                         <div class="">
-                            <button type="submit" class="btn btn-success">Simpan</button>
+                            <button type="submit" class="btn btn-success">Cetak</button>
                         </div>
                     </div>
                 </form>

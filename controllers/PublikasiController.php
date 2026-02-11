@@ -52,6 +52,195 @@ class PublikasiController
         require __DIR__ . '/../views/publikasi/index.php';
     }
 
+    public function indexPaud()
+    {
+        authOnly();
+
+        global $pdo;
+
+        $user = currentUser();
+        if (!$user || empty($user['id'])) {
+            die("User tidak valid");
+        }
+        $role = currentRole();
+
+        $pokjaId = $user['pokja_id'] ?? null;
+
+        $tanggalMulai = $_GET['tanggal_mulai'] ?? null;
+        $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
+        $jenis = $_GET['jenis'] ?? null;
+
+        // echo "<pre>";
+        // print_r($_POST);
+        // print_r($_GET['jenis']);
+        // echo "</pre>";
+        // die();
+
+        $modeljenis = new PublikasiJenisModel($pdo);
+        $jenisInput = $modeljenis->getAll();
+
+        $model = new PublikasiModel($pdo);
+
+        if (!empty($tanggalMulai) || !empty($tanggalSelesai) || !empty($jenis)) {
+            $data = $model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
+        } else {
+            $data = $model->getPaud();
+        }
+
+        require __DIR__ . '/../views/paud/publikasi.php';
+    }
+
+    public function indexSd()
+    {
+        authOnly();
+
+        global $pdo;
+
+        $user = currentUser();
+        if (!$user || empty($user['id'])) {
+            die("User tidak valid");
+        }
+        $role = currentRole();
+
+        $pokjaId = $user['pokja_id'] ?? null;
+
+        $tanggalMulai = $_GET['tanggal_mulai'] ?? null;
+        $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
+        $jenis = $_GET['jenis'] ?? null;
+
+        // echo "<pre>";
+        // print_r($_POST);
+        // print_r($_GET['jenis']);
+        // echo "</pre>";
+        // die();
+
+        $modeljenis = new PublikasiJenisModel($pdo);
+        $jenisInput = $modeljenis->getAll();
+
+        $model = new PublikasiModel($pdo);
+
+        if (!empty($tanggalMulai) || !empty($tanggalSelesai) || !empty($jenis)) {
+            $data = $model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
+        } else {
+            $data = $model->getSd();
+        }
+
+        require __DIR__ . '/../views/sd/publikasi.php';
+    }
+
+    public function indexSmp()
+    {
+        authOnly();
+
+        global $pdo;
+
+        $user = currentUser();
+        if (!$user || empty($user['id'])) {
+            die("User tidak valid");
+        }
+        $role = currentRole();
+
+        $pokjaId = $user['pokja_id'] ?? null;
+
+        $tanggalMulai = $_GET['tanggal_mulai'] ?? null;
+        $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
+        $jenis = $_GET['jenis'] ?? null;
+
+        // echo "<pre>";
+        // print_r($_POST);
+        // print_r($_GET['jenis']);
+        // echo "</pre>";
+        // die();
+
+        $modeljenis = new PublikasiJenisModel($pdo);
+        $jenisInput = $modeljenis->getAll();
+
+        $model = new PublikasiModel($pdo);
+
+        if (!empty($tanggalMulai) || !empty($tanggalSelesai) || !empty($jenis)) {
+            $data = $model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
+        } else {
+            $data = $model->getSmp();
+        }
+
+        require __DIR__ . '/../views/smp/publikasi.php';
+    }
+
+    public function indexSma()
+    {
+        authOnly();
+
+        global $pdo;
+
+        $user = currentUser();
+        if (!$user || empty($user['id'])) {
+            die("User tidak valid");
+        }
+        $role = currentRole();
+
+        $pokjaId = $user['pokja_id'] ?? null;
+
+        $tanggalMulai = $_GET['tanggal_mulai'] ?? null;
+        $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
+        $jenis = $_GET['jenis'] ?? null;
+
+        // echo "<pre>";
+        // print_r($_POST);
+        // print_r($_GET['jenis']);
+        // echo "</pre>";
+        // die();
+
+        $modeljenis = new PublikasiJenisModel($pdo);
+        $jenisInput = $modeljenis->getAll();
+
+        $model = new PublikasiModel($pdo);
+
+        if (!empty($tanggalMulai) || !empty($tanggalSelesai) || !empty($jenis)) {
+            $data = $model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
+        } else {
+            $data = $model->getSma();
+        }
+
+        require __DIR__ . '/../views/sma/publikasi.php';
+    }
+
+    public function indexWidyaprada()
+    {
+        authOnly();
+
+        global $pdo;
+
+        $user = currentUser();
+        if (!$user || empty($user['id'])) {
+            die("User tidak valid");
+        }
+        $role = currentRole();
+
+        $pokjaId = $user['pokja_id'] ?? null;
+
+        $tanggalMulai = $_GET['tanggal_mulai'] ?? null;
+        $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
+        $jenis = $_GET['jenis'] ?? null;
+
+        // echo "<pre>";
+        // print_r($_POST);
+        // print_r($_GET['jenis']);
+        // echo "</pre>";
+        // die();
+
+        $modeljenis = new PublikasiJenisModel($pdo);
+        $jenisInput = $modeljenis->getAll();
+
+        $model = new PublikasiModel($pdo);
+
+        if (!empty($tanggalMulai) || !empty($tanggalSelesai) || !empty($jenis)) {
+            $data = $model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
+        } else {
+            $data = $model->getWp();
+        }
+
+        require __DIR__ . '/../views/widyaprada/publikasi.php';
+    }
 
 
     public function getFiltered()

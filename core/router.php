@@ -153,6 +153,41 @@ function routeRequest()
             $controller->index();
             break;
 
+        case 'publikasi-paud':
+            authOnly();
+            require __DIR__ . '/../controllers/PublikasiController.php';
+            $controller = new PublikasiController();
+            $controller->indexPaud();
+            break;
+
+        case 'publikasi-sd':
+            authOnly();
+            require __DIR__ . '/../controllers/PublikasiController.php';
+            $controller = new PublikasiController();
+            $controller->indexSd();
+            break;
+
+        case 'publikasi-smp':
+            authOnly();
+            require __DIR__ . '/../controllers/PublikasiController.php';
+            $controller = new PublikasiController();
+            $controller->indexSmp();
+            break;
+
+        case 'publikasi-sma':
+            authOnly();
+            require __DIR__ . '/../controllers/PublikasiController.php';
+            $controller = new PublikasiController();
+            $controller->indexSma();
+            break;
+
+        case 'publikasi-widyaprada':
+            authOnly();
+            require __DIR__ . '/../controllers/PublikasiController.php';
+            $controller = new PublikasiController();
+            $controller->indexWidyaprada();
+            break;
+
         case 'tambah-publikasi':
             authOnly();
             require __DIR__ . '/../controllers/PublikasiController.php';

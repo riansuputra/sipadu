@@ -43,6 +43,176 @@ class PublikasiModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getPaud()
+    {
+        $this->db->exec("SET SESSION group_concat_max_len = 100000");
+
+        $stmt = $this->db->prepare("
+            SELECT 
+            p.*,
+            pj.pokja_tipe AS tim,
+            pj.pokja_nama AS nama_tim,
+            j.nama AS jenis,
+            GROUP_CONCAT(
+                CONCAT(pf.id, '|', pf.nama_file, '|', pf.path_file, '|', pf.tipe_file)
+                SEPARATOR '##'
+            ) AS files
+
+            FROM publikasi p
+
+            LEFT JOIN pokja pj 
+                ON p.pokja_id = pj.id
+
+            LEFT JOIN publikasi_jenis j 
+                ON p.jenis_id = j.id
+
+            LEFT JOIN publikasi_file pf 
+                ON p.id = pf.publikasi_id
+            WHERE p.is_active = 1 and p.pokja_id = 1
+            GROUP BY p.id
+            ORDER BY p.tanggal_kegiatan DESC, p.created_at DESC
+        ");
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getSd()
+    {
+        $this->db->exec("SET SESSION group_concat_max_len = 100000");
+
+        $stmt = $this->db->prepare("
+            SELECT 
+            p.*,
+            pj.pokja_tipe AS tim,
+            pj.pokja_nama AS nama_tim,
+            j.nama AS jenis,
+            GROUP_CONCAT(
+                CONCAT(pf.id, '|', pf.nama_file, '|', pf.path_file, '|', pf.tipe_file)
+                SEPARATOR '##'
+            ) AS files
+
+            FROM publikasi p
+
+            LEFT JOIN pokja pj 
+                ON p.pokja_id = pj.id
+
+            LEFT JOIN publikasi_jenis j 
+                ON p.jenis_id = j.id
+
+            LEFT JOIN publikasi_file pf 
+                ON p.id = pf.publikasi_id
+            WHERE p.is_active = 1 and p.pokja_id = 2
+            GROUP BY p.id
+            ORDER BY p.tanggal_kegiatan DESC, p.created_at DESC
+        ");
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getSmp()
+    {
+        $this->db->exec("SET SESSION group_concat_max_len = 100000");
+
+        $stmt = $this->db->prepare("
+            SELECT 
+            p.*,
+            pj.pokja_tipe AS tim,
+            pj.pokja_nama AS nama_tim,
+            j.nama AS jenis,
+            GROUP_CONCAT(
+                CONCAT(pf.id, '|', pf.nama_file, '|', pf.path_file, '|', pf.tipe_file)
+                SEPARATOR '##'
+            ) AS files
+
+            FROM publikasi p
+
+            LEFT JOIN pokja pj 
+                ON p.pokja_id = pj.id
+
+            LEFT JOIN publikasi_jenis j 
+                ON p.jenis_id = j.id
+
+            LEFT JOIN publikasi_file pf 
+                ON p.id = pf.publikasi_id
+            WHERE p.is_active = 1 and p.pokja_id = 3
+            GROUP BY p.id
+            ORDER BY p.tanggal_kegiatan DESC, p.created_at DESC
+        ");
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getSma()
+    {
+        $this->db->exec("SET SESSION group_concat_max_len = 100000");
+
+        $stmt = $this->db->prepare("
+            SELECT 
+            p.*,
+            pj.pokja_tipe AS tim,
+            pj.pokja_nama AS nama_tim,
+            j.nama AS jenis,
+            GROUP_CONCAT(
+                CONCAT(pf.id, '|', pf.nama_file, '|', pf.path_file, '|', pf.tipe_file)
+                SEPARATOR '##'
+            ) AS files
+
+            FROM publikasi p
+
+            LEFT JOIN pokja pj 
+                ON p.pokja_id = pj.id
+
+            LEFT JOIN publikasi_jenis j 
+                ON p.jenis_id = j.id
+
+            LEFT JOIN publikasi_file pf 
+                ON p.id = pf.publikasi_id
+            WHERE p.is_active = 1 and p.pokja_id = 4
+            GROUP BY p.id
+            ORDER BY p.tanggal_kegiatan DESC, p.created_at DESC
+        ");
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getWp()
+    {
+        $this->db->exec("SET SESSION group_concat_max_len = 100000");
+
+        $stmt = $this->db->prepare("
+            SELECT 
+            p.*,
+            pj.pokja_tipe AS tim,
+            pj.pokja_nama AS nama_tim,
+            j.nama AS jenis,
+            GROUP_CONCAT(
+                CONCAT(pf.id, '|', pf.nama_file, '|', pf.path_file, '|', pf.tipe_file)
+                SEPARATOR '##'
+            ) AS files
+
+            FROM publikasi p
+
+            LEFT JOIN pokja pj 
+                ON p.pokja_id = pj.id
+
+            LEFT JOIN publikasi_jenis j 
+                ON p.jenis_id = j.id
+
+            LEFT JOIN publikasi_file pf 
+                ON p.id = pf.publikasi_id
+            WHERE p.is_active = 1 and p.pokja_id = 5
+            GROUP BY p.id
+            ORDER BY p.tanggal_kegiatan DESC, p.created_at DESC
+        ");
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function getByRole($role, $pokjaId = null, $tanggalMulai = null, $tanggalSelesai = null, $jenis = null)
     {
         $this->db->exec("SET SESSION group_concat_max_len = 100000");

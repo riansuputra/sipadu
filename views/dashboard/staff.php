@@ -96,6 +96,19 @@ ob_start();
                 (in_array($user['role'], ['Admin', 'Staff']) && in_array($user['pokja_id'], [9], true))
             ): ?>
                 <div class="col-sm-6 col-lg-3 p-1">
+                    <a href="<?= url('?page=timpublikasi')  ?>"
+                        class="card card-link card-link-pop">
+
+                        <div class="img-responsive img-responsive-21x9 card-img-top"
+                            style="background-image: url('public/assets/img/publikasi.webp')">
+                        </div>
+
+                        <div class="card-body text-center fw-bold mb-0">
+                            Publikasi
+                        </div>
+                    </a>
+                </div>
+                <div class="col-sm-6 col-lg-3 p-1">
                     <a href="<?= url('?page=kepegawaian')  ?>"
                         class="card card-link card-link-pop">
 
@@ -135,18 +148,32 @@ ob_start();
                     </a>
                 </div>
                 <div class="col-sm-6 col-lg-3 p-1">
-                    <a href="<?= url('?page=timpublikasi')  ?>"
+                    <a href="<?= url('?page=dip-publik')  ?>"
                         class="card card-link card-link-pop">
 
                         <div class="img-responsive img-responsive-21x9 card-img-top"
-                            style="background-image: url('public/assets/img/publikasi.webp')">
+                            style="background-image: url('public/assets/img/dip.webp')">
                         </div>
 
                         <div class="card-body text-center fw-bold mb-0">
-                            Publikasi
+                            Daftar Informasi Publik
                         </div>
                     </a>
                 </div>
+                <div class="col-sm-6 col-lg-3 p-1">
+                    <a href="<?= url('?page=peraturan-publik')  ?>"
+                        class="card card-link card-link-pop">
+
+                        <div class="img-responsive img-responsive-21x9 card-img-top"
+                            style="background-image: url('public/assets/img/peraturan.webp')">
+                        </div>
+
+                        <div class="card-body text-center fw-bold mb-0">
+                            Peraturan
+                        </div>
+                    </a>
+                </div>
+
             <?php endif; ?>
 
         </div>

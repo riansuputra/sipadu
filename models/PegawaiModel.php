@@ -67,8 +67,9 @@ class PegawaiModel
                 pendidikan,
                 jurusan,
                 nomor_sk_pengangkatan,
-                nomor_sk_spmt
-            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                nomor_sk_spmt,
+                created_by
+            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
         ");
 
         $stmt->execute([
@@ -89,7 +90,8 @@ class PegawaiModel
             $data['pendidikan'],
             $data['jurusan'],
             $data['nomor_sk_pengangkatan'],
-            $data['nomor_sk_spmt']
+            $data['nomor_sk_spmt'],
+            $data['created_by']
         ]);
 
         return $this->db->lastInsertId();
