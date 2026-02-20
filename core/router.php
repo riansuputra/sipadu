@@ -39,6 +39,53 @@ function routeRequest()
             logout();
             break;
 
+
+        // Autentikasi ================================
+        case 'user':
+            authOnly();
+            roleOnly(['Superadmin']); // biasanya hanya Superadmin
+            require __DIR__ . '/../controllers/UserController.php';
+            $controller = new UserController();
+            $controller->index();
+            break;
+
+        case 'tambah-user':
+            authOnly();
+            roleOnly(['Superadmin']);
+            require __DIR__ . '/../controllers/UserController.php';
+            $controller = new UserController();
+            $controller->create();
+            break;
+
+        case 'user-store':
+            authOnly();
+            roleOnly(['Superadmin']);
+            require __DIR__ . '/../controllers/UserController.php';
+            $controller = new UserController();
+            $controller->store();
+            break;
+
+        case 'user-password':
+            authOnly();
+            roleOnly(['Superadmin']);
+            require __DIR__ . '/../controllers/UserController.php';
+            $controller = new UserController();
+            $controller->editPassword();
+            break;
+
+        case 'edit-user':
+            authOnly();
+            require __DIR__ . '/../controllers/UserController.php';
+            (new UserController())->edit();
+            break;
+
+        case 'user-update':
+            authOnly();
+            require __DIR__ . '/../controllers/UserController.php';
+            (new UserController())->update();
+            break;
+
+
         // Dashboard =================================
         case 'dashboard':
             authOnly(); // wajib login
@@ -242,6 +289,20 @@ function routeRequest()
             require __DIR__ . '/../controllers/PublikasiController.php';
             $controller = new PublikasiController();
             $controller->publikasiIndex();
+            break;
+
+        case 'approve-publikasi':
+            authOnly();
+            require __DIR__ . '/../controllers/PublikasiController.php';
+            $controller = new PublikasiController();
+            $controller->approve();
+            break;
+
+        case 'edit-status-publikasi':
+            authOnly();
+            require __DIR__ . '/../controllers/PublikasiController.php';
+            $controller = new PublikasiController();
+            $controller->editStatus();
             break;
 
         // Jenis Publikasi =======================================

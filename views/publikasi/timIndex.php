@@ -36,7 +36,7 @@ $tanggalMulai   = $_GET['tanggal_mulai'] ?? null;
 $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
 $jenis          = $_GET['jenis'] ?? null;
 
-$deskripsi = 'Menampilkan seluruh data';
+$deskripsi = 'Menampilkan seluruh data publikasi seluruh tim.';
 
 if ($tanggalMulai || $tanggalSelesai || $jenis) {
 
@@ -65,6 +65,8 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
     <div class="container-xl">
         <div class="row row-cards ">
 
+
+
             <div class="col-12 mb-0">
                 <div class="row">
                     <div class="col">
@@ -85,16 +87,15 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
             </div>
 
             <div class="col-12">
+
                 <div class="card">
-                    <div class="card-table">
-                        <div class="card-header">
-                            <div class="row w-full">
-                                <div class="col">
-                                    <h3 class="card-title mb-0">Tabel Publikasi</h3>
-                                    <p class="text-secondary m-0"><?= $deskripsi ?></p>
-                                </div>
-                                <div class="col-md-auto col-sm-12">
-                                    <div class="ms-auto d-flex flex-wrap btn-list">
+                    <div class="card-body">
+                        <div class="col-sm-12">
+
+                            <form method="get">
+                                <div class="row">
+
+                                    <div class="col-auto">
                                         <div class="input-group input-group-flat w-auto">
                                             <span class="input-group-text">
 
@@ -106,64 +107,73 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
                                             <input id="advanced-table-search" type="text" class="form-control" autocomplete="off" placeholder="Cari Data Publikasi">
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-md-auto col-sm-12">
-                                    <div class="ms-auto d-flex flex-wrap btn-list">
-                                        <form method="get">
-                                            <div class="row">
 
-                                                <input type="hidden" name="page" value="publikasi-publik">
+                                    <input type="hidden" name="page" value="publikasi-publik">
 
-                                                <div class="col-auto">
-                                                    <input type="date"
-                                                        name="tanggal_mulai"
-                                                        class="form-control"
-                                                        value="<?= htmlspecialchars($_GET['tanggal_mulai'] ?? '') ?>">
-                                                </div>
-
-                                                <div class="col-auto">
-                                                    <input type="date"
-                                                        name="tanggal_selesai"
-                                                        class="form-control"
-                                                        value="<?= htmlspecialchars($_GET['tanggal_selesai'] ?? '') ?>">
-                                                </div>
-
-                                                <div class="col-auto">
-                                                    <select name="jenis" class="form-select w-auto">
-                                                        <option value="">Semua Jenis</option>
-                                                        <option value="BERKALA" <?= ($_GET['jenis'] ?? '') == 'BERKALA' ? 'selected' : '' ?>>Berkala</option>
-                                                        <option value="SERTA MERTA" <?= ($_GET['jenis'] ?? '') == 'SERTA MERTA' ? 'selected' : '' ?>>Serta Merta</option>
-                                                        <option value="SETIAP SAAT" <?= ($_GET['jenis'] ?? '') == 'SETIAP SAAT' ? 'selected' : '' ?>>Setiap Saat</option>
-                                                        <option value="DIKECUALIKAN" <?= ($_GET['jenis'] ?? '') == 'DIKECUALIKAN' ? 'selected' : '' ?>>Dikecualikan</option>
-                                                    </select>
-
-                                                </div>
-                                                <div class="col-auto ms-auto">
-                                                    <button class="btn btn-primary">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-search">
-                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                            <path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
-                                                            <path d="M21 21l-6 -6" />
-                                                        </svg>
-                                                        Filter
-                                                    </button>
-                                                    <a href="<?= url('?page=publikasi-publik') ?>" class="btn btn-secondary">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
-                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                            <path d="M4 7l16 0" />
-                                                            <path d="M10 11l0 6" />
-                                                            <path d="M14 11l0 6" />
-                                                            <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                                                            <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-                                                        </svg>
-                                                        Reset
-                                                    </a>
-                                                </div>
-
-                                            </div>
-                                        </form>
+                                    <div class="col-auto">
+                                        <input type="date"
+                                            name="tanggal_mulai"
+                                            class="form-control"
+                                            value="<?= htmlspecialchars($_GET['tanggal_mulai'] ?? '') ?>">
                                     </div>
+
+                                    <div class="col-auto">
+                                        <input type="date"
+                                            name="tanggal_selesai"
+                                            class="form-control"
+                                            value="<?= htmlspecialchars($_GET['tanggal_selesai'] ?? '') ?>">
+                                    </div>
+
+                                    <div class="col-auto">
+                                        <select name="jenis" class="form-select w-auto">
+                                            <option value="">Semua Jenis</option>
+                                            <option value="BERKALA" <?= ($_GET['jenis'] ?? '') == 'BERKALA' ? 'selected' : '' ?>>Berkala</option>
+                                            <option value="SERTA MERTA" <?= ($_GET['jenis'] ?? '') == 'SERTA MERTA' ? 'selected' : '' ?>>Serta Merta</option>
+                                            <option value="SETIAP SAAT" <?= ($_GET['jenis'] ?? '') == 'SETIAP SAAT' ? 'selected' : '' ?>>Setiap Saat</option>
+                                            <option value="DIKECUALIKAN" <?= ($_GET['jenis'] ?? '') == 'DIKECUALIKAN' ? 'selected' : '' ?>>Dikecualikan</option>
+                                        </select>
+
+                                    </div>
+                                    <div class="col-auto ms-auto">
+                                        <button class="btn btn-primary">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-search">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+                                                <path d="M21 21l-6 -6" />
+                                            </svg>
+                                            Filter
+                                        </button>
+                                        <a href="<?= url('?page=publikasi-publik') ?>" class="btn btn-secondary">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path d="M4 7l16 0" />
+                                                <path d="M10 11l0 6" />
+                                                <path d="M14 11l0 6" />
+                                                <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                                                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                                            </svg>
+                                            Reset
+                                        </a>
+                                    </div>
+
                                 </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-table">
+                        <div class="card-header">
+                            <div class="row w-full">
+                                <div class="col">
+                                    <h3 class="card-title mb-0">Tabel Publikasi</h3>
+                                    <p class="text-secondary m-0"><?= $deskripsi ?></p>
+                                </div>
+
                             </div>
                         </div>
                         <div id="advanced-table">
@@ -177,14 +187,17 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
                                             <th>
                                                 <button class="table-sort d-flex justify-content-between" data-sort="sort-judul">Judul</button>
                                             </th>
-                                            <th>
-                                                <button class="table-sort d-flex justify-content-between" data-sort="sort-tanggal">Tanggal</button>
-                                            </th>
-                                            <th>
-                                                <button class="table-sort d-flex justify-content-between" data-sort="sort-lokasi">Lokasi</button>
-                                            </th>
                                             <th class="w-1">
                                                 <button class="table-sort d-flex justify-content-between" data-sort="sort-pokja">Unit/Tim</button>
+                                            </th>
+                                            <th>
+                                                <button class="table-sort d-flex justify-content-between" data-sort="sort-pokja">Status</button>
+                                            </th>
+                                            <th>
+                                                <button class="table-sort d-flex justify-content-between" data-sort="sort-tanggal">Tanggal <br> Publikasi</button>
+                                            </th>
+                                            <th class="w-1">
+                                                <button class="table-sort d-flex justify-content-between" data-sort="sort-lokasi">Tanggal Dibuat <br>& Diperbarui</button>
                                             </th>
                                             <th class="w-1">
                                                 <button class="table-sort d-flex justify-content-between" data-sort="sort-file">File</button>
@@ -204,14 +217,26 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
                                                     <?= htmlspecialchars($d['judul'] ?? '-') ?>
                                                 </td>
 
-                                                <td class="sort-tanggal">
-                                                    <?= htmlspecialchars(date('d/m/Y', strtotime($d['tanggal_kegiatan'])) ?? '-') ?>
-                                                </td>
-                                                <td class="sort-lokasi">
-                                                    <?= htmlspecialchars($d['lokasi'] ?? '-') ?>
-                                                </td>
                                                 <td class="sort-pokja">
                                                     <?= htmlspecialchars($d['nama_tim'] ?? '-') ?>
+                                                </td>
+                                                <td class="sort-pokja text-nowrap">
+                                                    <?php
+                                                    if ($d['is_published'] === 1) {
+                                                        $bg = 'success';
+                                                        $text = 'Terbit';
+                                                    } else {
+                                                        $bg = 'secondary';
+                                                        $text = 'Draft';
+                                                    }
+                                                    ?>
+                                                    <span class="badge bg-<?= $bg ?> me-1"></span><?= $text ?? '-' ?>
+                                                </td>
+                                                <td class="sort-tanggal">
+                                                    <span class="badge bg-primary-lt"><?= htmlspecialchars(date('d/m/Y', strtotime($d['tanggal_kegiatan'])) ?? '-') ?></span>
+                                                </td>
+                                                <td class="sort-lokasi">
+                                                    <span class="badge"><?= htmlspecialchars(date('d/m/Y', strtotime($d['tanggal_kegiatan'])) ?? '-') ?></span> <br> <span class="badge bg-success-lt"><?= htmlspecialchars(date('d/m/Y', strtotime($d['tanggal_kegiatan'])) ?? '-') ?></span>
                                                 </td>
                                                 <td class="sort-file">
                                                     <div class="btn-group me-1">
@@ -338,6 +363,13 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                 <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
                                                                 <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
+                                                            </svg>
+                                                        </a>
+                                                        <a href="<?= url('?page=edit-status-publikasi&id=' . $d["id"]) ?>" class="text-yellow me-2">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-settings" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Status">
+                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                                <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065" />
+                                                                <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
                                                             </svg>
                                                         </a>
                                                     </div>
@@ -663,6 +695,7 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
     </script>
     <?php unset($_SESSION['flash']); ?>
 <?php endif; ?>
+
 
 
 <?php

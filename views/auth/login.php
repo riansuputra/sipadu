@@ -113,7 +113,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
             <div class="login-photo">
                 <!-- background foto -->
                 <div class="login-bg"
-                    style="background-image: url(public/assets/img/login-img.webp)">
+                    style="background-image: url(public/assets/img/tests.webp)">
                 </div>
                 <!-- overlay bawah -->
                 <div class="login-overlay">

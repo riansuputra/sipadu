@@ -19,6 +19,8 @@ $headerImage = $headerImage ?? url('public/assets/img/banner.webp');
     <!-- CSS Global  -->
     <link href="<?= url('public/assets/css/tabler.min.css') ?>" rel="stylesheet" />
     <link href="<?= url('public/assets/css/tabler-vendors.min.css') ?>" rel="stylesheet" />
+    <link href="<?= url('public/assets/css/datatables.css') ?>" rel="stylesheet" />
+    <link href="<?= url('public/assets/css/datatables.min.css') ?>" rel="stylesheet" />
     <link href="<?= url('public/assets/dist/css/demo.min.css') ?>" rel="stylesheet" />
     <link href="<?= url('public/assets/dist/css/tabler-flags.min.css') ?>" rel="stylesheet" />
 
@@ -202,6 +204,8 @@ $headerImage = $headerImage ?? url('public/assets/img/banner.webp');
     <script src="<?= url('public/assets/dist/libs/list.js/dist/list.min.js') ?>" defer=""></script>
     <script src="<?= url('public/assets/dist/libs/apexcharts/dist/apexcharts.min.js') ?>" defer></script>
     <script src="<?= url('public/assets/js/tabler.min.js') ?>" defer></script>
+    <script src="<?= url('public/assets/js/datatables.js') ?>" defer></script>
+    <script src="<?= url('public/assets/js/datatables.min.js') ?>" defer></script>
     <script src="<?= url('public/assets/dist/libs/tom-select/dist/js/tom-select.base.min.js') ?>" defer></script>
 </body>
 

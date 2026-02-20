@@ -158,9 +158,9 @@ if ($tahun || $jenis) {
                             </div>
                         </div>
 
-                        <div id="advanced-table">
+                        <div id="">
                             <div class="table-responsive">
-                                <table class="table table-vcenter table-selectable table-bordered table-striped">
+                                <table id="dipTable" class="table table-vcenter table-selectable table-bordered table-striped">
                                     <thead>
                                         <tr>
                                             <th style="width:1%;">
@@ -610,70 +610,21 @@ if ($tahun || $jenis) {
 </div>
 
 <script>
-    const advancedTable = {
-        headers: [{
-                "data-sort": "sort-no",
-                name: "No"
-            },
-            {
-                "data-sort": "sort-nama",
-                name: "Nama Informasi"
-            },
-            {
-                "data-sort": "sort-tahun",
-                name: "Tahun"
-            },
-            {
-                "data-sort": "sort-jenis",
-                name: "Jenis Informasi"
-            },
-            {
-                "data-sort": "sort-retensi",
-                name: "Retensi"
-            },
-            {
-                "data-sort": "sort-bentuk",
-                name: "bentuk"
-            },
-            {
-                "data-sort": "sort-file",
-                name: "File"
-            },
-
-            {
-                "data-sort": "sort-aksi",
-                name: "Aksi"
-            },
-        ],
-    };
-    const setPageListItems = (e) => {
-        window.tabler_list["advanced-table"].page = parseInt(e.target.dataset.value);
-        window.tabler_list["advanced-table"].update();
-        document.querySelector("#page-count").innerHTML = e.target.dataset.value;
-    };
-    window.tabler_list = window.tabler_list || {};
     document.addEventListener("DOMContentLoaded", function() {
-        const list = (window.tabler_list["advanced-table"] = new List("advanced-table", {
-            sortClass: "table-sort",
-            listClass: "table-tbody",
-            page: parseInt("10"),
-            pagination: {
-                item: (value) => {
-                    return `<li class="page-item"><a class="page-link cursor-pointer">${value.page}</a></li>`;
-                },
-                innerWindow: 1,
-                outerWindow: 1,
-                left: 0,
-                right: 0,
-            },
-            valueNames: advancedTable.headers.map((header) => header["data-sort"]),
-        }));
-        const searchInput = document.querySelector("#advanced-table-search");
-        if (searchInput) {
-            searchInput.addEventListener("input", () => {
-                list.search(searchInput.value);
-            });
-        }
+        new DataTable('#dipTable', {
+            pageLength: 10,
+            lengthMenu: [10, 20, 50, 100],
+            stateSave: true,
+
+            language: {
+                search: "Cari:",
+                lengthMenu: "Tampilkan _MENU_ data",
+                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                infoEmpty: "Tidak ada data",
+                zeroRecords: "Data tidak ditemukan",
+            }
+        });
+
     });
 </script>
 

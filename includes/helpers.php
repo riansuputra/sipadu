@@ -123,3 +123,12 @@ function url(string $path = ''): string
 {
     return BASE_URL . '/' . ltrim($path, '/');
 }
+
+function getRoleButuhPokja(): array
+{
+    // isinya ROLE_ID (bukan kode)
+    return [
+        2, // ADMIN TIM
+        4  // STAFF
+    ];
+}

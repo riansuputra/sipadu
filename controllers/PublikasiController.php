@@ -394,7 +394,7 @@ class PublikasiController
         // proses upload file jika ada
         if (!empty($_FILES['file']['name'][0])) {
 
-            $dir = __DIR__ . '/../uploads/peraturan/';
+            $dir = __DIR__ . '/../uploads/publikasi/';
 
             if (!is_dir($dir))
                 mkdir($dir, 0777, true);
@@ -413,7 +413,7 @@ class PublikasiController
                 if (move_uploaded_file($tmp, $path)) {
                     $model->insertFile($publikasiId, [
                         'nama_file'   => $nama,
-                        'path_file'   => 'uploads/peraturan/' . $namaBaru,
+                        'path_file'   => 'uploads/publikasi/' . $namaBaru,
                         'tipe_file'   => $ext,
                         'ukuran_file' => $size
                     ]);
@@ -669,6 +669,138 @@ class PublikasiController
         exit;
     }
 
+    public function editStatus()
+    {
+        authOnly();
+
+        global $pdo;
+
+        $user = currentUser();
+        if (!$user || empty($user['id'])) {
+            die("User tidak valid");
+        }
+        $role = currentRole();
+
+        $model = new PublikasiModel($pdo);
+
+        $id = $_GET['id'];
+
+        $publikasi = $model->getById($id);
+        $files = $model->getFiles($id);
+
+        $modeljenis = new PublikasiJenisModel($pdo);
+        $jenis = $modeljenis->getAll();
+
+        require __DIR__ . '/../views/publikasi/editStatus.php';
+    }
+
+    public function approve()
+    {
+        authOnly();
+        global $pdo;
+
+        $user = currentUser();
+        if (!$user || empty($user['id'])) {
+            die("User tidak valid");
+        }
+
+        $errors = [];
+
+        // ==============================
+        // VALIDASI ID
+        // ==============================
+        if (empty($_POST['id'])) {
+            $errors['id'] = "ID publikasi tidak ditemukan";
+        }
+
+        // ==============================
+        // AMBIL STATUS TOGGLE
+        // ==============================
+        $isPublished = isset($_POST['is_published']) ? 1 : 0;
+
+        // ==============================
+        // AMBIL DATA LINK OBJECT
+        // ==============================
+        $linksInput = $_POST['publish_links'] ?? [];
+        $cleanLinks = [];
+
+        if ($isPublished) {
+
+            foreach ($linksInput as $i => $link) {
+
+                $platform = trim($link['platform'] ?? '');
+                $url      = trim($link['url'] ?? '');
+
+                // skip kalau dua-duanya kosong
+                if (!$platform && !$url) continue;
+
+                // validasi platform
+                if (empty($platform)) {
+                    $errors['publish_links'] = "Platform wajib dipilih";
+                    break;
+                }
+
+                // validasi url
+                if (empty($url)) {
+                    $errors['publish_links'] = "Link publikasi wajib diisi";
+                    break;
+                }
+
+                if (!filter_var($url, FILTER_VALIDATE_URL)) {
+                    $errors['publish_links'] = "Format URL tidak valid";
+                    break;
+                }
+
+                // simpan data bersih
+                $cleanLinks[] = [
+                    'platform' => $platform,
+                    'url'      => $url
+                ];
+            }
+
+            // minimal 1 link jika publish aktif
+            if (empty($cleanLinks)) {
+                $errors['publish_links'] = "Minimal 1 link publish wajib diisi jika publish aktif";
+            }
+        }
+
+
+        if (!empty($errors)) {
+            $_SESSION["errors"] = $errors;
+            $_SESSION["old"] = $_POST;
+
+            header("Location: " . url('?page=edit-status-publikasi&id=' . $_POST['id']));
+            exit();
+        }
+
+        $model = new PublikasiModel($pdo);
+
+
+        $data = [
+            'is_published' => $isPublished,
+            'published_at' => $isPublished ? date('Y-m-d H:i:s') : null,
+            'published_by' => $isPublished ? $user['id'] : null,
+            'updated_by'   => $user['id']
+        ];
+
+        // hanya update link kalau ada input baru
+        if (!empty($cleanLinks)) {
+            $data['publish_links'] = json_encode($cleanLinks);
+        }
+
+
+        $model->updatePublish($_POST['id'], $data);
+
+        $_SESSION['flash'] = [
+            'status'  => 'success',
+            'message' => $isPublished
+                ? 'Publikasi berhasil dipublish'
+                : 'Publikasi di-unpublish'
+        ];
+
+        header("Location: " . url('?page=timpublikasi'));
+        exit;
+    }
 
     public function delete()
     {
@@ -753,6 +885,11 @@ class PublikasiController
 
     public function publikasiIndex()
     {
+        // echo "<pre>";
+        // print_r($_POST);
+        // print_r($_GET['jenis']);
+        // echo "</pre>";
+        // die();
         authOnly();
 
         global $pdo;

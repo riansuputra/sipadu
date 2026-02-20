@@ -396,6 +396,32 @@ class PublikasiModel
         ]);
     }
 
+    public function updatePublish($id, $data)
+    {
+        $sql = "
+        UPDATE publikasi SET
+            is_published = :is_published,
+            published_at = :published_at,
+            published_by = :published_by,
+            publish_links = :publish_links,
+            updated_by = :updated_by,
+            updated_at = NOW()
+        WHERE id = :id
+    ";
+
+        $stmt = $this->db->prepare($sql);
+
+        return $stmt->execute([
+            ':id'            => $id,
+            ':is_published'  => $data['is_published'],
+            ':published_at'  => $data['published_at'],
+            ':published_by'  => $data['published_by'],
+            ':publish_links' => $data['publish_links'],
+            ':updated_by'    => $data['updated_by']
+        ]);
+    }
+
+
     public function delete($id, $deletedBy)
     {
         $stmt = $this->db->prepare("

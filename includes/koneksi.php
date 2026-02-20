@@ -10,6 +10,13 @@ $user = 'root';
 $pass = '';
 $charset = 'utf8mb4';
 
+// Konfigurasi database server
+// $host = 'db.bpmpbali.id';
+// $db   = 'db_sipadu';
+// $user = 'root';
+// $pass = 'Denpasar14';
+// $charset = 'utf8mb4';
+
 // Konfigurasi database termux ke server db infinityfree
 // $host = 'sql12.freesqldatabase.com';
 // $db   = 'sql12815967';

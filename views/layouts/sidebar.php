@@ -3,7 +3,7 @@ $page = $_GET['page'] ?? '';
 $arsipPages = ['arsip', 'tambah-arsip'];
 $publikasiPages = ['publikasi', 'tambah-publikasi', 'tambah-jenis-publikasi'];
 $dokumenPages = ['dokumen', 'tambah-dokumen', 'tambah-jenis-dokumen'];
-$pengaturanPages = ['profil', 'manajemen-file', 'backup-data'];
+$pengaturanPages = ['profil', 'manajemen-file', 'backup-data', 'user', 'tambah-user', 'user-password'];
 $dipPages = ['dip', 'tambah-dip', 'detail-dip', 'edit-dip', 'dip-print-filter'];
 $peraturanPages = ['peraturan', 'tambah-peraturan', 'detail-peraturan', 'edit-peraturan', 'jenis-peraturan', 'tambah-jenis-peraturan'];
 $pegawaiPages = ['pegawai', 'tambah-pegawai', 'detail-pegawai'];
@@ -244,8 +244,8 @@ $pegawaiPages = ['pegawai', 'tambah-pegawai', 'detail-pegawai'];
                             <a class="dropdown-item" href="<?= url('?page=dashboard&mode=staff') ?>">
                                 Dashboard Staff
                             </a>
-                            <a class="dropdown-item <?= $page === 'profil' ? 'active' : '' ?>" href="<?= url('?page=profil') ?>">
-                                Profil
+                            <a class="dropdown-item <?= $page === 'user' ? 'active' : '' ?>" href="<?= url('?page=user') ?>">
+                                Manajemen User
                             </a>
                             <a class="dropdown-item <?= $page === 'manajemen-file' ? 'active' : '' ?>" href="<?= url('?page=manajemen-file') ?>">
                                 Manajemen File
