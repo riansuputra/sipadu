@@ -19,14 +19,15 @@ function isLoggedIn()
 // -------------------------------
 function loginUser(array $user)
 {
-    // Simpan hanya data penting
+    session_regenerate_id(true); // WAJIB
+
     $_SESSION['user'] = [
-        'id'         => $user['id'],
-        'username'   => $user['username'],
-        'nama'       => $user['nama_lengkap'],
-        'role'       => $user['kode_role'], // SUPERADMIN / ADMIN / PIMPINAN / STAFF
-        'role_id'    => $user['role_id'],
-        'pokja_id'   => $user['pokja_id'] ?? null,
+        'id' => $user['id'],
+        'username' => $user['username'],
+        'nama' => $user['nama_lengkap'],
+        'role' => $user['kode_role'],
+        'role_id' => $user['role_id'],
+        'pokja_id' => $user['pokja_id'] ?? null,
         'pokja_nama' => $user['pokja_nama'] ?? null,
         'pokja_tipe' => $user['pokja_tipe'] ?? null,
     ];
@@ -37,11 +38,23 @@ function loginUser(array $user)
 // -------------------------------
 function logout()
 {
-    // Hapus semua session
     $_SESSION = [];
+
+    if (ini_get("session.use_cookies")) {
+        $params = session_get_cookie_params();
+        setcookie(
+            session_name(),
+            '',
+            time() - 42000,
+            $params["path"],
+            $params["domain"],
+            $params["secure"],
+            $params["httponly"]
+        );
+    }
+
     session_destroy();
 
-    // Redirect ke login
     header('Location: ' . url('?page=login'));
     exit;
 }
