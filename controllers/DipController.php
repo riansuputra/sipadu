@@ -9,7 +9,7 @@ class DipController
     {
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         if (!$user || empty($user['id'])) {
@@ -20,7 +20,7 @@ class DipController
         $tahun = $_GET['tahun'] ?? null;
         $jenis = $_GET['jenis'] ?? null;
 
-        $model = new DipModel($pdo);
+        $model = new DipModel();
         if (!empty($tahun) || !empty($jenis)) {
             $data = $model->getFiltered($tahun, $jenis);
         } else {
@@ -52,7 +52,7 @@ class DipController
         // die();
 
         authOnly();
-        global $pdo;
+
 
         $user = currentUser();
         if (!$user || empty($user['id'])) {
@@ -147,7 +147,7 @@ class DipController
             exit();
         }
 
-        $model = new DipModel($pdo);
+        $model = new DipModel();
 
         $data = $_POST;
         $data["created_by"] = $user['id'];
@@ -217,7 +217,7 @@ class DipController
     {
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         if (!$user || empty($user['id'])) {
@@ -225,7 +225,7 @@ class DipController
         }
         $role = currentRole();
 
-        $model = new DipModel($pdo);
+        $model = new DipModel();
 
         $id = $_GET["id"];
 
@@ -239,7 +239,7 @@ class DipController
     {
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         if (!$user || empty($user['id'])) {
@@ -247,7 +247,7 @@ class DipController
         }
         $role = currentRole();
 
-        $model = new DipModel($pdo);
+        $model = new DipModel();
 
         $id = $_GET["id"];
 
@@ -262,7 +262,7 @@ class DipController
 
 
         authOnly();
-        global $pdo;
+
 
         $user = currentUser();
         if (!$user || empty($user['id'])) {
@@ -270,7 +270,7 @@ class DipController
         }
         $role = currentRole();
 
-        $model = new DipModel($pdo);
+        $model = new DipModel();
 
         $tahun = $_GET['tahun'] ?? null;
         $jenis = $_GET['jenis'] ?? []; // bisa array
@@ -295,7 +295,7 @@ class DipController
         // echo "</pre>";
         // die();
         authOnly();
-        global $pdo;
+
 
         $user = currentUser();
         if (!$user || empty($user['id'])) {
@@ -303,7 +303,7 @@ class DipController
         }
         $role = currentRole();
 
-        $model = new DipModel($pdo);
+        $model = new DipModel();
 
         // ==========================
         // AMBIL FILTER DATA
@@ -351,7 +351,7 @@ class DipController
     {
         authOnly();
 
-        global $pdo;
+
 
         // echo "<pre>";
         // print_r($_POST);
@@ -449,7 +449,7 @@ class DipController
             exit();
         }
 
-        $model = new DipModel($pdo);
+        $model = new DipModel();
 
         $data = $_POST;
         $data["updated_by"] = $user['id'];
@@ -524,7 +524,7 @@ class DipController
         // authOnly();
 
         authOnly();
-        global $pdo;
+
 
         if (empty($_GET['id'])) {
             $_SESSION['flash'] = [
@@ -541,7 +541,7 @@ class DipController
         }
         $role = currentRole();
 
-        $model = new DipModel($pdo);
+        $model = new DipModel();
         $result = $model->delete($_GET['id'], $user['id']);
 
         if (!$result) {
@@ -573,7 +573,7 @@ class DipController
     {
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         if (!$user || empty($user['id'])) {
@@ -584,7 +584,7 @@ class DipController
         $tahun = $_GET['tahun'] ?? null;
         $jenis = $_GET['jenis'] ?? null;
 
-        $model = new DipModel($pdo);
+        $model = new DipModel();
         if (!empty($tahun) || !empty($jenis)) {
             $data = $model->getFiltered($tahun, $jenis);
         } else {
@@ -598,12 +598,12 @@ class DipController
     public function downloadFile()
     {
         authOnly();
-        global $pdo;
+
 
         $fileId = $_GET['file'];
         $dipId = $_GET['id'];
 
-        $model = new DipModel($pdo);
+        $model = new DipModel();
         $file  = $model->getFileById($fileId);
 
         if (!$file) {

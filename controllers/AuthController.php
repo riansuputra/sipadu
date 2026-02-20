@@ -8,6 +8,14 @@ require_once __DIR__ . '/../core/auth.php';
 
 class AuthController
 {
+
+    protected $db;
+
+    public function __construct()
+    {
+        // ambil dari singleton
+        $this->db = Database::getInstance();
+    }
     // ----------------------------
     // TAMPILKAN HALAMAN LOGIN
     // ----------------------------
@@ -27,7 +35,7 @@ class AuthController
             redirectByRole();
         }
 
-        global $pdo;
+
 
         // Ambil input
         $username = trim($_POST['username'] ?? '');
@@ -55,7 +63,7 @@ class AuthController
         // ----------------------------
         // QUERY USER
         // ----------------------------
-        $stmt = $pdo->prepare("
+        $stmt = $this->db->prepare("
             SELECT 
                 u.id,
                 u.username,

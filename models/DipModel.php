@@ -1,12 +1,16 @@
 <?php
 
+require_once __DIR__ . '/../includes/koneksi.php';
+
+
 class DipModel
 {
     protected $db;
 
-    public function __construct($pdo)
+    public function __construct()
     {
-        $this->db = $pdo;
+        // ambil dari singleton
+        $this->db = Database::getInstance();
     }
 
     public function getAll()

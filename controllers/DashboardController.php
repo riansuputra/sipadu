@@ -16,7 +16,7 @@ class DashboardController
         // Pastikan user sudah login
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         $role = currentRole();
@@ -27,7 +27,7 @@ class DashboardController
         // 3. STAFF → modul tampil di dashboard
         // ----------------------------
         if ($mode === 'staff' && in_array($role, ['Admin', 'Superadmin', 'Pimpinan'])) {
-            $moduleModel = new ModulModel($pdo);
+            $moduleModel = new ModulModel();
 
             // ambil semua modul aktif
             $modules = $moduleModel->getAllActive();
@@ -36,7 +36,7 @@ class DashboardController
         }
 
         if (in_array($role, ['Staff', 'Pimpinan'])) {
-            $moduleModel = new ModulModel($pdo);
+            $moduleModel = new ModulModel();
 
             // ambil semua modul aktif
             $modules = $moduleModel->getAllActive();
@@ -66,7 +66,7 @@ class DashboardController
         // Pastikan user sudah login
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         $role = currentRole();
@@ -79,7 +79,7 @@ class DashboardController
         // Pastikan user sudah login
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         $role = currentRole();
@@ -92,7 +92,7 @@ class DashboardController
         // Pastikan user sudah login
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         $role = currentRole();
@@ -105,7 +105,7 @@ class DashboardController
         // Pastikan user sudah login
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         $role = currentRole();
@@ -118,7 +118,7 @@ class DashboardController
         // Pastikan user sudah login
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         $role = currentRole();

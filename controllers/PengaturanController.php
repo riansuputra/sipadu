@@ -16,7 +16,7 @@ class PengaturanController
         // Pastikan user sudah login
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         // Ambil role user
@@ -49,7 +49,7 @@ class PengaturanController
         // Pastikan user sudah login
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         // Ambil role user
@@ -82,7 +82,7 @@ class PengaturanController
         // Pastikan user sudah login
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         // Ambil role user

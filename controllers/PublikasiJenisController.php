@@ -8,12 +8,12 @@ class PublikasiJenisController
     public function index()
     {
         authOnly();
-        global $pdo;
+
 
         $user = currentUser();
         $role = currentRole();
 
-        $model = new PublikasiJenisModel($pdo);
+        $model = new PublikasiJenisModel();
         $data  = $model->getAll();
 
         require __DIR__ . '/../views/jenis_publikasi/index.php';
@@ -22,12 +22,12 @@ class PublikasiJenisController
     public function create()
     {
         authOnly();
-        global $pdo;
+
 
         $user = currentUser();
         $role = currentRole();
 
-        $model = new PublikasiJenisModel($pdo);
+        $model = new PublikasiJenisModel();
         $data  = $model->getAll();
         require __DIR__ . '/../views/jenis_publikasi/create.php';
     }
@@ -35,7 +35,7 @@ class PublikasiJenisController
     public function store()
     {
         authOnly();
-        global $pdo;
+
         $user = currentUser();
         $role = currentRole();
 
@@ -52,7 +52,7 @@ class PublikasiJenisController
             exit();
         }
 
-        $model = new PublikasiJenisModel($pdo);
+        $model = new PublikasiJenisModel();
         $data = $_POST;
         $jenis = $model->insert($data);
 
@@ -68,12 +68,12 @@ class PublikasiJenisController
     {
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         $role = currentRole();
 
-        $model = new PublikasiJenisModel($pdo);
+        $model = new PublikasiJenisModel();
 
         $id = $_GET['id'];
 
@@ -86,12 +86,12 @@ class PublikasiJenisController
     {
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         $role = currentRole();
 
-        $model = new PublikasiJenisModel($pdo);
+        $model = new PublikasiJenisModel();
 
         $id = $_GET['id'];
 
@@ -103,7 +103,7 @@ class PublikasiJenisController
     public function update()
     {
         authOnly();
-        global $pdo;
+
         $user = currentUser();
         $role = currentRole();
 
@@ -120,7 +120,7 @@ class PublikasiJenisController
             exit();
         }
 
-        $model = new PublikasiJenisModel($pdo);
+        $model = new PublikasiJenisModel();
         $data = $_POST;
         $model->update($_POST['id'], $data);
 
@@ -136,12 +136,12 @@ class PublikasiJenisController
     public function delete()
     {
         authOnly();
-        global $pdo;
+
 
         $user = currentUser();
         $role = currentRole();
 
-        $model = new PublikasiJenisModel($pdo);
+        $model = new PublikasiJenisModel();
 
         $id = $_GET['id'];
 

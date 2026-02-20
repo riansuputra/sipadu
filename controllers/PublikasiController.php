@@ -10,7 +10,7 @@ class PublikasiController
     {
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         if (!$user || empty($user['id'])) {
@@ -30,10 +30,10 @@ class PublikasiController
         // echo "</pre>";
         // die();
 
-        $modeljenis = new PublikasiJenisModel($pdo);
+        $modeljenis = new PublikasiJenisModel();
         $jenisInput = $modeljenis->getAll();
 
-        $model = new PublikasiModel($pdo);
+        $model = new PublikasiModel();
 
         $data = $model->getByRole(
             $role,
@@ -56,7 +56,7 @@ class PublikasiController
     {
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         if (!$user || empty($user['id'])) {
@@ -76,10 +76,10 @@ class PublikasiController
         // echo "</pre>";
         // die();
 
-        $modeljenis = new PublikasiJenisModel($pdo);
+        $modeljenis = new PublikasiJenisModel();
         $jenisInput = $modeljenis->getAll();
 
-        $model = new PublikasiModel($pdo);
+        $model = new PublikasiModel();
 
         if (!empty($tanggalMulai) || !empty($tanggalSelesai) || !empty($jenis)) {
             $data = $model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
@@ -94,7 +94,7 @@ class PublikasiController
     {
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         if (!$user || empty($user['id'])) {
@@ -114,10 +114,10 @@ class PublikasiController
         // echo "</pre>";
         // die();
 
-        $modeljenis = new PublikasiJenisModel($pdo);
+        $modeljenis = new PublikasiJenisModel();
         $jenisInput = $modeljenis->getAll();
 
-        $model = new PublikasiModel($pdo);
+        $model = new PublikasiModel();
 
         if (!empty($tanggalMulai) || !empty($tanggalSelesai) || !empty($jenis)) {
             $data = $model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
@@ -132,7 +132,7 @@ class PublikasiController
     {
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         if (!$user || empty($user['id'])) {
@@ -152,10 +152,10 @@ class PublikasiController
         // echo "</pre>";
         // die();
 
-        $modeljenis = new PublikasiJenisModel($pdo);
+        $modeljenis = new PublikasiJenisModel();
         $jenisInput = $modeljenis->getAll();
 
-        $model = new PublikasiModel($pdo);
+        $model = new PublikasiModel();
 
         if (!empty($tanggalMulai) || !empty($tanggalSelesai) || !empty($jenis)) {
             $data = $model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
@@ -170,7 +170,7 @@ class PublikasiController
     {
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         if (!$user || empty($user['id'])) {
@@ -190,10 +190,10 @@ class PublikasiController
         // echo "</pre>";
         // die();
 
-        $modeljenis = new PublikasiJenisModel($pdo);
+        $modeljenis = new PublikasiJenisModel();
         $jenisInput = $modeljenis->getAll();
 
-        $model = new PublikasiModel($pdo);
+        $model = new PublikasiModel();
 
         if (!empty($tanggalMulai) || !empty($tanggalSelesai) || !empty($jenis)) {
             $data = $model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
@@ -208,7 +208,7 @@ class PublikasiController
     {
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         if (!$user || empty($user['id'])) {
@@ -228,10 +228,10 @@ class PublikasiController
         // echo "</pre>";
         // die();
 
-        $modeljenis = new PublikasiJenisModel($pdo);
+        $modeljenis = new PublikasiJenisModel();
         $jenisInput = $modeljenis->getAll();
 
-        $model = new PublikasiModel($pdo);
+        $model = new PublikasiModel();
 
         if (!empty($tanggalMulai) || !empty($tanggalSelesai) || !empty($jenis)) {
             $data = $model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
@@ -250,7 +250,7 @@ class PublikasiController
         $jenis = $_GET['jenis'] ?? null;
 
         // jika ada filter → pakai getFiltered
-        global $pdo;
+
 
         $user = currentUser();
         if (!$user || empty($user['id'])) {
@@ -258,7 +258,7 @@ class PublikasiController
         }
         $role = currentRole();
 
-        $model = new PublikasiModel($pdo);
+        $model = new PublikasiModel();
         if (!empty($tahun) || !empty($jenis)) {
             $data = $model->getFiltered($tahun, $jenis);
         } else {
@@ -275,14 +275,14 @@ class PublikasiController
     {
         authOnly();
 
-        global $pdo;
+
         $user = currentUser();
         if (!$user || empty($user['id'])) {
             die("User tidak valid");
         }
         $role = currentRole();
 
-        $modeljenis = new PublikasiJenisModel($pdo);
+        $modeljenis = new PublikasiJenisModel();
         $jenis = $modeljenis->getAll();
 
         require __DIR__ . '/../views/publikasi/create.php';
@@ -292,7 +292,7 @@ class PublikasiController
     {
         authOnly();
 
-        global $pdo;
+
 
         // echo "<pre>";
         // print_r($_POST);
@@ -383,7 +383,7 @@ class PublikasiController
             exit();
         }
 
-        $model = new PublikasiModel($pdo);
+        $model = new PublikasiModel();
 
         $data = $_POST;
         $data['created_by'] = $user['id'];
@@ -450,7 +450,7 @@ class PublikasiController
 
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         if (!$user || empty($user['id'])) {
@@ -458,7 +458,7 @@ class PublikasiController
         }
         $role = currentRole();
 
-        $model = new PublikasiModel($pdo);
+        $model = new PublikasiModel();
 
         $id = $_GET['id'];
 
@@ -472,7 +472,7 @@ class PublikasiController
     {
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         if (!$user || empty($user['id'])) {
@@ -480,14 +480,14 @@ class PublikasiController
         }
         $role = currentRole();
 
-        $model = new PublikasiModel($pdo);
+        $model = new PublikasiModel();
 
         $id = $_GET['id'];
 
         $publikasi = $model->getById($id);
         $files = $model->getFiles($id);
 
-        $modeljenis = new PublikasiJenisModel($pdo);
+        $modeljenis = new PublikasiJenisModel();
         $jenis = $modeljenis->getAll();
 
         require __DIR__ . '/../views/publikasi/edit.php';
@@ -496,7 +496,7 @@ class PublikasiController
     public function update()
     {
         authOnly();
-        global $pdo;
+
 
         $user = currentUser();
         if (!$user || empty($user['id'])) {
@@ -595,7 +595,7 @@ class PublikasiController
             exit();
         }
 
-        $model = new PublikasiModel($pdo);
+        $model = new PublikasiModel();
 
         // ==============================
         // UPDATE DATA UTAMA
@@ -673,7 +673,7 @@ class PublikasiController
     {
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         if (!$user || empty($user['id'])) {
@@ -681,14 +681,14 @@ class PublikasiController
         }
         $role = currentRole();
 
-        $model = new PublikasiModel($pdo);
+        $model = new PublikasiModel();
 
         $id = $_GET['id'];
 
         $publikasi = $model->getById($id);
         $files = $model->getFiles($id);
 
-        $modeljenis = new PublikasiJenisModel($pdo);
+        $modeljenis = new PublikasiJenisModel();
         $jenis = $modeljenis->getAll();
 
         require __DIR__ . '/../views/publikasi/editStatus.php';
@@ -697,7 +697,7 @@ class PublikasiController
     public function approve()
     {
         authOnly();
-        global $pdo;
+
 
         $user = currentUser();
         if (!$user || empty($user['id'])) {
@@ -773,7 +773,7 @@ class PublikasiController
             exit();
         }
 
-        $model = new PublikasiModel($pdo);
+        $model = new PublikasiModel();
 
 
         $data = [
@@ -806,7 +806,7 @@ class PublikasiController
     {
         authOnly();
 
-        global $pdo;
+
 
         if (empty($_GET['id'])) {
             $_SESSION['flash'] = [
@@ -823,7 +823,7 @@ class PublikasiController
         }
         $role = currentRole();
 
-        $model = new PublikasiModel($pdo);
+        $model = new PublikasiModel();
         $result = $model->delete($_GET['id'], $user['id']);
 
         if (!$result) {
@@ -855,7 +855,7 @@ class PublikasiController
     {
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         if (!$user || empty($user['id'])) {
@@ -869,7 +869,7 @@ class PublikasiController
         $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
         $jenis = $_GET['jenis'] ?? null;
 
-        $model = new PublikasiModel($pdo);
+        $model = new PublikasiModel();
 
 
         $data = $model->getByRole(
@@ -892,7 +892,7 @@ class PublikasiController
         // die();
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         if (!$user || empty($user['id'])) {
@@ -906,7 +906,7 @@ class PublikasiController
         $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
         $jenis = $_GET['jenis'] ?? null;
 
-        $model = new PublikasiModel($pdo);
+        $model = new PublikasiModel();
 
         if (!empty($tanggalMulai) || !empty($tanggalSelesai) || !empty($jenis)) {
             $data = $model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);

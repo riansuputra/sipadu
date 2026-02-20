@@ -1,12 +1,15 @@
 <?php
 
+require_once __DIR__ . '/../includes/koneksi.php';
+
 class PublikasiModel
 {
     protected $db;
 
-    public function __construct($pdo)
+    public function __construct()
     {
-        $this->db = $pdo;
+        // ambil dari singleton
+        $this->db = Database::getInstance();
     }
 
     public function getAll()
@@ -40,7 +43,7 @@ class PublikasiModel
         ");
 
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll();
     }
 
     public function getPaud()
@@ -74,7 +77,7 @@ class PublikasiModel
         ");
 
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll();
     }
 
     public function getSd()
@@ -108,7 +111,7 @@ class PublikasiModel
         ");
 
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll();
     }
 
     public function getSmp()
@@ -142,7 +145,7 @@ class PublikasiModel
         ");
 
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll();
     }
 
     public function getSma()
@@ -176,7 +179,7 @@ class PublikasiModel
         ");
 
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll();
     }
 
     public function getWp()
@@ -210,7 +213,7 @@ class PublikasiModel
         ");
 
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll();
     }
 
     public function getByRole($role, $pokjaId = null, $tanggalMulai = null, $tanggalSelesai = null, $jenis = null)
@@ -262,7 +265,7 @@ class PublikasiModel
         ";
         $stmt = $this->db->prepare($sql);
         $stmt->execute($params);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll();
     }
 
     public function getFiltered($tanggalMulai = null, $tanggalSelesai = null, $jenis = null)
@@ -304,7 +307,7 @@ class PublikasiModel
         $stmt = $this->db->prepare($sql);
         $stmt->execute($params);
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll();
     }
 
     public function getById($id)
@@ -317,7 +320,7 @@ class PublikasiModel
         ");
 
         $stmt->execute([$id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $stmt->fetch();
     }
 
     public function insert($data)
@@ -490,7 +493,7 @@ class PublikasiModel
         SELECT * FROM publikasi_file WHERE id = ?
     ");
         $stmt->execute([$id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $stmt->fetch();
     }
 
     // ----------------------------------------------------

@@ -2,14 +2,16 @@
 // ======================================================
 // MODEL ARSIP SESUAI TABEL
 // ======================================================
+require_once __DIR__ . '/../includes/koneksi.php';
+
 class ArsipModel
 {
     protected $db;
 
-    // constructor
-    public function __construct($pdo)
+    public function __construct()
     {
-        $this->db = $pdo;
+        // ambil dari singleton
+        $this->db = Database::getInstance();
     }
 
     // ----------------------------------------------------

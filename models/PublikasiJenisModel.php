@@ -1,12 +1,15 @@
 <?php
 
+require_once __DIR__ . '/../includes/koneksi.php';
+
 class PublikasiJenisModel
 {
     protected $db;
 
-    public function __construct($pdo)
+    public function __construct()
     {
-        $this->db = $pdo;
+        // ambil dari singleton
+        $this->db = Database::getInstance();
     }
 
     // ambil semua
@@ -16,7 +19,7 @@ class PublikasiJenisModel
             SELECT * FROM publikasi_jenis
             WHERE publikasi_jenis.is_active = 1
             ORDER BY nama ASC
-        ")->fetchAll(PDO::FETCH_ASSOC);
+        ")->fetchAll();
     }
 
     public function getById($id)
@@ -27,7 +30,7 @@ class PublikasiJenisModel
         ");
 
         $stmt->execute([$id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $stmt->fetch();
     }
 
     // simpan

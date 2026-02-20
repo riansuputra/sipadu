@@ -8,12 +8,12 @@ class ArsipController
     {
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         $role = currentRole();
 
-        $model = new ArsipModel($pdo);
+        $model = new ArsipModel();
         $data = $model->getAll();
 
         require __DIR__ . '/../views/arsip/index.php';
@@ -35,7 +35,7 @@ class ArsipController
     public function store()
     {
         authOnly();
-        global $pdo;
+
 
         // echo "<pre>";
         // print_r($_POST);
@@ -58,7 +58,7 @@ class ArsipController
             exit;
         }
 
-        $model = new ArsipModel($pdo);
+        $model = new ArsipModel();
 
         $data = $_POST;
         $data['dibuat_oleh'] = currentUser()['id'];
@@ -107,12 +107,12 @@ class ArsipController
     {
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         $role = currentRole();
 
-        $model = new ArsipModel($pdo);
+        $model = new ArsipModel();
 
         $id = $_GET['id'];
 
@@ -126,12 +126,12 @@ class ArsipController
     {
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         $role = currentRole();
 
-        $model = new ArsipModel($pdo);
+        $model = new ArsipModel();
 
         $id = $_GET['id'];
 
@@ -144,7 +144,7 @@ class ArsipController
     public function update()
     {
         authOnly();
-        global $pdo;
+
 
         // echo "<pre>";
         // print_r($_POST);
@@ -167,7 +167,7 @@ class ArsipController
             exit;
         }
 
-        $model = new ArsipModel($pdo);
+        $model = new ArsipModel();
 
         $data = $_POST;
 
@@ -214,11 +214,11 @@ class ArsipController
     public function delete()
     {
         authOnly();
-        global $pdo;
+
         $user = currentUser();
         $role = currentRole();
 
-        $model = new ArsipModel($pdo);
+        $model = new ArsipModel();
         $model->delete($_GET['id']);
 
         header("Location: " . url('?page=arsip'));

@@ -1,11 +1,14 @@
 <?php
+require_once __DIR__ . '/../includes/koneksi.php';
+
 class UserModel
 {
-    protected PDO $db;
+    protected $db;
 
-    public function __construct(PDO $db)
+    public function __construct()
     {
-        $this->db = $db;
+        // ambil dari singleton
+        $this->db = Database::getInstance();
     }
 
     // ============================
@@ -25,7 +28,7 @@ class UserModel
             ORDER BY u.created_at DESC
         ");
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll();
     }
 
     public function usernameExists($username)
@@ -51,7 +54,7 @@ class UserModel
         ORDER BY id ASC
     ");
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll();
     }
 
     // ============================
@@ -65,7 +68,7 @@ class UserModel
         ORDER BY id ASC
     ");
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll();
     }
 
 
@@ -79,7 +82,7 @@ class UserModel
             SELECT * FROM users WHERE id = ?
         ");
         $stmt->execute([$id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $stmt->fetch();
     }
 
     // ============================

@@ -1,12 +1,15 @@
 <?php
 
+require_once __DIR__ . '/../includes/koneksi.php';
+
 class PeraturanModel
 {
     protected $db;
 
-    public function __construct($pdo)
+    public function __construct()
     {
-        $this->db = $pdo;
+        // ambil dari singleton
+        $this->db = Database::getInstance();
     }
 
     // ==========================
@@ -38,7 +41,7 @@ class PeraturanModel
         ORDER BY p.tahun_terbit DESC, p.created_at DESC
     ");
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll();
     }
 
     public function getFiltered($tahun = null, $jenis = null)
@@ -81,7 +84,7 @@ class PeraturanModel
         $stmt = $this->db->prepare($sql);
         $stmt->execute($params);
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll();
     }
 
 
@@ -98,7 +101,7 @@ class PeraturanModel
         ");
 
         $stmt->execute([$id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $stmt->fetch();
     }
 
     public function insert($data)
@@ -216,7 +219,7 @@ class PeraturanModel
         ");
 
         $stmt->execute([$id]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll();
     }
 
     public function getFileById($id)
@@ -225,7 +228,7 @@ class PeraturanModel
         SELECT * FROM peraturan_file WHERE id = ?
     ");
         $stmt->execute([$id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $stmt->fetch();
     }
 
     public function deleteFileById($fileId)
@@ -389,7 +392,7 @@ ORDER BY p.created_at DESC
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bind);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll();
     }
 
     public function countFiltered($params)

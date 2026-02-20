@@ -8,12 +8,12 @@ class PegawaiController
     public function index()
     {
         authOnly();
-        global $pdo;
+
 
         $user = currentUser();
         $role = currentRole();
 
-        $model = new PegawaiModel($pdo);
+        $model = new PegawaiModel();
         $data = $model->getAll();
 
         foreach ($data as &$dt) {
@@ -39,7 +39,7 @@ class PegawaiController
     public function store()
     {
         authOnly();
-        global $pdo;
+
 
         // echo "<pre>";
         // print_r($_POST);
@@ -116,7 +116,7 @@ class PegawaiController
         }
 
         // ================ SIMPAN DATA PEGAWAI ================
-        $model = new PegawaiModel($pdo);
+        $model = new PegawaiModel();
 
         $data = $_POST;
         $data['dibuat_oleh'] = currentUser()['id'];
@@ -172,12 +172,12 @@ class PegawaiController
     {
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         $role = currentRole();
 
-        $model = new PegawaiModel($pdo);
+        $model = new PegawaiModel();
 
         $id = $_GET['id'];
 
@@ -191,12 +191,12 @@ class PegawaiController
     {
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         $role = currentRole();
 
-        $model = new PegawaiModel($pdo);
+        $model = new PegawaiModel();
 
         $id = $_GET['id'];
 
@@ -209,7 +209,7 @@ class PegawaiController
     public function update()
     {
         authOnly();
-        global $pdo;
+
 
         $errors = [];
 
@@ -266,7 +266,7 @@ class PegawaiController
             exit;
         }
 
-        $model = new PegawaiModel($pdo);
+        $model = new PegawaiModel();
 
         // UPDATE DATA UTAMA
         $data = $_POST;
@@ -319,12 +319,12 @@ class PegawaiController
     {
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         $role = currentRole();
 
-        $model = new PegawaiModel($pdo);
+        $model = new PegawaiModel();
         $model->delete($_GET['id']);
 
         header("Location: " . url('?page=pegawai'));

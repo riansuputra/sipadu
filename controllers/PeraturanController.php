@@ -10,7 +10,7 @@ class PeraturanController
     {
         authOnly();
 
-        global $pdo;
+
         $user = currentUser();
         if (!$user || empty($user['id'])) {
             die("User tidak valid");
@@ -20,10 +20,10 @@ class PeraturanController
         $tahun = $_GET['tahun'] ?? null;
         $jenis = $_GET['jenis'] ?? null;
 
-        $modeljenis = new PeraturanJenisModel($pdo);
+        $modeljenis = new PeraturanJenisModel();
         $jenisPeraturan = $modeljenis->getAll();
 
-        $model = new PeraturanModel($pdo);
+        $model = new PeraturanModel();
         if (!empty($tahun) || !empty($jenis)) {
             $data = $model->getFiltered($tahun, $jenis);
         } else {
@@ -41,7 +41,7 @@ class PeraturanController
         $jenis = $_GET['jenis'] ?? null;
 
         // jika ada filter → pakai getFiltered
-        global $pdo;
+
 
         $user = currentUser();
         if (!$user || empty($user['id'])) {
@@ -49,7 +49,7 @@ class PeraturanController
         }
         $role = currentRole();
 
-        $model = new PeraturanModel($pdo);
+        $model = new PeraturanModel();
         if (!empty($tahun) || !empty($jenis)) {
             $data = $model->getFiltered($tahun, $jenis);
         } else {
@@ -66,14 +66,14 @@ class PeraturanController
     {
         authOnly();
 
-        global $pdo;
+
         $user = currentUser();
         if (!$user || empty($user['id'])) {
             die("User tidak valid");
         }
         $role = currentRole();
 
-        $modeljenis = new PeraturanJenisModel($pdo);
+        $modeljenis = new PeraturanJenisModel();
         $jenis = $modeljenis->getAll();
 
         require __DIR__ . '/../views/peraturan/create.php';
@@ -82,7 +82,7 @@ class PeraturanController
     public function store()
     {
         authOnly();
-        global $pdo;
+
 
 
 
@@ -177,7 +177,7 @@ class PeraturanController
         }
 
 
-        $model = new PeraturanModel($pdo);
+        $model = new PeraturanModel();
 
         $data = $_POST;
         $data["created_by"] = $user['id'];
@@ -239,7 +239,7 @@ class PeraturanController
     {
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         if (!$user || empty($user['id'])) {
@@ -247,7 +247,7 @@ class PeraturanController
         }
         $role = currentRole();
 
-        $model = new PeraturanModel($pdo);
+        $model = new PeraturanModel();
 
         $id = $_GET['id'];
 
@@ -263,7 +263,7 @@ class PeraturanController
     {
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         if (!$user || empty($user['id'])) {
@@ -271,14 +271,14 @@ class PeraturanController
         }
         $role = currentRole();
 
-        $model = new PeraturanModel($pdo);
+        $model = new PeraturanModel();
 
         $id = $_GET['id'];
 
         $peraturan = $model->getById($id);
         $files = $model->getFiles($id);
 
-        $modeljenis = new PeraturanJenisModel($pdo);
+        $modeljenis = new PeraturanJenisModel();
         $jenis = $modeljenis->getAll();
 
         require __DIR__ . '/../views/peraturan/edit.php';
@@ -293,7 +293,7 @@ class PeraturanController
         // die();
 
         authOnly();
-        global $pdo;
+
 
         $user = currentUser();
         if (!$user || empty($user['id'])) {
@@ -374,7 +374,7 @@ class PeraturanController
             exit();
         }
 
-        $model = new PeraturanModel($pdo);
+        $model = new PeraturanModel();
 
         $data = $_POST;
         $data["updated_by"] = $user['id'];
@@ -442,14 +442,14 @@ class PeraturanController
     public function delete()
     {
         authOnly();
-        global $pdo;
+
         $user = currentUser();
         if (!$user || empty($user['id'])) {
             die("User tidak valid");
         }
         $role = currentRole();
 
-        $model = new PeraturanModel($pdo);
+        $model = new PeraturanModel();
         $result = $model->delete($_GET['id'], $user['id']);
 
 
@@ -480,10 +480,10 @@ class PeraturanController
 
     public function publicIndex()
     {
-        global $pdo;
-        $model = new PeraturanModel($pdo);
 
-        $modeljenis = new PeraturanJenisModel($pdo);
+        $model = new PeraturanModel();
+
+        $modeljenis = new PeraturanJenisModel();
         $jenis = $modeljenis->getAll();
 
         $limit = 5; // data per halaman
@@ -517,12 +517,12 @@ class PeraturanController
     public function downloadFile()
     {
         authOnly();
-        global $pdo;
+
 
         $fileId = $_GET['file'];
         $peraturanId = $_GET['id'];
 
-        $model = new PeraturanModel($pdo);
+        $model = new PeraturanModel();
         $file  = $model->getFileById($fileId);
 
         if (!$file) {
@@ -551,11 +551,11 @@ class PeraturanController
     public function download()
     {
         authOnly();
-        global $pdo;
+
 
         $fileId = $_GET['file'];
 
-        $model = new PeraturanModel($pdo);
+        $model = new PeraturanModel();
         $file  = $model->getFileById($fileId);
 
         if (!$file) {
@@ -585,9 +585,9 @@ class PeraturanController
     public function detail($id)
     {
         authOnly();
-        global $pdo;
 
-        $model = new PeraturanModel($pdo);
+
+        $model = new PeraturanModel();
 
         $model->incrementView($id);
 

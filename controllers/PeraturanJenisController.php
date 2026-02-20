@@ -8,12 +8,12 @@ class PeraturanJenisController
     public function index()
     {
         authOnly();
-        global $pdo;
+
 
         $user = currentUser();
         $role = currentRole();
 
-        $model = new PeraturanJenisModel($pdo);
+        $model = new PeraturanJenisModel();
         $data  = $model->getAll();
 
         require __DIR__ . '/../views/jenis_peraturan/index.php';
@@ -22,12 +22,12 @@ class PeraturanJenisController
     public function create()
     {
         authOnly();
-        global $pdo;
+
 
         $user = currentUser();
         $role = currentRole();
 
-        $model = new PeraturanJenisModel($pdo);
+        $model = new PeraturanJenisModel();
         $data  = $model->getAll();
         require __DIR__ . '/../views/jenis_peraturan/create.php';
     }
@@ -41,7 +41,7 @@ class PeraturanJenisController
         // die();
 
         authOnly();
-        global $pdo;
+
         $user = currentUser();
         $role = currentRole();
 
@@ -61,7 +61,7 @@ class PeraturanJenisController
             exit();
         }
 
-        $model = new PeraturanJenisModel($pdo);
+        $model = new PeraturanJenisModel();
         $data = $_POST;
         $jenis = $model->insert($data);
 
@@ -77,12 +77,12 @@ class PeraturanJenisController
     {
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         $role = currentRole();
 
-        $model = new PeraturanJenisModel($pdo);
+        $model = new PeraturanJenisModel();
 
         $id = $_GET['id'];
 
@@ -95,12 +95,12 @@ class PeraturanJenisController
     {
         authOnly();
 
-        global $pdo;
+
 
         $user = currentUser();
         $role = currentRole();
 
-        $model = new PeraturanJenisModel($pdo);
+        $model = new PeraturanJenisModel();
 
         $id = $_GET['id'];
 
@@ -118,7 +118,7 @@ class PeraturanJenisController
         // die();
 
         authOnly();
-        global $pdo;
+
         $user = currentUser();
         $role = currentRole();
 
@@ -138,7 +138,7 @@ class PeraturanJenisController
             exit();
         }
 
-        $model = new PeraturanJenisModel($pdo);
+        $model = new PeraturanJenisModel();
         $data = $_POST;
         $model->update($_POST['id'], $data);
 
@@ -154,12 +154,12 @@ class PeraturanJenisController
     public function delete()
     {
         authOnly();
-        global $pdo;
+
 
         $user = currentUser();
         $role = currentRole();
 
-        $model = new PeraturanJenisModel($pdo);
+        $model = new PeraturanJenisModel();
 
         $id = $_GET['id'];
 
