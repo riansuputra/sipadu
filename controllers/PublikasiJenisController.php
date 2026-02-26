@@ -2,16 +2,17 @@
 
 require_once __DIR__ . '/../models/PublikasiJenisModel.php';
 require_once __DIR__ . '/../core/auth.php';
+require_once __DIR__ . '/../core/BaseController.php';
 
-class PublikasiJenisController
+class PublikasiJenisController extends BaseController
 {
     public function index()
     {
-        authOnly();
+        $this->auth();
 
 
-        $user = currentUser();
-        $role = currentRole();
+        $user = $this->user;
+        $role = $this->role;
 
         $model = new PublikasiJenisModel();
         $data  = $model->getAll();
@@ -21,11 +22,11 @@ class PublikasiJenisController
 
     public function create()
     {
-        authOnly();
+        $this->auth();
 
 
-        $user = currentUser();
-        $role = currentRole();
+        $user = $this->user;
+        $role = $this->role;
 
         $model = new PublikasiJenisModel();
         $data  = $model->getAll();
@@ -34,10 +35,10 @@ class PublikasiJenisController
 
     public function store()
     {
-        authOnly();
+        $this->auth();
 
-        $user = currentUser();
-        $role = currentRole();
+        $user = $this->user;
+        $role = $this->role;
 
         $errors = [];
 
@@ -66,12 +67,12 @@ class PublikasiJenisController
 
     public function show()
     {
-        authOnly();
+        $this->auth();
 
 
 
-        $user = currentUser();
-        $role = currentRole();
+        $user = $this->user;
+        $role = $this->role;
 
         $model = new PublikasiJenisModel();
 
@@ -84,12 +85,12 @@ class PublikasiJenisController
 
     public function edit()
     {
-        authOnly();
+        $this->auth();
 
 
 
-        $user = currentUser();
-        $role = currentRole();
+        $user = $this->user;
+        $role = $this->role;
 
         $model = new PublikasiJenisModel();
 
@@ -102,10 +103,10 @@ class PublikasiJenisController
 
     public function update()
     {
-        authOnly();
+        $this->auth();
 
-        $user = currentUser();
-        $role = currentRole();
+        $user = $this->user;
+        $role = $this->role;
 
         $errors = [];
 
@@ -135,11 +136,11 @@ class PublikasiJenisController
 
     public function delete()
     {
-        authOnly();
+        $this->auth();
 
 
-        $user = currentUser();
-        $role = currentRole();
+        $user = $this->user;
+        $role = $this->role;
 
         $model = new PublikasiJenisModel();
 

@@ -2,16 +2,17 @@
 
 require_once __DIR__ . '/../models/PegawaiModel.php';
 require_once __DIR__ . '/../core/auth.php';
+require_once __DIR__ . '/../core/BaseController.php';
 
-class PegawaiController
+class PegawaiController extends BaseController
 {
     public function index()
     {
-        authOnly();
+        $this->auth();
 
 
-        $user = currentUser();
-        $role = currentRole();
+        $user = $this->user;
+        $role = $this->role;
 
         $model = new PegawaiModel();
         $data = $model->getAll();
@@ -28,17 +29,17 @@ class PegawaiController
 
     public function create()
     {
-        authOnly();
+        $this->auth();
 
-        $user = currentUser();
-        $role = currentRole();
+        $user = $this->user;
+        $role = $this->role;
 
         require __DIR__ . '/../views/pegawai/create.php';
     }
 
     public function store()
     {
-        authOnly();
+        $this->auth();
 
 
         // echo "<pre>";
@@ -47,8 +48,8 @@ class PegawaiController
         // echo "</pre>";
         // die();
 
-        $user = currentUser();
-        $role = currentRole();
+        $user = $this->user;
+        $role = $this->role;
 
         $errors = [];
 
@@ -119,7 +120,7 @@ class PegawaiController
         $model = new PegawaiModel();
 
         $data = $_POST;
-        $data['dibuat_oleh'] = currentUser()['id'];
+        $data['dibuat_oleh'] = $this->user['id'];
 
         $pegawaiId = $model->insert($data);
 
@@ -170,12 +171,12 @@ class PegawaiController
 
     public function show()
     {
-        authOnly();
+        $this->auth();
 
 
 
-        $user = currentUser();
-        $role = currentRole();
+        $user = $this->user;
+        $role = $this->role;
 
         $model = new PegawaiModel();
 
@@ -189,12 +190,12 @@ class PegawaiController
 
     public function edit()
     {
-        authOnly();
+        $this->auth();
 
 
 
-        $user = currentUser();
-        $role = currentRole();
+        $user = $this->user;
+        $role = $this->role;
 
         $model = new PegawaiModel();
 
@@ -208,13 +209,13 @@ class PegawaiController
 
     public function update()
     {
-        authOnly();
+        $this->auth();
 
 
         $errors = [];
 
-        $user = currentUser();
-        $role = currentRole();
+        $user = $this->user;
+        $role = $this->role;
 
         $dokumenMap = [
             'file_ktp'    => 'KTP',
@@ -270,7 +271,7 @@ class PegawaiController
 
         // UPDATE DATA UTAMA
         $data = $_POST;
-        $data['diubah_oleh'] = currentUser()['id'];
+        $data['diubah_oleh'] = $this->user['id'];
 
         $model->update($_POST['id'], $data);
 
@@ -317,12 +318,12 @@ class PegawaiController
     // hapus
     public function delete()
     {
-        authOnly();
+        $this->auth();
 
 
 
-        $user = currentUser();
-        $role = currentRole();
+        $user = $this->user;
+        $role = $this->role;
 
         $model = new PegawaiModel();
         $model->delete($_GET['id']);

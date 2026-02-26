@@ -161,7 +161,7 @@ $headerImage = $headerImage ?? url('public/assets/img/banner.webp');
         // ----------------------------
         // HEADER (hanya jika login)
         // ----------------------------
-        if (isLoggedIn()) {
+        if (Auth::check()) {
             require __DIR__ . '/header.php';
         }
         ?>

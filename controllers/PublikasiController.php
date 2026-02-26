@@ -1,311 +1,191 @@
 <?php
 
-require_once __DIR__ . '/../models/PublikasiModel.php';
-require_once __DIR__ . '/../models/PublikasiJenisModel.php';
-require_once __DIR__ . '/../core/auth.php';
+require_once __DIR__ . '/../core/BaseController.php';
 
-class PublikasiController
+class PublikasiController extends BaseController
 {
+    private $model;
+    private $modelJenis;
+
+    public function __construct()
+    {
+        $this->model = $this->model('PublikasiModel');
+        $this->modelJenis = $this->model('PublikasiJenisModel');
+    }
+
     public function index()
     {
-        authOnly();
+        $this->auth();
 
-
-
-        $user = currentUser();
-        if (!$user || empty($user['id'])) {
-            die("User tidak valid");
-        }
-        $role = currentRole();
-
-        $pokjaId = $user['pokja_id'] ?? null;
+        $pokjaId = $this->user['pokja_id'] ?? null;
 
         $tanggalMulai = $_GET['tanggal_mulai'] ?? null;
         $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
         $jenis = $_GET['jenis'] ?? null;
 
-        // echo "<pre>";
-        // print_r($_POST);
-        // print_r($_GET['jenis']);
-        // echo "</pre>";
-        // die();
+        $jenisInput = $this->modelJenis->getAll();
 
-        $modeljenis = new PublikasiJenisModel();
-        $jenisInput = $modeljenis->getAll();
-
-        $model = new PublikasiModel();
-
-        $data = $model->getByRole(
-            $role,
+        $data = $this->model->getByRole(
+            $this->role,
             $pokjaId,
             $tanggalMulai,
             $tanggalSelesai,
             $jenis
         );
 
-        // if (!empty($tanggalMulai) || !empty($tanggalSelesai) || !empty($jenis)) {
-        //     $data = $model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
-        // } else {
-        //     $data = $model->getAll();
-        // }
-
-        require __DIR__ . '/../views/publikasi/index.php';
+        $this->view('publikasi/index', [
+            'data' => $data,
+            'jenisInput' => $jenisInput,
+            'user' => $this->user,
+            'role' => $this->role
+        ]);
     }
 
     public function indexPaud()
     {
-        authOnly();
+        $this->auth();
 
-
-
-        $user = currentUser();
-        if (!$user || empty($user['id'])) {
-            die("User tidak valid");
-        }
-        $role = currentRole();
-
-        $pokjaId = $user['pokja_id'] ?? null;
+        $pokjaId = $this->user['pokja_id'] ?? null;
 
         $tanggalMulai = $_GET['tanggal_mulai'] ?? null;
         $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
         $jenis = $_GET['jenis'] ?? null;
 
-        // echo "<pre>";
-        // print_r($_POST);
-        // print_r($_GET['jenis']);
-        // echo "</pre>";
-        // die();
-
-        $modeljenis = new PublikasiJenisModel();
-        $jenisInput = $modeljenis->getAll();
-
-        $model = new PublikasiModel();
+        $jenisInput = $this->modelJenis->getAll();
 
         if (!empty($tanggalMulai) || !empty($tanggalSelesai) || !empty($jenis)) {
-            $data = $model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
+            $data = $this->model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
         } else {
-            $data = $model->getPaud();
+            $data = $this->model->getPaud();
         }
 
-        require __DIR__ . '/../views/paud/publikasi.php';
+        $this->view('paud/publikasi', [
+            'user' => $this->user,
+            'role' => $this->role,
+            'data' => $data
+        ]);
     }
 
     public function indexSd()
     {
-        authOnly();
+        $this->auth();
 
 
-
-        $user = currentUser();
-        if (!$user || empty($user['id'])) {
-            die("User tidak valid");
-        }
-        $role = currentRole();
-
-        $pokjaId = $user['pokja_id'] ?? null;
+        $pokjaId = $this->user['pokja_id'] ?? null;
 
         $tanggalMulai = $_GET['tanggal_mulai'] ?? null;
         $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
         $jenis = $_GET['jenis'] ?? null;
 
-        // echo "<pre>";
-        // print_r($_POST);
-        // print_r($_GET['jenis']);
-        // echo "</pre>";
-        // die();
-
-        $modeljenis = new PublikasiJenisModel();
-        $jenisInput = $modeljenis->getAll();
-
-        $model = new PublikasiModel();
+        $jenisInput = $this->modelJenis->getAll();
 
         if (!empty($tanggalMulai) || !empty($tanggalSelesai) || !empty($jenis)) {
-            $data = $model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
+            $data = $this->model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
         } else {
-            $data = $model->getSd();
+            $data = $this->model->getSd();
         }
 
-        require __DIR__ . '/../views/sd/publikasi.php';
+        $this->view('sd/publikasi', [
+            'user' => $this->user,
+            'role' => $this->role,
+            'data' => $data
+        ]);
     }
 
     public function indexSmp()
     {
-        authOnly();
+        $this->auth();
 
-
-
-        $user = currentUser();
-        if (!$user || empty($user['id'])) {
-            die("User tidak valid");
-        }
-        $role = currentRole();
-
-        $pokjaId = $user['pokja_id'] ?? null;
+        $pokjaId = $this->user['pokja_id'] ?? null;
 
         $tanggalMulai = $_GET['tanggal_mulai'] ?? null;
         $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
         $jenis = $_GET['jenis'] ?? null;
 
-        // echo "<pre>";
-        // print_r($_POST);
-        // print_r($_GET['jenis']);
-        // echo "</pre>";
-        // die();
-
-        $modeljenis = new PublikasiJenisModel();
-        $jenisInput = $modeljenis->getAll();
-
-        $model = new PublikasiModel();
+        $jenisInput = $this->modelJenis->getAll();
 
         if (!empty($tanggalMulai) || !empty($tanggalSelesai) || !empty($jenis)) {
-            $data = $model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
+            $data = $this->model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
         } else {
-            $data = $model->getSmp();
+            $data = $this->model->getSmp();
         }
 
-        require __DIR__ . '/../views/smp/publikasi.php';
+        $this->view('sd/publikasi', [
+            'user' => $this->user,
+            'role' => $this->role,
+            'data' => $data
+        ]);
     }
 
     public function indexSma()
     {
-        authOnly();
+        $this->auth();
 
-
-
-        $user = currentUser();
-        if (!$user || empty($user['id'])) {
-            die("User tidak valid");
-        }
-        $role = currentRole();
-
-        $pokjaId = $user['pokja_id'] ?? null;
+        $pokjaId = $this->user['pokja_id'] ?? null;
 
         $tanggalMulai = $_GET['tanggal_mulai'] ?? null;
         $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
         $jenis = $_GET['jenis'] ?? null;
 
-        // echo "<pre>";
-        // print_r($_POST);
-        // print_r($_GET['jenis']);
-        // echo "</pre>";
-        // die();
-
-        $modeljenis = new PublikasiJenisModel();
-        $jenisInput = $modeljenis->getAll();
-
-        $model = new PublikasiModel();
+        $jenisInput = $this->modelJenis->getAll();
 
         if (!empty($tanggalMulai) || !empty($tanggalSelesai) || !empty($jenis)) {
-            $data = $model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
+            $data = $this->model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
         } else {
-            $data = $model->getSma();
+            $data = $this->model->getSma();
         }
 
-        require __DIR__ . '/../views/sma/publikasi.php';
+        $this->view('sd/publikasi', [
+            'user' => $this->user,
+            'role' => $this->role,
+            'data' => $data
+        ]);
     }
 
     public function indexWidyaprada()
     {
-        authOnly();
+        $this->auth();
 
-
-
-        $user = currentUser();
-        if (!$user || empty($user['id'])) {
-            die("User tidak valid");
-        }
-        $role = currentRole();
-
-        $pokjaId = $user['pokja_id'] ?? null;
+        $pokjaId = $this->user['pokja_id'] ?? null;
 
         $tanggalMulai = $_GET['tanggal_mulai'] ?? null;
         $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
         $jenis = $_GET['jenis'] ?? null;
 
-        // echo "<pre>";
-        // print_r($_POST);
-        // print_r($_GET['jenis']);
-        // echo "</pre>";
-        // die();
-
-        $modeljenis = new PublikasiJenisModel();
-        $jenisInput = $modeljenis->getAll();
-
-        $model = new PublikasiModel();
+        $jenisInput = $this->modelJenis->getAll();
 
         if (!empty($tanggalMulai) || !empty($tanggalSelesai) || !empty($jenis)) {
-            $data = $model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
+            $data = $this->model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
         } else {
-            $data = $model->getWp();
+            $data = $this->model->getWp();
         }
 
-        require __DIR__ . '/../views/widyaprada/publikasi.php';
-    }
-
-
-    public function getFiltered()
-    {
-        // ambil filter dari GET
-        $tahun = $_GET['tahun'] ?? null;
-        $jenis = $_GET['jenis'] ?? null;
-
-        // jika ada filter → pakai getFiltered
-
-
-        $user = currentUser();
-        if (!$user || empty($user['id'])) {
-            die("User tidak valid");
-        }
-        $role = currentRole();
-
-        $model = new PublikasiModel();
-        if (!empty($tahun) || !empty($jenis)) {
-            $data = $model->getFiltered($tahun, $jenis);
-        } else {
-            // default
-            $data = $model->getAll();
-        }
-
-        // kirim ke view
-        header('Location: ' . url('?page=publikasi'));
-        exit;
+        $this->view('sd/publikasi', [
+            'user' => $this->user,
+            'role' => $this->role,
+            'data' => $data
+        ]);
     }
 
     public function create()
     {
-        authOnly();
+        $this->auth();
 
+        $jenis = $this->modelJenis->getAll();
 
-        $user = currentUser();
-        if (!$user || empty($user['id'])) {
-            die("User tidak valid");
-        }
-        $role = currentRole();
-
-        $modeljenis = new PublikasiJenisModel();
-        $jenis = $modeljenis->getAll();
-
-        require __DIR__ . '/../views/publikasi/create.php';
+        $this->view('publikasi/create', [
+            'user' => $this->user,
+            'role' => $this->role,
+            'modelJenis' => $this->modelJenis,
+            'jenis' => $jenis
+        ]);
     }
 
     public function store()
     {
-        authOnly();
+        $this->auth();
 
-
-
-        // echo "<pre>";
-        // print_r($_POST);
-        // print_r($_FILES);
-        // echo "</pre>";
-        // die();
-
-        $user = currentUser();
-        if (!$user || empty($user['id'])) {
-            die("User tidak valid");
-        }
-        $role = currentRole();
-        $pokja = currentPokja();
+        $pokja = $this->pokja;
 
         $errors = [];
 
@@ -379,17 +259,16 @@ class PublikasiController
             $_SESSION["errors"] = $errors;
             $_SESSION["old"] = $_POST;
 
-            header("Location: " . url('?page=tambah-publikasi'));
-            exit();
+            $this->redirect('?page=tambah-publikasi');
         }
 
-        $model = new PublikasiModel();
+
 
         $data = $_POST;
-        $data['created_by'] = $user['id'];
+        $data['created_by'] = $this->user['id'];
         $data['pokja_id'] = $pokja;
 
-        $publikasiId = $model->insert($data);
+        $publikasiId = $this->model->insert($data);
 
         // proses upload file jika ada
         if (!empty($_FILES['file']['name'][0])) {
@@ -411,7 +290,7 @@ class PublikasiController
                 $path = $dir . $namaBaru;
 
                 if (move_uploaded_file($tmp, $path)) {
-                    $model->insertFile($publikasiId, [
+                    $this->model->insertFile($publikasiId, [
                         'nama_file'   => $nama,
                         'path_file'   => 'uploads/publikasi/' . $namaBaru,
                         'tipe_file'   => $ext,
@@ -421,306 +300,184 @@ class PublikasiController
             }
         }
 
-        logActivity([
-            'user_id'      => $user['id'],
-            'role_id'      => $user['role_id'],
+        $this->log([
+            'user_id'      => $this->user['id'],
+            'role_id'      => $this->user['role_id'],
             'action'       => 'create',
             'entity_type'  => 'publikasi',
             'entity_id'    => $publikasiId,
             'description'  => 'Menambahkan data Publikasi'
         ]);
 
-        $_SESSION['flash'] = [
-            'status' => 'success',
-            'errors' => array_values($errors),
-            'message' => 'Data Publikasi berhasil disimpan'
-        ];
-
-        header("Location: " . url('?page=tambah-publikasi'));
-        exit;
-    }
-
-    public function show()
-    {
-        echo "<pre>";
-        print_r($_POST);
-        print_r($_FILES);
-        echo "</pre>";
-        die();
-
-        authOnly();
-
-
-
-        $user = currentUser();
-        if (!$user || empty($user['id'])) {
-            die("User tidak valid");
-        }
-        $role = currentRole();
-
-        $model = new PublikasiModel();
-
-        $id = $_GET['id'];
-
-        $publikasi = $model->getById($id);
-        $files = $model->getFiles($id);
-
-        require __DIR__ . '/../views/publikasi/detail.php';
+        $this->flash('success', 'Data publikasi berhasil disimpan');
+        $this->redirect('?page=tambah-publikasi');
     }
 
     public function edit()
     {
-        authOnly();
-
-
-
-        $user = currentUser();
-        if (!$user || empty($user['id'])) {
-            die("User tidak valid");
-        }
-        $role = currentRole();
-
-        $model = new PublikasiModel();
+        $this->auth();
 
         $id = $_GET['id'];
 
-        $publikasi = $model->getById($id);
-        $files = $model->getFiles($id);
+        $publikasi = $this->model->getById($id);
+        $files = $this->model->getFiles($id);
+        $jenis = $this->modelJenis->getAll();
 
-        $modeljenis = new PublikasiJenisModel();
-        $jenis = $modeljenis->getAll();
-
-        require __DIR__ . '/../views/publikasi/edit.php';
+        $this->view('publikasi/edit', [
+            'user' => $this->user,
+            'role' => $this->role,
+            'publikasi' => $publikasi,
+            'files' => $files,
+            'modelJenis' => $this->modelJenis,
+            'jenis' => $jenis
+        ]);
     }
 
     public function update()
     {
-        authOnly();
+        $this->auth();
 
-
-        $user = currentUser();
-        if (!$user || empty($user['id'])) {
-            die("User tidak valid");
-        }
-        $role = currentRole();
-
-        $errors = [];
-
-        if (empty($_POST['judul'])) {
-            $errors['judul'] = "Judul wajib diisi";
-        } elseif (strlen($_POST['judul']) < 2) {
-            $errors['judul'] = "Judul minimal 2 karakter";
-        }
-        if (!empty($_POST['deskripsi']) && strlen($_POST['deskripsi']) < 1) {
-            $errors['deskripsi'] = "Deskripsi minimal 1 karakter";
-        }
-        $currentDate = date('Y-m-d');
-        $inputDate   = $_POST['tanggal_kegiatan'] ?? '';
-
-        if (empty($inputDate)) {
-            $errors['tanggal_kegiatan'] = "Tanggal kegiatan wajib diisi";
-        } elseif ($inputDate > $currentDate) {
-            $errors['tanggal_kegiatan'] = "Tanggal kegiatan tidak boleh di masa depan";
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return $this->redirect('?page=publikasi');
         }
 
-        if (empty($_POST['lokasi'])) {
-            $errors['lokasi'] = "Lokasi kegiatan wajib diisi";
+        if (empty($_POST['id']) || !ctype_digit($_POST['id'])) {
+            $this->flash('error', 'ID tidak valid');
+            return $this->redirect('?page=publikasi');
         }
-        if (empty($_POST['jenis_id'])) {
-            $errors['jenis_id'] = "Jenis wajib diisi";
+
+        $errors = $this->validate($_POST, $_FILES, true);
+
+        if ($errors) {
+            $_SESSION['errors'] = $errors;
+            $_SESSION['old'] = $_POST;
+            return $this->redirect('?page=edit-publikasi&id=' . $_POST['id']);
         }
-        if (empty($_POST['penulis'])) {
-            $errors['penulis'] = "Penulis wajib diisi";
-        }
-        if (empty($_POST['kabupaten'])) {
-            $errors['kabupaten'] = "Kabupaten/Kota wajib diisi";
-        }
-        if (!empty($_FILES["file"]["name"][0])) {
 
-            $allowed = [
-                'pdf',
+        try {
 
-                // Dokumen
-                'doc',
-                'docx',
-                'xls',
-                'xlsx',
-                'ppt',
-                'pptx',
-                'txt',
+            $this->model->beginTransaction();
 
-                // Gambar
-                'jpg',
-                'jpeg',
-                'png',
-                'gif',
-                'webp',
-            ];
+            $data = $_POST;
+            $data['updated_by'] = $this->user['id'];
 
+            if (!$this->model->update($_POST['id'], $data)) {
+                throw new Exception("Update gagal");
+            }
 
-            foreach ($_FILES["file"]["name"] as $i => $name) {
-                $size = $_FILES["file"]["size"][$i];
-                $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+            // hapus file (DB saja sesuai arsitektur kamu)
+            if (!empty($_POST["hapus_file"])) {
 
-                if (!in_array($ext, $allowed)) {
-                    $errors['file'] = "File {$name} tidak diizinkan";
-                }
+                foreach (explode(",", $_POST["hapus_file"]) as $fileId) {
 
-                if ($size > 5 * 1024 * 1024) {
-                    $errors['file'] = "File {$name} lebih dari 5MB";
+                    if (!ctype_digit($fileId)) continue;
+
+                    if (!$this->model->deleteFileById($fileId)) {
+                        throw new Exception("Gagal hapus file");
+                    }
                 }
             }
+
+            // upload file baru
+            $this->handleUpload($_POST['id'], $_FILES);
+
+            $this->model->commit();
+
+            $this->log([
+                'user_id' => $this->user['id'],
+                'role_id' => $this->user['role_id'],
+                'action' => 'update',
+                'entity_type' => 'publikasi',
+                'entity_id' => $_POST['id'],
+                'description' => 'Mengubah data Publikasi'
+            ]);
+
+            $this->flash('success', 'Publikasi berhasil diperbarui');
+        } catch (Throwable $e) {
+
+            $this->model->rollback();
+            debug_log($e->getMessage(), 'UPDATE ERROR');
+
+            $this->flash('error', 'Gagal update data');
+        }
+        return $this->redirect('?page=publikasi');
+    }
+
+    public function delete()
+    {
+        $this->auth();
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return $this->redirect('?page=publikasi');
         }
 
-        // if (!empty($errors)) {
-        //     echo "<pre>";
-        //     print_r($errors);
-        //     echo "</pre>";
-        //     die();
-        // } else {
-        //     echo "<pre>";
-        //     print_r($_POST);
-        //     echo "</pre>";
-        //     die();
-        // }
-
-
-
-
-        if (!empty($errors)) {
-            $_SESSION["errors"] = $errors;
-            $_SESSION["old"] = $_POST;
-
-            header("Location: " . url('?page=edit-publikasi&id=' . $_POST['id']));
-            exit();
+        if (empty($_POST['id']) || !ctype_digit($_POST['id'])) {
+            $this->flash('error', 'ID tidak valid');
+            return $this->redirect('?page=publikasi');
         }
 
-        $model = new PublikasiModel();
+        try {
 
-        // ==============================
-        // UPDATE DATA UTAMA
-        // ==============================
-        $data = $_POST;
-        $data['updated_by'] = $user['id'];
+            $this->model->beginTransaction();
 
-        $model->update($_POST['id'], $data);
+            $id = $_POST['id'];
 
-        if (!empty($_POST["hapus_file"])) {
-            $ids = explode(",", $_POST["hapus_file"]);
-            foreach ($ids as $id) {
-                $model->deleteFileById($id);
-            }
-        }
-
-        // ==============================
-        // PROSES UPLOAD FILE BARU
-        // ==============================
-        if (!empty($_FILES['file']['name'][0])) {
-
-            $dir = __DIR__ . '/../uploads/publikasi/';
-
-            if (!is_dir($dir)) {
-                mkdir($dir, 0777, true);
+            if (!$this->model->delete($id, $this->user['id'])) {
+                throw new Exception("Gagal menghapus data");
             }
 
-            foreach ($_FILES['file']['name'] as $i => $namaAsli) {
+            $this->model->commit();
 
-                if (!$namaAsli) continue;
+            $this->log([
+                'user_id' => $this->user['id'],
+                'role_id' => $this->user['role_id'],
+                'action' => 'delete',
+                'entity_type' => 'publikasi',
+                'entity_id' => $id,
+                'description' => 'Menghapus data Publikasi'
+            ]);
 
-                $tmp  = $_FILES['file']['tmp_name'][$i];
-                $type = $_FILES['file']['type'][$i];
-                $size = $_FILES['file']['size'][$i];
-                $ext = strtolower(pathinfo($namaAsli, PATHINFO_EXTENSION));
+            $this->flash('success', 'Publikasi berhasil dihapus');
+        } catch (Throwable $e) {
 
-                $namaBaru = time() . '_' . $i . '_' .
-                    preg_replace('/[^a-zA-Z0-9._-]/', '_', $namaAsli);
+            $this->model->rollback();
+            debug_log($e->getMessage(), 'DELETE ERROR');
 
-                $path = $dir . $namaBaru;
-
-                $upload = move_uploaded_file($tmp, $path);
-
-                if ($upload) {
-
-                    $model->insertFile($_POST['id'], [
-                        'nama_file'   => $namaAsli,
-                        'path_file'   => 'uploads/publikasi/' . $namaBaru,
-                        'tipe_file'   => $ext,
-                        'ukuran_file' => $size
-                    ]);
-                }
-            }
+            $this->flash('error', 'Gagal menghapus data');
         }
 
-        logActivity([
-            'user_id'      => $user['id'],
-            'role_id'      => $user['role_id'],
-            'action'       => 'update',
-            'entity_type'  => 'publikasi',
-            'entity_id'    => $_POST["id"],
-            'description'  => 'Mengubah data Publikasi'
-        ]);
-
-        $_SESSION['flash'] = [
-            'status'  => 'success',
-            'message' => 'Data Publikasi berhasil diperbarui'
-        ];
-
-        header("Location: " . url('?page=publikasi'));
-        exit;
+        return $this->redirect('?page=publikasi');
     }
 
     public function editStatus()
     {
-        authOnly();
-
-
-
-        $user = currentUser();
-        if (!$user || empty($user['id'])) {
-            die("User tidak valid");
-        }
-        $role = currentRole();
-
-        $model = new PublikasiModel();
+        $this->auth();
 
         $id = $_GET['id'];
 
-        $publikasi = $model->getById($id);
-        $files = $model->getFiles($id);
+        $publikasi = $this->model->getById($id);
+        $files = $this->model->getFiles($id);
+        $jenis = $this->modelJenis->getAll();
 
-        $modeljenis = new PublikasiJenisModel();
-        $jenis = $modeljenis->getAll();
-
-        require __DIR__ . '/../views/publikasi/editStatus.php';
+        $this->view('publikasi/editStatus', [
+            'user' => $this->user,
+            'role' => $this->role,
+            'modelJenis' => $this->modelJenis,
+            'jenis' => $jenis
+        ]);
     }
 
     public function approve()
     {
-        authOnly();
-
-
-        $user = currentUser();
-        if (!$user || empty($user['id'])) {
-            die("User tidak valid");
-        }
+        $this->auth();
 
         $errors = [];
-
-        // ==============================
-        // VALIDASI ID
-        // ==============================
         if (empty($_POST['id'])) {
             $errors['id'] = "ID publikasi tidak ditemukan";
         }
 
-        // ==============================
-        // AMBIL STATUS TOGGLE
-        // ==============================
         $isPublished = isset($_POST['is_published']) ? 1 : 0;
 
-        // ==============================
-        // AMBIL DATA LINK OBJECT
-        // ==============================
         $linksInput = $_POST['publish_links'] ?? [];
         $cleanLinks = [];
 
@@ -764,23 +521,18 @@ class PublikasiController
             }
         }
 
-
         if (!empty($errors)) {
             $_SESSION["errors"] = $errors;
             $_SESSION["old"] = $_POST;
 
-            header("Location: " . url('?page=edit-status-publikasi&id=' . $_POST['id']));
-            exit();
+            $this->redirect('?page=edit-status-publikasi&id=' . $_POST['id']);
         }
-
-        $model = new PublikasiModel();
-
 
         $data = [
             'is_published' => $isPublished,
             'published_at' => $isPublished ? date('Y-m-d H:i:s') : null,
-            'published_by' => $isPublished ? $user['id'] : null,
-            'updated_by'   => $user['id']
+            'published_by' => $isPublished ? $this->user['id'] : null,
+            'updated_by'   => $this->user['id']
         ];
 
         // hanya update link kalau ada input baru
@@ -788,8 +540,7 @@ class PublikasiController
             $data['publish_links'] = json_encode($cleanLinks);
         }
 
-
-        $model->updatePublish($_POST['id'], $data);
+        $this->model->updatePublish($_POST['id'], $data);
 
         $_SESSION['flash'] = [
             'status'  => 'success',
@@ -798,89 +549,37 @@ class PublikasiController
                 : 'Publikasi di-unpublish'
         ];
 
-        header("Location: " . url('?page=timpublikasi'));
-        exit;
-    }
-
-    public function delete()
-    {
-        authOnly();
-
-
-
-        if (empty($_GET['id'])) {
-            $_SESSION['flash'] = [
-                'status'  => 'error',
-                'message' => 'ID tidak ditemukan'
-            ];
-            header('Location: ' . url('?page=publikasi'));
-            exit;
-        }
-
-        $user = currentUser();
-        if (!$user || empty($user['id'])) {
-            die("User tidak valid");
-        }
-        $role = currentRole();
-
-        $model = new PublikasiModel();
-        $result = $model->delete($_GET['id'], $user['id']);
-
-        if (!$result) {
-            $_SESSION['flash'] = [
-                'status'  => 'error',
-                'message' => 'Gagal menghapus data'
-            ];
-        } else {
-            logActivity([
-                'user_id'      => $user['id'],
-                'role_id'      => $user['role_id'],
-                'action'       => 'delete',
-                'entity_type'  => 'publikasi',
-                'entity_id'    => $_GET["id"],
-                'description'  => 'Menghapus data Publikasi'
-            ]);
-
-            $_SESSION['flash'] = [
-                'status'  => 'success',
-                'message' => 'Data berhasil dihapus'
-            ];
-        }
-
-        header("Location: " . url("?page=publikasi"));
-        exit;
+        $this->redirect('?page=timpublikasi');
     }
 
     public function publicIndex()
     {
-        authOnly();
+        $this->auth();
 
 
 
-        $user = currentUser();
-        if (!$user || empty($user['id'])) {
-            die("User tidak valid");
-        }
-        $role = currentRole();
-
-        $pokjaId = $user['pokja_id'] ?? null;
+        $pokjaId = $this->user['pokja_id'] ?? null;
 
         $tanggalMulai = $_GET['tanggal_mulai'] ?? null;
         $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
         $jenis = $_GET['jenis'] ?? null;
 
-        $model = new PublikasiModel();
 
 
-        $data = $model->getByRole(
-            $role,
+
+        $data = $this->model->getByRole(
+            $this->role,
             $pokjaId,
             $tanggalMulai,
             $tanggalSelesai,
             $jenis
         );
 
-        require __DIR__ . '/../views/publikasi/publicIndex.php';
+        $this->view('publikasi/publicIndex', [
+            'user' => $this->user,
+            'role' => $this->role,
+            'data' => $data
+        ]);
     }
 
     public function publikasiIndex()
@@ -890,31 +589,115 @@ class PublikasiController
         // print_r($_GET['jenis']);
         // echo "</pre>";
         // die();
-        authOnly();
+        $this->auth();
 
 
 
-        $user = currentUser();
-        if (!$user || empty($user['id'])) {
-            die("User tidak valid");
-        }
-        $role = currentRole();
-
-        $pokjaId = $user['pokja_id'] ?? null;
+        $pokjaId = $this->user['pokja_id'] ?? null;
 
         $tanggalMulai = $_GET['tanggal_mulai'] ?? null;
         $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
         $jenis = $_GET['jenis'] ?? null;
 
-        $model = new PublikasiModel();
+
 
         if (!empty($tanggalMulai) || !empty($tanggalSelesai) || !empty($jenis)) {
-            $data = $model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
+            $data = $this->model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
         } else {
             // default
-            $data = $model->getAll();
+            $data = $this->model->getAll();
         }
 
-        require __DIR__ . '/../views/publikasi/timindex.php';
+        $this->view('publikasi/timindex', [
+            'user' => $this->user,
+            'role' => $this->role,
+            'data' => $data
+        ]);
+    }
+
+    private function validate($data, $files, $isUpdate = false)
+    {
+        $errors = [];
+
+        if (empty($data['judul'])) {
+            $errors['judul'] = "Judul wajib diisi";
+        } elseif (strlen($data['judul']) < 2) {
+            $errors['judul'] = "Judul minimal 2 karakter";
+        }
+        if (!empty($data['deskripsi']) && strlen($data['deskripsi']) < 1) {
+            $errors['deskripsi'] = "Deskripsi minimal 1 karakter";
+        }
+        $currentDate = date('Y-m-d');
+        $inputDate   = $data['tanggal_kegiatan'] ?? '';
+
+        if (empty($inputDate)) {
+            $errors['tanggal_kegiatan'] = "Tanggal kegiatan wajib diisi";
+        } elseif ($inputDate > $currentDate) {
+            $errors['tanggal_kegiatan'] = "Tanggal kegiatan tidak boleh di masa depan";
+        }
+
+        if (empty($data['lokasi'])) {
+            $errors['lokasi'] = "Lokasi kegiatan wajib diisi";
+        }
+        if (empty($data['jenis_id'])) {
+            $errors['jenis_id'] = "Jenis wajib diisi";
+        }
+        if (empty($data['penulis'])) {
+            $errors['penulis'] = "Penulis wajib diisi";
+        }
+        if (empty($data['kabupaten'])) {
+            $errors['kabupaten'] = "Kabupaten/Kota wajib diisi";
+        }
+
+        if (!empty($files['file']['name'][0])) {
+            $allowed = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'jpg', 'jpeg', 'png', 'gif', 'webp'];
+
+            foreach ($files['file']['name'] as $i => $name) {
+                $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+                $size = $files['file']['size'][$i];
+
+                if (!in_array($ext, $allowed))
+                    $errors['file'] = "File tidak diizinkan";
+
+                if ($size > 5 * 1024 * 1024)
+                    $errors['file'] = "File maksimal 5MB";
+            }
+        }
+
+        return $errors;
+    }
+
+    private function handleUpload($publikasiId, $files)
+    {
+        if (empty($files['file']['name'][0])) return;
+
+        $dir = realpath(__DIR__ . '/../uploads') . '/publikasi/';
+
+        if (!is_dir($dir) && !mkdir($dir, 0755, true)) {
+            throw new Exception("Folder upload gagal dibuat");
+        }
+
+        foreach ($files['file']['name'] as $i => $nama) {
+
+            if (!$nama) continue;
+
+            $tmp  = $files['file']['tmp_name'][$i];
+            $size = $files['file']['size'][$i];
+            $ext  = strtolower(pathinfo($nama, PATHINFO_EXTENSION));
+
+            $namaBaru = time() . '_' . $i . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $nama);
+            $path = $dir . $namaBaru;
+
+            if (!move_uploaded_file($tmp, $path)) {
+                throw new Exception("Upload file gagal");
+            }
+
+            $this->model->insertFile($publikasiId, [
+                'nama_file' => $nama,
+                'path_file' => 'uploads/publikasi/' . $namaBaru,
+                'tipe_file' => $ext,
+                'ukuran_file' => $size
+            ]);
+        }
     }
 }

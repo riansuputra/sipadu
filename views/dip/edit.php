@@ -41,7 +41,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
         <div class="row row-cards ">
 
             <div class="col-sm-12 col-lg-6">
-                <form class="card" method="POST" action="<?= url('?page=dip-update&id=' . $dip['id'])  ?>" enctype="multipart/form-data">
+                <form class="card" method="POST" action="<?= url('?page=dip-update&id=' . $data['id'])  ?>" enctype="multipart/form-data">
                     <div class="card-header">
                         <h3 class="card-title">Form Edit DIP</h3>
                     </div>
@@ -54,7 +54,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                     id="nama_informasi"
                                     placeholder="Nama Informasi..."
                                     rows="3"
-                                    class="form-control <?= isset($errors['nama_informasi']) ? 'is-invalid' : '' ?>" autocomplete="off"><?= $dip['nama_informasi'] ?? $old['nama_informasi'] ?? '' ?></textarea>
+                                    class="form-control <?= isset($errors['nama_informasi']) ? 'is-invalid' : '' ?>" autocomplete="off"><?= $data['nama_informasi'] ?? $old['nama_informasi'] ?? '' ?></textarea>
                                 <div class="invalid-feedback">
                                     <?= $errors['nama_informasi'] ?? '' ?>
                                 </div>
@@ -64,7 +64,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                 <input type="text"
                                     name="unit_penyedia"
                                     id="unit_penyedia"
-                                    value="<?= $dip['unit_penyedia'] ?? $old['unit_penyedia'] ?? '' ?>"
+                                    value="<?= $data['unit_penyedia'] ?? $old['unit_penyedia'] ?? '' ?>"
                                     placeholder="Unit Kerja yang Menyediakan..."
                                     class="form-control <?= isset($errors['unit_penyedia']) ? 'is-invalid' : '' ?>" autocomplete="off">
                                 <div class="invalid-feedback">
@@ -76,7 +76,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                 <input type="text"
                                     name="penanggung_jawab"
                                     id="penanggung_jawab"
-                                    value="<?= $dip['penanggung_jawab'] ?? $old['penanggung_jawab'] ?? '' ?>"
+                                    value="<?= $data['penanggung_jawab'] ?? $old['penanggung_jawab'] ?? '' ?>"
                                     placeholder="Penanggung Jawab Informasi..."
                                     class="form-control <?= isset($errors['penanggung_jawab']) ? 'is-invalid' : '' ?>" autocomplete="off">
                                 <div class="invalid-feedback">
@@ -88,9 +88,9 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                     <label class="form-label required">Waktu dan Tempat Pembuatan :</label>
                                     <div class="col-auto">
                                         <select name="tahun_pembuatan" id="tahun_pembuatan" class="form-select <?= isset($errors['tahun_pembuatan']) ? 'is-invalid' : '' ?>">
-                                            <option value="" disabled <?= empty($dip['tahun_pembuatan']) ? 'selected' : '' ?>>-- Pilih Tahun --</option>
+                                            <option value="" disabled <?= empty($data['tahun_pembuatan']) ? 'selected' : '' ?>>-- Pilih Tahun --</option>
                                             <?php for ($i = date('Y'); $i >= 1990; $i--): ?>
-                                                <option value="<?= $i ?>" <?= ($dip['tahun_pembuatan'] ?? '') == $i ? 'selected' : '' ?>><?= $i ?></option>
+                                                <option value="<?= $i ?>" <?= ($data['tahun_pembuatan'] ?? '') == $i ? 'selected' : '' ?>><?= $i ?></option>
                                             <?php endfor; ?>
                                         </select>
                                         <div class="invalid-feedback">
@@ -101,7 +101,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                         <input type="text"
                                             name="tempat_pembuatan"
                                             id="tempat_pembuatan"
-                                            value="<?= $dip['tempat_pembuatan'] ?? $old['tempat_pembuatan'] ?? '' ?>"
+                                            value="<?= $data['tempat_pembuatan'] ?? $old['tempat_pembuatan'] ?? '' ?>"
                                             placeholder="Tempat Pembuatan..."
                                             class="form-control <?= isset($errors['tempat_pembuatan']) ? 'is-invalid' : '' ?>" autocomplete="off">
                                         <div class="invalid-feedback">
@@ -117,11 +117,11 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                         <select class="form-select <?= isset($errors['jenis_informasi']) ? 'is-invalid' : '' ?>"
                                             name="jenis_informasi"
                                             id="jenis_informasi">
-                                            <option value="" disabled <?= empty($dip['jenis_informasi']) ? 'selected' : '' ?>>-- Pilih Jenis --</option>
-                                            <option value="berkala" <?= ($dip['jenis_informasi'] ?? '') == 'berkala' ? 'selected' : '' ?>>Berkala</option>
-                                            <option value="serta_merta" <?= ($dip['jenis_informasi'] ?? '') == 'serta_merta' ? 'selected' : '' ?>>Serta Merta</option>
-                                            <option value="setiap_saat" <?= ($dip['jenis_informasi'] ?? '') == 'setiap_saat' ? 'selected' : '' ?>>Setiap Saat</option>
-                                            <option value="dikecualikan" <?= ($dip['jenis_informasi'] ?? '') == 'dikecualikan' ? 'selected' : '' ?>>Dikecualikan</option>
+                                            <option value="" disabled <?= empty($data['jenis_informasi']) ? 'selected' : '' ?>>-- Pilih Jenis --</option>
+                                            <option value="berkala" <?= ($data['jenis_informasi'] ?? '') == 'berkala' ? 'selected' : '' ?>>Berkala</option>
+                                            <option value="serta_merta" <?= ($data['jenis_informasi'] ?? '') == 'serta_merta' ? 'selected' : '' ?>>Serta Merta</option>
+                                            <option value="setiap_saat" <?= ($data['jenis_informasi'] ?? '') == 'setiap_saat' ? 'selected' : '' ?>>Setiap Saat</option>
+                                            <option value="dikecualikan" <?= ($data['jenis_informasi'] ?? '') == 'dikecualikan' ? 'selected' : '' ?>>Dikecualikan</option>
                                         </select>
                                         <div class="invalid-feedback">
                                             <?= $errors['jenis_informasi'] ?? '' ?>
@@ -132,10 +132,10 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                         <select class="form-select <?= isset($errors['bentuk_informasi']) ? 'is-invalid' : '' ?>"
                                             name="bentuk_informasi"
                                             id="bentuk_informasi">
-                                            <option value="" disabled <?= empty($dip['bentuk_informasi']) ? 'selected' : '' ?>>-- Pilih Bentuk --</option>
-                                            <option value="hardcopy" <?= ($dip['bentuk_informasi'] ?? '') == 'hardcopy' ? 'selected' : '' ?>>Hardcopy</option>
-                                            <option value="softcopy" <?= ($dip['bentuk_informasi'] ?? '') == 'softcopy' ? 'selected' : '' ?>>Softcopy</option>
-                                            <option value="hardcopy_softcopy" <?= ($dip['bentuk_informasi'] ?? '') == 'hardcopy_softcopy' ? 'selected' : '' ?>>Hardcopy + Softcopy</option>
+                                            <option value="" disabled <?= empty($data['bentuk_informasi']) ? 'selected' : '' ?>>-- Pilih Bentuk --</option>
+                                            <option value="hardcopy" <?= ($data['bentuk_informasi'] ?? '') == 'hardcopy' ? 'selected' : '' ?>>Hardcopy</option>
+                                            <option value="softcopy" <?= ($data['bentuk_informasi'] ?? '') == 'softcopy' ? 'selected' : '' ?>>Softcopy</option>
+                                            <option value="hardcopy_softcopy" <?= ($data['bentuk_informasi'] ?? '') == 'hardcopy_softcopy' ? 'selected' : '' ?>>Hardcopy + Softcopy</option>
                                         </select>
                                         <div class="invalid-feedback">
                                             <?= $errors['bentuk_informasi'] ?? '' ?>
@@ -150,15 +150,15 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                         <select class="form-select <?= isset($errors['retensi_arsip']) ? 'is-invalid' : '' ?>"
                                             name="retensi_arsip"
                                             id="retensi_arsip">
-                                            <option value="" disabled <?= empty($dip['retensi_arsip']) ? 'selected' : '' ?>>-- Pilih Retensi --</option>
-                                            <option value="Aktif" <?= ($dip['retensi_arsip'] ?? '') == 'Aktif' ? 'selected' : '' ?>>Aktif</option>
-                                            <option value="1 Tahun" <?= ($dip['retensi_arsip'] ?? '') == '1 Tahun' ? 'selected' : '' ?>>1 Tahun</option>
-                                            <option value="2 Tahun" <?= ($dip['retensi_arsip'] ?? '') == '2 Tahun' ? 'selected' : '' ?>>2 Tahun</option>
-                                            <option value="3 Tahun" <?= ($dip['retensi_arsip'] ?? '') == '3 Tahun' ? 'selected' : '' ?>>3 Tahun</option>
-                                            <option value="5 Tahun" <?= ($dip['retensi_arsip'] ?? '') == '5 Tahun' ? 'selected' : '' ?>>5 Tahun</option>
-                                            <option value="10 Tahun" <?= ($dip['retensi_arsip'] ?? '') == '10 Tahun' ? 'selected' : '' ?>>10 Tahun</option>
-                                            <option value="Musnah" <?= ($dip['retensi_arsip'] ?? '') == 'Musnah' ? 'selected' : '' ?>>Musnah</option>
-                                            <option value="Permanen" <?= ($dip['bentuk_informasi'] ?? '') == 'Permanen' ? 'selected' : '' ?>>Permanen</option>
+                                            <option value="" disabled <?= empty($data['retensi_arsip']) ? 'selected' : '' ?>>-- Pilih Retensi --</option>
+                                            <option value="Aktif" <?= ($data['retensi_arsip'] ?? '') == 'Aktif' ? 'selected' : '' ?>>Aktif</option>
+                                            <option value="1 Tahun" <?= ($data['retensi_arsip'] ?? '') == '1 Tahun' ? 'selected' : '' ?>>1 Tahun</option>
+                                            <option value="2 Tahun" <?= ($data['retensi_arsip'] ?? '') == '2 Tahun' ? 'selected' : '' ?>>2 Tahun</option>
+                                            <option value="3 Tahun" <?= ($data['retensi_arsip'] ?? '') == '3 Tahun' ? 'selected' : '' ?>>3 Tahun</option>
+                                            <option value="5 Tahun" <?= ($data['retensi_arsip'] ?? '') == '5 Tahun' ? 'selected' : '' ?>>5 Tahun</option>
+                                            <option value="10 Tahun" <?= ($data['retensi_arsip'] ?? '') == '10 Tahun' ? 'selected' : '' ?>>10 Tahun</option>
+                                            <option value="Musnah" <?= ($data['retensi_arsip'] ?? '') == 'Musnah' ? 'selected' : '' ?>>Musnah</option>
+                                            <option value="Permanen" <?= ($data['bentuk_informasi'] ?? '') == 'Permanen' ? 'selected' : '' ?>>Permanen</option>
                                         </select>
                                         <div class="invalid-feedback">
                                             <?= $errors['retensi_arsip'] ?? '' ?>
@@ -179,7 +179,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                             Format: jpg, jpeg, png, doc, pdf, xls, ppt (maks 5MB)
                                         </small>
                                     </div>
-                                    <input type="text" name="id" id="id" value="<?= $dip['id'] ?>" hidden>
+                                    <input type="text" name="id" id="id" value="<?= $data['id'] ?>" hidden>
                                     <input type="text" name="hapus_file" id="hapus_file" hidden>
                                 </div>
                             </div>

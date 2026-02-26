@@ -80,6 +80,21 @@
 
         .no-print {
             margin-bottom: 15px;
+            padding: 12px 22px;
+            background: linear-gradient(135deg, #4CAF50, #2e7d32);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: all 0.25s ease;
+        }
+
+        .no-print:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
         }
 
         @media print {
@@ -106,8 +121,8 @@
     <!-- =====================
      TOMBOL CETAK
 ===================== -->
-    <div class="no-print">
-        <button onclick="window.print()">Cetak</button>
+    <div class="">
+        <button class="no-print" onclick="window.print()">Cetak</button>
     </div>
 
     <!-- =====================

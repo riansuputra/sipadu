@@ -1,68 +1,73 @@
 <?php
 
-require_once __DIR__ . '/../includes/koneksi.php';
-
 class PeraturanModel
 {
     protected $db;
 
     public function __construct()
     {
-        // ambil dari singleton
         $this->db = Database::getInstance();
     }
 
-    // ==========================
-    // LIST
-    // ==========================
+    public function beginTransaction()
+    {
+        return $this->db->beginTransaction();
+    }
+
+    public function commit()
+    {
+        return $this->db->commit();
+    }
+
+    public function rollback()
+    {
+        return $this->db->rollBack();
+    }
+
     public function getAll()
     {
-        $this->db->exec("SET SESSION group_concat_max_len = 100000");
-
         $stmt = $this->db->prepare("
-        SELECT 
-            p.*,
-            j.nama AS jenis,
-            j.kode AS kode_jenis,
-            GROUP_CONCAT(
-                CONCAT(pf.id, '|', pf.nama_file, '|', pf.path_file, '|', pf.tipe_file)
-                SEPARATOR '##'
-            ) AS files
+            SELECT 
+                p.*,
+                j.nama AS jenis,
+                j.kode AS kode_jenis,
+                GROUP_CONCAT(
+                    CONCAT(pf.id, '|', pf.nama_file, '|', pf.path_file, '|', pf.tipe_file)
+                    SEPARATOR '##'
+                ) AS files
 
-        FROM peraturan p
+            FROM peraturan p
+            LEFT JOIN peraturan_jenis j ON p.jenis_id = j.id
+            LEFT JOIN peraturan_file pf ON p.id = pf.peraturan_id
 
-        LEFT JOIN peraturan_jenis j 
-            ON p.jenis_id = j.id
+            WHERE p.is_active = 1
 
-        LEFT JOIN peraturan_file pf 
-            ON p.id = pf.peraturan_id
-        WHERE p.is_active = 1
-        GROUP BY p.id
-        ORDER BY p.tahun_terbit DESC, p.created_at DESC
-    ");
+            GROUP BY p.id, j.nama, j.kode
+            ORDER BY p.tahun_terbit DESC, p.created_at DESC
+        ");
+
         $stmt->execute();
         return $stmt->fetchAll();
     }
 
     public function getFiltered($tahun = null, $jenis = null)
     {
-        $this->db->exec("SET SESSION group_concat_max_len = 100000");
-
         $sql = "
-        SELECT 
-            p.*,
-            j.nama AS jenis,
-            j.kode AS kode_jenis,
-            j.id,
-            GROUP_CONCAT(
-                CONCAT(pf.id, '|', pf.nama_file, '|', pf.path_file, '|', pf.tipe_file) 
-                SEPARATOR '##'
-            ) AS files
-        FROM peraturan p
-        LEFT JOIN peraturan_jenis j ON p.jenis_id = j.id
-        LEFT JOIN peraturan_file pf ON p.id = pf.peraturan_id
-        WHERE p.is_active = 1
-    ";
+            SELECT 
+                p.*,
+                j.nama AS jenis,
+                j.kode AS kode_jenis,
+                j.id AS jenis_ref_id,
+                GROUP_CONCAT(
+                    CONCAT(pf.id, '|', pf.nama_file, '|', pf.path_file, '|', pf.tipe_file) 
+                    SEPARATOR '##'
+                ) AS files
+
+            FROM peraturan p
+            LEFT JOIN peraturan_jenis j ON p.jenis_id = j.id
+            LEFT JOIN peraturan_file pf ON p.id = pf.peraturan_id
+            WHERE p.is_active = 1
+        ";
 
         $params = [];
 
@@ -77,16 +82,15 @@ class PeraturanModel
         }
 
         $sql .= "
-        GROUP BY p.id
-        ORDER BY p.tahun_terbit DESC, p.created_at DESC
-    ";
+            GROUP BY p.id, j.nama, j.kode
+            ORDER BY p.tahun_terbit DESC, p.created_at DESC
+        ";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($params);
 
         return $stmt->fetchAll();
     }
-
 
     // ==========================
     // DETAIL
@@ -97,13 +101,16 @@ class PeraturanModel
             SELECT p.*, j.nama as jenis, j.kode as kode
             FROM peraturan p
             LEFT JOIN peraturan_jenis j ON p.jenis_id = j.id
-            WHERE p.id = ?
+            WHERE p.id = ? AND p.is_active = 1
         ");
 
         $stmt->execute([$id]);
         return $stmt->fetch();
     }
 
+    // ==========================
+    // INSERT
+    // ==========================
     public function insert($data)
     {
         if (empty($data['created_by']) || !is_numeric($data['created_by'])) {
@@ -123,7 +130,7 @@ class PeraturanModel
             ) VALUES (?,?,?,?,?,?,?,?)
         ");
 
-        $stmt->execute([
+        if (!$stmt->execute([
             $data['judul'],
             $data['nomor'],
             $data['lembaga'],
@@ -131,12 +138,17 @@ class PeraturanModel
             $data['tahun_terbit'],
             $data['tempat_penetapan'],
             $data['penandatangan'],
-            (int) $data['created_by']
-        ]);
+            (int)$data['created_by']
+        ])) {
+            return false;
+        }
 
         return $this->db->lastInsertId();
     }
 
+    // ==========================
+    // UPDATE
+    // ==========================
     public function update($id, $data)
     {
         if (empty($data['updated_by']) || !is_numeric($data['updated_by'])) {
@@ -169,40 +181,48 @@ class PeraturanModel
             $data['tahun_terbit'],
             $data['tempat_penetapan'],
             $data['penandatangan'],
-            (int) $data['updated_by'],
-            (int) $id
+            (int)$data['updated_by'],
+            (int)$id
         ]);
     }
 
+    // ==========================
+    // SOFT DELETE
+    // ==========================
     public function delete($id, $deletedBy)
     {
         $stmt = $this->db->prepare("
             UPDATE peraturan SET 
                 is_active = 0,
                 deleted_at = NOW(),
-                deleted_by = ? 
+                deleted_by = ?
             WHERE id = ?
         ");
 
-        return $stmt->execute([
-            (int) $deletedBy,
-            (int) $id
+        $stmt->execute([
+            (int)$deletedBy,
+            (int)$id
         ]);
+
+        return $stmt->rowCount() > 0;
     }
 
+    // ==========================
+    // FILE
+    // ==========================
     public function insertFile($id, $file)
     {
         $stmt = $this->db->prepare("
             INSERT INTO peraturan_file (
-                peraturan_id, 
-                nama_file, 
-                path_file, 
-                tipe_file, 
+                peraturan_id,
+                nama_file,
+                path_file,
+                tipe_file,
                 ukuran_file
             ) VALUES (?, ?, ?, ?, ?)
         ");
 
-        $stmt->execute([
+        return $stmt->execute([
             $id,
             $file['nama_file'],
             $file['path_file'],
@@ -225,8 +245,9 @@ class PeraturanModel
     public function getFileById($id)
     {
         $stmt = $this->db->prepare("
-        SELECT * FROM peraturan_file WHERE id = ?
-    ");
+            SELECT * FROM peraturan_file WHERE id = ?
+        ");
+
         $stmt->execute([$id]);
         return $stmt->fetch();
     }
@@ -249,14 +270,15 @@ class PeraturanModel
         return $stmt->execute([$id]);
     }
 
+
     public function getLatest($limit = 5)
     {
         $stmt = $this->db->prepare("
-        SELECT * FROM peraturan
-        WHERE is_active = 1
-        ORDER BY created_at DESC
-        LIMIT ?
-    ");
+            SELECT * FROM peraturan
+            WHERE is_active = 1
+            ORDER BY created_at DESC
+            LIMIT ?
+        ");
         $stmt->bindValue(1, (int)$limit, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll();
@@ -265,22 +287,21 @@ class PeraturanModel
     public function searchByJudul($judul)
     {
         $stmt = $this->db->prepare("
-        SELECT 
-    p.*,
-    j.nama AS jenis,
-    GROUP_CONCAT(
-        CONCAT(pf.id,'|',pf.nama_file,'|',pf.path_file)
-        SEPARATOR '##'
-    ) AS files
-FROM peraturan p
-LEFT JOIN peraturan_jenis j ON p.jenis_id = j.id
-LEFT JOIN peraturan_file pf ON p.id = pf.peraturan_id
-WHERE p.is_active = 1
--- + kondisi filter dinamis
-GROUP BY p.id
-ORDER BY p.created_at DESC
-
-    ");
+            SELECT 
+                p.*,
+                j.nama AS jenis,
+                GROUP_CONCAT(
+                    CONCAT(pf.id,'|',pf.nama_file,'|',pf.path_file)
+                    SEPARATOR '##'
+                ) AS files
+            FROM peraturan p
+            LEFT JOIN peraturan_jenis j ON p.jenis_id = j.id
+            LEFT JOIN peraturan_file pf ON p.id = pf.peraturan_id
+            WHERE p.is_active = 1
+            -- + kondisi filter dinamis
+            GROUP BY p.id
+            ORDER BY p.created_at DESC
+        ");
         $stmt->execute(['%' . $judul . '%']);
         return $stmt->fetchAll();
     }
@@ -325,38 +346,38 @@ ORDER BY p.created_at DESC
     public function incrementDownload($id)
     {
         $stmt = $this->db->prepare("
-        UPDATE peraturan
-        SET jumlah_unduhan = jumlah_unduhan + 1
-        WHERE id = ?
-    ");
+            UPDATE peraturan
+            SET jumlah_unduhan = jumlah_unduhan + 1
+            WHERE id = ?
+        ");
         $stmt->execute([$id]);
     }
 
     public function incrementView($id)
     {
         $stmt = $this->db->prepare("
-        UPDATE peraturan
-        SET jumlah_dilihat = jumlah_dilihat + 1
-        WHERE id = ?
-    ");
+            UPDATE peraturan
+            SET jumlah_dilihat = jumlah_dilihat + 1
+            WHERE id = ?
+        ");
         $stmt->execute([$id]);
     }
 
     public function filterWithPagination($params, $limit, $offset)
     {
         $sql = "
-        SELECT 
-            p.*,
-            j.nama AS jenis,
-            GROUP_CONCAT(
-                CONCAT(pf.id,'|',pf.nama_file,'|',pf.path_file)
-                SEPARATOR '##'
-            ) AS files
-        FROM peraturan p
-        LEFT JOIN peraturan_jenis j ON p.jenis_id = j.id
-        LEFT JOIN peraturan_file pf ON p.id = pf.peraturan_id
-        WHERE p.is_active = 1
-    ";
+            SELECT 
+                p.*,
+                j.nama AS jenis,
+                GROUP_CONCAT(
+                    CONCAT(pf.id,'|',pf.nama_file,'|',pf.path_file)
+                    SEPARATOR '##'
+                ) AS files
+            FROM peraturan p
+            LEFT JOIN peraturan_jenis j ON p.jenis_id = j.id
+            LEFT JOIN peraturan_file pf ON p.id = pf.peraturan_id
+            WHERE p.is_active = 1
+        ";
         $bind = [];
 
         if (!empty($params['judul'])) {
@@ -385,10 +406,10 @@ ORDER BY p.created_at DESC
         }
 
         $sql .= "
-        GROUP BY p.id
-        ORDER BY p.created_at DESC
-        LIMIT $limit OFFSET $offset
-    ";
+            GROUP BY p.id
+            ORDER BY p.created_at DESC
+            LIMIT $limit OFFSET $offset
+        ";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bind);
@@ -432,7 +453,8 @@ ORDER BY p.created_at DESC
 
     public function countAll()
     {
-        $stmt = $this->db->query("SELECT COUNT(*) FROM peraturan WHERE is_active = 1");
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM peraturan WHERE is_active = 1");
+        $stmt->execute();
         return $stmt->fetchColumn();
     }
 }

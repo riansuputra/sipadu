@@ -1,188 +1,228 @@
 <?php
 
-require_once __DIR__ . '/../models/PeraturanJenisModel.php';
-require_once __DIR__ . '/../core/auth.php';
+require_once __DIR__ . '/../core/BaseController.php';
 
-class PeraturanJenisController
+class PeraturanJenisController extends BaseController
 {
+    private $model;
+
+    public function __construct()
+    {
+        $this->model = $this->model('PeraturanJenisModel');
+    }
+
     public function index()
     {
-        authOnly();
+        $this->auth();
 
+        $data  = $this->model->getAll();
 
-        $user = currentUser();
-        $role = currentRole();
-
-        $model = new PeraturanJenisModel();
-        $data  = $model->getAll();
-
-        require __DIR__ . '/../views/jenis_peraturan/index.php';
+        $this->view('jenis_peraturan/index', [
+            'data' => $data,
+            'user' => $this->user,
+            'role' => $this->role
+        ]);
     }
 
     public function create()
     {
-        authOnly();
+        $this->auth();
 
+        $data  = $this->model->getAll();
 
-        $user = currentUser();
-        $role = currentRole();
-
-        $model = new PeraturanJenisModel();
-        $data  = $model->getAll();
-        require __DIR__ . '/../views/jenis_peraturan/create.php';
+        $this->view('jenis_peraturan/create', [
+            'data' => $data,
+            'user' => $this->user,
+            'role' => $this->role
+        ]);
     }
 
     public function store()
     {
-        // echo "<pre>";
-        // print_r($_POST);
-        // print_r($_FILES);
-        // echo "</pre>";
-        // die();
+        $this->auth();
 
-        authOnly();
-
-        $user = currentUser();
-        $role = currentRole();
-
-        $errors = [];
-
-        if (empty($_POST['kode'])) {
-            $errors['kode'] = "Singkatan jenis wajib diisi";
-        }
-        if (empty($_POST['nama'])) {
-            $errors['nama'] = "Jenis peraturan wajib diisi";
-        }
-        if (!empty($errors)) {
-            $_SESSION["errors"] = $errors;
-            $_SESSION["old"] = $_POST;
-
-            header("Location: " . url('?page=tambah-jenis-peraturan'));
-            exit();
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return $this->redirect('?page=peraturan');
         }
 
-        $model = new PeraturanJenisModel();
-        $data = $_POST;
-        $jenis = $model->insert($data);
+        $errors = $this->validate($_POST);
 
-        $_SESSION['flash'] = [
-            'status' => 'success',
-            'message' => 'Jenis peraturan berhasil disimpan'
-        ];
+        if ($errors) {
+            $_SESSION['errors'] = $errors;
+            $_SESSION['old'] = $_POST;
+            return $this->redirect('?page=tambah-jenis-peraturan');
+        }
 
-        header("Location: " . url('?page=tambah-jenis-peraturan'));
-    }
+        try {
+            $this->model->beginTransaction();
 
-    public function show()
-    {
-        authOnly();
+            $data = $_POST;
+            $id = $this->model->insert($data);
 
+            if (!$id) {
+                throw new Exception("Insert gagal");
+            }
 
+            $this->model->commit();
 
-        $user = currentUser();
-        $role = currentRole();
+            $this->log([
+                'user_id' => $this->user['id'],
+                'role_id' => $this->user['role_id'],
+                'action' => 'store',
+                'entity_type' => 'jenis_peraturan',
+                'entity_id' => $_POST['id'],
+                'description' => 'Menambah data Jenis Peraturan'
+            ]);
 
-        $model = new PeraturanJenisModel();
+            $this->flash('success', 'Jenis peraturan berhasil disimpan');
+        } catch (Throwable $e) {
+            $this->model->rollback();
 
-        $id = $_GET['id'];
+            if ($e instanceof PDOException && $e->getCode() == 23000) {
 
-        $jenis = $model->getById($id);
+                $this->flash('error', 'Kode sudah digunakan');
+            } else {
 
-        require __DIR__ . '/../views/jenis_peraturan/create.php';
+                debug_log($e->getMessage(), 'UPDATE ERROR');
+                $this->flash('error', 'Terjadi kesalahan sistem');
+            }
+        }
+        return $this->redirect('?page=tambah-jenis-peraturan');
     }
 
     public function edit()
     {
-        authOnly();
+        $this->auth();
 
+        $id = $_GET['id'] ?? null;
+        if (!$id) die("ID tidak valid");
 
+        $data = $this->model->getById($id);
 
-        $user = currentUser();
-        $role = currentRole();
-
-        $model = new PeraturanJenisModel();
-
-        $id = $_GET['id'];
-
-        $publikasi = $model->getById($id);
-
-        require __DIR__ . '/../views/jenis_peraturan/edit.php';
+        $this->view('jenis_peraturan/edit', [
+            'data' => $data,
+            'user' => $this->user,
+            'role' => $this->role
+        ]);
     }
 
     public function update()
     {
+        $this->auth();
 
-        // echo "<pre>";
-        // print_r($_POST);
-        // echo "</pre>";
-        // die();
-
-        authOnly();
-
-        $user = currentUser();
-        $role = currentRole();
-
-        $errors = [];
-
-        if (empty($_POST['kode'])) {
-            $errors['kode'] = "Singkatan jenis wajib diisi";
-        }
-        if (empty($_POST['nama'])) {
-            $errors['nama'] = "Jenis peraturan wajib diisi";
-        }
-        if (!empty($errors)) {
-            $_SESSION["errors"] = $errors;
-            $_SESSION["old"] = $_POST;
-
-            header("Location: " . url('?page=tambah-jenis-peraturan&id=' . $_POST['id']));
-            exit();
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return $this->redirect('?page=jenis_peraturan');
         }
 
-        $model = new PeraturanJenisModel();
-        $data = $_POST;
-        $model->update($_POST['id'], $data);
+        if (empty($_POST['id']) || !ctype_digit($_POST['id'])) {
+            $this->flash('error', 'ID tidak valid');
+            return $this->redirect('?page=jenis_peraturan');
+        }
 
-        $_SESSION['flash'] = [
-            'status' => 'success',
-            'message' => 'Jenis peraturan berhasil diperbarui'
-        ];
+        $errors = $this->validate($_POST, true);
 
-        header("Location: " . url('?page=tambah-jenis-peraturan'));
-        exit();
+        if ($errors) {
+            $_SESSION['errors'] = $errors;
+            $_SESSION['old'] = $_POST;
+            return $this->redirect('?page=edit-jenis-peraturan&id=' . $_POST['id']);
+        }
+
+        try {
+
+            $this->model->beginTransaction();
+
+            $data = $_POST;
+
+            if (!$this->model->update($_POST['id'], $data)) {
+                throw new Exception("Update gagal");
+            }
+
+            $this->model->commit();
+
+            $this->log([
+                'user_id' => $this->user['id'],
+                'role_id' => $this->user['role_id'],
+                'action' => 'update',
+                'entity_type' => 'peraturan_jenis',
+                'entity_id' => $_POST['id'],
+                'description' => 'Mengubah data Jenis Peraturan'
+            ]);
+
+            $this->flash('success', 'Jenis peraturan berhasil diperbarui');
+        } catch (Throwable $e) {
+
+            $this->model->rollback();
+            if ($e instanceof PDOException && $e->getCode() == 23000) {
+
+                $this->flash('error', 'Kode sudah digunakan');
+            } else {
+
+                debug_log($e->getMessage(), 'UPDATE ERROR');
+                $this->flash('error', 'Gagal update data');
+            }
+        }
+        return $this->redirect('?page=tambah-jenis-peraturan');
     }
 
     public function delete()
     {
-        authOnly();
+        $this->auth();
 
-
-        $user = currentUser();
-        $role = currentRole();
-
-        $model = new PeraturanJenisModel();
-
-        $id = $_GET['id'];
-
-        // CEK DIPAKAI ATAU TIDAK
-        if ($model->isUsed($id)) {
-
-            $_SESSION['flash'] = [
-                'status'  => 'error',
-                'message' => 'Jenis tidak dapat dihapus karena masih digunakan di data peraturan'
-            ];
-
-            header("Location: " . url('?page=tambah-jenis-peraturan'));
-            exit;
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return $this->redirect('?page=tambah-jenis-peraturan');
         }
 
-        $model->delete($id);
+        if (empty($_POST['id']) || !ctype_digit($_POST['id'])) {
+            $this->flash('error', 'ID tidak valid');
+            return $this->redirect('?page=tambah-jenis-peraturan');
+        }
 
-        $_SESSION['flash'] = [
-            'status'  => 'success',
-            'message' => 'Jenis peraturan berhasil dinonaktifkan'
-        ];
+        try {
 
-        header("Location: " . url('?page=tambah-jenis-peraturan'));
-        exit;
+            $this->model->beginTransaction();
+
+            $id = $_POST['id'];
+
+            // cek masih dipakai
+            if ($this->model->isUsed($id)) {
+                throw new Exception("Jenis masih digunakan");
+            }
+
+            if (!$this->model->delete($id)) {
+                throw new Exception("Gagal menghapus jenis");
+            }
+
+            $this->model->commit();
+
+            $this->flash('success', 'Jenis peraturan berhasil dihapus');
+        } catch (Throwable $e) {
+
+            $this->model->rollback();
+            debug_log($e->getMessage(), 'DELETE JENIS ERROR');
+
+            $this->flash('error', 'Jenis tidak dapat dihapus karena masih digunakan');
+        }
+
+        return $this->redirect('?page=tambah-jenis-peraturan');
+    }
+
+    private function validate($data, $isUpdate = false)
+    {
+        $errors = [];
+
+        if (empty($data['kode'])) {
+            $errors['kode'] = "Singkatan jenis wajib diisi";
+        } else {
+            $id = $isUpdate ? ($data['id'] ?? null) : null;
+
+            if ($this->model->kodeExists($data['kode'], $id)) {
+                $errors['kode'] = "Kode sudah digunakan";
+            }
+        }
+
+        if (empty($data['nama']))
+            $errors['nama'] = "Lembaga wajib diisi";
+
+        return $errors;
     }
 }

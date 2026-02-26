@@ -45,7 +45,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
         <div class="row row-cards">
 
             <div class="col-sm-12 col-lg-6">
-                <form class="card" method="POST" action="<?= ('?page=peraturan-update&id=' . $peraturan['id']) ?>" enctype="multipart/form-data">
+                <form class="card" method="POST" action="<?= ('?page=peraturan-update&id=' . $data['id']) ?>" enctype="multipart/form-data">
                     <div class="card-header">
                         <h3 class="card-title">Form Edit Peraturan</h3>
                     </div>
@@ -58,12 +58,12 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                         <select class="form-select <?= isset($errors['jenis_id']) ? 'is-invalid' : '' ?>"
                                             name="jenis_id"
                                             id="jenis_id">
-                                            <option value="" disabled <?= empty($peraturan['jenis_id']) ? 'selected' : '' ?>>
+                                            <option value="" disabled <?= empty($data['jenis_id']) ? 'selected' : '' ?>>
                                                 -- Pilih Jenis Peraturan --
                                             </option>
 
                                             <?php foreach ($jenis as $j): ?>
-                                                <option value="<?= $j['id'] ?>" <?= ($peraturan['jenis_id'] ?? '') == $j['id'] ? 'selected' : '' ?>>
+                                                <option value="<?= $j['id'] ?>" <?= ($data['jenis_id'] ?? '') == $j['id'] ? 'selected' : '' ?>>
                                                     <?= $j['kode'] ?> (<?= $j['nama'] ?>)
                                                 </option>
                                             <?php endforeach; ?>
@@ -82,7 +82,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                             id="judul"
                                             rows="3"
                                             placeholder="Judul..."
-                                            class="form-control <?= isset($errors['judul']) ? 'is-invalid' : '' ?>" autocomplete="off"><?= $peraturan['judul'] ?? $old['judul'] ?? '' ?></textarea>
+                                            class="form-control <?= isset($errors['judul']) ? 'is-invalid' : '' ?>" autocomplete="off"><?= $data['judul'] ?? $old['judul'] ?? '' ?></textarea>
                                         <div class="invalid-feedback">
                                             <?= $errors['judul'] ?? '' ?>
                                         </div>
@@ -96,7 +96,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                             name="nomor"
                                             id="nomor"
                                             placeholder="Nomor..."
-                                            value="<?= $peraturan['nomor'] ?? $old['nomor'] ?>"
+                                            value="<?= $data['nomor'] ?? $old['nomor'] ?>"
                                             class="form-control <?= isset($errors['nomor']) ? 'is-invalid' : '' ?>" autocomplete="off">
                                         <div class="invalid-feedback">
                                             <?= $errors['nomor'] ?? '' ?>
@@ -109,13 +109,13 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                         <select name="tahun_terbit"
                                             id="tahun_terbit"
                                             class="form-select <?= isset($errors['tahun_terbit']) ? 'is-invalid' : '' ?>">
-                                            <option value="" disabled <?= empty($peraturan['tahun_terbit']) ? 'selected' : '' ?>>
+                                            <option value="" disabled <?= empty($data['tahun_terbit']) ? 'selected' : '' ?>>
                                                 -- Pilih Tahun Terbit --
                                             </option>
 
                                             <?php for ($i = date('Y'); $i >= 1990; $i--): ?>
                                                 <option value="<?= $i ?>"
-                                                    <?= ($peraturan['tahun_terbit'] ?? '') == $i ? 'selected' : '' ?>>
+                                                    <?= ($data['tahun_terbit'] ?? '') == $i ? 'selected' : '' ?>>
                                                     <?= $i ?>
                                                 </option>
                                             <?php endfor; ?>
@@ -133,7 +133,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                             name="lembaga"
                                             id="lembaga"
                                             placeholder="Lembaga Penerbit..."
-                                            value="<?= $peraturan['lembaga'] ?? $old['lembaga'] ?>"
+                                            value="<?= $data['lembaga'] ?? $old['lembaga'] ?>"
                                             class="form-control <?= isset($errors['lembaga']) ? 'is-invalid' : '' ?>" autocomplete="off">
                                         <div class="invalid-feedback">
                                             <?= $errors['lembaga'] ?? '' ?>
@@ -149,7 +149,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                             name="tempat_penetapan"
                                             id="tempat_penetapan"
                                             placeholder="Tempat Penetapan..."
-                                            value="<?= $peraturan['tempat_penetapan'] ?? $old['tempat_penetapan'] ?>"
+                                            value="<?= $data['tempat_penetapan'] ?? $old['tempat_penetapan'] ?>"
                                             class="form-control <?= isset($errors['tempat_penetapan']) ? 'is-invalid' : '' ?>" autocomplete="off">
                                         <div class="invalid-feedback">
                                             <?= $errors['tempat_penetapan'] ?? '' ?>
@@ -164,7 +164,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                             name="penandatangan"
                                             id="penandatangan"
                                             placeholder="Penandatangan..."
-                                            value="<?= $peraturan['penandatangan'] ?? $old['penandatangan'] ?>"
+                                            value="<?= $data['penandatangan'] ?? $old['penandatangan'] ?>"
                                             class="form-control <?= isset($errors['penandatangan']) ? 'is-invalid' : '' ?>" autocomplete="off">
                                         <div class="invalid-feedback">
                                             <?= $errors['penandatangan'] ?? '' ?>
@@ -188,7 +188,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                             Format: jpg, jpeg, png, doc, pdf, xls, ppt (maks 5MB)
                                         </small>
                                     </div>
-                                    <input type="text" name="id" id="id" value="<?= $peraturan['id'] ?>" hidden>
+                                    <input type="text" name="id" id="id" value="<?= $data['id'] ?>" hidden>
                                     <input type="text" name="hapus_file" id="hapus_file" hidden>
                                 </div>
                             </div>

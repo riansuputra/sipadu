@@ -93,32 +93,6 @@ function showMaintenance()
     exit;
 }
 
-function logActivity(array $data)
-{
-    global $pdo;
-
-    if (empty($data['user_id']) || empty($data['action']) || empty($data['entity_type'])) {
-        return;
-    }
-
-    $stmt = $pdo->prepare("
-        INSERT INTO log
-        (user_id, role_id, action, entity_type, entity_id, description, ip_address, user_agent)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    ");
-
-    $stmt->execute([
-        (int) $data['user_id'],
-        $data['role_id'] ?? null,
-        $data['action'],
-        $data['entity_type'],
-        $data['entity_id'] ?? null,
-        $data['description'] ?? null,
-        $_SERVER['REMOTE_ADDR'] ?? null,
-        $_SERVER['HTTP_USER_AGENT'] ?? null
-    ]);
-}
-
 function url(string $path = ''): string
 {
     return BASE_URL . '/' . ltrim($path, '/');
@@ -131,4 +105,31 @@ function getRoleButuhPokja(): array
         2, // ADMIN TIM
         4  // STAFF
     ];
+}
+
+function dd(...$vars)
+{
+    echo "<pre style='background:#111;color:#0f0;padding:20px'>";
+    foreach ($vars as $v) {
+        var_dump($v);
+    }
+    echo "</pre>";
+    die();
+}
+
+function dump(...$vars)
+{
+    echo "<pre>";
+    foreach ($vars as $v) {
+        var_dump($v);
+    }
+    echo "</pre>";
+}
+
+function debug_log($data, $title = 'DEBUG')
+{
+    $log = "[" . date('Y-m-d H:i:s') . "] $title\n";
+    $log .= print_r($data, true) . "\n\n";
+
+    file_put_contents(__DIR__ . '/../logs/debug.log', $log, FILE_APPEND);
 }

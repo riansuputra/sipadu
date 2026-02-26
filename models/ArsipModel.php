@@ -2,7 +2,6 @@
 // ======================================================
 // MODEL ARSIP SESUAI TABEL
 // ======================================================
-require_once __DIR__ . '/../includes/koneksi.php';
 
 class ArsipModel
 {

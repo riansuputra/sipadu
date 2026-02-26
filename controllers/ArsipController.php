@@ -1,17 +1,19 @@
 <?php
 require_once __DIR__ . '/../models/ArsipModel.php';
 require_once __DIR__ . '/../core/auth.php';
+require_once __DIR__ . '/../core/BaseController.php';
 
-class ArsipController
+
+class ArsipController extends BaseController
 {
     public function index()
     {
-        authOnly();
+        $this->auth();
 
 
 
-        $user = currentUser();
-        $role = currentRole();
+        $user = $this->user;
+        $role = $this->role;
 
         $model = new ArsipModel();
         $data = $model->getAll();
@@ -21,10 +23,10 @@ class ArsipController
 
     public function create()
     {
-        authOnly();
+        $this->auth();
 
-        $user = currentUser();
-        $role = currentRole();
+        $user = $this->user;
+        $role = $this->role;
 
         require __DIR__ . '/../views/arsip/create.php';
     }
@@ -34,7 +36,7 @@ class ArsipController
     // ----------------------------------------------------
     public function store()
     {
-        authOnly();
+        $this->auth();
 
 
         // echo "<pre>";
@@ -43,8 +45,8 @@ class ArsipController
         // echo "</pre>";
         // die();
 
-        $user = currentUser();
-        $role = currentRole();
+        $user = $this->user;
+        $role = $this->role;
 
         $errors = [];
 
@@ -61,7 +63,7 @@ class ArsipController
         $model = new ArsipModel();
 
         $data = $_POST;
-        $data['dibuat_oleh'] = currentUser()['id'];
+        $data['dibuat_oleh'] = $this->user['id'];
 
         $id = $model->insert($data);
 
@@ -105,12 +107,12 @@ class ArsipController
 
     public function show()
     {
-        authOnly();
+        $this->auth();
 
 
 
-        $user = currentUser();
-        $role = currentRole();
+        $user = $this->user;
+        $role = $this->role;
 
         $model = new ArsipModel();
 
@@ -124,12 +126,12 @@ class ArsipController
 
     public function edit()
     {
-        authOnly();
+        $this->auth();
 
 
 
-        $user = currentUser();
-        $role = currentRole();
+        $user = $this->user;
+        $role = $this->role;
 
         $model = new ArsipModel();
 
@@ -143,7 +145,7 @@ class ArsipController
 
     public function update()
     {
-        authOnly();
+        $this->auth();
 
 
         // echo "<pre>";
@@ -152,8 +154,8 @@ class ArsipController
         // echo "</pre>";
         // die();
 
-        $user = currentUser();
-        $role = currentRole();
+        $user = $this->user;
+        $role = $this->role;
 
         $errors = [];
 
@@ -213,10 +215,10 @@ class ArsipController
 
     public function delete()
     {
-        authOnly();
+        $this->auth();
 
-        $user = currentUser();
-        $role = currentRole();
+        $user = $this->user;
+        $role = $this->role;
 
         $model = new ArsipModel();
         $model->delete($_GET['id']);

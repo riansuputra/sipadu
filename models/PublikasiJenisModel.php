@@ -1,6 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../includes/koneksi.php';
 
 class PublikasiJenisModel
 {
@@ -8,18 +7,35 @@ class PublikasiJenisModel
 
     public function __construct()
     {
-        // ambil dari singleton
         $this->db = Database::getInstance();
+    }
+
+    public function beginTransaction()
+    {
+        return $this->db->beginTransaction();
+    }
+
+    public function commit()
+    {
+        return $this->db->commit();
+    }
+
+    public function rollback()
+    {
+        return $this->db->rollBack();
     }
 
     // ambil semua
     public function getAll()
     {
-        return $this->db->query("
+        $stmt = $this->db->prepare("
             SELECT * FROM publikasi_jenis
             WHERE publikasi_jenis.is_active = 1
             ORDER BY nama ASC
-        ")->fetchAll();
+        ");
+
+        $stmt->execute();
+        return $stmt->fetchAll();
     }
 
     public function getById($id)

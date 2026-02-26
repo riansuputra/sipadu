@@ -15,7 +15,7 @@ ob_start();
 <?php
 // echo '<pre>';
 // print_r($data);
-// print_r($jenisPeraturan);
+// print_r($modelJenis);
 // foreach ($data as $dt => $d):
 //     if ($d['files']) {
 
@@ -133,7 +133,7 @@ if ($tahun || $jenis) {
                                                 <div class="col-auto">
                                                     <select name="jenis" class="form-select w-auto">
                                                         <option value="">Semua Jenis</option>
-                                                        <?php foreach ($jenisPeraturan as $j): ?>
+                                                        <?php foreach ($modelJenis as $j): ?>
                                                             <option
                                                                 value="<?= $j['kode'] ?>"
                                                                 <?= ($_GET['jenis'] ?? '') == $j['kode'] ? 'selected' : '' ?>>
@@ -352,9 +352,12 @@ if ($tahun || $jenis) {
                                                                 <path d="M16 5l3 3" />
                                                             </svg>
                                                         </a>
-                                                        <a type="button" class="text-red" onclick="confirmDelete(
-                                                                '<?= url('?page=peraturan-delete&id=' . $d['id']) ?>'
+                                                        <a class="text-red"
+                                                            onclick="confirmDelete(
+                                                                '<?= url('?page=peraturan-delete') ?>',
+                                                                '<?= $d['id'] ?>'
                                                             )">
+
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                 <path d="M4 7l16 0" />
@@ -650,7 +653,7 @@ if ($tahun || $jenis) {
 </script>
 
 <script>
-    function confirmDelete(url, label = '') {
+    function confirmDelete(url, id, label = '') {
 
         Swal.fire({
             title: 'Yakin ingin menghapus?',
@@ -659,16 +662,31 @@ if ($tahun || $jenis) {
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Ya, hapus',
-            cancelButtonText: 'Batal'
+            cancelButtonText: 'Batal',
         }).then((result) => {
 
             if (result.isConfirmed) {
-                window.location.href = url;
+
+                // buat form POST dinamis
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = url;
+
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'id';
+                input.value = id;
+
+                form.appendChild(input);
+                document.body.appendChild(form);
+                form.submit();
             }
+            timer: 5000;
 
         });
     }
 </script>
+
 <?php if (isset($_SESSION['flash'])): ?>
     <script>
         document.addEventListener('DOMContentLoaded', function() {

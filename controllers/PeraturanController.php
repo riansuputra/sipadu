@@ -1,490 +1,248 @@
 <?php
 
-require_once __DIR__ . '/../models/PeraturanModel.php';
-require_once __DIR__ . '/../models/PeraturanJenisModel.php';
-require_once __DIR__ . '/../core/auth.php';
+require_once __DIR__ . '/../core/BaseController.php';
 
-class PeraturanController
+class PeraturanController extends BaseController
 {
-    public function index()
+    private $model;
+    private $modelJenis;
+
+    public function __construct()
     {
-        authOnly();
-
-
-        $user = currentUser();
-        if (!$user || empty($user['id'])) {
-            die("User tidak valid");
-        }
-        $role = currentRole();
-
-        $tahun = $_GET['tahun'] ?? null;
-        $jenis = $_GET['jenis'] ?? null;
-
-        $modeljenis = new PeraturanJenisModel();
-        $jenisPeraturan = $modeljenis->getAll();
-
-        $model = new PeraturanModel();
-        if (!empty($tahun) || !empty($jenis)) {
-            $data = $model->getFiltered($tahun, $jenis);
-        } else {
-            // default
-            $data = $model->getAll();
-        }
-
-        require __DIR__ . '/../views/peraturan/index.php';
+        $this->model = $this->model('PeraturanModel');
+        $this->modelJenis = $this->model('PeraturanJenisModel');
     }
 
-    public function getFiltered()
+    public function index()
     {
-        // ambil filter dari GET
+        $this->auth();
+
         $tahun = $_GET['tahun'] ?? null;
-        $jenis = $_GET['jenis'] ?? null;
+        $jenis_filter = $_GET['jenis'] ?? null;
 
-        // jika ada filter → pakai getFiltered
+        $jenis = $this->modelJenis->getAll();
 
+        $data = (!empty($tahun) || !empty($jenis_filter))
+            ? $this->model->getFiltered($tahun, $jenis_filter)
+            : $this->model->getAll();
 
-        $user = currentUser();
-        if (!$user || empty($user['id'])) {
-            die("User tidak valid");
-        }
-        $role = currentRole();
-
-        $model = new PeraturanModel();
-        if (!empty($tahun) || !empty($jenis)) {
-            $data = $model->getFiltered($tahun, $jenis);
-        } else {
-            // default
-            $data = $model->getAll();
-        }
-
-        // kirim ke view
-        header('Location: ' . url(' ?page=peraturan'));
-        exit;
+        $this->view('peraturan/index', [
+            'data' => $data,
+            'jenis' => $jenis,
+            'user' => $this->user,
+            'role' => $this->role
+        ]);
     }
 
     public function create()
     {
-        authOnly();
+        $this->auth();
 
+        $jenis = $this->modelJenis->getAll();
 
-        $user = currentUser();
-        if (!$user || empty($user['id'])) {
-            die("User tidak valid");
-        }
-        $role = currentRole();
-
-        $modeljenis = new PeraturanJenisModel();
-        $jenis = $modeljenis->getAll();
-
-        require __DIR__ . '/../views/peraturan/create.php';
+        $this->view('peraturan/create', [
+            'jenis' => $jenis,
+            'user' => $this->user,
+            'role' => $this->role
+        ]);
     }
 
     public function store()
     {
-        authOnly();
+        $this->auth();
 
-
-
-
-        $user = currentUser();
-        if (!$user || empty($user['id'])) {
-            die("User tidak valid");
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return $this->redirect('?page=peraturan');
         }
 
+        $errors = $this->validate($_POST, $_FILES);
 
-
-        $role = currentRole();
-        $errors = [];
-
-        if (empty($_POST['judul'])) {
-            $errors['judul'] = "Judul wajib diisi";
-        } elseif (strlen($_POST['judul']) < 2) {
-            $errors['judul'] = "Judul minimal 2 karakter";
+        if ($errors) {
+            $_SESSION['errors'] = $errors;
+            $_SESSION['old'] = $_POST;
+            return $this->redirect('?page=tambah-peraturan');
         }
-        if (empty($_POST['nomor'])) {
-            $errors['nomor'] = "Nomor wajib diisi";
-        }
-        if (empty($_POST['lembaga'])) {
-            $errors['lembaga'] = "Lembaga penerbit wajib diisi";
-        }
-        if (empty($_POST['jenis_id'])) {
-            $errors['jenis_id'] = "Jenis wajib diisi";
-        }
-        $currentYear = (int) date('Y');
-        $inputYear   = (int) $_POST['tahun_terbit'];
 
-        if (empty($_POST['tahun_terbit'])) {
-            $errors['tahun_terbit'] = "Tahun terbit wajib diisi";
-        } elseif ($inputYear > $currentYear) {
-            $errors['tahun_terbit'] = "Tahun terbit tidak boleh di masa depan";
-        }
-        if (empty($_POST['tempat_penetapan'])) {
-            $errors['tempat_penetapan'] = "Tempat penetapan wajib diisi";
-        }
-        if (empty($_POST['penandatangan'])) {
-            $errors['penandatangan'] = "Penandatangan wajib diisi";
-        }
-        if (!empty($_FILES["file"]["name"][0])) {
+        try {
+            $this->model->beginTransaction();
 
-            $allowed = [
-                'pdf',
+            $data = $_POST;
+            $data['created_by'] = $this->user['id'];
 
-                // Dokumen
-                'doc',
-                'docx',
-                'xls',
-                'xlsx',
-                'ppt',
-                'pptx',
-                'txt',
+            $id = $this->model->insert($data);
 
-                // Gambar
-                'jpg',
-                'jpeg',
-                'png',
-                'gif',
-                'webp',
-            ];
-
-            foreach ($_FILES["file"]["name"] as $i => $name) {
-                $size = $_FILES["file"]["size"][$i];
-                $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
-
-                if (!in_array($ext, $allowed)) {
-                    $errors['file'] = "File {$name} tidak diizinkan";
-                }
-
-                if ($size > 5 * 1024 * 1024) {
-                    $errors['file'] = "File {$name} lebih dari 5MB";
-                }
+            if (!$id) {
+                throw new Exception("Insert gagal");
             }
+
+            $this->handleUpload($id, $_FILES);
+
+            $this->model->commit();
+
+            $this->log([
+                'user_id' => $this->user['id'],
+                'role_id' => $this->user['role_id'],
+                'action' => 'store',
+                'entity_type' => 'peraturan',
+                'entity_id' => $_POST['id'],
+                'description' => 'Menambah data Peraturan'
+            ]);
+
+            $this->flash('success', 'Peraturan berhasil disimpan');
+        } catch (Throwable $e) {
+
+            $this->model->rollback();
+
+            debug_log($e->getMessage(), 'STORE ERROR');
+
+            $this->flash('error', 'Gagal menyimpan data');
         }
-
-        // echo "<pre>";
-        // print_r($_POST);
-        // print_r($_FILES);
-        // print_r($user['id']);
-        // print_r($errors);
-        // echo "</pre>";
-        // die();
-
-        if (!empty($errors)) {
-            $_SESSION["errors"] = $errors;
-            $_SESSION["old"] = $_POST;
-
-            header("Location: " . url('?page=tambah-peraturan'));
-            exit();
-        }
-
-
-        $model = new PeraturanModel();
-
-        $data = $_POST;
-        $data["created_by"] = $user['id'];
-
-        $id = $model->insert($data);
-
-        // ============= UPLOAD FILE ==============
-        if (!empty($_FILES['file']['name'][0])) {
-
-            $dir = __DIR__ . '/../uploads/peraturan/';
-
-            if (!is_dir($dir))
-                mkdir($dir, 0777, true);
-
-            foreach ($_FILES['file']['name'] as $i => $nama) {
-
-                if (!$nama) continue;
-
-                $tmp  = $_FILES['file']['tmp_name'][$i];
-                $type = $_FILES['file']['type'][$i];
-                $size = $_FILES['file']['size'][$i];
-                $ext = strtolower(pathinfo($nama, PATHINFO_EXTENSION));
-
-
-                $namaBaru = time() . '_' . $i . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $nama);
-                $path = $dir . $namaBaru;
-
-                if (move_uploaded_file($tmp, $path)) {
-
-                    $model->insertFile($id, [
-                        'nama_file'   => $nama,
-                        'path_file'   => 'uploads/peraturan/' . $namaBaru,
-                        'tipe_file'   => $ext,
-                        'ukuran_file' => $size
-                    ]);
-                }
-            }
-        }
-
-        logActivity([
-            'user_id'      => $user['id'],
-            'role_id'      => $user['role_id'],
-            'action'       => 'create',
-            'entity_type'  => 'peraturan',
-            'entity_id'    => $id,
-            'description'  => 'Menambahkan data Peraturan'
-        ]);
-
-        $_SESSION['flash'] = [
-            'status'  => 'success',
-            'message' => 'Peraturan berhasil disimpan'
-        ];
-
-        header("Location: " . url('?page=tambah-peraturan'));
-        exit;
-    }
-
-    public function show()
-    {
-        authOnly();
-
-
-
-        $user = currentUser();
-        if (!$user || empty($user['id'])) {
-            die("User tidak valid");
-        }
-        $role = currentRole();
-
-        $model = new PeraturanModel();
-
-        $id = $_GET['id'];
-
-        $model->incrementView($id);
-
-        $peraturan = $model->getById($id);
-        $files = $model->getFiles($id);
-
-        require __DIR__ . '/../views/peraturan/detail.php';
+        return $this->redirect('?page=tambah-peraturan');
     }
 
     public function edit()
     {
-        authOnly();
+        $this->auth();
 
+        $id = $_GET['id'] ?? null;
+        if (!$id) die("ID tidak valid");
 
+        $data = $this->model->getById($id);
+        $files = $this->model->getFiles($id);
+        $jenis = $this->modelJenis->getAll();
 
-        $user = currentUser();
-        if (!$user || empty($user['id'])) {
-            die("User tidak valid");
-        }
-        $role = currentRole();
-
-        $model = new PeraturanModel();
-
-        $id = $_GET['id'];
-
-        $peraturan = $model->getById($id);
-        $files = $model->getFiles($id);
-
-        $modeljenis = new PeraturanJenisModel();
-        $jenis = $modeljenis->getAll();
-
-        require __DIR__ . '/../views/peraturan/edit.php';
+        $this->view('peraturan/edit', [
+            'data' => $data,
+            'files' => $files,
+            'jenis' => $jenis,
+            'user' => $this->user,
+            'role' => $this->role
+        ]);
     }
 
     public function update()
     {
-        // echo "<pre>";
-        // print_r($_POST);
-        // print_r($_FILES);
-        // echo "</pre>";
-        // die();
+        $this->auth();
 
-        authOnly();
-
-
-        $user = currentUser();
-        if (!$user || empty($user['id'])) {
-            die("User tidak valid");
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return $this->redirect('?page=peraturan');
         }
-        $role = currentRole();
 
-        $errors = [];
-
-        if (empty($_POST['judul'])) {
-            $errors['judul'] = "Judul wajib diisi";
-        } elseif (strlen($_POST['judul']) < 2) {
-            $errors['judul'] = "Judul minimal 2 karakter";
+        if (empty($_POST['id']) || !ctype_digit($_POST['id'])) {
+            $this->flash('error', 'ID tidak valid');
+            return $this->redirect('?page=peraturan');
         }
-        if (empty($_POST['nomor'])) {
-            $errors['nomor'] = "Nomor wajib diisi";
+
+        $errors = $this->validate($_POST, $_FILES, true);
+
+        if ($errors) {
+            $_SESSION['errors'] = $errors;
+            $_SESSION['old'] = $_POST;
+            return $this->redirect('?page=edit-peraturan&id=' . $_POST['id']);
         }
-        if (empty($_POST['lembaga'])) {
-            $errors['lembaga'] = "Lembaga penerbit wajib diisi";
-        }
-        if (empty($_POST['jenis_id'])) {
-            $errors['jenis_id'] = "Jenis wajib diisi";
-        }
-        $currentYear = (int) date('Y');
-        $inputYear   = (int) $_POST['tahun_terbit'];
 
-        if (empty($_POST['tahun_terbit'])) {
-            $errors['tahun_terbit'] = "Tahun terbit wajib diisi";
-        } elseif ($inputYear > $currentYear) {
-            $errors['tahun_terbit'] = "Tahun terbit tidak boleh di masa depan";
-        }
-        if (empty($_POST['tempat_penetapan'])) {
-            $errors['tempat_penetapan'] = "Tempat penetapan wajib diisi";
-        }
-        if (empty($_POST['penandatangan'])) {
-            $errors['penandatangan'] = "Penandatangan wajib diisi";
-        }
-        if (!empty($_FILES["file"]["name"][0])) {
+        try {
 
-            $allowed = [
-                'pdf',
+            $this->model->beginTransaction();
 
-                // Dokumen
-                'doc',
-                'docx',
-                'xls',
-                'xlsx',
-                'ppt',
-                'pptx',
-                'txt',
+            $data = $_POST;
+            $data['updated_by'] = $this->user['id'];
 
-                // Gambar
-                'jpg',
-                'jpeg',
-                'png',
-                'gif',
-                'webp',
-            ];
+            if (!$this->model->update($_POST['id'], $data)) {
+                throw new Exception("Update gagal");
+            }
 
-            foreach ($_FILES["file"]["name"] as $i => $name) {
-                $size = $_FILES["file"]["size"][$i];
-                $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+            // hapus file (DB saja sesuai arsitektur kamu)
+            if (!empty($_POST["hapus_file"])) {
 
-                if (!in_array($ext, $allowed)) {
-                    $errors['file'] = "File {$name} tidak diizinkan";
-                }
+                foreach (explode(",", $_POST["hapus_file"]) as $fileId) {
 
-                if ($size > 5 * 1024 * 1024) {
-                    $errors['file'] = "File {$name} lebih dari 5MB";
+                    if (!ctype_digit($fileId)) continue;
+
+                    if (!$this->model->deleteFileById($fileId)) {
+                        throw new Exception("Gagal hapus file");
+                    }
                 }
             }
+
+            // upload file baru
+            $this->handleUpload($_POST['id'], $_FILES);
+
+            $this->model->commit();
+
+            $this->log([
+                'user_id' => $this->user['id'],
+                'role_id' => $this->user['role_id'],
+                'action' => 'update',
+                'entity_type' => 'peraturan',
+                'entity_id' => $_POST['id'],
+                'description' => 'Mengubah data Peraturan'
+            ]);
+
+            $this->flash('success', 'Peraturan berhasil diperbarui');
+        } catch (Throwable $e) {
+
+            $this->model->rollback();
+            debug_log($e->getMessage(), 'UPDATE ERROR');
+
+            $this->flash('error', 'Gagal update data');
         }
-        if (!empty($errors)) {
-            $_SESSION["errors"] = $errors;
-            $_SESSION["old"] = $_POST;
-
-            header("Location: " . url('?page=edit-peraturan&id=' . $_POST["id"]));
-            exit();
-        }
-
-        $model = new PeraturanModel();
-
-        $data = $_POST;
-        $data["updated_by"] = $user['id'];
-
-
-        $model->update($_POST['id'], $data);
-
-        if (!empty($_POST["hapus_file"])) {
-            $ids = explode(",", $_POST["hapus_file"]);
-            foreach ($ids as $id) {
-                $model->deleteFileById($id);
-            }
-        }
-
-        // ============= HANDLE UPLOAD FILE BARU ==============
-        if (!empty($_FILES['file']['name'][0])) {
-
-            $dir = __DIR__ . '/../uploads/peraturan/';
-
-            if (!is_dir($dir))
-                mkdir($dir, 0777, true);
-
-            foreach ($_FILES['file']['name'] as $i => $nama) {
-
-                if (!$nama) continue;
-
-                $tmp  = $_FILES['file']['tmp_name'][$i];
-                $type = $_FILES['file']['type'][$i];
-                $size = $_FILES['file']['size'][$i];
-                $ext = strtolower(pathinfo($nama, PATHINFO_EXTENSION));
-
-
-                $namaBaru = time() . '_' . $i . '_' .
-                    preg_replace('/[^a-zA-Z0-9._-]/', '_', $nama);
-                $path = $dir . $namaBaru;
-
-                if (move_uploaded_file($tmp, $path)) {
-                    $model->insertFile($_POST['id'], [
-                        'nama_file'   => $nama,
-                        'path_file'   => 'uploads/peraturan/' . $namaBaru,
-                        'tipe_file'   => $ext,
-                        'ukuran_file' => $size
-                    ]);
-                }
-            }
-        }
-
-        logActivity([
-            'user_id'      => $user['id'],
-            'role_id'      => $user['role_id'],
-            'action'       => 'update',
-            'entity_type'  => 'peraturan',
-            'entity_id'    => $_POST["id"],
-            'description'  => 'Mengubah data Peraturan'
-        ]);
-
-        $_SESSION['flash'] = [
-            'status'  => 'success',
-            'message' => 'Peraturan berhasil diperbarui'
-        ];
-
-        header("Location: " . url('?page=peraturan'));
+        return $this->redirect('?page=peraturan');
     }
 
     public function delete()
     {
-        authOnly();
+        $this->auth();
 
-        $user = currentUser();
-        if (!$user || empty($user['id'])) {
-            die("User tidak valid");
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return $this->redirect('?page=peraturan');
         }
-        $role = currentRole();
 
-        $model = new PeraturanModel();
-        $result = $model->delete($_GET['id'], $user['id']);
+        if (empty($_POST['id']) || !ctype_digit($_POST['id'])) {
+            $this->flash('error', 'ID tidak valid');
+            return $this->redirect('?page=peraturan');
+        }
 
+        try {
 
-        if (!$result) {
-            $_SESSION['flash'] = [
-                'status'  => 'error',
-                'message' => 'Gagal menghapus data'
-            ];
-        } else {
-            logActivity([
-                'user_id'      => $user['id'],
-                'role_id'      => $user['role_id'],
-                'action'       => 'delete',
-                'entity_type'  => 'peraturan',
-                'entity_id'    => $_GET["id"],
-                'description'  => 'Menghapus data Peraturan'
+            $this->model->beginTransaction();
+
+            $id = $_POST['id'];
+
+            if (!$this->model->delete($id, $this->user['id'])) {
+                throw new Exception("Gagal menghapus data");
+            }
+
+            $this->model->commit();
+
+            $this->log([
+                'user_id' => $this->user['id'],
+                'role_id' => $this->user['role_id'],
+                'action' => 'delete',
+                'entity_type' => 'peraturan',
+                'entity_id' => $id,
+                'description' => 'Menghapus data Peraturan'
             ]);
 
-            $_SESSION['flash'] = [
-                'status'  => 'success',
-                'message' => 'Data berhasil dihapus'
-            ];
+            $this->flash('success', 'Peraturan berhasil dihapus');
+        } catch (Throwable $e) {
+
+            $this->model->rollback();
+            debug_log($e->getMessage(), 'DELETE ERROR');
+
+            $this->flash('error', 'Gagal menghapus data');
         }
 
-        header("Location: " . url('?page=peraturan'));
-        exit;
+        return $this->redirect('?page=peraturan');
     }
+
+    // =================================== Belum dicek ========================================
 
     public function publicIndex()
     {
+        $this->auth();
 
-        $model = new PeraturanModel();
-
-        $modeljenis = new PeraturanJenisModel();
-        $jenis = $modeljenis->getAll();
+        $jenis = $this->modelJenis->getAll();
 
         $limit = 5; // data per halaman
         $page  = isset($_GET['p']) ? (int)$_GET['p'] : 1;
@@ -504,33 +262,40 @@ class PeraturanController
         // Jika semua filter kosong, tetap tampil 5 data terbaru
         $allEmpty = array_filter($params) ? false : true;
 
-        $data  = $model->filterWithPagination($params, $limit, $offset);
+        $data  = $this->model->filterWithPagination($params, $limit, $offset);
         $total = $allEmpty
-            ? $model->countAll()
-            : $model->countFiltered($params);
+            ? $this->model->countAll()
+            : $this->model->countFiltered($params);
 
         $totalPage = ceil($total / $limit);
 
-        require __DIR__ . '/../views/peraturan/publicIndex.php';
+        $this->view('peraturan/publicIndex', [
+            'data' => $data,
+            'jenis' => $jenis,
+            'totalPage' => $totalPage,
+            'page' => $page,
+            'user' => $this->user,
+            'role' => $this->role
+        ]);
     }
 
     public function downloadFile()
     {
-        authOnly();
+        $this->auth();
 
 
         $fileId = $_GET['file'];
         $peraturanId = $_GET['id'];
 
-        $model = new PeraturanModel();
-        $file  = $model->getFileById($fileId);
+
+        $file  = $this->model->getFileById($fileId);
 
         if (!$file) {
             exit('File tidak ditemukan');
         }
 
         // hitung download (di tabel peraturan)
-        $model->incrementDownload($peraturanId);
+        $this->model->incrementDownload($peraturanId);
 
         $fullPath = __DIR__ . '/../' . $file['path_file'];
 
@@ -550,20 +315,20 @@ class PeraturanController
 
     public function download()
     {
-        authOnly();
+        $this->auth();
 
 
         $fileId = $_GET['file'];
 
-        $model = new PeraturanModel();
-        $file  = $model->getFileById($fileId);
+
+        $file  = $this->model->getFileById($fileId);
 
         if (!$file) {
             exit('File tidak ditemukan');
         }
 
         // hitung download (di tabel peraturan)
-        $model->incrementDownload($file['peraturan_id']);
+        $this->model->incrementDownload($file['peraturan_id']);
 
         $fullPath = __DIR__ . '/../' . $file['path_file'];
 
@@ -584,19 +349,87 @@ class PeraturanController
 
     public function detail($id)
     {
-        authOnly();
+        $this->auth();
 
 
-        $model = new PeraturanModel();
 
-        $model->incrementView($id);
+
+        $this->model->incrementView($id);
 
 
         // Ambil data peraturan
-        $data  = $model->getById($id);
+        $data  = $this->model->getById($id);
 
         // Ambil file terkait
-        $files = $model->getFiles($id);
+        $files = $this->model->getFiles($id);
         require __DIR__ . '/../views/peraturan/publicDetail.php';
+    }
+
+    private function validate($data, $files, $isUpdate = false)
+    {
+        $errors = [];
+
+        if (empty($data['judul']) || strlen($data['judul']) < 2)
+            $errors['judul'] = "Judul minimal 2 karakter";
+
+        if (empty($data['nomor']))
+            $errors['nomor'] = "Nomor wajib diisi";
+
+        if (empty($data['lembaga']))
+            $errors['lembaga'] = "Lembaga wajib diisi";
+
+        if (empty($data['jenis_id']))
+            $errors['jenis_id'] = "Jenis wajib diisi";
+
+        if (!empty($files['file']['name'][0])) {
+            $allowed = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'jpg', 'jpeg', 'png', 'gif', 'webp'];
+
+            foreach ($files['file']['name'] as $i => $name) {
+                $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+                $size = $files['file']['size'][$i];
+
+                if (!in_array($ext, $allowed))
+                    $errors['file'] = "File tidak diizinkan";
+
+                if ($size > 5 * 1024 * 1024)
+                    $errors['file'] = "File maksimal 5MB";
+            }
+        }
+
+        return $errors;
+    }
+
+    private function handleUpload($peraturanId, $files)
+    {
+        if (empty($files['file']['name'][0])) return;
+
+        $dir = realpath(__DIR__ . '/../uploads') . '/peraturan/';
+
+        if (!is_dir($dir) && !mkdir($dir, 0755, true)) {
+            throw new Exception("Folder upload gagal dibuat");
+        }
+
+        foreach ($files['file']['name'] as $i => $nama) {
+
+            if (!$nama) continue;
+
+            $tmp  = $files['file']['tmp_name'][$i];
+            $size = $files['file']['size'][$i];
+            $ext  = strtolower(pathinfo($nama, PATHINFO_EXTENSION));
+
+            $namaBaru = time() . '_' . $i . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $nama);
+            $path = $dir . $namaBaru;
+
+            if (!move_uploaded_file($tmp, $path)) {
+                throw new Exception("Upload file gagal");
+            }
+
+            $this->model->insertFile($peraturanId, [
+                'nama_file' => $nama,
+                'path_file' => 'uploads/peraturan/' . $namaBaru,
+                'tipe_file' => $ext,
+                'ukuran_file' => $size
+            ]);
+        }
     }
 }

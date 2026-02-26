@@ -1,21 +1,31 @@
 <?php
 
-require_once __DIR__ . '/../includes/koneksi.php';
-
-
 class DipModel
 {
     protected $db;
 
     public function __construct()
     {
-        // ambil dari singleton
         $this->db = Database::getInstance();
+    }
+
+    public function beginTransaction()
+    {
+        return $this->db->beginTransaction();
+    }
+
+    public function commit()
+    {
+        return $this->db->commit();
+    }
+
+    public function rollback()
+    {
+        return $this->db->rollBack();
     }
 
     public function getAll()
     {
-        $this->db->exec("SET SESSION group_concat_max_len = 100000");
         $stmt = $this->db->prepare("
             SELECT 
                 dip.*,
@@ -31,14 +41,11 @@ class DipModel
         ");
 
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll();
     }
 
     public function getFiltered($tahun = null, $jenis = [])
     {
-        // penting untuk group_concat
-        $this->db->exec("SET SESSION group_concat_max_len = 100000");
-
         $sql = "
         SELECT 
             dip.*,
@@ -81,7 +88,7 @@ class DipModel
         $stmt = $this->db->prepare($sql);
         $stmt->execute($params);
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll();
     }
 
 
@@ -92,7 +99,7 @@ class DipModel
         ");
 
         $stmt->execute([$id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $stmt->fetch();
     }
 
     public function insert($data)
@@ -214,7 +221,7 @@ class DipModel
         ");
 
         $stmt->execute([$dipId]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll();
     }
 
     public function getFileById($id)
@@ -223,7 +230,7 @@ class DipModel
             SELECT * FROM dip_file WHERE id = ?
         ");
         $stmt->execute([$id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $stmt->fetch();
     }
 
     public function deleteFileById($fileId)
@@ -294,6 +301,6 @@ class DipModel
         $stmt = $this->db->prepare($sql);
         $stmt->execute($params);
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll();
     }
 }

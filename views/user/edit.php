@@ -92,7 +92,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                 <div class="mb-3">
                                     <label class="form-label required">Password :</label>
                                     <div class="input-group input-group-flat">
-                                        <input type="password" value="<?= $data['password'] ?? '' ?>" id="password" name="password" class="form-control <?= isset($errors['password']) ? 'is-invalid' : '' ?>" placeholder="Masukkan kata sandi..." autocomplete="off">
+                                        <input type="password" id="password_baru" name="password_baru" class="form-control <?= isset($errors['password']) ? 'is-invalid' : '' ?>" placeholder="Masukkan kata sandi..." autocomplete="off">
                                         <span class="input-group-text" id="togglePassword">
                                             <a class="link-secondary" data-bs-toggle="tooltip" aria-label="Show password" data-bs-original-title="Lihat sandi"><!-- Download SVG icon from http://tabler.io/icons/icon/eye -->
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
@@ -246,11 +246,11 @@ unset($_SESSION['errors'], $_SESSION['old']);
 <script>
     $(document).ready(function() {
         $('#togglePassword').click(function() {
-            var passwordInput = $('#password');
-            if (passwordInput.attr('type') === 'password') {
+            var passwordInput = $('#password_baru');
+            if (passwordInput.attr('type') === 'password_baru') {
                 passwordInput.attr('type', 'text');
             } else {
-                passwordInput.attr('type', 'password');
+                passwordInput.attr('type', 'password_baru');
             }
         });
     });

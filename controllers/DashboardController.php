@@ -5,8 +5,10 @@
 
 require_once __DIR__ . '/../core/auth.php';
 require_once __DIR__ . '/../models/ModulModel.php';
+require_once __DIR__ . '/../core/BaseController.php';
 
-class DashboardController
+
+class DashboardController extends BaseController
 {
     // ----------------------------
     // HALAMAN DASHBOARD
@@ -14,12 +16,12 @@ class DashboardController
     public function index()
     {
         // Pastikan user sudah login
-        authOnly();
+        $this->auth();
 
 
 
-        $user = currentUser();
-        $role = currentRole();
+        $user = $this->user;
+        $role = $this->role;
 
         $mode = $_GET['mode'] ?? null;
 
@@ -64,12 +66,12 @@ class DashboardController
     public function paud()
     {
         // Pastikan user sudah login
-        authOnly();
+        $this->auth();
 
 
 
-        $user = currentUser();
-        $role = currentRole();
+        $user = $this->user;
+        $role = $this->role;
 
         require __DIR__ . "/../views/paud/index.php";
     }
@@ -77,12 +79,12 @@ class DashboardController
     public function sd()
     {
         // Pastikan user sudah login
-        authOnly();
+        $this->auth();
 
 
 
-        $user = currentUser();
-        $role = currentRole();
+        $user = $this->user;
+        $role = $this->role;
 
         require __DIR__ . "/../views/sd/index.php";
     }
@@ -90,12 +92,12 @@ class DashboardController
     public function smp()
     {
         // Pastikan user sudah login
-        authOnly();
+        $this->auth();
 
 
 
-        $user = currentUser();
-        $role = currentRole();
+        $user = $this->user;
+        $role = $this->role;
 
         require __DIR__ . "/../views/smp/index.php";
     }
@@ -103,12 +105,12 @@ class DashboardController
     public function sma()
     {
         // Pastikan user sudah login
-        authOnly();
+        $this->auth();
 
 
 
-        $user = currentUser();
-        $role = currentRole();
+        $user = $this->user;
+        $role = $this->role;
 
         require __DIR__ . "/../views/sma/index.php";
     }
@@ -116,12 +118,12 @@ class DashboardController
     public function widyaprada()
     {
         // Pastikan user sudah login
-        authOnly();
+        $this->auth();
 
 
 
-        $user = currentUser();
-        $role = currentRole();
+        $user = $this->user;
+        $role = $this->role;
 
         require __DIR__ . "/../views/widyaprada/index.php";
     }

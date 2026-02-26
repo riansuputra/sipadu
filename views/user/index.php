@@ -94,10 +94,13 @@ ob_start();
                                                 <button class="table-sort d-flex justify-content-between" data-sort="sort-username">Username</button>
                                             </th>
                                             <th class="w-1">
+                                                <button class="table-sort d-flex justify-content-between" data-sort="sort-tim">Tim / Unit</button>
+                                            </th>
+                                            <th class="w-1">
                                                 <button class="table-sort d-flex justify-content-between" data-sort="sort-role">Role</button>
                                             </th>
                                             <th class="w-1">
-                                                <button class="table-sort d-flex justify-content-between" data-sort="sort-tim">Tim / Unit</button>
+                                                <button class="table-sort d-flex justify-content-between" data-sort="sort-role">Status</button>
                                             </th>
                                             <th class="w-1">
                                                 <button class="table-sort d-flex justify-content-between" data-sort="sort-aksi">Aksi</button>
@@ -105,7 +108,7 @@ ob_start();
                                         </tr>
                                     </thead>
                                     <tbody class="table-tbody">
-                                        <?php foreach ($users as $dt => $d): ?>
+                                        <?php foreach ($data as $dt => $d): ?>
                                             <tr>
                                                 <td class="sort-no text-center">
                                                     <?= $dt + 1 ?>
@@ -115,6 +118,9 @@ ob_start();
                                                 </td>
                                                 <td class="sort-username">
                                                     <?= htmlspecialchars($d['username'] ?? '-') ?>
+                                                </td>
+                                                <td class="sort-tim">
+                                                    <?= htmlspecialchars($d['pokja_nama'] ?? '-') ?>
                                                 </td>
                                                 <td class="sort-role">
                                                     <?php if ($d["kode_role"] === "Admin") {
@@ -132,9 +138,17 @@ ob_start();
                                                     } ?>
                                                     <span class="badge <?= $bg ?>"><?= $text ?></span>
                                                 </td>
-                                                <td class="sort-tim">
-                                                    <?= htmlspecialchars($d['pokja_nama'] ?? '-') ?>
+                                                <td class="sort-role">
+                                                    <?php if ($d["is_active"] === 1) {
+                                                        $bg = "bg-success text-blue-fg";
+                                                        $text = 'Aktif';
+                                                    } else {
+                                                        $bg = "bg-danger text-secondary-fg";
+                                                        $text = 'Nonaktif';
+                                                    } ?>
+                                                    <span class="badge <?= $bg ?>"><?= $text ?></span>
                                                 </td>
+
                                                 <td>
                                                     <div class="btn-group w-100">
                                                         <a href="<?= url('?page=edit-user&id=' . $d["id"]) ?>" class="text-yellow me-1">
@@ -145,8 +159,10 @@ ob_start();
                                                                 <path d="M16 5l3 3" />
                                                             </svg>
                                                         </a>
-                                                        <a type="button" class="text-red" onclick="confirmDelete(
-                                                                '<?= url('?page=peraturan-delete&id=' . $d['id']) ?>'
+                                                        <a class="text-red"
+                                                            onclick="confirmDelete(
+                                                                '<?= url('?page=user-delete') ?>',
+                                                                '<?= $d['id'] ?>'
                                                             )">
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -267,7 +283,7 @@ ob_start();
 </script>
 
 <script>
-    function confirmDelete(url, label = '') {
+    function confirmDelete(url, id, label = '') {
 
         Swal.fire({
             title: 'Yakin ingin menghapus?',
@@ -276,16 +292,31 @@ ob_start();
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Ya, hapus',
-            cancelButtonText: 'Batal'
+            cancelButtonText: 'Batal',
         }).then((result) => {
 
             if (result.isConfirmed) {
-                window.location.href = url;
+
+                // buat form POST dinamis
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = url;
+
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'id';
+                input.value = id;
+
+                form.appendChild(input);
+                document.body.appendChild(form);
+                form.submit();
             }
+            timer: 5000;
 
         });
     }
 </script>
+
 <?php if (isset($_SESSION['flash'])): ?>
     <script>
         document.addEventListener('DOMContentLoaded', function() {

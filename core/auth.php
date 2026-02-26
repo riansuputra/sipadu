@@ -1,92 +1,96 @@
 <?php
 // ================================
-// AUTHENTICATION CORE
+// AUTHENTICATION CORE (SESSION ONLY)
 // ================================
 
 require_once __DIR__ . '/../includes/config.php';
 
-// -------------------------------
-// CEK APAKAH USER SUDAH LOGIN
-// -------------------------------
-function isLoggedIn()
+class Auth
 {
-    // Mengecek apakah session user tersedia
-    return isset($_SESSION['user']);
-}
+    private static $user = null;
 
-// -------------------------------
-// SIMPAN DATA USER KE SESSION
-// -------------------------------
-function loginUser(array $user)
-{
-    session_regenerate_id(true); // WAJIB
+    // ================================
+    // INIT SESSION
+    // ================================
+    public static function init()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
 
-    $_SESSION['user'] = [
-        'id' => $user['id'],
-        'username' => $user['username'],
-        'nama' => $user['nama_lengkap'],
-        'role' => $user['kode_role'],
-        'role_id' => $user['role_id'],
-        'pokja_id' => $user['pokja_id'] ?? null,
-        'pokja_nama' => $user['pokja_nama'] ?? null,
-        'pokja_tipe' => $user['pokja_tipe'] ?? null,
-    ];
-}
-
-// -------------------------------
-// LOGOUT USER
-// -------------------------------
-function logout()
-{
-    $_SESSION = [];
-
-    if (ini_get("session.use_cookies")) {
-        $params = session_get_cookie_params();
-        setcookie(
-            session_name(),
-            '',
-            time() - 42000,
-            $params["path"],
-            $params["domain"],
-            $params["secure"],
-            $params["httponly"]
-        );
+        self::$user = $_SESSION['user'] ?? null;
     }
 
-    session_destroy();
+    // ================================
+    // CHECK LOGIN STATUS
+    // ================================
+    public static function check()
+    {
+        return !empty(self::$user['id']);
+    }
 
-    header('Location: ' . url('?page=login'));
-    exit;
-}
+    // ================================
+    // LOGIN PROCESS
+    // ================================
+    public static function login(array $user)
+    {
+        session_regenerate_id(true);
 
-// ambil seluruh data user dari session
-function currentUser()
-{
-    return $_SESSION['user'] ?? null;
-}
+        $_SESSION['user'] = [
+            'id'         => $user['id'],
+            'username'   => $user['username'],
+            'nama'       => $user['nama_lengkap'],
+            'role'       => $user['kode_role'],
+            'role_id'    => $user['role_id'],
+            'pokja_id'   => $user['pokja_id'] ?? null,
+            'pokja_nama' => $user['pokja_nama'] ?? null,
+            'pokja_tipe' => $user['pokja_tipe'] ?? null,
+        ];
 
-// -------------------------------
-// AMBIL ROLE SAAT INI
-// -------------------------------
-function currentRole()
-{
-    return $_SESSION['user']['role'] ?? null;
-}
+        self::$user = $_SESSION['user'];
+    }
 
-// -------------------------------
-// AMBIL ROLE SAAT INI
-// -------------------------------
-function currentPokja()
-{
-    return $_SESSION['user']['pokja_id'] ?? null;
-}
+    // ================================
+    // LOGOUT PROCESS
+    // ================================
+    public static function logout()
+    {
+        $_SESSION = [];
 
-// -------------------------------
-// REDIRECT SETELAH LOGIN
-// -------------------------------
-function redirectByRole()
-{
-    // Semua role masuk ke dashboard yang sama
-    header('Location: ' . url('?page=dashboard'));
-    exit;
+        if (ini_get("session.use_cookies")) {
+            $params = session_get_cookie_params();
+            setcookie(
+                session_name(),
+                '',
+                time() - 42000,
+                $params["path"],
+                $params["domain"],
+                $params["secure"],
+                $params["httponly"]
+            );
+        }
+
+        session_destroy();
+
+        header('Location: ' . url('?page=login'));
+        exit;
+    }
+
+    // ================================
+    // GET USER DATA
+    // ================================
+    public static function user()
+    {
+        return self::$user;
+    }
+
+    public static function role()
+    {
+        return self::$user['role'] ?? null;
+    }
+
+    public static function pokja()
+    {
+        return self::$user['pokja_id'] ?? null;
+    }
 }

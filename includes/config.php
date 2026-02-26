@@ -23,3 +23,23 @@ define('MAINTENANCE_PAGES', [
     'pengaturan-profile',
     'pegawai-publik'
 ]);
+
+// Konfigurasi database lokal
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'db_sipadu');
+define('DB_USER', 'root');
+define('DB_PASS', '');
+
+// Konfigurasi database server
+// define('DB_HOST', 'localhost');
+// define('DB_NAME', 'db_sipadu');
+// define('DB_USER', 'root');
+// define('DB_PASS', '');
+
+
+// // Konfigurasi database server
+// // $host = 'db.bpmpbali.id';
+// // $db   = 'db_sipadu';
+// // $user = 'root';
+// // $pass = 'Denpasar14';
+// // $charset = 'utf8mb4';

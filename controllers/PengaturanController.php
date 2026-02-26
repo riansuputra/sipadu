@@ -5,8 +5,10 @@
 
 require_once __DIR__ . '/../core/auth.php';
 require_once __DIR__ . '/../models/ModulModel.php';
+require_once __DIR__ . '/../core/BaseController.php';
 
-class PengaturanController
+
+class PengaturanController extends BaseController
 {
     // ----------------------------
     // HALAMAN DASHBOARD
@@ -14,13 +16,13 @@ class PengaturanController
     public function backupData()
     {
         // Pastikan user sudah login
-        authOnly();
+        $this->auth();
 
 
 
-        $user = currentUser();
+        $user = $this->user;
         // Ambil role user
-        $role = currentRole();
+        $role = $this->role;
 
         // ----------------------------
         // 3. STAFF → modul tampil di dashboard
@@ -47,13 +49,13 @@ class PengaturanController
     public function manajemenFile()
     {
         // Pastikan user sudah login
-        authOnly();
+        $this->auth();
 
 
 
-        $user = currentUser();
+        $user = $this->user;
         // Ambil role user
-        $role = currentRole();
+        $role = $this->role;
 
         // ----------------------------
         // 3. STAFF → modul tampil di dashboard
@@ -80,13 +82,13 @@ class PengaturanController
     public function profil()
     {
         // Pastikan user sudah login
-        authOnly();
+        $this->auth();
 
 
 
-        $user = currentUser();
+        $user = $this->user;
         // Ambil role user
-        $role = currentRole();
+        $role = $this->role;
 
         // ----------------------------
         // 3. STAFF → modul tampil di dashboard

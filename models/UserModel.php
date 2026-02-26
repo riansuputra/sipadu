@@ -1,5 +1,4 @@
 <?php
-require_once __DIR__ . '/../includes/koneksi.php';
 
 class UserModel
 {
@@ -7,16 +6,27 @@ class UserModel
 
     public function __construct()
     {
-        // ambil dari singleton
         $this->db = Database::getInstance();
     }
 
-    // ============================
-    // GET ALL USER
-    // ============================
+    public function beginTransaction()
+    {
+        return $this->db->beginTransaction();
+    }
+
+    public function commit()
+    {
+        return $this->db->commit();
+    }
+
+    public function rollback()
+    {
+        return $this->db->rollBack();
+    }
+
     public function getAll()
     {
-        $stmt = $this->db->query("
+        $stmt = $this->db->prepare("
             SELECT 
                 u.*,
                 r.nama_role,
@@ -28,6 +38,7 @@ class UserModel
             ORDER BY u.created_at DESC
         ");
 
+        $stmt->execute();
         return $stmt->fetchAll();
     }
 
@@ -48,12 +59,13 @@ class UserModel
     // ============================
     public function getRoles()
     {
-        $stmt = $this->db->query("
-        SELECT id, nama_role, kode_role
-        FROM role
-        ORDER BY id ASC
-    ");
+        $stmt = $this->db->prepare("
+            SELECT id, nama_role, kode_role
+            FROM role
+            ORDER BY id ASC
+        ");
 
+        $stmt->execute();
         return $stmt->fetchAll();
     }
 
@@ -62,12 +74,13 @@ class UserModel
     // ============================
     public function getPokja()
     {
-        $stmt = $this->db->query("
-        SELECT id, pokja_nama, pokja_tipe
-        FROM pokja
-        ORDER BY id ASC
-    ");
+        $stmt = $this->db->prepare("
+            SELECT id, pokja_nama, pokja_tipe
+            FROM pokja
+            ORDER BY id ASC
+        ");
 
+        $stmt->execute();
         return $stmt->fetchAll();
     }
 
@@ -118,8 +131,9 @@ class UserModel
     // ================================
     public function update($id, $data)
     {
+        $isActive = $data['is_active'] ?? 1;
         // Jika password diisi
-        if (!empty($data['password'])) {
+        if (!empty($data['password_baru'])) {
 
             $stmt = $this->db->prepare("
             UPDATE users SET
@@ -134,9 +148,9 @@ class UserModel
             return $stmt->execute([
                 $data['nama_lengkap'],
                 $data['role_id'],
-                $data['pokja_id'],
-                password_hash($data['password'], PASSWORD_DEFAULT),
-                $data['is_active'],
+                $data['pokja_id'] ?? null,
+                password_hash(trim($data['password_baru']), PASSWORD_DEFAULT),
+                $isActive,
                 $id
             ]);
         }
@@ -155,8 +169,52 @@ class UserModel
             $data['nama_lengkap'],
             $data['role_id'],
             $data['pokja_id'],
-            $data['is_active'],
+            $isActive,
             $id
         ]);
+    }
+
+    // ==============================
+    // CARI USER BERDASARKAN USERNAME
+    // ==============================
+    public function findByUsername($username)
+    {
+        $stmt = $this->db->prepare("
+            SELECT 
+                u.id,
+                u.username,
+                u.password_hash,
+                u.nama_lengkap,
+                r.id as role_id,
+                r.kode_role,
+                p.id AS pokja_id,
+                p.pokja_nama,
+                p.pokja_tipe
+            FROM users u
+            JOIN role r ON u.role_id = r.id
+            LEFT JOIN pokja p ON u.pokja_id = p.id
+            WHERE u.username = ?
+              AND u.is_active = 1
+            LIMIT 1
+        ");
+
+        $stmt->execute([$username]);
+
+        return $stmt->fetch();
+    }
+
+    public function delete($id)
+    {
+        $stmt = $this->db->prepare("
+            UPDATE users SET 
+                is_active = 0
+            WHERE id = ?
+        ");
+
+        $stmt->execute([
+            (int)$id
+        ]);
+
+        return $stmt->rowCount() > 0;
     }
 }

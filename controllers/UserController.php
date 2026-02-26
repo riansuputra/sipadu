@@ -1,57 +1,50 @@
 <?php
 
-require_once __DIR__ . '/../core/auth.php';
-require_once __DIR__ . '/../models/UserModel.php';
+require_once __DIR__ . '/../core/BaseController.php';
 
-class UserController
+class UserController extends BaseController
 {
+    private $model;
+
+    public function __construct()
+    {
+        $this->model = $this->model('UserModel');
+    }
+
     public function index()
     {
-        global $pdo;
+        $this->auth();
 
-        $user = currentUser();
-        $role = currentRole();
-        $model = new UserModel($pdo);
-        $users = $model->getAll();
+        $data = $this->model->getAll();
 
-        require __DIR__ . '/../views/user/index.php';
+        $this->view('user/index', [
+            'data' => $data,
+            'user' => $this->user,
+            'role' => $this->role
+        ]);
     }
 
     public function create()
     {
-        authOnly();
-        roleOnly(['Superadmin']);
+        $this->auth();
+        $this->roleOnly(['Superadmin']);
 
-        $user = currentUser();
-        $role = currentRole();
+        $roles = $this->model->getRoles();
+        $pokja = $this->model->getPokja();
 
-        global $pdo;
-
-        $model = new UserModel($pdo);
-
-        // data untuk form
-        $roles = $model->getRoles();
-        $pokja = $model->getPokja();
-
-        require __DIR__ . '/../views/user/create.php';
+        $this->view('user/create', [
+            'roles' => $roles,
+            'pokja' => $pokja,
+            'user' => $this->user,
+            'role' => $this->role
+        ]);
     }
 
 
     public function store()
     {
-        // echo "<pre>";
-        // print_r($_POST);
-        // print_r($_FILES);
-        // echo "</pre>";
-        // die();
-        authOnly();
-
-        $user = currentUser();
-        $role = currentRole();
-        roleOnly(['Superadmin']);
-
-        global $pdo;
-        $model = new UserModel($pdo);
+        $this->auth();
+        $this->roleOnly(['Superadmin']);
 
         $errors = [];
 
@@ -61,12 +54,9 @@ class UserController
         $roleId       = $_POST['role_id'] ?? '';
         $pokjaId      = $_POST['pokja_id'] ?? null;
 
-        // ============================
-        // VALIDASI
-        // ============================
         if ($username === '') {
             $errors['username'] = 'Username wajib diisi';
-        } elseif ($model->usernameExists($_POST['username'])) {
+        } elseif ($this->model->usernameExists($_POST['username'])) {
             $errors['username'] = 'Username sudah digunakan';
         }
 
@@ -84,11 +74,6 @@ class UserController
             $errors['role_id'] = 'Role wajib dipilih';
         }
 
-        /**
-         * RULE PENTING:
-         * - STAFF / ADMIN TIM → WAJIB PUNYA POKJA
-         * - SUPERADMIN / PIMPINAN → POKJA BOLEH NULL
-         */
         if (in_array($roleId, getRoleButuhPokja()) && empty($pokjaId)) {
             $errors['pokja_id'] = 'Pokja wajib diisi untuk role ini';
         }
@@ -105,10 +90,7 @@ class UserController
             exit;
         }
 
-        // ============================
-        // SIMPAN
-        // ============================
-        $model->insert([
+        $this->model->insert([
             'username'     => $username,
             'password'     => $password,
             'nama_lengkap' => $nama,
@@ -130,13 +112,14 @@ class UserController
     // ================================
     public function update()
     {
+        // dd($_POST);
         // echo "<pre>";
         // print_r($_POST);
         // echo "</pre>";
         // die();
-        authOnly();
+        $this->auth();
 
-        global $pdo;
+
 
         $id = $_POST['id'];
 
@@ -164,7 +147,7 @@ class UserController
             exit;
         }
 
-        $model = new UserModel($pdo);
+        $model = new UserModel();
 
         $model->update($id, $_POST);
 
@@ -180,11 +163,11 @@ class UserController
 
     public function editPassword()
     {
-        global $pdo;
-        $user = currentUser();
-        $role = currentRole();
 
-        $model = new UserModel($pdo);
+        $user = $this->user;
+        $role = $this->role;
+
+        $model = new UserModel();
         $user = $model->findById($_GET['id']);
 
         if (!$user) {
@@ -201,11 +184,11 @@ class UserController
     // ================================
     public function edit()
     {
-        authOnly();
+        $this->auth();
 
-        global $pdo;
-        $user = currentUser();
-        $role = currentRole();
+
+        $user = $this->user;
+        $role = $this->role;
 
         $id = $_GET['id'] ?? null;
 
@@ -214,7 +197,7 @@ class UserController
             exit;
         }
 
-        $model = new UserModel($pdo);
+        $model = new UserModel();
 
         $data = $model->findById($id);
 
@@ -235,46 +218,40 @@ class UserController
         require __DIR__ . '/../views/user/edit.php';
     }
 
+    public function delete()
+    {
+        $this->auth();
 
-    // public function updatePassword()
-    // {
-    //     authOnly();
-    //     roleOnly(['Superadmin']);
-    //     $user = currentUser();
-    //     $role = currentRole();
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return $this->redirect('?page=user');
+        }
 
-    //     global $pdo;
-    //     $errors = [];
+        if (empty($_POST['id']) || !ctype_digit($_POST['id'])) {
+            $this->flash('error', 'ID tidak valid');
+            return $this->redirect('?page=user');
+        }
 
-    //     $id = (int)$_POST['id'];
-    //     $password = $_POST['password'] ?? '';
-    //     $confirm  = $_POST['password_confirm'] ?? '';
+        try {
 
-    //     if ($password === '') {
-    //         $errors['password'] = 'Password wajib diisi';
-    //     } elseif (strlen($password) < 6) {
-    //         $errors['password'] = 'Password minimal 6 karakter';
-    //     }
+            $this->model->beginTransaction();
 
-    //     if ($password !== $confirm) {
-    //         $errors['password_confirm'] = 'Konfirmasi password tidak sama';
-    //     }
+            $id = $_POST['id'];
 
-    //     if (!empty($errors)) {
-    //         $_SESSION['errors'] = $errors;
-    //         header('Location: ?page=user-password&id=' . $id);
-    //         exit;
-    //     }
+            if (!$this->model->delete($id, $this->user['id'])) {
+                throw new Exception("Gagal nonaktifkan user");
+            }
 
-    //     $model = new UserModel($pdo);
-    //     $model->updatePassword($id, $password);
+            $this->model->commit();
 
-    //     $_SESSION['flash'] = [
-    //         'status' => 'success',
-    //         'message' => 'Password berhasil diubah'
-    //     ];
+            $this->flash('success', 'User berhasil dinonaktifkan');
+        } catch (Throwable $e) {
 
-    //     header('Location: ?page=user');
-    //     exit;
-    // }
+            $this->model->rollback();
+            debug_log($e->getMessage(), 'DELETE ERROR');
+
+            $this->flash('error', 'Gagal nonaktifkan user');
+        }
+
+        return $this->redirect('?page=user');
+    }
 }
