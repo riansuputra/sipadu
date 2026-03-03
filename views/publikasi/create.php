@@ -50,8 +50,8 @@ unset($_SESSION['errors'], $_SESSION['old']);
                     </div>
                     <div class="card-body">
                         <div class="form-fieldset">
-                            <div class="mb-3 row">
-                                <label class="col-3 col-form-label required">Judul Publikasi</label>
+                            <div class="mb-3">
+                                <label class="form-label required">Judul Publikasi</label>
                                 <div class="col">
                                     <input
                                         type="text"
@@ -65,8 +65,8 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                     </div>
                                 </div>
                             </div>
-                            <div class="mb-3 row">
-                                <label class="col-3 col-form-label">Deskripsi</label>
+                            <div class="mb-3">
+                                <label class="form-label">Deskripsi</label>
                                 <div class="col">
                                     <textarea
                                         name="deskripsi"
@@ -79,8 +79,8 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                     </div>
                                 </div>
                             </div>
-                            <div class="mb-3 row">
-                                <label class="col-3 col-form-label required">Tanggal :</label>
+                            <div class="mb-3">
+                                <label class="form-label required">Tanggal :</label>
                                 <div class="col">
                                     <input
                                         type="date"
@@ -93,8 +93,8 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                     </div>
                                 </div>
                             </div>
-                            <div class="mb-3 row">
-                                <label class="col-3 col-form-label required">Lokasi</label>
+                            <div class="mb-3">
+                                <label class="form-label required">Lokasi</label>
                                 <div class="col">
                                     <input
                                         type="text"
@@ -108,8 +108,8 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                     </div>
                                 </div>
                             </div>
-                            <div class="mb-3 row">
-                                <label class="col-3 col-form-label required">Jenis</label>
+                            <div class="mb-3">
+                                <label class="form-label required">Jenis</label>
                                 <div class="col">
                                     <select class="form-select <?= isset($errors['jenis_id']) ? 'is-invalid' : '' ?>" name="jenis_id" id="jenis_id">
                                         <option value="" disabled <?= empty($old['jenis_id']) ? 'selected' : '' ?>>-- Pilih Jenis --</option>
@@ -124,8 +124,8 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                     </div>
                                 </div>
                             </div>
-                            <div class="mb-3 row">
-                                <label class="col-3 col-form-label required">Penulis</label>
+                            <div class="mb-3">
+                                <label class="form-label required">Penulis</label>
                                 <div class="col">
                                     <input
                                         type="text"
@@ -139,8 +139,8 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                     </div>
                                 </div>
                             </div>
-                            <div class="mb-3 row">
-                                <label class="col-3 col-form-label required">Kabupaten/Kota</label>
+                            <div class="mb-3">
+                                <label class="form-label required">Kabupaten / Kota</label>
                                 <div class="col">
                                     <input
                                         type="text"
@@ -154,8 +154,8 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                     </div>
                                 </div>
                             </div>
-                            <div class="mb-3 row">
-                                <label class="col-3 col-form-label">File</label>
+                            <div class="mb-3">
+                                <label class="form-label">File</label>
                                 <div class="col">
                                     <input type="file" class="form-control <?= isset($errors['file']) ? 'is-invalid' : '' ?>" name="file[]" id="file" accept=".pdf, .jpg, .png, .jpeg, .gif, .doc, .docx, .xls, .xlsx, .ppt, .pptx" multiple>
                                     <small class="form-hint">
@@ -166,8 +166,8 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                     </div>
                                 </div>
                             </div>
-                            <div class="mb-3 row">
-                                <label class="col-3 col-form-label">Link</label>
+                            <div class="mb-3">
+                                <label class="form-label">Link Media</label>
                                 <div class="col">
                                     <input
                                         type="text"

@@ -17,7 +17,7 @@ ob_start();
 
 <?php
 // echo "<pre>";
-// print_r($publikasi);
+// print_r($data);
 // print_r($_FILES);
 // echo "</pre>";
 // die();
@@ -46,7 +46,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
         <div class="row row-cards ">
 
             <div class="col-sm-12 col-lg-6">
-                <form class="card" method="POST" action="<?= url('?page=publikasi-update&id=' . $publikasi['id']) ?>" enctype="multipart/form-data">
+                <form class="card" method="POST" action="<?= url('?page=publikasi-update&id=' . $data['id']) ?>" enctype="multipart/form-data">
                     <div class="card-header">
                         <h3 class="card-title">Form Edit Publikasi</h3>
                     </div>
@@ -60,7 +60,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                         name="judul"
                                         id="judul"
                                         placeholder="Judul Publikasi..."
-                                        value="<?= $publikasi['judul'] ?? $old['judul'] ?? '' ?>"
+                                        value="<?= $data['judul'] ?? $old['judul'] ?? '' ?>"
                                         class="form-control <?= isset($errors['judul']) ? 'is-invalid' : '' ?>" autocomplete="off">
                                     <div class="invalid-feedback">
                                         <?= $errors['judul'] ?? '' ?>
@@ -75,7 +75,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                         id="deskripsi"
                                         rows="3"
                                         placeholder="Deskripsi.."
-                                        class="form-control <?= isset($errors['deskripsi']) ? 'is-invalid' : '' ?>" autocomplete="off"><?= $publikasi['deskripsi'] ?? $old['deskripsi'] ?? '' ?></textarea>
+                                        class="form-control <?= isset($errors['deskripsi']) ? 'is-invalid' : '' ?>" autocomplete="off"><?= $data['deskripsi'] ?? $old['deskripsi'] ?? '' ?></textarea>
                                     <div class="invalid-feedback">
                                         <?= $errors['deskripsi'] ?? '' ?>
                                     </div>
@@ -88,7 +88,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                         type="date"
                                         name="tanggal_kegiatan"
                                         id="tanggal_kegiatan"
-                                        value="<?= $publikasi['tanggal_kegiatan'] ?? $old['tanggal_kegiatan'] ?? date('Y-m-d') ?>"
+                                        value="<?= $data['tanggal_kegiatan'] ?? $old['tanggal_kegiatan'] ?? date('Y-m-d') ?>"
                                         class="form-control <?= isset($errors['tanggal_kegiatan']) ? 'is-invalid' : '' ?>">
                                     <div class="invalid-feedback">
                                         <?= $errors['tanggal_kegiatan'] ?? '' ?>
@@ -103,7 +103,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                         name="lokasi"
                                         id="lokasi"
                                         placeholder="Lokasi..."
-                                        value="<?= $publikasi['lokasi'] ?? $old['lokasi'] ?? '' ?>"
+                                        value="<?= $data['lokasi'] ?? $old['lokasi'] ?? '' ?>"
                                         class="form-control <?= isset($errors['lokasi']) ? 'is-invalid' : '' ?>" autocomplete="off">
                                     <div class="invalid-feedback">
                                         <?= $errors['lokasi'] ?? '' ?>
@@ -114,9 +114,9 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                 <label class="col-3 col-form-label required">Jenis</label>
                                 <div class="col">
                                     <select class="form-select <?= isset($errors['jenis_id']) ? 'is-invalid' : '' ?>" name="jenis_id" id="jenis_id">
-                                        <option value="" disabled <?= empty($publikasi['jenis_id']) ? 'selected' : '' ?>>-- Pilih Jenis --</option>
+                                        <option value="" disabled <?= empty($data['jenis_id']) ? 'selected' : '' ?>>-- Pilih Jenis --</option>
                                         <?php foreach ($jenis as $j): ?>
-                                            <option value="<?= $j['id'] ?>" <?= ($publikasi['jenis_id'] ?? '') == $j['id'] ? 'selected' : '' ?>>
+                                            <option value="<?= $j['id'] ?>" <?= ($data['jenis_id'] ?? '') == $j['id'] ? 'selected' : '' ?>>
                                                 <?= $j['nama'] ?>
                                             </option>
                                         <?php endforeach; ?>
@@ -134,7 +134,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                         name="penulis"
                                         id="penulis"
                                         placeholder="Penulis..."
-                                        value="<?= $publikasi['penulis'] ?? $old['penulis'] ?? '' ?>"
+                                        value="<?= $data['penulis'] ?? $old['penulis'] ?? '' ?>"
                                         class="form-control <?= isset($errors['penulis']) ? 'is-invalid' : '' ?>" autocomplete="off">
                                     <div class="invalid-feedback">
                                         <?= $errors['penulis'] ?? '' ?>
@@ -142,14 +142,14 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                 </div>
                             </div>
                             <div class="mb-3 row">
-                                <label class="col-3 col-form-label required">Kabupaten/Kota</label>
+                                <label class="col-3 col-form-label required">Kabupaten / Kota</label>
                                 <div class="col">
                                     <input
                                         type="text"
                                         name="kabupaten"
                                         id="kabupaten"
                                         placeholder="Kabupaten/Kota..."
-                                        value="<?= $publikasi['kabupaten'] ?? $old['kabupaten'] ?? '' ?>"
+                                        value="<?= $data['kabupaten'] ?? $old['kabupaten'] ?? '' ?>"
                                         class="form-control <?= isset($errors['kabupaten']) ? 'is-invalid' : '' ?>" autocomplete="off">
                                     <div class="invalid-feedback">
                                         <?= $errors['kabupaten'] ?? '' ?>
@@ -169,20 +169,20 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                 </div>
                             </div>
                             <div class="mb-3 row">
-                                <label class="col-3 col-form-label">Link</label>
+                                <label class="col-3 col-form-label">Link Media</label>
                                 <div class="col">
                                     <input
                                         type="text"
                                         name="link"
                                         id="link"
                                         placeholder="Link..."
-                                        value="<?= $publikasi['link'] ?? $old['link'] ?? '' ?>"
+                                        value="<?= $data['link'] ?? $old['link'] ?? '' ?>"
                                         class="form-control <?= isset($errors['link']) ? 'is-invalid' : '' ?>" autocomplete="off">
                                     <div class="invalid-feedback">
                                         <?= $errors['link'] ?? '' ?>
                                     </div>
                                 </div>
-                                <input type="text" name="id" id="id" value="<?= $publikasi['id'] ?>" hidden>
+                                <input type="text" name="id" id="id" value="<?= $data['id'] ?>" hidden>
                                 <input type="text" name="hapus_file" id="hapus_file" hidden>
                             </div>
                         </div>

@@ -254,4 +254,41 @@ class UserController extends BaseController
 
         return $this->redirect('?page=user');
     }
+
+    public function active()
+    {
+        $this->auth();
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return $this->redirect('?page=user');
+        }
+
+        if (empty($_POST['id']) || !ctype_digit($_POST['id'])) {
+            $this->flash('error', 'ID tidak valid');
+            return $this->redirect('?page=user');
+        }
+
+        try {
+
+            $this->model->beginTransaction();
+
+            $id = $_POST['id'];
+
+            if (!$this->model->active($id, $this->user['id'])) {
+                throw new Exception("Gagal aktifkan user");
+            }
+
+            $this->model->commit();
+
+            $this->flash('success', 'User berhasil diaktifkan');
+        } catch (Throwable $e) {
+
+            $this->model->rollback();
+            debug_log($e->getMessage(), 'DELETE ERROR');
+
+            $this->flash('error', 'Gagal aktifkan user');
+        }
+
+        return $this->redirect('?page=user');
+    }
 }

@@ -1,170 +1,225 @@
 <?php
 
-require_once __DIR__ . '/../models/PublikasiJenisModel.php';
-require_once __DIR__ . '/../core/auth.php';
 require_once __DIR__ . '/../core/BaseController.php';
 
 class PublikasiJenisController extends BaseController
 {
+    private $model;
+
+    public function __construct()
+    {
+        $this->model = $this->model('PublikasiJenisModel');
+    }
+
     public function index()
     {
         $this->auth();
 
+        $data  = $this->model->getAll();
 
-        $user = $this->user;
-        $role = $this->role;
-
-        $model = new PublikasiJenisModel();
-        $data  = $model->getAll();
-
-        require __DIR__ . '/../views/jenis_publikasi/index.php';
+        $this->view('jenis_publikasi/index', [
+            'user' => $this->user,
+            'role' => $this->role,
+            'data' => $data
+        ]);
     }
 
     public function create()
     {
         $this->auth();
 
+        $data  = $this->model->getAll();
 
-        $user = $this->user;
-        $role = $this->role;
-
-        $model = new PublikasiJenisModel();
-        $data  = $model->getAll();
-        require __DIR__ . '/../views/jenis_publikasi/create.php';
+        $this->view('jenis_publikasi/create', [
+            'data' => $data,
+            'user' => $this->user,
+            'role' => $this->role
+        ]);
     }
 
     public function store()
     {
         $this->auth();
 
-        $user = $this->user;
-        $role = $this->role;
-
-        $errors = [];
-
-        if (empty($_POST['nama'])) {
-            $errors['nama'] = "Jenis publikasi wajib diisi";
-        }
-        if (!empty($errors)) {
-            $_SESSION["errors"] = $errors;
-            $_SESSION["old"] = $_POST;
-
-            header("Location: " . url('?page=tambah-jenis-publikasi'));
-            exit();
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return $this->redirect('?page=publikasi');
         }
 
-        $model = new PublikasiJenisModel();
-        $data = $_POST;
-        $jenis = $model->insert($data);
+        $errors = $this->validate($_POST);
 
-        $_SESSION['flash'] = [
-            'status' => 'success',
-            'message' => 'Jenis publikasi berhasil disimpan'
-        ];
+        if ($errors) {
+            $_SESSION['errors'] = $errors;
+            $_SESSION['old'] = $_POST;
+            return $this->redirect('?page=tambah-jenis-publikasi');
+        }
 
-        header("Location: " . url('?page=tambah-jenis-publikasi'));
-    }
+        try {
+            $this->model->beginTransaction();
 
-    public function show()
-    {
-        $this->auth();
+            $data = $_POST;
+            $id = $this->model->insert($data);
 
+            if (!$id) {
+                throw new Exception("Insert gagal");
+            }
 
+            $this->model->commit();
 
-        $user = $this->user;
-        $role = $this->role;
+            $this->log([
+                'user_id' => $this->user['id'],
+                'role_id' => $this->user['role_id'],
+                'action' => 'store',
+                'entity_type' => 'publikasi_jenis',
+                'entity_id' => $_POST['id'],
+                'description' => 'Menambah data Jenis Publikasi'
+            ]);
 
-        $model = new PublikasiJenisModel();
+            $this->flash('success', 'Jenis publikasi berhasil disimpan');
+        } catch (Throwable $e) {
+            $this->model->rollback();
 
-        $id = $_GET['id'];
+            if ($e instanceof PDOException && $e->getCode() == 23000) {
+                $this->flash('error', 'Jenis publikasi sudah digunakan');
+            } else {
 
-        $jenis = $model->getById($id);
-
-        require __DIR__ . '/../views/jenis_publikasi/create.php';
+                debug_log($e->getMessage(), 'UPDATE ERROR');
+                $this->flash('error', 'Gagal menyimpan data');
+            }
+        }
+        return $this->redirect('?page=tambah-jenis-publikasi');
     }
 
     public function edit()
     {
         $this->auth();
 
+        $id = $_GET['id'] ?? null;
+        if (!$id) die("ID tidak valid");
 
+        $data = $this->model->getById($id);
 
-        $user = $this->user;
-        $role = $this->role;
-
-        $model = new PublikasiJenisModel();
-
-        $id = $_GET['id'];
-
-        $publikasi = $model->getById($id);
-
-        require __DIR__ . '/../views/jenis_publikasi/edit.php';
+        $this->view('jenis_publikasi/edit', [
+            'data' => $data,
+            'user' => $this->user,
+            'role' => $this->role
+        ]);
     }
 
     public function update()
     {
         $this->auth();
 
-        $user = $this->user;
-        $role = $this->role;
-
-        $errors = [];
-
-        if (empty($_POST['nama'])) {
-            $errors['nama'] = "Jenis publikasi wajib diisi";
-        }
-        if (!empty($errors)) {
-            $_SESSION["errors"] = $errors;
-            $_SESSION["old"] = $_POST;
-
-            header("Location: " . url('?page=tambah-jenis-publikasi&id=' . $_POST['id']));
-            exit();
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return $this->redirect('?page=jenis-publikasi');
         }
 
-        $model = new PublikasiJenisModel();
-        $data = $_POST;
-        $model->update($_POST['id'], $data);
+        if (empty($_POST['id']) || !ctype_digit($_POST['id'])) {
+            $this->flash('error', 'ID tidak valid');
+            return $this->redirect('?page=jenis-publikasi');
+        }
 
-        $_SESSION['flash'] = [
-            'status' => 'success',
-            'message' => 'Jenis publikasi berhasil diperbarui'
-        ];
+        $errors = $this->validate($_POST, true);
 
-        header("Location: " . url('?page=tambah-jenis-publikasi'));
-        exit();
+        if ($errors) {
+            $_SESSION['errors'] = $errors;
+            $_SESSION['old'] = $_POST;
+            return $this->redirect('?page=edit-jenis-publikasi&id=' . $_POST['id']);
+        }
+
+        try {
+
+            $this->model->beginTransaction();
+
+            $data = $_POST;
+
+            if (!$this->model->update($_POST['id'], $data)) {
+                throw new Exception("Update gagal");
+            }
+
+            $this->model->commit();
+
+            $this->log([
+                'user_id' => $this->user['id'],
+                'role_id' => $this->user['role_id'],
+                'action' => 'update',
+                'entity_type' => 'publikasi_jenis',
+                'entity_id' => $_POST['id'],
+                'description' => 'Mengubah data Jenis Publikasi'
+            ]);
+
+            $this->flash('success', 'Jenis publikasi berhasil diperbarui');
+        } catch (Throwable $e) {
+
+            $this->model->rollback();
+            if ($e instanceof PDOException && $e->getCode() == 23000) {
+
+                $this->flash('error', 'Jenis sudah digunakan');
+            } else {
+
+                debug_log($e->getMessage(), 'UPDATE ERROR');
+                $this->flash('error', 'Gagal update data');
+            }
+        }
+        return $this->redirect('?page=tambah-jenis-publikasi');
     }
 
     public function delete()
     {
         $this->auth();
 
-
-        $user = $this->user;
-        $role = $this->role;
-
-        $model = new PublikasiJenisModel();
-
-        $id = $_GET['id'];
-
-        // CEK DIPAKAI ATAU TIDAK
-        if ($model->isUsed($id)) {
-
-            $_SESSION['flash'] = [
-                'status'  => 'error',
-                'message' => 'Jenis tidak dapat dihapus karena masih digunakan di data publikasi'
-            ];
-
-            header("Location: " . url('?page=tambah-jenis-publikasi'));
-            exit;
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return $this->redirect('?page=tambah-jenis-publikasi');
         }
 
-        $model->delete($id);
+        if (empty($_POST['id']) || !ctype_digit($_POST['id'])) {
+            $this->flash('error', 'ID tidak valid');
+            return $this->redirect('?page=tambah-jenis-publikasi');
+        }
 
-        $_SESSION['flash'] = [
-            'status'  => 'success',
-            'message' => 'Jenis publikasi berhasil dinonaktifkan'
-        ];
+        try {
 
-        header("Location: " . url('?page=tambah-jenis-publikasi'));
+            $this->model->beginTransaction();
+
+            $id = $_POST['id'];
+
+            if ($this->model->isUsed($id)) {
+                throw new Exception("Jenis publikasi masih digunakan");
+            }
+
+            if (!$this->model->delete($id)) {
+                throw new Exception("Gagal menghapus jenis");
+            }
+
+            $this->model->commit();
+
+            $this->log([
+                'user_id' => $this->user['id'],
+                'role_id' => $this->user['role_id'],
+                'action' => 'delete',
+                'entity_type' => 'publikasi_jenis',
+                'entity_id' => $id,
+                'description' => 'Menghapus data Jenis Publikasi'
+            ]);
+
+            $this->flash('success', 'Jenis publikasi berhasil dihapus');
+        } catch (Throwable $e) {
+
+            $this->model->rollback();
+            debug_log($e->getMessage(), 'DELETE JENIS ERROR');
+
+            $this->flash('error', 'Jenis publikasi tidak dapat dihapus karena masih digunakan');
+        }
+
+        return $this->redirect('?page=tambah-jenis-publikasi');
+    }
+
+    private function validate($data, $isUpdate = false)
+    {
+        $errors = [];
+
+        if (empty($data['nama']))
+            $errors['nama'] = "Jenis publikasi wajib diisi";
+
+        return $errors;
     }
 }

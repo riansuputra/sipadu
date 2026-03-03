@@ -32,3 +32,12 @@ SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a chi
 [2026-02-25 14:26:19] DELETE ERROR
 SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE id = '31'' at line 3
 
+[2026-03-02 13:21:10] STORE ERROR
+SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'pokja_id' cannot be null
+
+[2026-03-02 13:29:03] STORE ERROR
+SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'pokja_id' cannot be null
+
+[2026-03-03 10:00:15] UPDATE ERROR
+SQLSTATE[22001]: String data, right truncated: 1406 Data too long for column 'judul' at row 1
+

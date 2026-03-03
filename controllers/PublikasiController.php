@@ -17,153 +17,27 @@ class PublikasiController extends BaseController
     {
         $this->auth();
 
-        $pokjaId = $this->user['pokja_id'] ?? null;
+        $pokjaId = $this->pokja ?? null;
 
         $tanggalMulai = $_GET['tanggal_mulai'] ?? null;
         $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
-        $jenis = $_GET['jenis'] ?? null;
+        $jenisFilter = $_GET['jenis'] ?? null;
 
-        $jenisInput = $this->modelJenis->getAll();
+        $jenis = $this->modelJenis->getAll();
 
         $data = $this->model->getByRole(
             $this->role,
             $pokjaId,
             $tanggalMulai,
             $tanggalSelesai,
-            $jenis
+            $jenisFilter
         );
 
         $this->view('publikasi/index', [
             'data' => $data,
-            'jenisInput' => $jenisInput,
-            'user' => $this->user,
-            'role' => $this->role
-        ]);
-    }
-
-    public function indexPaud()
-    {
-        $this->auth();
-
-        $pokjaId = $this->user['pokja_id'] ?? null;
-
-        $tanggalMulai = $_GET['tanggal_mulai'] ?? null;
-        $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
-        $jenis = $_GET['jenis'] ?? null;
-
-        $jenisInput = $this->modelJenis->getAll();
-
-        if (!empty($tanggalMulai) || !empty($tanggalSelesai) || !empty($jenis)) {
-            $data = $this->model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
-        } else {
-            $data = $this->model->getPaud();
-        }
-
-        $this->view('paud/publikasi', [
+            'jenis' => $jenis,
             'user' => $this->user,
             'role' => $this->role,
-            'data' => $data
-        ]);
-    }
-
-    public function indexSd()
-    {
-        $this->auth();
-
-
-        $pokjaId = $this->user['pokja_id'] ?? null;
-
-        $tanggalMulai = $_GET['tanggal_mulai'] ?? null;
-        $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
-        $jenis = $_GET['jenis'] ?? null;
-
-        $jenisInput = $this->modelJenis->getAll();
-
-        if (!empty($tanggalMulai) || !empty($tanggalSelesai) || !empty($jenis)) {
-            $data = $this->model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
-        } else {
-            $data = $this->model->getSd();
-        }
-
-        $this->view('sd/publikasi', [
-            'user' => $this->user,
-            'role' => $this->role,
-            'data' => $data
-        ]);
-    }
-
-    public function indexSmp()
-    {
-        $this->auth();
-
-        $pokjaId = $this->user['pokja_id'] ?? null;
-
-        $tanggalMulai = $_GET['tanggal_mulai'] ?? null;
-        $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
-        $jenis = $_GET['jenis'] ?? null;
-
-        $jenisInput = $this->modelJenis->getAll();
-
-        if (!empty($tanggalMulai) || !empty($tanggalSelesai) || !empty($jenis)) {
-            $data = $this->model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
-        } else {
-            $data = $this->model->getSmp();
-        }
-
-        $this->view('sd/publikasi', [
-            'user' => $this->user,
-            'role' => $this->role,
-            'data' => $data
-        ]);
-    }
-
-    public function indexSma()
-    {
-        $this->auth();
-
-        $pokjaId = $this->user['pokja_id'] ?? null;
-
-        $tanggalMulai = $_GET['tanggal_mulai'] ?? null;
-        $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
-        $jenis = $_GET['jenis'] ?? null;
-
-        $jenisInput = $this->modelJenis->getAll();
-
-        if (!empty($tanggalMulai) || !empty($tanggalSelesai) || !empty($jenis)) {
-            $data = $this->model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
-        } else {
-            $data = $this->model->getSma();
-        }
-
-        $this->view('sd/publikasi', [
-            'user' => $this->user,
-            'role' => $this->role,
-            'data' => $data
-        ]);
-    }
-
-    public function indexWidyaprada()
-    {
-        $this->auth();
-
-        $pokjaId = $this->user['pokja_id'] ?? null;
-
-        $tanggalMulai = $_GET['tanggal_mulai'] ?? null;
-        $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
-        $jenis = $_GET['jenis'] ?? null;
-
-        $jenisInput = $this->modelJenis->getAll();
-
-        if (!empty($tanggalMulai) || !empty($tanggalSelesai) || !empty($jenis)) {
-            $data = $this->model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
-        } else {
-            $data = $this->model->getWp();
-        }
-
-        $this->view('sd/publikasi', [
-            'user' => $this->user,
-            'role' => $this->role,
-            'data' => $data
         ]);
     }
 
@@ -176,141 +50,63 @@ class PublikasiController extends BaseController
         $this->view('publikasi/create', [
             'user' => $this->user,
             'role' => $this->role,
-            'modelJenis' => $this->modelJenis,
             'jenis' => $jenis
         ]);
     }
 
     public function store()
     {
+        // dd($_POST);
         $this->auth();
 
-        $pokja = $this->pokja;
-
-        $errors = [];
-
-        if (empty($_POST['judul'])) {
-            $errors['judul'] = "Judul wajib diisi";
-        } elseif (strlen($_POST['judul']) < 2) {
-            $errors['judul'] = "Judul minimal 2 karakter";
-        }
-        if (!empty($_POST['deskripsi']) && strlen($_POST['deskripsi']) < 1) {
-            $errors['deskripsi'] = "Deskripsi minimal 1 karakter";
-        }
-        $currentDate = date('Y-m-d');
-        $inputDate   = $_POST['tanggal_kegiatan'] ?? '';
-
-        if (empty($inputDate)) {
-            $errors['tanggal_kegiatan'] = "Tanggal kegiatan wajib diisi";
-        } elseif ($inputDate > $currentDate) {
-            $errors['tanggal_kegiatan'] = "Tanggal kegiatan tidak boleh di masa depan";
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return $this->redirect('?page=publikasi');
         }
 
-        if (empty($_POST['lokasi'])) {
-            $errors['lokasi'] = "Lokasi kegiatan wajib diisi";
+        $errors = $this->validate($_POST, $_FILES);
+
+        if ($errors) {
+            $_SESSION['errors'] = $errors;
+            $_SESSION['old'] = $_POST;
+            return $this->redirect('?page=tambah-publikasi');
         }
-        if (empty($_POST['jenis_id'])) {
-            $errors['jenis_id'] = "Jenis wajib diisi";
-        }
-        if (empty($_POST['penulis'])) {
-            $errors['penulis'] = "Penulis wajib diisi";
-        }
-        if (empty($_POST['kabupaten'])) {
-            $errors['kabupaten'] = "Kabupaten/Kota wajib diisi";
-        }
-        if (!empty($_FILES["file"]["name"][0])) {
 
-            $allowed = [
-                'pdf',
+        try {
+            $this->model->beginTransaction();
 
-                // Dokumen
-                'doc',
-                'docx',
-                'xls',
-                'xlsx',
-                'ppt',
-                'pptx',
-                'txt',
+            $data = $_POST;
+            $data['created_by'] = $this->user['id'];
+            $data['pokja_id'] = $this->pokja;
 
-                // Gambar
-                'jpg',
-                'jpeg',
-                'png',
-                'gif',
-                'webp',
-            ];
+            $id = $this->model->insert($data);
 
-
-            foreach ($_FILES["file"]["name"] as $i => $name) {
-                $size = $_FILES["file"]["size"][$i];
-                $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
-
-                if (!in_array($ext, $allowed)) {
-                    $errors['file'] = "File {$name} tidak diizinkan";
-                }
-
-                if ($size > 5 * 1024 * 1024) {
-                    $errors['file'] = "File {$name} lebih dari 5MB";
-                }
+            if (!$id) {
+                throw new Exception("Insert gagal");
             }
+
+            $this->handleUpload($id, $_FILES);
+
+            $this->model->commit();
+
+            $this->log([
+                'user_id' => $this->user['id'],
+                'role_id' => $this->user['role_id'],
+                'action' => 'store',
+                'entity_type' => 'publikasi',
+                'entity_id' => $_POST['id'],
+                'description' => 'Menambah data Publikasi'
+            ]);
+
+            $this->flash('success', 'Publikasi berhasil disimpan');
+        } catch (Throwable $e) {
+
+            $this->model->rollback();
+
+            debug_log($e->getMessage(), 'STORE ERROR');
+
+            $this->flash('error', 'Gagal menyimpan data');
         }
-
-        if (!empty($errors)) {
-            $_SESSION["errors"] = $errors;
-            $_SESSION["old"] = $_POST;
-
-            $this->redirect('?page=tambah-publikasi');
-        }
-
-
-
-        $data = $_POST;
-        $data['created_by'] = $this->user['id'];
-        $data['pokja_id'] = $pokja;
-
-        $publikasiId = $this->model->insert($data);
-
-        // proses upload file jika ada
-        if (!empty($_FILES['file']['name'][0])) {
-
-            $dir = __DIR__ . '/../uploads/publikasi/';
-
-            if (!is_dir($dir))
-                mkdir($dir, 0777, true);
-
-            foreach ($_FILES['file']['name'] as $i => $nama) {
-
-                if (!$nama) continue;
-
-                $tmp  = $_FILES['file']['tmp_name'][$i];
-                $size = $_FILES['file']['size'][$i];
-                $ext = strtolower(pathinfo($nama, PATHINFO_EXTENSION));
-
-                $namaBaru = time() . '_' . $i . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $nama);
-                $path = $dir . $namaBaru;
-
-                if (move_uploaded_file($tmp, $path)) {
-                    $this->model->insertFile($publikasiId, [
-                        'nama_file'   => $nama,
-                        'path_file'   => 'uploads/publikasi/' . $namaBaru,
-                        'tipe_file'   => $ext,
-                        'ukuran_file' => $size
-                    ]);
-                }
-            }
-        }
-
-        $this->log([
-            'user_id'      => $this->user['id'],
-            'role_id'      => $this->user['role_id'],
-            'action'       => 'create',
-            'entity_type'  => 'publikasi',
-            'entity_id'    => $publikasiId,
-            'description'  => 'Menambahkan data Publikasi'
-        ]);
-
-        $this->flash('success', 'Data publikasi berhasil disimpan');
-        $this->redirect('?page=tambah-publikasi');
+        return $this->redirect('?page=tambah-publikasi');
     }
 
     public function edit()
@@ -319,16 +115,15 @@ class PublikasiController extends BaseController
 
         $id = $_GET['id'];
 
-        $publikasi = $this->model->getById($id);
+        $data = $this->model->getById($id);
         $files = $this->model->getFiles($id);
         $jenis = $this->modelJenis->getAll();
 
         $this->view('publikasi/edit', [
             'user' => $this->user,
             'role' => $this->role,
-            'publikasi' => $publikasi,
+            'data' => $data,
             'files' => $files,
-            'modelJenis' => $this->modelJenis,
             'jenis' => $jenis
         ]);
     }
@@ -365,7 +160,6 @@ class PublikasiController extends BaseController
                 throw new Exception("Update gagal");
             }
 
-            // hapus file (DB saja sesuai arsitektur kamu)
             if (!empty($_POST["hapus_file"])) {
 
                 foreach (explode(",", $_POST["hapus_file"]) as $fileId) {
@@ -378,7 +172,6 @@ class PublikasiController extends BaseController
                 }
             }
 
-            // upload file baru
             $this->handleUpload($_POST['id'], $_FILES);
 
             $this->model->commit();
@@ -455,14 +248,15 @@ class PublikasiController extends BaseController
 
         $id = $_GET['id'];
 
-        $publikasi = $this->model->getById($id);
+        $data = $this->model->getById($id);
         $files = $this->model->getFiles($id);
         $jenis = $this->modelJenis->getAll();
 
         $this->view('publikasi/editStatus', [
             'user' => $this->user,
             'role' => $this->role,
-            'modelJenis' => $this->modelJenis,
+            'data' => $data,
+            'files' => $files,
             'jenis' => $jenis
         ]);
     }
@@ -471,34 +265,34 @@ class PublikasiController extends BaseController
     {
         $this->auth();
 
+        // ======================
+        // VALIDASI INPUT
+        // ======================
         $errors = [];
-        if (empty($_POST['id'])) {
-            $errors['id'] = "ID publikasi tidak ditemukan";
+
+        if (empty($_POST['id']) || !ctype_digit($_POST['id'])) {
+            $errors['id'] = "ID publikasi tidak valid";
         }
 
         $isPublished = isset($_POST['is_published']) ? 1 : 0;
-
         $linksInput = $_POST['publish_links'] ?? [];
         $cleanLinks = [];
 
         if ($isPublished) {
 
-            foreach ($linksInput as $i => $link) {
+            foreach ($linksInput as $link) {
 
                 $platform = trim($link['platform'] ?? '');
                 $url      = trim($link['url'] ?? '');
 
-                // skip kalau dua-duanya kosong
                 if (!$platform && !$url) continue;
 
-                // validasi platform
-                if (empty($platform)) {
+                if (!$platform) {
                     $errors['publish_links'] = "Platform wajib dipilih";
                     break;
                 }
 
-                // validasi url
-                if (empty($url)) {
+                if (!$url) {
                     $errors['publish_links'] = "Link publikasi wajib diisi";
                     break;
                 }
@@ -508,14 +302,12 @@ class PublikasiController extends BaseController
                     break;
                 }
 
-                // simpan data bersih
                 $cleanLinks[] = [
                     'platform' => $platform,
                     'url'      => $url
                 ];
             }
 
-            // minimal 1 link jika publish aktif
             if (empty($cleanLinks)) {
                 $errors['publish_links'] = "Minimal 1 link publish wajib diisi jika publish aktif";
             }
@@ -524,10 +316,12 @@ class PublikasiController extends BaseController
         if (!empty($errors)) {
             $_SESSION["errors"] = $errors;
             $_SESSION["old"] = $_POST;
-
-            $this->redirect('?page=edit-status-publikasi&id=' . $_POST['id']);
+            return $this->redirect('?page=edit-status-publikasi&id=' . $_POST['id']);
         }
 
+        // ======================
+        // DATA UPDATE
+        // ======================
         $data = [
             'is_published' => $isPublished,
             'published_at' => $isPublished ? date('Y-m-d H:i:s') : null,
@@ -535,21 +329,39 @@ class PublikasiController extends BaseController
             'updated_by'   => $this->user['id']
         ];
 
-        // hanya update link kalau ada input baru
         if (!empty($cleanLinks)) {
             $data['publish_links'] = json_encode($cleanLinks);
         }
 
-        $this->model->updatePublish($_POST['id'], $data);
+        // ======================
+        // TRY TRANSACTION
+        // ======================
+        try {
 
-        $_SESSION['flash'] = [
-            'status'  => 'success',
-            'message' => $isPublished
-                ? 'Publikasi berhasil dipublish'
-                : 'Publikasi di-unpublish'
-        ];
+            $this->model->beginTransaction();
 
-        $this->redirect('?page=timpublikasi');
+            if (!$this->model->updatePublish($_POST['id'], $data)) {
+                throw new Exception("Gagal update publish");
+            }
+
+            $this->model->commit();
+
+            $this->flash(
+                'success',
+                $isPublished
+                    ? 'Publikasi berhasil dipublish'
+                    : 'Publikasi di-unpublish'
+            );
+        } catch (Throwable $e) {
+
+            $this->model->rollback();
+
+            debug_log($e->getMessage(), 'APPROVE ERROR');
+
+            $this->flash('error', 'Gagal mengubah status publikasi');
+        }
+
+        return $this->redirect('?page=timpublikasi');
     }
 
     public function publicIndex()
@@ -699,5 +511,131 @@ class PublikasiController extends BaseController
                 'ukuran_file' => $size
             ]);
         }
+    }
+
+    public function indexPaud()
+    {
+        $this->auth();
+
+        $pokjaId = $this->user['pokja_id'] ?? null;
+
+        $tanggalMulai = $_GET['tanggal_mulai'] ?? null;
+        $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
+        $jenis = $_GET['jenis'] ?? null;
+
+        $jenisInput = $this->modelJenis->getAll();
+
+        if (!empty($tanggalMulai) || !empty($tanggalSelesai) || !empty($jenis)) {
+            $data = $this->model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
+        } else {
+            $data = $this->model->getPaud();
+        }
+
+        $this->view('paud/publikasi', [
+            'user' => $this->user,
+            'role' => $this->role,
+            'data' => $data
+        ]);
+    }
+
+    public function indexSd()
+    {
+        $this->auth();
+
+
+        $pokjaId = $this->user['pokja_id'] ?? null;
+
+        $tanggalMulai = $_GET['tanggal_mulai'] ?? null;
+        $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
+        $jenis = $_GET['jenis'] ?? null;
+
+        $jenisInput = $this->modelJenis->getAll();
+
+        if (!empty($tanggalMulai) || !empty($tanggalSelesai) || !empty($jenis)) {
+            $data = $this->model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
+        } else {
+            $data = $this->model->getSd();
+        }
+
+        $this->view('sd/publikasi', [
+            'user' => $this->user,
+            'role' => $this->role,
+            'data' => $data
+        ]);
+    }
+
+    public function indexSmp()
+    {
+        $this->auth();
+
+        $pokjaId = $this->user['pokja_id'] ?? null;
+
+        $tanggalMulai = $_GET['tanggal_mulai'] ?? null;
+        $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
+        $jenis = $_GET['jenis'] ?? null;
+
+        $jenisInput = $this->modelJenis->getAll();
+
+        if (!empty($tanggalMulai) || !empty($tanggalSelesai) || !empty($jenis)) {
+            $data = $this->model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
+        } else {
+            $data = $this->model->getSmp();
+        }
+
+        $this->view('smp/publikasi', [
+            'user' => $this->user,
+            'role' => $this->role,
+            'data' => $data
+        ]);
+    }
+
+    public function indexSma()
+    {
+        $this->auth();
+
+        $pokjaId = $this->user['pokja_id'] ?? null;
+
+        $tanggalMulai = $_GET['tanggal_mulai'] ?? null;
+        $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
+        $jenis = $_GET['jenis'] ?? null;
+
+        $jenisInput = $this->modelJenis->getAll();
+
+        if (!empty($tanggalMulai) || !empty($tanggalSelesai) || !empty($jenis)) {
+            $data = $this->model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
+        } else {
+            $data = $this->model->getSma();
+        }
+
+        $this->view('sma/publikasi', [
+            'user' => $this->user,
+            'role' => $this->role,
+            'data' => $data
+        ]);
+    }
+
+    public function indexWidyaprada()
+    {
+        $this->auth();
+
+        $pokjaId = $this->user['pokja_id'] ?? null;
+
+        $tanggalMulai = $_GET['tanggal_mulai'] ?? null;
+        $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
+        $jenis = $_GET['jenis'] ?? null;
+
+        $jenisInput = $this->modelJenis->getAll();
+
+        if (!empty($tanggalMulai) || !empty($tanggalSelesai) || !empty($jenis)) {
+            $data = $this->model->getFiltered($tanggalMulai, $tanggalSelesai, $jenis);
+        } else {
+            $data = $this->model->getWp();
+        }
+
+        $this->view('widyaprada/publikasi', [
+            'user' => $this->user,
+            'role' => $this->role,
+            'data' => $data
+        ]);
     }
 }

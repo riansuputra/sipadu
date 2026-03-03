@@ -85,6 +85,13 @@ function routeRequest()
             (new UserController())->delete();
             break;
 
+        case 'user-active':
+
+            require __DIR__ . '/../controllers/UserController.php';
+            (new UserController())->active();
+            break;
+
+
         // Dashboard =================================
         case 'dashboard':
             // wajib login

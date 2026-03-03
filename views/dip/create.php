@@ -90,7 +90,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                     <label class="form-label required">Waktu dan Tempat Pembuatan :</label>
                                     <div class="col-auto">
                                         <select name="tahun_pembuatan" id="tahun_pembuatan" class="form-select <?= isset($errors['tahun_pembuatan']) ? 'is-invalid' : '' ?>">
-                                            <option value="" disabled <?= empty($old['tahun_pembuatan']) ? 'selected' : '' ?>>-- Pilih Tahun --</option>
+                                            <option value="" disabled <?= empty($old['tahun_pembuatan']) ? 'selected' : '' ?>>Tahun</option>
                                             <?php for ($i = date('Y'); $i >= 1990; $i--): ?>
                                                 <option value="<?= $i ?>" <?= ($old['tahun_pembuatan'] ?? '') == $i ? 'selected' : '' ?>><?= $i ?></option>
                                             <?php endfor; ?>
@@ -98,7 +98,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                         <div class="invalid-feedback">
                                             <?= $errors['tahun_pembuatan'] ?? '' ?>
                                         </div>
-                                    </div>,
+                                    </div>
                                     <div class="col">
                                         <input type="text"
                                             name="tempat_pembuatan"

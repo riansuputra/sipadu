@@ -15,11 +15,11 @@ ob_start();
 
 <?php
 // echo '<pre>';
-// print_r($publikasiata);
-// foreach ($publikasiata as $publikasit => $publikasi):
-//     if ($publikasi['files']) {
+// print_r($dataata);
+// foreach ($dataata as $datat => $data):
+//     if ($data['files']) {
 
-//         $files = explode('##', $publikasi['files']);
+//         $files = explode('##', $data['files']);
 
 //         foreach ($files as $f) {
 
@@ -36,7 +36,7 @@ $tanggalMulai   = $_GET['tanggal_mulai'] ?? null;
 $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
 $jenis          = $_GET['jenis'] ?? null;
 
-$publikasieskripsi = 'Menampilkan seluruh data';
+$dataeskripsi = 'Menampilkan seluruh data';
 
 if ($tanggalMulai || $tanggalSelesai || $jenis) {
 
@@ -55,7 +55,7 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
             "</strong>'";
     }
 
-    $publikasieskripsi = 'Filter data publikasi ' . implode(' dan ', $parts);
+    $dataeskripsi = 'Filter data publikasi ' . implode(' dan ', $parts);
 }
 
 ?>
@@ -90,14 +90,14 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
                         <h4 class="card-title">Edit Status Publikasi</h4>
                     </div>
                     <div class="card-body">
-                        <form id="form-approve-<?= $publikasi['id'] ?>"
+                        <form id="form-approve-<?= $data['id'] ?>"
                             method="POST"
                             action="<?= url('?page=approve-publikasi') ?>">
 
                             <div class="form-fieldset">
                                 <div class="mb-3 row">
                                     <div class="col-auto form-label">Judul Publikasi :</div>
-                                    <div class="col-auto form-label fw-bold"><?= htmlspecialchars($publikasi['judul']) ?></div>
+                                    <div class="col-auto form-label fw-bold"><?= htmlspecialchars($data['judul']) ?></div>
 
                                 </div>
                                 <div class="mb-3 row">
@@ -109,9 +109,9 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
                                             type="checkbox"
                                             name="is_published"
                                             value="1"
-                                            <?= !empty($publikasi['is_published']) ? 'checked' : '' ?>>
-                                        <span class="form-check-label form-check-label-on">Terbit</span>
-                                        <span class="form-check-label form-check-label-off">Draft</span>
+                                            <?= !empty($data['is_published']) ? 'checked' : '' ?>>
+                                        <span class="form-check-label form-check-label-on">Sudah</span>
+                                        <span class="form-check-label form-check-label-off">Belum</span>
 
                                     </label>
                                 </div>
@@ -124,17 +124,17 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
 
                                         <button type="button"
                                             class="btn btn-primary btn-sm"
-                                            onclick="addLink(<?= $publikasi['id'] ?>)">
+                                            onclick="addLink(<?= $data['id'] ?>)">
                                             + Tambah Link
                                         </button>
                                     </div>
                                     <small class="form-hint"><i>(contoh: https://www.instagram.com/bpmpbali)</i></small>
                                     <!-- CONTAINER KHUSUS INPUT (INI PENTING) -->
-                                    <div id="link-wrapper-<?= $publikasi['id'] ?>">
+                                    <div id="link-wrapper-<?= $data['id'] ?>">
 
                                         <?php
-                                        $links = !empty($publikasi['publish_links'])
-                                            ? json_decode($publikasi['publish_links'], true)
+                                        $links = !empty($data['publish_links'])
+                                            ? json_decode($data['publish_links'], true)
                                             : [];
                                         ?>
 
@@ -161,7 +161,7 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
                                                     <button type="button"
                                                         class="btn btn-danger"
                                                         onclick="removeLink(this)">
-                                                        hapus
+                                                        Hapus
                                                     </button>
 
                                                 </div>
@@ -188,7 +188,7 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
                                                 <button type="button"
                                                     class="btn btn-danger"
                                                     onclick="removeLink(this)">
-                                                    hapus
+                                                    Hapus
                                                 </button>
 
                                             </div>
@@ -201,11 +201,11 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
                                 </div>
 
                             </div>
-                            <input type="text" name="id" id="id" value="<?= $publikasi['id'] ?>" hidden>
+                            <input type="text" name="id" id="id" value="<?= $data['id'] ?>" hidden>
                             <div class="">
                                 <button type="button"
                                     class="btn btn-success"
-                                    onclick="submitApprove(<?= $publikasi['id'] ?>)">
+                                    onclick="submitApprove(<?= $data['id'] ?>)">
                                     Simpan
                                 </button>
 
@@ -218,70 +218,6 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
         </div>
     </div>
 </div>
-
-<script>
-    const advancedTable = {
-        headers: [{
-                "data-sort": "sort-no",
-                name: "No"
-            },
-
-            {
-                "data-sort": "sort-judul",
-                name: "Judul"
-            },
-            {
-                "data-sort": "sort-tanggal",
-                name: "Tanggal"
-            },
-            {
-                "data-sort": "sort-lokasi",
-                name: "Lokasi"
-            },
-            {
-                "data-sort": "sort-pokja",
-                name: "Unit/Tim"
-            },
-            {
-                "data-sort": "sort-file",
-                name: "File"
-            },
-            {
-                "data-sort": "sort-aksi",
-                name: "Aksi"
-            },
-        ],
-    };
-    const setPageListItems = (e) => {
-        window.tabler_list["advanced-table"].page = parseInt(e.target.dataset.value);
-        window.tabler_list["advanced-table"].update();
-        document.querySelector("#page-count").innerHTML = e.target.dataset.value;
-    };
-    window.tabler_list = window.tabler_list || {};
-    document.addEventListener("DOMContentLoaded", function() {
-        const list = (window.tabler_list["advanced-table"] = new List("advanced-table", {
-            sortClass: "table-sort",
-            listClass: "table-tbody",
-            page: parseInt("10"),
-            pagination: {
-                item: (value) => {
-                    return `<li class="page-item"><a class="page-link cursor-pointer">${value.page}</a></li>`;
-                },
-                innerWindow: 1,
-                outerWindow: 1,
-                left: 0,
-                right: 0,
-            },
-            valueNames: advancedTable.headers.map((header) => header["data-sort"]),
-        }));
-        const searchInput = document.querySelector("#advanced-table-search");
-        if (searchInput) {
-            searchInput.addEventListener("input", () => {
-                list.search(searchInput.value);
-            });
-        }
-    });
-</script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -359,7 +295,7 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
         <button type="button"
             class="btn btn-danger"
             onclick="removeLink(this)">
-            hapus
+            Hapus
         </button>
     `;
 

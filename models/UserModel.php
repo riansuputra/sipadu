@@ -217,4 +217,19 @@ class UserModel
 
         return $stmt->rowCount() > 0;
     }
+
+    public function active($id)
+    {
+        $stmt = $this->db->prepare("
+            UPDATE users SET 
+                is_active = 1
+            WHERE id = ?
+        ");
+
+        $stmt->execute([
+            (int)$id
+        ]);
+
+        return $stmt->rowCount() > 0;
+    }
 }

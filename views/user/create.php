@@ -114,6 +114,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                                         ?>
 
                                                         <option value="<?= $j['id'] ?>"
+                                                            data-kode="<?= $j['kode_role'] ?>"
                                                             <?= ($old['role_id'] ?? '') == $j['id'] ? 'selected' : '' ?>>
                                                             <?= $j['nama_role'] ?>
                                                         </option>
@@ -170,6 +171,32 @@ unset($_SESSION['errors'], $_SESSION['old']);
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+
+        const roleSelect = document.getElementById("role_id");
+        const pokjaSelect = document.getElementById("pokja_id");
+
+        function togglePokja() {
+            const selectedOption = roleSelect.options[roleSelect.selectedIndex];
+            const kodeRole = selectedOption.getAttribute("data-kode");
+
+            if (kodeRole === "Pimpinan") {
+                pokjaSelect.disabled = true;
+                pokjaSelect.value = ""; // reset pilihan
+            } else {
+                pokjaSelect.disabled = false;
+            }
+        }
+
+        // Jalankan saat load (edit mode)
+        togglePokja();
+
+        // Jalankan saat role berubah
+        roleSelect.addEventListener("change", togglePokja);
+    });
+</script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {

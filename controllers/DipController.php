@@ -134,7 +134,6 @@ class DipController extends BaseController
         }
 
         try {
-
             $this->model->beginTransaction();
 
             $data = $_POST;
@@ -144,7 +143,6 @@ class DipController extends BaseController
                 throw new Exception("Update gagal");
             }
 
-            // hapus file (DB saja sesuai arsitektur kamu)
             if (!empty($_POST["hapus_file"])) {
 
                 foreach (explode(",", $_POST["hapus_file"]) as $fileId) {
@@ -157,7 +155,6 @@ class DipController extends BaseController
                 }
             }
 
-            // upload file baru
             $this->handleUpload($_POST['id'], $_FILES);
 
             $this->model->commit();
@@ -171,7 +168,7 @@ class DipController extends BaseController
                 'description' => 'Mengubah data DIP'
             ]);
 
-            $this->flash('success', 'Dip berhasil diperbarui');
+            $this->flash('success', 'DIP berhasil diperbarui');
         } catch (Throwable $e) {
 
             $this->model->rollback();

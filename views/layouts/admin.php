@@ -31,6 +31,41 @@
         body {
             font-feature-settings: "cv03", "cv04", "cv11";
         }
+
+        #filterRow input,
+        #filterRow select {
+            width: 100%;
+        }
+
+        #filterRow select option {
+            white-space: pre-line;
+        }
+
+        .file-icons {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .file-icon {
+            font-size: 16px;
+        }
+
+        .more-files {
+            font-size: 14px;
+            color: #666;
+        }
+
+        dt,
+        dd {
+            border-bottom: 1px solid #ccc;
+            padding: 6px 0;
+        }
+
+        dd {
+            margin: 0;
+            /* supaya rapi */
+        }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
@@ -57,13 +92,8 @@
                 <div class="navbar-nav flex-row d-lg-none">
                     <div class="nav-item dropdown">
                         <a href="" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu">
-                            <span class="avatar avatar-sm text-primary">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="icon">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <path d="M12 2a5 5 0 1 1 -5 5l.005 -.217a5 5 0 0 1 4.995 -4.783z" />
-                                    <path d="M14 14a5 5 0 0 1 5 5v1a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-1a5 5 0 0 1 5 -5h4z" />
-                                </svg>
-                            </span>
+                            <span class="avatar avatar-sm" style="background-image: url(<?= url('public/assets/img/icon-profile.webp') ?>)"> </span>
+
                             <div class="d-none d-xl-block ps-2 text-white">
                                 <div><?= htmlspecialchars($user['nama']) ?></div>
                                 <div class="mt-1 small"><?= htmlspecialchars($user['username']) ?></div>
@@ -104,13 +134,8 @@
                 <div class="navbar-nav flex-row order-md-last">
                     <div class="nav-item dropdown">
                         <a href="" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu">
-                            <span class="avatar avatar-sm text-primary">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="icon">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <path d="M12 2a5 5 0 1 1 -5 5l.005 -.217a5 5 0 0 1 4.995 -4.783z" />
-                                    <path d="M14 14a5 5 0 0 1 5 5v1a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-1a5 5 0 0 1 5 -5h4z" />
-                                </svg>
-                            </span>
+                            <span class="avatar avatar-sm" style="background-image: url(<?= url('public/assets/img/icon-profile.webp') ?>)"> </span>
+
                             <div class="d-none d-xl-block ps-2 text-white">
                                 <div><?= htmlspecialchars($user['nama']) ?></div>
                                 <div class="mt-1 small"><?= htmlspecialchars($user['username']) ?></div>

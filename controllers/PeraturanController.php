@@ -142,7 +142,6 @@ class PeraturanController extends BaseController
         }
 
         try {
-
             $this->model->beginTransaction();
 
             $data = $_POST;
@@ -152,7 +151,6 @@ class PeraturanController extends BaseController
                 throw new Exception("Update gagal");
             }
 
-            // hapus file (DB saja sesuai arsitektur kamu)
             if (!empty($_POST["hapus_file"])) {
 
                 foreach (explode(",", $_POST["hapus_file"]) as $fileId) {
@@ -165,7 +163,6 @@ class PeraturanController extends BaseController
                 }
             }
 
-            // upload file baru
             $this->handleUpload($_POST['id'], $_FILES);
 
             $this->model->commit();

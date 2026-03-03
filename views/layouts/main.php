@@ -141,6 +141,41 @@ $headerImage = $headerImage ?? url('public/assets/img/banner.webp');
             word-break: break-word;
             /* potong kata panjang */
         }
+
+        #filterRow input,
+        #filterRow select {
+            width: 100%;
+        }
+
+        #filterRow select option {
+            white-space: pre-line;
+        }
+
+        .file-icons {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .file-icon {
+            font-size: 16px;
+        }
+
+        .more-files {
+            font-size: 14px;
+            color: #666;
+        }
+
+        dt,
+        dd {
+            border-bottom: 1px solid #ccc;
+            padding: 6px 0;
+        }
+
+        dd {
+            margin: 0;
+            /* supaya rapi */
+        }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">

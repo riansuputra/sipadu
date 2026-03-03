@@ -69,7 +69,7 @@ class PeraturanJenisController extends BaseController
                 'user_id' => $this->user['id'],
                 'role_id' => $this->user['role_id'],
                 'action' => 'store',
-                'entity_type' => 'jenis_peraturan',
+                'entity_type' => 'peraturan_jenis',
                 'entity_id' => $_POST['id'],
                 'description' => 'Menambah data Jenis Peraturan'
             ]);
@@ -79,12 +79,11 @@ class PeraturanJenisController extends BaseController
             $this->model->rollback();
 
             if ($e instanceof PDOException && $e->getCode() == 23000) {
-
                 $this->flash('error', 'Kode sudah digunakan');
             } else {
 
                 debug_log($e->getMessage(), 'UPDATE ERROR');
-                $this->flash('error', 'Terjadi kesalahan sistem');
+                $this->flash('error', 'Gagal menyimpan data');
             }
         }
         return $this->redirect('?page=tambah-jenis-peraturan');
@@ -111,12 +110,12 @@ class PeraturanJenisController extends BaseController
         $this->auth();
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return $this->redirect('?page=jenis_peraturan');
+            return $this->redirect('?page=jenis-peraturan');
         }
 
         if (empty($_POST['id']) || !ctype_digit($_POST['id'])) {
             $this->flash('error', 'ID tidak valid');
-            return $this->redirect('?page=jenis_peraturan');
+            return $this->redirect('?page=jenis-peraturan');
         }
 
         $errors = $this->validate($_POST, true);
@@ -183,9 +182,8 @@ class PeraturanJenisController extends BaseController
 
             $id = $_POST['id'];
 
-            // cek masih dipakai
             if ($this->model->isUsed($id)) {
-                throw new Exception("Jenis masih digunakan");
+                throw new Exception("Jenis peraturan masih digunakan");
             }
 
             if (!$this->model->delete($id)) {
@@ -194,13 +192,22 @@ class PeraturanJenisController extends BaseController
 
             $this->model->commit();
 
+            $this->log([
+                'user_id' => $this->user['id'],
+                'role_id' => $this->user['role_id'],
+                'action' => 'delete',
+                'entity_type' => 'peraturan_jenis',
+                'entity_id' => $id,
+                'description' => 'Menghapus data Jenis Peraturan'
+            ]);
+
             $this->flash('success', 'Jenis peraturan berhasil dihapus');
         } catch (Throwable $e) {
 
             $this->model->rollback();
             debug_log($e->getMessage(), 'DELETE JENIS ERROR');
 
-            $this->flash('error', 'Jenis tidak dapat dihapus karena masih digunakan');
+            $this->flash('error', 'Jenis peraturan tidak dapat dihapus karena masih digunakan');
         }
 
         return $this->redirect('?page=tambah-jenis-peraturan');

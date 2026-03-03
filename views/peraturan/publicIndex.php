@@ -111,13 +111,10 @@ ob_start();
                                     </svg>Cari
                                 </button>
                                 <a href="<?= url('?page=peraturan-publik') ?>" class="btn btn-1 btn-secondary">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <path d="M4 7l16 0" />
-                                        <path d="M10 11l0 6" />
-                                        <path d="M14 11l0 6" />
-                                        <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                                        <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-refresh">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                        <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"></path>
+                                        <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"></path>
                                     </svg>Reset </a>
                             </div>
                         </form>
@@ -133,7 +130,7 @@ ob_start();
                                 <div class="card card-link card-link-pop">
                                     <div class="row g-0">
                                         <div class="col-auto">
-                                            <a href="">
+                                            <a href="<?= url('?page=peraturan-detail&id=' . $d['id']) ?>">
                                                 <div class="card-body">
                                                     <div class="avatar avatar-md">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-file-description">
@@ -149,17 +146,17 @@ ob_start();
                                             <div class="card-body ps-0">
                                                 <div class="row">
                                                     <div class="col">
-                                                        <a class="mb-0" href="<?= url('?page=peraturan-detail&id=' . $d['id']) ?>"><span class="text-primary"><?= $d['jenis'] ?></span></a>
+                                                        <a class="mb-0 text-black text-decoration-none" href="<?= url('?page=peraturan-detail&id=' . $d['id']) ?>"><span class="text-primary"><?= $d['jenis'] ?></span></a>
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col">
-                                                        <span class="mb-0 text-secondary h4">Nomor <?= htmlspecialchars($d['nomor']) ?>Tahun <?= htmlspecialchars($d['tahun_terbit']) ?></span>
+                                                        <a class="mb-0 text-black text-decoration-none" href="<?= url('?page=peraturan-detail&id=' . $d['id']) ?>"><span class="mb-0 h3"><?= htmlspecialchars($d['judul']) ?></span></a>
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col">
-                                                        <span class="mb-0 h3"><?= htmlspecialchars($d['judul']) ?></span>
+                                                        <a class="mb-0 text-black text-decoration-none no-underline" href="<?= url('?page=peraturan-detail&id=' . $d['id']) ?>"><span class="mb-0 text-secondary h4">Nomor <?= htmlspecialchars($d['nomor']) ?> Tahun <?= htmlspecialchars($d['tahun_terbit']) ?></span></a>
                                                     </div>
                                                 </div>
                                                 <div class="row">
