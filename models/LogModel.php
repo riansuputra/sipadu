@@ -7,7 +7,7 @@ class LogModel
 
     public function __construct()
     {
-        $this->db = Database::getInstance(); // singleton kamu
+        $this->db = Database::getInstance();
     }
 
     public function create(array $data)

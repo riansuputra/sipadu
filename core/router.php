@@ -39,6 +39,25 @@ function routeRequest()
 
 
         // Autentikasi ================================
+        case 'notifikasi-unread-count':
+            require __DIR__ . '/../controllers/NotifikasiController.php';
+            $controller = new NotifikasiController();
+            $controller->unreadCount();
+            break;
+
+        case 'notifikasi-list':
+            require __DIR__ . '/../controllers/NotifikasiController.php';
+            $controller = new NotifikasiController();
+            $controller->getList();
+            break;
+
+        case 'notifikasi-read':
+            require __DIR__ . '/../controllers/NotifikasiController.php';
+            $controller = new NotifikasiController();
+            $controller->markAsRead();
+            break;
+
+        // Autentikasi ================================
         case 'user':
             // biasanya hanya Superadmin
             require __DIR__ . '/../controllers/UserController.php';

@@ -6,11 +6,13 @@ class PublikasiController extends BaseController
 {
     private $model;
     private $modelJenis;
+    private $modelNotif;
 
     public function __construct()
     {
         $this->model = $this->model('PublikasiModel');
         $this->modelJenis = $this->model('PublikasiJenisModel');
+        $this->modelNotif = $this->model('NotifikasiModel');
     }
 
     public function index()
@@ -96,6 +98,13 @@ class PublikasiController extends BaseController
                 'entity_id' => $_POST['id'],
                 'description' => 'Menambah data Publikasi'
             ]);
+
+            $notif = $this->modelNotif->create(
+                "Publikasi Baru",
+                "Publikasi" . $data['judul'] . "telah ditambahkan",
+                "/timpublikasi",
+                "admin"
+            );
 
             $this->flash('success', 'Publikasi berhasil disimpan');
         } catch (Throwable $e) {
