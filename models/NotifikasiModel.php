@@ -2,7 +2,6 @@
 
 class NotifikasiModel
 {
-
     protected $db;
 
     public function __construct()
@@ -10,48 +9,101 @@ class NotifikasiModel
         $this->db = Database::getInstance();
     }
 
-    // simpan notifikasi baru
-    public function create($judul, $pesan, $url, $role)
+    // Buat notifikasi master
+    public function createMaster($judul, $pesan, $url)
     {
         $stmt = $this->db->prepare("
-            INSERT INTO notifikasi (judul, pesan, url, role_target)
-            VALUES (?, ?, ?, ?)
+            INSERT INTO notifikasi (judul, pesan, url)
+            VALUES (?, ?, ?)
         ");
-        return $stmt->execute([$judul, $pesan, $url, $role]);
+        $stmt->execute([$judul, $pesan, $url]);
+
+        return $this->db->lastInsertId();
     }
 
-    // hitung notifikasi belum dibaca
-    public function countUnread($role)
+    // Assign ke user tertentu
+    public function assignToUser($notifikasi_id, $user_id)
     {
         $stmt = $this->db->prepare("
-            SELECT COUNT(*) as total 
-            FROM notifikasi 
-            WHERE is_read = 0 
-            AND (role_target = ? OR role_target = 'semua')
+            INSERT INTO notifikasi_user (notifikasi_id, user_id)
+            VALUES (?, ?)
         ");
-        $stmt->execute([$role]);
+        return $stmt->execute([$notifikasi_id, $user_id]);
+    }
+
+    // Hitung unread per user
+    public function countUnread($user_id)
+    {
+        $stmt = $this->db->prepare("
+            SELECT COUNT(*) as total
+            FROM notifikasi_user
+            WHERE user_id = ? AND is_read = 0
+        ");
+        $stmt->execute([$user_id]);
         return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
     }
 
-    // ambil daftar notifikasi terbaru
-    public function getLatest($role)
+    // Ambil list terbaru
+    public function getLatest($user_id)
     {
         $stmt = $this->db->prepare("
-            SELECT * FROM notifikasi 
-            WHERE (role_target = ? OR role_target = 'semua')
-            ORDER BY created_at DESC 
-            LIMIT 5
-        ");
-        $stmt->execute([$role]);
+        SELECT 
+            n.id as notif_id,
+            n.judul,
+            n.pesan,
+            n.url,
+            nu.is_read
+        FROM notifikasi n
+        JOIN notifikasi_user nu 
+            ON n.id = nu.notifikasi_id
+        WHERE nu.user_id = ?
+        ORDER BY n.created_at DESC
+        LIMIT 5
+    ");
+
+        $stmt->execute([$user_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
-    // tandai sudah dibaca
-    public function markAsRead($id)
+    // Tandai 1 notif
+    public function markAsRead($id, $user_id)
     {
         $stmt = $this->db->prepare("
-            UPDATE notifikasi SET is_read = 1 WHERE id = ?
+            UPDATE notifikasi_user
+            SET is_read = 1, read_at = NOW()
+            WHERE notifikasi_id = ? AND user_id = ?
         ");
-        return $stmt->execute([$id]);
+        return $stmt->execute([$id, $user_id]);
+    }
+
+    // Mark all
+    public function markAllRead($user_id)
+    {
+        $stmt = $this->db->prepare("
+            UPDATE notifikasi_user
+            SET is_read = 1, read_at = NOW()
+            WHERE user_id = ?
+        ");
+        return $stmt->execute([$user_id]);
+    }
+
+    // ambil user berdasarkan nama role
+    public function getUsersByRoleAndPokja($roles, $keywordPokja)
+    {
+        $in = str_repeat('?,', count($roles) - 1) . '?';
+
+        $stmt = $this->db->prepare("
+        SELECT u.id
+        FROM users u
+        JOIN role r ON u.role_id = r.id
+        JOIN pokja p ON u.pokja_id = p.id
+        WHERE r.kode_role IN ($in)
+        AND p.pokja_nama LIKE ?
+    ");
+
+        $params = array_merge($roles, ["%$keywordPokja%"]);
+
+        $stmt->execute($params);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

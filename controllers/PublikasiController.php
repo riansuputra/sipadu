@@ -99,13 +99,20 @@ class PublikasiController extends BaseController
                 'description' => 'Menambah data Publikasi'
             ]);
 
-            $notif = $this->modelNotif->create(
-                "Publikasi Baru",
-                "Publikasi" . $data['judul'] . "telah ditambahkan",
-                "/timpublikasi",
-                "admin"
+            $notif_id = $this->modelNotif->createMaster(
+                'Publikasi Baru | ' . $this->user['pokja_nama'],
+                '"' . $data['judul'] . '"',
+                ''
             );
 
+            $users = $this->modelNotif->getUsersByRoleAndPokja(
+                ['Admin', 'Staff'],
+                'Publikasi'
+            );
+
+            foreach ($users as $user) {
+                $this->modelNotif->assignToUser($notif_id, $user['id']);
+            }
             $this->flash('success', 'Publikasi berhasil disimpan');
         } catch (Throwable $e) {
 
@@ -411,7 +418,6 @@ class PublikasiController extends BaseController
         // echo "</pre>";
         // die();
         $this->auth();
-
 
 
         $pokjaId = $this->user['pokja_id'] ?? null;

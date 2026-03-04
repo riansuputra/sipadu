@@ -57,6 +57,12 @@ function routeRequest()
             $controller->markAsRead();
             break;
 
+        case 'notifikasi-read-all':
+            require __DIR__ . '/../controllers/NotifikasiController.php';
+            $controller = new NotifikasiController();
+            $controller->markAllRead();
+            break;
+
         // Autentikasi ================================
         case 'user':
             // biasanya hanya Superadmin

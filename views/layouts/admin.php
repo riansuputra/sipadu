@@ -131,7 +131,46 @@
 
                     </div>
                 </div>
-                <div class="navbar-nav flex-row order-md-last">
+                <div class="navbar-nav flex-row order-md-last me-2">
+                    <div class="mt-1">
+                        <div class="nav-item dropdown  me-3">
+                            <a href="#"
+                                class="btn btn-action btn-icon text-white bg-blue"
+                                data-bs-toggle="dropdown"
+                                data-bs-auto-close="outside"
+                                aria-label="Show notifications">
+
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
+                                    <path d="M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6"></path>
+                                    <path d="M9 17v1a3 3 0 0 0 6 0v-1"></path>
+                                </svg>
+                                <span id="notif-count" class="badge bg-red text-red-fg badge-notification badge-pill mt-2">0</span>
+                            </a>
+
+                            <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-end dropdown-menu-card">
+                                <div class="card">
+
+                                    <div class="card-header d-flex">
+                                        <h3 class="card-title">Notifikasi</h3>
+                                        <div class="btn-close ms-auto" data-bs-dismiss="dropdown"></div>
+                                    </div>
+
+                                    <div id="notif-list" class="list-group list-group-flush list-group-hoverable">
+                                        <!-- Notifikasi akan dimuat di sini -->
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <a href="#" class="btn btn-2 w-100" onclick="markAllRead()">Tandai semua sudah dibaca</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="nav-item dropdown">
                         <a href="" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu">
                             <span class="avatar avatar-sm" style="background-image: url(<?= url('public/assets/img/icon-profile.webp') ?>)"> </span>
@@ -172,6 +211,122 @@
 
             <?= $content ?>
         </div>
+        <script>
+            let lastCount = 0;
+
+            function loadNotifCount() {
+                fetch('index.php?page=notifikasi-unread-count')
+                    .then(res => res.json())
+                    .then(data => {
+
+                        const current = parseInt(data.total);
+
+                        document.getElementById('notif-count').innerText = current;
+
+                        if (current == 0) {
+                            document.getElementById('notif-count').style.display = 'none';
+                        } else {
+                            document.getElementById('notif-count').style.display = 'inline-block';
+                        }
+
+                        // Kalau ada perubahan → reload list
+                        if (current !== lastCount) {
+                            loadNotifList();
+                            lastCount = current;
+                        }
+                    });
+            }
+
+            function loadNotifList() {
+                fetch('index.php?page=notifikasi-list')
+                    .then(res => res.json())
+                    .then(data => {
+
+                        let html = '';
+
+                        if (data.length === 0) {
+                            html = `
+                    <div class="list-group-item text-center text-muted">
+                        Tidak ada notifikasi
+                    </div>
+                `;
+                        } else {
+                            data.forEach(function(item) {
+
+                                html += `
+                                <div class="list-group-item">
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+                                            ${item.is_read == 0 
+                                                ? '<span class="status-dot status-dot-animated bg-red d-block"></span>' 
+                                                : '<span class="status-dot d-block"></span>'}
+                                        </div>
+
+                                        <div class="col text-truncate">
+                                            <a href="#"
+                                            class="text-body d-block"
+                                            onclick="markAsRead(${item.notif_id}); return false;">
+                                                ${item.judul}
+                                            </a>
+                                            <div class="d-block text-secondary text-truncate mt-n1">
+                                                ${item.pesan}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                `;
+                            });
+                        }
+
+                        document.getElementById('notif-list').innerHTML = html;
+                    });
+            }
+
+            function markAsRead(id) {
+                fetch('index.php?page=notifikasi-read', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: 'id=' + id
+                }).then(() => {
+                    loadNotifCount();
+                    loadNotifList();
+                });
+            }
+
+            function markAllRead() {
+                fetch('index.php?page=notifikasi-read-all', {
+                    method: 'POST'
+                }).then(() => {
+                    loadNotifCount();
+                    loadNotifList();
+                });
+            }
+
+            function handleNotifClick(e, id, url) {
+                e.preventDefault(); // STOP redirect dulu
+
+                fetch('index.php?page=notifikasi-read', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: 'id=' + id
+                }).then(() => {
+                    window.location.href = url; // redirect setelah update
+                });
+            }
+
+            // reload setiap 10 detik
+            setInterval(loadNotifCount, 10000);
+
+            // load awal
+            loadNotifCount();
+            loadNotifList();
+        </script>
+
+
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     </div>
 

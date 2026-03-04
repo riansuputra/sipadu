@@ -11,36 +11,49 @@ class NotifikasiController extends BaseController
         $this->model = $this->model('NotifikasiModel');
     }
 
-    // endpoint untuk hitung unread (AJAX)
     public function unreadCount()
     {
         $this->auth();
-
         header('Content-Type: application/json');
 
-        $total = $this->model->countUnread($this->role);
+        $total = $this->model->countUnread($this->user['id']);
 
         echo json_encode(['total' => $total]);
         exit;
     }
 
-    // endpoint ambil list notifikasi (AJAX)
     public function getList()
     {
         $this->auth();
+        header('Content-Type: application/json');
 
-
-        $data = $this->model->getLatest($this->role);
+        $data = $this->model->getLatest($this->user['id']);
 
         echo json_encode($data);
+        exit;
     }
 
-    // tandai sudah dibaca
     public function markAsRead()
     {
         $this->auth();
+        header('Content-Type: application/json');
 
-        $id = $_POST['id'];
-        $this->model->markAsRead($id);
+        $notif_id = $_POST['id'];
+
+        $this->model->markAsRead($notif_id, $this->user['id']);
+
+        echo json_encode(['status' => 'ok']);
+        exit;
+    }
+
+    public function markAllRead()
+    {
+        $this->auth();
+        header('Content-Type: application/json');
+
+        $this->model->markAllRead($this->user['id']);
+
+        echo json_encode(['status' => 'ok']);
+        exit;
     }
 }

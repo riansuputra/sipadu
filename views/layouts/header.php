@@ -24,7 +24,7 @@ $user = $_SESSION['user'];
             <div class="mt-1">
                 <div class="nav-item dropdown  me-2">
                     <a href="#"
-                        class="btn btn-icon"
+                        class="btn btn-icon btn-action text-black"
                         data-bs-toggle="dropdown"
                         data-bs-auto-close="outside"
                         aria-label="Show notifications">
@@ -40,7 +40,7 @@ $user = $_SESSION['user'];
                         <div class="card">
 
                             <div class="card-header d-flex">
-                                <h3 class="card-title">Notifications</h3>
+                                <h3 class="card-title">Notifikasi</h3>
                                 <div class="btn-close ms-auto" data-bs-dismiss="dropdown"></div>
                             </div>
 
@@ -51,7 +51,7 @@ $user = $_SESSION['user'];
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <a href="#" class="btn btn-2 w-100" onclick="markAllRead()">Mark all as read</a>
+                                        <a href="#" class="btn btn-2 w-100" onclick="markAllRead()">Tandai semua sudah dibaca</a>
                                     </div>
                                 </div>
                             </div>

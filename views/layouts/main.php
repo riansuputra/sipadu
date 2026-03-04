@@ -227,6 +227,121 @@ $headerImage = $headerImage ?? url('public/assets/img/banner.webp');
             <?= $content ?>
         </div>
 
+        <script>
+            let lastCount = 0;
+
+            function loadNotifCount() {
+                fetch('index.php?page=notifikasi-unread-count')
+                    .then(res => res.json())
+                    .then(data => {
+
+                        const current = parseInt(data.total);
+
+                        document.getElementById('notif-count').innerText = current;
+
+                        if (current == 0) {
+                            document.getElementById('notif-count').style.display = 'none';
+                        } else {
+                            document.getElementById('notif-count').style.display = 'inline-block';
+                        }
+
+                        // Kalau ada perubahan → reload list
+                        if (current !== lastCount) {
+                            loadNotifList();
+                            lastCount = current;
+                        }
+                    });
+            }
+
+            function loadNotifList() {
+                fetch('index.php?page=notifikasi-list')
+                    .then(res => res.json())
+                    .then(data => {
+
+                        let html = '';
+
+                        if (data.length === 0) {
+                            html = `
+                    <div class="list-group-item text-center text-muted">
+                        Tidak ada notifikasi
+                    </div>
+                `;
+                        } else {
+                            data.forEach(function(item) {
+
+                                html += `
+                                <div class="list-group-item">
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+                                            ${item.is_read == 0 
+                                                ? '<span class="status-dot status-dot-animated bg-red d-block"></span>' 
+                                                : '<span class="status-dot d-block"></span>'}
+                                        </div>
+
+                                        <div class="col text-truncate">
+                                            <a href="#"
+                                            class="text-body d-block"
+                                            onclick="markAsRead(${item.notif_id}); return false;">
+                                                ${item.judul}
+                                            </a>
+                                            <div class="d-block text-secondary text-truncate mt-n1">
+                                                ${item.pesan}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                `;
+                            });
+                        }
+
+                        document.getElementById('notif-list').innerHTML = html;
+                    });
+            }
+
+            function markAsRead(id) {
+                fetch('index.php?page=notifikasi-read', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: 'id=' + id
+                }).then(() => {
+                    loadNotifCount();
+                    loadNotifList();
+                });
+            }
+
+            function markAllRead() {
+                fetch('index.php?page=notifikasi-read-all', {
+                    method: 'POST'
+                }).then(() => {
+                    loadNotifCount();
+                    loadNotifList();
+                });
+            }
+
+            function handleNotifClick(e, id, url) {
+                e.preventDefault(); // STOP redirect dulu
+
+                fetch('index.php?page=notifikasi-read', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: 'id=' + id
+                }).then(() => {
+                    window.location.href = url; // redirect setelah update
+                });
+            }
+
+            // reload setiap 10 detik
+            setInterval(loadNotifCount, 10000);
+
+            // load awal
+            loadNotifCount();
+            loadNotifList();
+        </script>
+
         <?php
         // ----------------------------
         // FOOTER
