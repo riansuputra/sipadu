@@ -152,7 +152,7 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
                                         <th class="text-center">Judul</th>
                                         <th class="w-1 text-center">Unit/Tim</th>
                                         <th class="w-1 text-center">Status <br> Publikasi</th>
-                                        <th class="w-1 text-center">Tanggal <br> Publikasi</th>
+                                        <th class="w-1 text-center">Tanggal <br> Kegiatan</th>
                                         <th class="w-1 text-center">Tanggal Dibuat <br>& Diperbarui</th>
                                         <th class="w-1">File</th>
                                         <th class="w-1">Aksi</th>

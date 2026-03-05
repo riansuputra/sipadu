@@ -17,6 +17,7 @@ ob_start();
 
 <?php
 // echo '<pre>';
+// dd($data);
 
 // $plain = "halo123"; // password asli
 // $hash = $data['password_hash'];
@@ -84,7 +85,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                         id="username"
                                         placeholder="Username..."
                                         value="<?= $data['username'] ?? $old['username'] ?? '' ?>"
-                                        class="form-control <?= isset($errors['username']) ? 'is-invalid' : '' ?>" autocomplete="off" readonly>
+                                        class="form-control <?= isset($errors['username']) ? 'is-invalid' : '' ?>" autocomplete="off">
                                     <div class="invalid-feedback">
                                         <?= $errors['username'] ?? '' ?>
                                     </div>

@@ -95,7 +95,7 @@ class PublikasiController extends BaseController
                 'role_id' => $this->user['role_id'],
                 'action' => 'store',
                 'entity_type' => 'publikasi',
-                'entity_id' => $_POST['id'],
+                'entity_id' => $id,
                 'description' => 'Menambah data Publikasi'
             ]);
 
@@ -197,7 +197,7 @@ class PublikasiController extends BaseController
                 'role_id' => $this->user['role_id'],
                 'action' => 'update',
                 'entity_type' => 'publikasi',
-                'entity_id' => $_POST['id'],
+                'entity_id' => $data['id'],
                 'description' => 'Mengubah data Publikasi'
             ]);
 

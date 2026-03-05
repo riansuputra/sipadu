@@ -1,6 +1,5 @@
 <?php
 
-
 class PublikasiModel
 {
     protected $db;
@@ -255,7 +254,6 @@ class PublikasiModel
             !in_array($role, ['Superadmin', 'Pimpinan']) &&
             $pokjaId != 9
         ) {
-            // Admin & Staff NON-Publikasi → hanya pokja sendiri
             $sql .= " AND p.pokja_id = ?";
             $params[] = $pokjaId;
         }
@@ -454,9 +452,6 @@ class PublikasiModel
         ]);
     }
 
-    // ----------------------------------------------------
-    // Simpan file publikasi (SESUAI TABEL publikasi_file)
-    // ----------------------------------------------------
     public function insertFile($id, $file)
     {
         $stmt = $this->db->prepare("
@@ -478,9 +473,6 @@ class PublikasiModel
         ]);
     }
 
-    // ----------------------------------------------------
-    // Ambil file berdasarkan publikasi
-    // ----------------------------------------------------
     public function getFiles($id)
     {
         $stmt = $this->db->prepare("
@@ -509,9 +501,6 @@ class PublikasiModel
         return $stmt->fetch();
     }
 
-    // ----------------------------------------------------
-    // Hapus file by publikasi
-    // ----------------------------------------------------
     public function deleteFiles($publikasi_id)
     {
         $stmt = $this->db->prepare("

@@ -22,11 +22,10 @@ $user = $_SESSION['user'];
 
         <div class="navbar-nav flex-row order-md-last me-2">
             <div class="mt-1">
-                <div class="nav-item dropdown  me-2">
+                <div class="nav-item dropdown me-2">
                     <a href="#"
                         class="btn btn-icon btn-action text-black"
                         data-bs-toggle="dropdown"
-                        data-bs-auto-close="outside"
                         aria-label="Show notifications">
 
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">

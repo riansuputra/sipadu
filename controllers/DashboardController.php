@@ -1,130 +1,110 @@
 <?php
-// ================================
-// DASHBOARD CONTROLLER
-// ================================
 
-require_once __DIR__ . '/../core/auth.php';
 require_once __DIR__ . '/../models/ModulModel.php';
 require_once __DIR__ . '/../core/BaseController.php';
 
 
 class DashboardController extends BaseController
 {
-    // ----------------------------
-    // HALAMAN DASHBOARD
-    // ----------------------------
     public function index()
     {
-        // Pastikan user sudah login
         $this->auth();
-
-
-
-        $user = $this->user;
-        $role = $this->role;
 
         $mode = $_GET['mode'] ?? null;
 
-        // ----------------------------
-        // 3. STAFF → modul tampil di dashboard
-        // ----------------------------
-        if ($mode === 'staff' && in_array($role, ['Admin', 'Superadmin', 'Pimpinan'])) {
+        if ($mode === 'staff' && in_array($this->role, ['Admin', 'Superadmin', 'Pimpinan'])) {
             $moduleModel = new ModulModel();
 
-            // ambil semua modul aktif
             $modules = $moduleModel->getAllActive();
-            require __DIR__ . '/../views/dashboard/staff.php';
+            $this->view('dashboard/staff', [
+                'moduleModel' => $moduleModel,
+                'modules' => $modules,
+                'user' => $this->user,
+                'role' => $this->role,
+            ]);
             return;
         }
 
-        if (in_array($role, ['Staff', 'Pimpinan'])) {
+        if (in_array($this->role, ['Staff', 'Pimpinan'])) {
             $moduleModel = new ModulModel();
 
-            // ambil semua modul aktif
             $modules = $moduleModel->getAllActive();
-            require __DIR__ . '/../views/dashboard/staff.php';
+            $this->view('dashboard/staff', [
+                'moduleModel' => $moduleModel,
+                'modules' => $modules,
+                'user' => $this->user,
+                'role' => $this->role,
+            ]);
             return;
         }
 
-        // Tentukan view dashboard berdasarkan role
-        switch ($role) {
+        switch ($this->role) {
             case 'Superadmin':
             case 'Admin':
 
-                require __DIR__ . '/../views/dashboard/admin.php';
+                $this->view('dashboard/admin', [
+                    'user' => $this->user,
+                    'role' => $this->role,
+                ]);
                 break;
 
             case 'Pimpinan':
             case 'Staff':
-                require __DIR__ . '/../views/dashboard/staff.php';
+                $this->view('dashboard/staff', [
+                    'user' => $this->user,
+                    'role' => $this->role,
+                ]);
                 break;
         }
-
-        // Load dashboard sesuai role
     }
 
     public function paud()
     {
-        // Pastikan user sudah login
         $this->auth();
 
-
-
-        $user = $this->user;
-        $role = $this->role;
-
-        require __DIR__ . "/../views/paud/index.php";
+        $this->view('paud/index', [
+            'user' => $this->user,
+            'role' => $this->role,
+        ]);
     }
 
     public function sd()
     {
-        // Pastikan user sudah login
         $this->auth();
 
-
-
-        $user = $this->user;
-        $role = $this->role;
-
-        require __DIR__ . "/../views/sd/index.php";
+        $this->view('sd/index', [
+            'user' => $this->user,
+            'role' => $this->role,
+        ]);
     }
 
     public function smp()
     {
-        // Pastikan user sudah login
         $this->auth();
 
-
-
-        $user = $this->user;
-        $role = $this->role;
-
-        require __DIR__ . "/../views/smp/index.php";
+        $this->view('smp/index', [
+            'user' => $this->user,
+            'role' => $this->role,
+        ]);
     }
 
     public function sma()
     {
-        // Pastikan user sudah login
         $this->auth();
 
-
-
-        $user = $this->user;
-        $role = $this->role;
-
-        require __DIR__ . "/../views/sma/index.php";
+        $this->view('sma/index', [
+            'user' => $this->user,
+            'role' => $this->role,
+        ]);
     }
 
     public function widyaprada()
     {
-        // Pastikan user sudah login
         $this->auth();
 
-
-
-        $user = $this->user;
-        $role = $this->role;
-
-        require __DIR__ . "/../views/widyaprada/index.php";
+        $this->view('widyaprada/index', [
+            'user' => $this->user,
+            'role' => $this->role,
+        ]);
     }
 }

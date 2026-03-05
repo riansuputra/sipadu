@@ -40,7 +40,6 @@ class UserController extends BaseController
         ]);
     }
 
-
     public function store()
     {
         $this->auth();
@@ -78,16 +77,11 @@ class UserController extends BaseController
             $errors['pokja_id'] = 'Pokja wajib diisi untuk role ini';
         }
 
-        // echo "<pre>";
-        // print_r($errors);
-        // echo "</pre>";
-        // die();
-
         if (!empty($errors)) {
             $_SESSION['errors'] = $errors;
             $_SESSION['old'] = $_POST;
-            header('Location: ?page=tambah-user');
-            exit;
+
+            $this->redirect('?page=tambah-user');
         }
 
         $this->model->insert([
@@ -103,23 +97,12 @@ class UserController extends BaseController
             'message' => 'User berhasil ditambahkan'
         ];
 
-        header('Location: ?page=tambah-user');
-        exit;
+        $this->redirect('?page=tambah-user');
     }
 
-    // ================================
-    // UPDATE USER
-    // ================================
     public function update()
     {
-        // dd($_POST);
-        // echo "<pre>";
-        // print_r($_POST);
-        // echo "</pre>";
-        // die();
         $this->auth();
-
-
 
         $id = $_POST['id'];
 
@@ -133,42 +116,30 @@ class UserController extends BaseController
             $errors['role_id'] = "Role wajib dipilih";
         }
 
-        // echo "<pre>";
-        // print_r($errors);
-        // echo "</pre>";
-        // die();
-
         if (!empty($errors)) {
 
             $_SESSION['errors'] = $errors;
             $_SESSION['old'] = $_POST;
 
-            header("Location: ?page=user-edit&id=" . $id);
-            exit;
+            $this->redirect('?page=user-edit&id=' . $id);
         }
 
-        $model = new UserModel();
-
-        $model->update($id, $_POST);
+        $this->model->update($id, $_POST);
 
         $_SESSION['flash'] = [
             'status' => 'success',
             'message' => 'User berhasil diperbarui'
         ];
 
-        header("Location: ?page=user");
-        exit;
+        $this->redirect('?page=user');
     }
 
 
     public function editPassword()
     {
+        $this->auth();
 
-        $user = $this->user;
-        $role = $this->role;
-
-        $model = new UserModel();
-        $user = $model->findById($_GET['id']);
+        $user = $this->model->findById($_GET['id']);
 
         if (!$user) {
             http_response_code(404);
@@ -176,30 +147,23 @@ class UserController extends BaseController
             exit;
         }
 
-        require __DIR__ . '/../views/user/edit-password.php';
+        $this->view('user/edit-password', [
+            'user' => $this->user,
+            'role' => $this->role
+        ]);
     }
 
-    // ================================
-    // FORM EDIT USER
-    // ================================
     public function edit()
     {
         $this->auth();
 
-
-        $user = $this->user;
-        $role = $this->role;
-
         $id = $_GET['id'] ?? null;
 
         if (!$id) {
-            header("Location: ?page=user");
-            exit;
+            $this->redirect('?page=user');
         }
 
-        $model = new UserModel();
-
-        $data = $model->findById($id);
+        $data = $this->model->findById($id);
 
         if (!$data) {
             $_SESSION['flash'] = [
@@ -207,15 +171,19 @@ class UserController extends BaseController
                 'message' => 'User tidak ditemukan'
             ];
 
-            header("Location: ?page=user");
-            exit;
+            $this->redirect('?page=user');
         }
 
-        // untuk dropdown
-        $roles = $model->getRoles();
-        $pokja = $model->getPokja();
+        $roles = $this->model->getRoles();
+        $pokja = $this->model->getPokja();
 
-        require __DIR__ . '/../views/user/edit.php';
+        $this->view('user/edit', [
+            'data' => $data,
+            'roles' => $roles,
+            'pokja' => $pokja,
+            'user' => $this->user,
+            'role' => $this->role
+        ]);
     }
 
     public function delete()

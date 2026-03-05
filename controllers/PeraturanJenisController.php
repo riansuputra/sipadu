@@ -70,7 +70,7 @@ class PeraturanJenisController extends BaseController
                 'role_id' => $this->user['role_id'],
                 'action' => 'store',
                 'entity_type' => 'peraturan_jenis',
-                'entity_id' => $_POST['id'],
+                'entity_id' => $id,
                 'description' => 'Menambah data Jenis Peraturan'
             ]);
 
@@ -143,7 +143,7 @@ class PeraturanJenisController extends BaseController
                 'role_id' => $this->user['role_id'],
                 'action' => 'update',
                 'entity_type' => 'peraturan_jenis',
-                'entity_id' => $_POST['id'],
+                'entity_id' => $data['id'],
                 'description' => 'Mengubah data Jenis Peraturan'
             ]);
 

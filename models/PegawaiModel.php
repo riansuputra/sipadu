@@ -1,20 +1,33 @@
 <?php
 
-
-
 class PegawaiModel
 {
     protected $db;
 
     public function __construct()
     {
-        // ambil dari singleton
         $this->db = Database::getInstance();
     }
 
-    // Ambil semua data DIP
+    public function beginTransaction()
+    {
+        return $this->db->beginTransaction();
+    }
+
+    public function commit()
+    {
+        return $this->db->commit();
+    }
+
+    public function rollback()
+    {
+        return $this->db->rollBack();
+    }
+
     public function getAll()
     {
+        $this->db->exec("SET SESSION group_concat_max_len = 100000");
+
         $stmt = $this->db->prepare("
             SELECT 
             p.*,
@@ -36,7 +49,6 @@ class PegawaiModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Ambil detail DIP
     public function getById($id)
     {
         $stmt = $this->db->prepare("
@@ -209,5 +221,45 @@ class PegawaiModel
         ");
 
         return $stmt->execute([$id]);
+    }
+
+    // cek apakah NIK sudah ada (untuk store & update)
+    public function existsNik($nik, $excludeId = null)
+    {
+        $sql = "SELECT id FROM pegawai 
+            WHERE nik = ? 
+            AND deleted_at IS NULL";
+
+        $params = [$nik];
+
+        if ($excludeId) {
+            $sql .= " AND id != ?";
+            $params[] = $excludeId;
+        }
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC) ? true : false;
+    }
+
+
+    public function existsNip($nip, $excludeId = null)
+    {
+        $sql = "SELECT id FROM pegawai 
+            WHERE nip = ? 
+            AND deleted_at IS NULL";
+
+        $params = [$nip];
+
+        if ($excludeId) {
+            $sql .= " AND id != ?";
+            $params[] = $excludeId;
+        }
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC) ? true : false;
     }
 }

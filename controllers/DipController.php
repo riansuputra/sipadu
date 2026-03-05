@@ -76,7 +76,7 @@ class DipController extends BaseController
                 'role_id' => $this->user['role_id'],
                 'action' => 'store',
                 'entity_type' => 'dip',
-                'entity_id' => $_POST['id'],
+                'entity_id' => $id,
                 'description' => 'Menambah data DIP'
             ]);
 
@@ -164,7 +164,7 @@ class DipController extends BaseController
                 'role_id' => $this->user['role_id'],
                 'action' => 'update',
                 'entity_type' => 'dip',
-                'entity_id' => $_POST['id'],
+                'entity_id' => $data['id'],
                 'description' => 'Mengubah data DIP'
             ]);
 
@@ -294,22 +294,18 @@ class DipController extends BaseController
     {
         $this->auth();
 
-
-
-
-
         $tahun = $_GET['tahun'] ?? null;
         $jenis = $_GET['jenis'] ?? null;
 
+        $data = (!empty($tahun) || !empty($jenis))
+            ? $this->model->getFiltered($tahun, $jenis)
+            : $this->model->getAll();
 
-        if (!empty($tahun) || !empty($jenis)) {
-            $data = $this->model->getFiltered($tahun, $jenis);
-        } else {
-            // default
-            $data = $this->model->getAll();
-        }
-
-        require __DIR__ . "/../views/dip/publicIndex.php";
+        $this->view('dip/publicIndex', [
+            'data' => $data,
+            'user' => $this->user,
+            'role' => $this->role
+        ]);
     }
 
     public function downloadFile()

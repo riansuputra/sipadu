@@ -84,7 +84,7 @@ class PeraturanController extends BaseController
                 'role_id' => $this->user['role_id'],
                 'action' => 'store',
                 'entity_type' => 'peraturan',
-                'entity_id' => $_POST['id'],
+                'entity_id' => $id,
                 'description' => 'Menambah data Peraturan'
             ]);
 
@@ -172,7 +172,7 @@ class PeraturanController extends BaseController
                 'role_id' => $this->user['role_id'],
                 'action' => 'update',
                 'entity_type' => 'peraturan',
-                'entity_id' => $_POST['id'],
+                'entity_id' => $data['id'],
                 'description' => 'Mengubah data Peraturan'
             ]);
 
@@ -314,9 +314,7 @@ class PeraturanController extends BaseController
     {
         $this->auth();
 
-
         $fileId = $_GET['file'];
-
 
         $file  = $this->model->getFileById($fileId);
 
@@ -324,7 +322,6 @@ class PeraturanController extends BaseController
             exit('File tidak ditemukan');
         }
 
-        // hitung download (di tabel peraturan)
         $this->model->incrementDownload($file['peraturan_id']);
 
         $fullPath = __DIR__ . '/../' . $file['path_file'];
@@ -333,7 +330,6 @@ class PeraturanController extends BaseController
             exit('File tidak ada di server');
         }
 
-        // paksa download
         header('Content-Description: File Transfer');
         header('Content-Type: ' . $file['tipe_file']);
         header('Content-Disposition: attachment; filename="' . basename($file['nama_file']) . '"');
@@ -343,23 +339,21 @@ class PeraturanController extends BaseController
         exit;
     }
 
-
     public function detail($id)
     {
         $this->auth();
 
-
-
-
         $this->model->incrementView($id);
 
-
-        // Ambil data peraturan
         $data  = $this->model->getById($id);
-
-        // Ambil file terkait
         $files = $this->model->getFiles($id);
-        require __DIR__ . '/../views/peraturan/publicDetail.php';
+
+        $this->view('peraturan/publicDetail', [
+            'data' => $data,
+            'files' => $files,
+            'user' => $this->user,
+            'role' => $this->role
+        ]);
     }
 
     private function validate($data, $files, $isUpdate = false)
