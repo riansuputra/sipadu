@@ -89,6 +89,10 @@ class PegawaiController extends BaseController
 
             $this->model->rollback();
 
+            dd($e->getMessage());
+
+            $_SESSION['old'] = $_POST;
+
             if ($e instanceof PDOException && $e->getCode() == 23000) {
                 $this->flash('error', 'NIK atau NIP sudah terdaftar');
             } else {
@@ -264,6 +268,26 @@ class PegawaiController extends BaseController
             $errors['agama'] = 'Agama wajib diisi';
         }
 
+        if (empty($data['no_telepon'])) {
+            $errors['no_telepon'] = 'No. telepon wajib diisi';
+        }
+
+        if (empty($data['alamat_domisili'])) {
+            $errors['alamat_domisili'] = 'Alamat wajib diisi';
+        }
+
+        if (empty($data['jabatan'])) {
+            $errors['jabatan'] = 'Jabatan wajib diisi';
+        }
+
+        if (empty($data['pangkat_golongan'])) {
+            $errors['pangkat_golongan'] = 'Pangkat golongan wajib diisi';
+        }
+
+        if (!$isUpdate && (!isset($files['file_foto']) || $files['file_foto']['error'] === UPLOAD_ERR_NO_FILE)) {
+            $errors['file_foto'] = 'File foto wajib diisi';
+        }
+
         if (
             empty($data['status_asn']) ||
             !in_array($data['status_asn'], ['PNS', 'PPPK', 'PPNPN/OUTSOURCING'])
@@ -381,42 +405,39 @@ class PegawaiController extends BaseController
 
     private function handleUpload($pegawaiId, $files)
     {
-        if (empty($files['file']['name'][0])) return;
-
-        // Path absolut folder uploads/pegawai
         $dir = realpath(__DIR__ . '/../uploads') . '/pegawai/';
 
-        if (!is_dir($dir) && !mkdir($dir, 0755, true)) {
-            throw new Exception("Folder upload pegawai gagal dibuat");
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
         }
 
-        foreach ($files['file']['name'] as $i => $nama) {
+        foreach ($files as $input => $file) {
 
-            if (!$nama) continue;
-
-            if ($files['file']['error'][$i] !== 0) {
-                throw new Exception("Terjadi error pada file upload");
+            if ($file['error'] === UPLOAD_ERR_NO_FILE) {
+                continue;
             }
 
-            $tmp  = $files['file']['tmp_name'][$i];
-            $size = $files['file']['size'][$i];
+            if ($file['error'] !== UPLOAD_ERR_OK) {
+                throw new Exception("Upload gagal: {$input}");
+            }
+
+            $nama = $file['name'];
+            $tmp  = $file['tmp_name'];
+            $size = $file['size'];
             $ext  = strtolower(pathinfo($nama, PATHINFO_EXTENSION));
 
-            // Sanitasi nama file
-            $namaBaru = time() . '_' . $i . '_' .
-                preg_replace('/[^a-zA-Z0-9._-]/', '_', $nama);
-
+            $namaBaru = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $nama);
             $path = $dir . $namaBaru;
 
             if (!move_uploaded_file($tmp, $path)) {
-                throw new Exception("Upload file pegawai gagal");
+                throw new Exception("Gagal upload {$nama}");
             }
 
-            // Simpan ke tabel pegawai_file
             $this->model->insertFile($pegawaiId, [
-                'nama_file'  => $nama,
-                'path_file'  => 'uploads/pegawai/' . $namaBaru,
-                'tipe_file'  => $ext,
+                'jenis_dokumen' => $input,
+                'nama_file' => $nama,
+                'path_file' => 'uploads/pegawai/' . $namaBaru,
+                'tipe_file' => $ext,
                 'ukuran_file' => $size
             ]);
         }

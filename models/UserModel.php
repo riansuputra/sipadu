@@ -138,6 +138,7 @@ class UserModel
             $stmt = $this->db->prepare("
             UPDATE users SET
                 nama_lengkap = ?,
+                username = ?,
                 role_id = ?,
                 pokja_id = ?,
                 password_hash = ?,
@@ -147,6 +148,7 @@ class UserModel
 
             return $stmt->execute([
                 $data['nama_lengkap'],
+                $data['username'],
                 $data['role_id'],
                 $data['pokja_id'] ?? null,
                 password_hash(trim($data['password_baru']), PASSWORD_DEFAULT),
@@ -159,6 +161,7 @@ class UserModel
         $stmt = $this->db->prepare("
         UPDATE users SET
             nama_lengkap = ?,
+            username = ?,
             role_id = ?,
             pokja_id = ?,
             is_active = ?
@@ -167,6 +170,7 @@ class UserModel
 
         return $stmt->execute([
             $data['nama_lengkap'],
+            $data['username'],
             $data['role_id'],
             $data['pokja_id'],
             $isActive,

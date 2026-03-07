@@ -52,20 +52,20 @@ function statusPensiunSingkat($tanggalLahir, $usiaPensiun = 58)
     $tahunPensiun = $tglPensiun->format('Y');
 
     if ($now >= $tglPensiun) {
-        return "Sudah pensiun ({$tahunPensiun})";
+        return "Sudah pensiun <br>({$tahunPensiun})";
     }
 
     $diff = $now->diff($tglPensiun);
 
     if ($diff->y >= 5) {
-        return "> 5 tahun ({$tahunPensiun})";
+        return "> 5 tahun <br>({$tahunPensiun})";
     }
 
     if ($diff->y >= 1) {
-        return "{$diff->y} th ({$tahunPensiun})";
+        return "{$diff->y} th <br>({$tahunPensiun})";
     }
 
-    return "{$diff->m} bln ({$tahunPensiun})";
+    return "{$diff->m} bln <br>({$tahunPensiun})";
 }
 
 function abort404()

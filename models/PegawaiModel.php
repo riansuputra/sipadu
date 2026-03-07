@@ -62,29 +62,47 @@ class PegawaiModel
     // Simpan DIP baru
     public function insert($data)
     {
+        // Normalisasi field optional
+        foreach (
+            [
+                'nik',
+                'nip',
+                'email',
+                'grade',
+                'jurusan',
+                'nomor_sk_pengangkatan',
+                'nomor_sk_spmt',
+                'tempat_lahir'
+            ] as $field
+        ) {
+            if (!isset($data[$field]) || trim($data[$field]) === '') {
+                $data[$field] = null;
+            }
+        }
+
         $stmt = $this->db->prepare("
-            INSERT INTO pegawai (
-                nama,
-                nik,
-                nip,
-                tempat_lahir,
-                tanggal_lahir,
-                jenis_kelamin,
-                agama,
-                alamat_domisili,
-                no_telepon,
-                email,
-                status_asn,
-                pangkat_golongan,
-                grade,
-                jabatan,
-                pendidikan,
-                jurusan,
-                nomor_sk_pengangkatan,
-                nomor_sk_spmt,
-                created_by
-            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
-        ");
+        INSERT INTO pegawai (
+            nama,
+            nik,
+            nip,
+            tempat_lahir,
+            tanggal_lahir,
+            jenis_kelamin,
+            agama,
+            alamat_domisili,
+            no_telepon,
+            email,
+            status_asn,
+            pangkat_golongan,
+            grade,
+            jabatan,
+            pendidikan,
+            jurusan,
+            nomor_sk_pengangkatan,
+            nomor_sk_spmt,
+            created_by
+        ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+    ");
 
         $stmt->execute([
             $data['nama'],

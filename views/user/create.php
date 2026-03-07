@@ -108,11 +108,6 @@ unset($_SESSION['errors'], $_SESSION['old']);
 
                                                     <?php foreach ($roles as $j): ?>
 
-                                                        <?php
-                                                        // skip superadmin
-                                                        if ($j['kode_role'] === 'Superadmin') continue;
-                                                        ?>
-
                                                         <option value="<?= $j['id'] ?>"
                                                             data-kode="<?= $j['kode_role'] ?>"
                                                             <?= ($old['role_id'] ?? '') == $j['id'] ? 'selected' : '' ?>>

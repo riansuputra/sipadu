@@ -16,6 +16,11 @@ ob_start();
 // echo '<pre>';
 // print_r($user);  
 // echo '</pre>';
+$errors = $_SESSION['errors'] ?? [];
+$old    = $_SESSION['old'] ?? [];
+
+// 🔥 HAPUS SETELAH DIPAKAI
+unset($_SESSION['errors'], $_SESSION['old']);
 ?>
 
 <div class="page-header d-print-none" aria-label="Page header">
@@ -36,7 +41,7 @@ ob_start();
         <div class="row row-deck row-cards ">
 
             <div class="col-12">
-                <form class="card" method="POST" action="?page=pegawai-store" enctype="multipart/form-data">
+                <form class="card" method="POST" action="<?= url('?page=pegawai-store') ?>" enctype="multipart/form-data">
                     <div class="card-header">
                         <h3 class="card-title">Form Tambah Pegawai</h3>
                     </div>
@@ -44,7 +49,7 @@ ob_start();
                         <div class="row">
                             <div class="col-sm-12 col-lg-6">
                                 <div>
-                                    <h4>Data Prib adi</h4>
+                                    <h4>Data Pribadi</h4>
                                 </div>
                                 <div class="form-fieldset">
 
@@ -52,6 +57,7 @@ ob_start();
                                         <div class="col-lg-auto col-sm-12 me-3">
                                             <div
                                                 onclick="document.getElementById('file_foto').click()"
+                                                class="<?= isset($errors['file_foto']) ? 'border-danger' : '' ?>"
                                                 style="
                                                 width:110px;
                                                 height:146px;
@@ -92,49 +98,94 @@ ob_start();
                                                 accept="image/*"
                                                 hidden
                                                 onchange="previewImage(this)">
+                                            <?php if (isset($errors['file_foto'])) : ?>
+                                                <div class="invalid-feedback d-block">
+                                                    <?= $errors['file_foto'] ?>
+                                                </div>
+                                            <?php endif; ?>
                                         </div>
                                         <div class="col">
                                             <label class="form-label required">Nama Lengkap</label>
-                                            <input type="text" name="nama" id="nama" class="form-control mb-3" placeholder="Nama lengkap...">
-                                            <div class="row">
+                                            <input
+                                                type="text"
+                                                name="nama"
+                                                id="nama"
+                                                placeholder="Nama lengkap..."
+                                                value="<?= $old['nama'] ?? '' ?>"
+                                                class="form-control <?= isset($errors['nama']) ? 'is-invalid' : '' ?>" autocomplete="off">
+                                            <div class="invalid-feedback">
+                                                <?= $errors['nama'] ?? '' ?>
+                                            </div>
+                                            <div class="row mt-3">
                                                 <div class="col">
                                                     <label class="form-label">Tempat Lahir</label>
-                                                    <input type="text" name="tempat_lahir" id="tempat_lahir" class="form-control" placeholder="Tempat lahir...">
-
+                                                    <input
+                                                        type="text"
+                                                        name="tempat_lahir"
+                                                        id="tempat_lahir"
+                                                        placeholder="Tempat lahir..."
+                                                        value="<?= $old['tempat_lahir'] ?? '' ?>"
+                                                        class="form-control <?= isset($errors['tempat_lahir']) ? 'is-invalid' : '' ?>" autocomplete="off">
+                                                    <div class="invalid-feedback">
+                                                        <?= $errors['tempat_lahir'] ?? '' ?>
+                                                    </div>
                                                 </div>
                                                 <div class="col">
                                                     <label class="form-label required">Tanggal Lahir</label>
-                                                    <input type="date" name="tanggal_lahir" id="tanggal_lahir" class="form-control" placeholder="">
+                                                    <input
+                                                        type="date"
+                                                        name="tanggal_lahir"
+                                                        id="tanggal_lahir"
+                                                        value="<?= $old['tanggal_lahir'] ?? '' ?>"
+                                                        class="form-control <?= isset($errors['tanggal_lahir']) ? 'is-invalid' : '' ?>" autocomplete="off">
+                                                    <div class="invalid-feedback">
+                                                        <?= $errors['tanggal_lahir'] ?? '' ?>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">NIK</label>
-                                        <input type="text" name="nik" id="nik" class="form-control" placeholder="Masukkan NIK...">
+                                        <input
+                                            type="text"
+                                            name="nik"
+                                            id="nik"
+                                            placeholder="NIK..."
+                                            value="<?= $old['nik'] ?? '' ?>"
+                                            class="form-control <?= isset($errors['nik']) ? 'is-invalid' : '' ?>" autocomplete="off">
+                                        <div class="invalid-feedback">
+                                            <?= $errors['nik'] ?? '' ?>
+                                        </div>
                                     </div>
                                     <div class="mb-3 row">
                                         <div class="col">
                                             <div class="row">
                                                 <div class="col">
                                                     <label class="form-label required">Jenis Kelamin</label>
-                                                    <select class="form-select" name="jenis_kelamin" id="jenis_kelamin">
-                                                        <option value="" disabled selected>-- Pilih Jenis --</option>
-                                                        <option value="L">Laki-Laki</option>
-                                                        <option value="P">Perempuan</option>
+                                                    <select class="form-select <?= isset($errors['jenis_kelamin']) ? 'is-invalid' : '' ?>" name="jenis_kelamin" id="jenis_kelamin">
+                                                        <option value="" disabled <?= empty($old['jenis_kelamin']) ? 'selected' : '' ?>>-- Pilih Jenis --</option>
+                                                        <option value="L" <?= ($old['jenis_kelamin'] ?? '') == 'L' ? 'selected' : '' ?>>Laki-Laki</option>
+                                                        <option value="P" <?= ($old['jenis_kelamin'] ?? '') == 'P' ? 'selected' : '' ?>>Perempuan</option>
                                                     </select>
+                                                    <div class="invalid-feedback">
+                                                        <?= $errors['jenis_kelamin'] ?? '' ?>
+                                                    </div>
                                                 </div>
                                                 <div class="col">
                                                     <label class="form-label required">Agama</label>
-                                                    <select class="form-select" name="agama" id="agama">
-                                                        <option value="" disabled selected>-- Pilih Agama --</option>
-                                                        <option value="Islam">Islam</option>
-                                                        <option value="Kristen Protestan">Kristen Protestan</option>
-                                                        <option value="Katolik">Katolik</option>
-                                                        <option value="Hindu">Hindu</option>
-                                                        <option value="Buddha">Buddha</option>
-                                                        <option value="Konghucu">Konghucu</option>
+                                                    <select class="form-select <?= isset($errors['agama']) ? 'is-invalid' : '' ?>" name="agama" id="agama">
+                                                        <option value="" disabled <?= empty($old['agama']) ? 'selected' : '' ?>>-- Pilih Agama --</option>
+                                                        <option value="Islam" <?= ($old['agama'] ?? '') == 'Islam' ? 'selected' : '' ?>>Islam</option>
+                                                        <option value="Kristen Protestan" <?= ($old['agama'] ?? '') == 'Kristen Protestan' ? 'selected' : '' ?>>Kristen Protestan</option>
+                                                        <option value="Katolik" <?= ($old['agama'] ?? '') == 'Katolik' ? 'selected' : '' ?>>Katolik</option>
+                                                        <option value="Hindu" <?= ($old['agama'] ?? '') == 'Hindu' ? 'selected' : '' ?>>Hindu</option>
+                                                        <option value="Buddha" <?= ($old['agama'] ?? '') == 'Buddha' ? 'selected' : '' ?>>Buddha</option>
+                                                        <option value="Konghucu" <?= ($old['agama'] ?? '') == 'Konghucu' ? 'selected' : '' ?>>Konghucu</option>
                                                     </select>
+                                                    <div class="invalid-feedback">
+                                                        <?= $errors['agama'] ?? '' ?>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -144,35 +195,68 @@ ob_start();
                                             <div class="row">
                                                 <div class="col">
                                                     <label class="form-label required">No. Telepon</label>
-                                                    <input type="text" name="no_telepon" id="no_telepon" class="form-control" placeholder="">
+                                                    <input
+                                                        type="text"
+                                                        name="no_telepon"
+                                                        id="no_telepon"
+                                                        placeholder="No. Telepon..."
+                                                        value="<?= $old['no_telepon'] ?? '' ?>"
+                                                        class="form-control <?= isset($errors['no_telepon']) ? 'is-invalid' : '' ?>" autocomplete="off">
+                                                    <div class="invalid-feedback">
+                                                        <?= $errors['no_telepon'] ?? '' ?>
+                                                    </div>
                                                 </div>
                                                 <div class="col">
                                                     <label class="form-label">Alamat Email</label>
-                                                    <input type="email" name="email" id="email" class="form-control" placeholder="">
+                                                    <input
+                                                        type="email"
+                                                        name="email"
+                                                        id="email"
+                                                        placeholder="Alamat email..."
+                                                        value="<?= $old['email'] ?? '' ?>"
+                                                        class="form-control <?= isset($errors['email']) ? 'is-invalid' : '' ?>" autocomplete="off">
+                                                    <div class="invalid-feedback">
+                                                        <?= $errors['email'] ?? '' ?>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label required">Alamat</label>
-                                        <input type="text" name="alamat_domisili" id="alamat_domisili" class="form-control" placeholder="">
+                                        <input
+                                            type="alamat_domisili"
+                                            name="alamat_domisili"
+                                            id="alamat_domisili"
+                                            placeholder="Alamat..."
+                                            value="<?= $old['alamat_domisili'] ?? '' ?>"
+                                            class="form-control <?= isset($errors['alamat_domisili']) ? 'is-invalid' : '' ?>" autocomplete="off">
+                                        <div class="invalid-feedback">
+                                            <?= $errors['alamat_domisili'] ?? '' ?>
+                                        </div>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">File KK</label>
                                         <div class="col">
-                                            <input type="file" class="form-control" name="file_kk" id="file_kk" accept=".pdf, .jpg, .png">
+                                            <input type="file" class="form-control <?= isset($errors['file_kk']) ? 'is-invalid' : '' ?>" name="file_kk" id="file_kk" accept=".pdf, .jpg, .png">
                                             <small class="form-hint">
                                                 Format: pdf maks 5MB
                                             </small>
+                                            <div class="invalid-feedback">
+                                                <?= $errors['file_kk'] ?? '' ?>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">File KTP</label>
                                         <div class="col">
-                                            <input type="file" class="form-control" name="file_ktp" id="file_ktp" accept=".pdf, .jpg, .png">
+                                            <input type="file" class="form-control <?= isset($errors['file_ktp']) ? 'is-invalid' : '' ?>" name="file_ktp" id="file_ktp" accept=".pdf, .jpg, .png">
                                             <small class="form-hint">
                                                 Format: pdf maks 5MB
                                             </small>
+                                            <div class="invalid-feedback">
+                                                <?= $errors['file_ktp'] ?? '' ?>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -187,16 +271,28 @@ ob_start();
                                             <div class="row">
                                                 <div class="col">
                                                     <label class="form-label required">Status ASN</label>
-                                                    <select class="form-select" name="status_asn" id="status_asn">
-                                                        <option value="" disabled selected>-- Pilih Status --</option>
-                                                        <option value="PNS">PNS</option>
-                                                        <option value="PPPK">PPPK</option>
-                                                        <option value="PPNPN/OUTSOURCING">PPNPN/Outsourcing</option>
+                                                    <select class="form-select <?= isset($errors['status_asn']) ? 'is-invalid' : '' ?>" name="status_asn" id="status_asn">
+                                                        <option value="" disabled <?= empty($old['status_asn']) ? 'selected' : '' ?>>-- Pilih Status --</option>
+                                                        <option value="PNS" <?= ($old['status_asn'] ?? '') == 'PNS' ? 'selected' : '' ?>>PNS</option>
+                                                        <option value="PPPK" <?= ($old['status_asn'] ?? '') == 'PPPK' ? 'selected' : '' ?>>PPPK</option>
+                                                        <option value="PPNPN/OUTSOURCING" <?= ($old['status_asn'] ?? '') == 'PPNPN/OUTSOURCING' ? 'selected' : '' ?>>PPNPN/Outsourcing</option>
                                                     </select>
+                                                    <div class="invalid-feedback">
+                                                        <?= $errors['status_asn'] ?? '' ?>
+                                                    </div>
                                                 </div>
                                                 <div class="col">
                                                     <label class="form-label">NIP / NIPPPK</label>
-                                                    <input type="text" name="nip" id="nip" class="form-control" placeholder="">
+                                                    <input
+                                                        type="text"
+                                                        name="nip"
+                                                        id="nip"
+                                                        placeholder="NIP/NIPPPK..."
+                                                        value="<?= $old['nip'] ?? '' ?>"
+                                                        class="form-control <?= isset($errors['nip']) ? 'is-invalid' : '' ?>" autocomplete="off">
+                                                    <div class="invalid-feedback">
+                                                        <?= $errors['nip'] ?? '' ?>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -206,142 +302,187 @@ ob_start();
                                             <div class="row">
                                                 <div class="col">
                                                     <label class="form-label required">Pendidikan</label>
-                                                    <select class="form-select" name="pendidikan" id="pendidikan">
-                                                        <option value="" disabled selected>-- Pilih Pendidikan --</option>
-                                                        <option value="S3">S3</option>
-                                                        <option value="S2">S2</option>
-                                                        <option value="S1">S1</option>
-                                                        <option value="SMA">SMA</option>
-                                                        <option value="SMP">SMP</option>
+                                                    <select class="form-select <?= isset($errors['pendidikan']) ? 'is-invalid' : '' ?>" name="pendidikan" id="pendidikan">
+                                                        <option value="" disabled <?= empty($old['pendidikan']) ? 'selected' : '' ?>>-- Pilih Pendidikan --</option>
+                                                        <option value="S3" <?= ($old['pendidikan'] ?? '') == 'S3' ? 'selected' : '' ?>>S3</option>
+                                                        <option value="S2" <?= ($old['pendidikan'] ?? '') == 'S2' ? 'selected' : '' ?>>S2</option>
+                                                        <option value="S1" <?= ($old['pendidikan'] ?? '') == 'S1' ? 'selected' : '' ?>>S1</option>
+                                                        <option value="SMA" <?= ($old['pendidikan'] ?? '') == 'SMA' ? 'selected' : '' ?>>SMA</option>
+                                                        <option value="SMP" <?= ($old['pendidikan'] ?? '') == 'SMP' ? 'selected' : '' ?>>SMP</option>
                                                     </select>
+                                                    <div class="invalid-feedback">
+                                                        <?= $errors['pendidikan'] ?? '' ?>
+                                                    </div>
                                                 </div>
                                                 <div class="col">
                                                     <label class="form-label">Jurusan</label>
-                                                    <input type="text" name="jurusan" id="jurusan" class="form-control" placeholder="">
+                                                    <input
+                                                        type="text"
+                                                        name="jurusan"
+                                                        id="jurusan"
+                                                        placeholder="Jurusan..."
+                                                        value="<?= $old['jurusan'] ?? '' ?>"
+                                                        class="form-control <?= isset($errors['jurusan']) ? 'is-invalid' : '' ?>" autocomplete="off">
+                                                    <div class="invalid-feedback">
+                                                        <?= $errors['jurusan'] ?? '' ?>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Pangkat, Gol/Ruang</label>
-                                        <select class="form-select" name="pangkat_golongan" id="pangkat_golongan_pns">
-                                            <option value="" disabled selected>-- Pilih Pangkat/Gol, Ruang --</option>
-                                            <option value="Juru Muda, I/a">Juru Muda, I/a</option>
-                                            <option value="Juru Muda Tingkat I, I/a">Juru Muda Tingkat I, I/a</option>
-                                            <option value="Juru, I/c">Juru, I/c</option>
-                                            <option value="Juru Tingkat I, I/d">Juru Tingkat I, I/d</option>
-                                            <option value="Pengatur Muda, II/a">Pengatur Muda, II/a</option>
-                                            <option value="Pengatur Muda Tingkat I, II/b">Pengatur Muda Tingkat I, II/b</option>
-                                            <option value="Pengatur Muda, II/c">Pengatur Muda, II/c</option>
-                                            <option value="Pengatur Muda, II/d">Pengatur Muda, II/d</option>
-                                            <option value="Penata Muda, III/a">Penata Muda, III/a</option>
-                                            <option value="Penata Muda Tingkat I, III/b">Penata Muda Tingkat I, III/b</option>
-                                            <option value="Penata, III/c">Penata, III/c</option>
-                                            <option value="Penata Tingkat I, III/d">Penata Tingkat I, III/d</option>
-                                            <option value="Pembina, IV/a">Pembina, IV/a</option>
-                                            <option value="Pembina Tingkat I, IV/b">Pembina Tingkat I, IV/b</option>
-                                            <option value="Pembina Utama Muda, IV/c">Pembina Utama Muda, IV/c</option>
-                                            <option value="Pembina Utama Madya, IV/d">Pembina Utama Madya, IV/d</option>
-                                            <option value="Pembina Utama, IV/e">Pembina Utama, IV/e</option>
+                                        <select class="form-select <?= isset($errors['pangkat_golongan']) ? 'is-invalid' : '' ?>" name="pangkat_golongan" id="pangkat_golongan_pns">
+                                            <option value="" disabled <?= empty($old['pangkat_golongan']) ? 'selected' : '' ?>>-- Pilih Pangkat/Gol, Ruang --</option>
+                                            <option value="Juru Muda, I/a" <?= ($old['pangkat_golongan'] ?? '') == 'Juru Muda, I/a' ? 'selected' : '' ?>>Juru Muda, I/a</option>
+                                            <option value="Juru Muda Tingkat I, I/a" <?= ($old['pangkat_golongan'] ?? '') == 'Juru Muda Tingkat I, I/a' ? 'selected' : '' ?>>Juru Muda Tingkat I, I/a</option>
+                                            <option value="Juru, I/c" <?= ($old['pangkat_golongan'] ?? '') == 'Juru, I/c' ? 'selected' : '' ?>>Juru, I/c</option>
+                                            <option value="Juru Tingkat I, I/d" <?= ($old['pangkat_golongan'] ?? '') == 'Juru Tingkat I, I/d' ? 'selected' : '' ?>>Juru Tingkat I, I/d</option>
+                                            <option value="Pengatur Muda, II/a" <?= ($old['pangkat_golongan'] ?? '') == 'Pengatur Muda, II/a' ? 'selected' : '' ?>>Pengatur Muda, II/a</option>
+                                            <option value="Pengatur Muda Tingkat I, II/b" <?= ($old['pangkat_golongan'] ?? '') == 'Pengatur Muda Tingkat I, II/b' ? 'selected' : '' ?>>Pengatur Muda Tingkat I, II/b</option>
+                                            <option value="Pengatur Muda, II/c" <?= ($old['pangkat_golongan'] ?? '') == 'Pengatur Muda, II/c' ? 'selected' : '' ?>>Pengatur Muda, II/c</option>
+                                            <option value="Pengatur Muda, II/d" <?= ($old['pangkat_golongan'] ?? '') == 'Pengatur Muda, II/d' ? 'selected' : '' ?>>Pengatur Muda, II/d</option>
+                                            <option value="Penata Muda, III/a" <?= ($old['pangkat_golongan'] ?? '') == 'Penata Muda, III/a' ? 'selected' : '' ?>>Penata Muda, III/a</option>
+                                            <option value="Penata Muda Tingkat I, III/b" <?= ($old['pangkat_golongan'] ?? '') == 'Penata Muda Tingkat I, III/b' ? 'selected' : '' ?>>Penata Muda Tingkat I, III/b</option>
+                                            <option value="Penata, III/c" <?= ($old['pangkat_golongan'] ?? '') == 'Penata, III/c' ? 'selected' : '' ?>>Penata, III/c</option>
+                                            <option value="Penata Tingkat I, III/d" <?= ($old['pangkat_golongan'] ?? '') == 'Penata Tingkat I, III/d' ? 'selected' : '' ?>>Penata Tingkat I, III/d</option>
+                                            <option value="Pembina, IV/a" <?= ($old['pangkat_golongan'] ?? '') == 'Pembina, IV/a' ? 'selected' : '' ?>>Pembina, IV/a</option>
+                                            <option value="Pembina Tingkat I, IV/b" <?= ($old['pangkat_golongan'] ?? '') == 'Pembina Tingkat I, IV/b' ? 'selected' : '' ?>>Pembina Tingkat I, IV/b</option>
+                                            <option value="Pembina Utama Muda, IV/c" <?= ($old['pangkat_golongan'] ?? '') == 'Pembina Utama Muda, IV/c' ? 'selected' : '' ?>>Pembina Utama Muda, IV/c</option>
+                                            <option value="Pembina Utama Madya, IV/d" <?= ($old['pangkat_golongan'] ?? '') == 'Pembina Utama Madya, IV/d' ? 'selected' : '' ?>>Pembina Utama Madya, IV/d</option>
+                                            <option value="Pembina Utama, IV/e" <?= ($old['pangkat_golongan'] ?? '') == 'Pembina Utama, IV/e' ? 'selected' : '' ?>>Pembina Utama, IV/e</option>
                                         </select>
-                                        <select class="form-select" name="pangkat_golongan" id="pangkat_golongan_pppk">
-                                            <option value="" disabled selected>-- Pilih Golongan P3K --</option>
-                                            <option value="P3K/V">P3K/V</option>
-                                            <option value="P3K/VI">P3K/VI</option>
-                                            <option value="P3K/VII">P3K/VII</option>
-                                            <option value="P3K/VIII">P3K/VIII</option>
-                                            <option value="P3K/IX">P3K/IX</option>
-                                            <option value="P3K/X">P3K/X</option>
-                                            <option value="P3K/XI">P3K/XI</option>
-                                            <option value="P3K/XII">P3K/XII</option>
-                                            <option value="P3K/XIII">P3K/XIII</option>
-                                            <option value="P3K/XIV">P3K/XIV</option>
-                                            <option value="P3K/XV">P3K/XV</option>
-                                            <option value="P3K/XVI">P3K/XVI</option>
-                                            <option value="P3K/XVII">P3K/XVII</option>
+                                        <select class="form-select <?= isset($errors['pangkat_golongan']) ? 'is-invalid' : '' ?>" name="pangkat_golongan" id="pangkat_golongan_pppk">
+                                            <option value="" disabled <?= empty($old['pangkat_golongan']) ? 'selected' : '' ?>>-- Pilih Golongan P3K --</option>
+                                            <option value="P3K/V" <?= ($old['pangkat_golongan'] ?? '') == 'P3K/V' ? 'selected' : '' ?>>P3K/V</option>
+                                            <option value="P3K/VI" <?= ($old['pangkat_golongan'] ?? '') == 'P3K/VI' ? 'selected' : '' ?>>P3K/VI</option>
+                                            <option value="P3K/VII" <?= ($old['pangkat_golongan'] ?? '') == 'P3K/VII' ? 'selected' : '' ?>>P3K/VII</option>
+                                            <option value="P3K/VIII" <?= ($old['pangkat_golongan'] ?? '') == 'P3K/VIII' ? 'selected' : '' ?>>P3K/VIII</option>
+                                            <option value="P3K/IX" <?= ($old['pangkat_golongan'] ?? '') == 'P3K/IX' ? 'selected' : '' ?>>P3K/IX</option>
+                                            <option value="P3K/X" <?= ($old['pangkat_golongan'] ?? '') == 'P3K/X' ? 'selected' : '' ?>>P3K/X</option>
+                                            <option value="P3K/XI" <?= ($old['pangkat_golongan'] ?? '') == 'P3K/XI' ? 'selected' : '' ?>>P3K/XI</option>
+                                            <option value="P3K/XII" <?= ($old['pangkat_golongan'] ?? '') == 'P3K/XII' ? 'selected' : '' ?>>P3K/XII</option>
+                                            <option value="P3K/XIII" <?= ($old['pangkat_golongan'] ?? '') == 'P3K/XIII' ? 'selected' : '' ?>>P3K/XIII</option>
+                                            <option value="P3K/XIV" <?= ($old['pangkat_golongan'] ?? '') == 'P3K/XIV' ? 'selected' : '' ?>>P3K/XIV</option>
+                                            <option value="P3K/XV" <?= ($old['pangkat_golongan'] ?? '') == 'P3K/XV' ? 'selected' : '' ?>>P3K/XV</option>
+                                            <option value="P3K/XVI" <?= ($old['pangkat_golongan'] ?? '') == 'P3K/XVI' ? 'selected' : '' ?>>P3K/XVI</option>
+                                            <option value="P3K/XVII" <?= ($old['pangkat_golongan'] ?? '') == 'P3K/XVII' ? 'selected' : '' ?>>P3K/XVII</option>
                                         </select>
+                                        <div class="invalid-feedback">
+                                            <?= $errors['pangkat_golongan'] ?? '' ?>
+                                        </div>
                                     </div>
                                     <div class="mb-3 row">
                                         <div class="col">
                                             <div class="row">
                                                 <div class="col">
                                                     <label class="form-label required">Jabatan</label>
-                                                    <select class="form-select" name="jabatan" id="jabatan" placeholder="-- Pilih Jabatan --" autocomplete="off">
-                                                        <option value="" disabled selected>-- Pilih Jabatan --</option>
-                                                        <option value="Analis Kemitraan">Analis Kemitraan</option>
-                                                        <option value="Analis Sumber Daya Manusia Aparatur Ahli Pertama">Analis Sumber Daya Manusia Aparatur Ahli Pertama</option>
-                                                        <option value="Arsiparis Ahli Pertama">Arsiparis Ahli Pertama</option>
-                                                        <option value="Arsiparis Mahir">Arsiparis Mahir</option>
-                                                        <option value="Cleaning Service">Cleaning Service</option>
-                                                        <option value="Kepala BPMP Provinsi Bali">Kepala BPMP Provinsi Bali</option>
-                                                        <option value="Kepala Sub Bagian Umum">Kepala Sub Bagian Umum</option>
-                                                        <option value="Penelaah Informasi dan Komunikasi Publik">Penelaah Informasi dan Komunikasi Publik</option>
-                                                        <option value="Penelaah Teknis Kebijakan">Penelaah Teknis Kebijakan</option>
-                                                        <option value="Pengadministrasi Keuangan">Pengadministrasi Keuangan</option>
-                                                        <option value="Pengadministrasi Perkantoran">Pengadministrasi Perkantoran</option>
-                                                        <option value="Pengelola Sistem dan Teknologi Informasi">Pengelola Sistem dan Teknologi Informasi</option>
-                                                        <option value="Pengolah Data dan Informasi">Pengolah Data dan Informasi</option>
-                                                        <option value="Pranata Komputer Ahli Pertama">Pranata Komputer Ahli Pertama</option>
-                                                        <option value="Satpam">Satpam</option>
-                                                        <option value="Sopir">Sopir</option>
-                                                        <option value="Teknisi Sarana dan Prasarana">Teknisi Sarana dan Prasarana</option>
-                                                        <option value="Tenaga Administrasi">Tenaga Administrasi</option>
-                                                        <option value="Tukang Kebun">Tukang Kebun</option>
-                                                        <option value="Widyaprada Ahli Madya">Widyaprada Ahli Madya</option>
-                                                        <option value="Widyaprada Ahli Muda">Widyaprada Ahli Muda</option>
-                                                        <option value="Widyaprada Ahli Pertama">Widyaprada Ahli Pertama</option>
+                                                    <select class="form-select <?= isset($errors['jabatan']) ? 'is-invalid' : '' ?>" name="jabatan" id="jabatan" placeholder="-- Pilih Jabatan --" autocomplete="off">
+                                                        <option value="" disabled <?= empty($old['jabatan']) ? 'selected' : '' ?>>-- Pilih Jabatan --</option>
+                                                        <option value="Analis Kemitraan" <?= ($old['jabatan'] ?? '') == 'Analis Kemitraan' ? 'selected' : '' ?>>Analis Kemitraan</option>
+                                                        <option value="Analis Sumber Daya Manusia Aparatur Ahli Pertama" <?= ($old['jabatan'] ?? '') == 'Analis Sumber Daya Manusia Aparatur Ahli Pertama' ? 'selected' : '' ?>>Analis Sumber Daya Manusia Aparatur Ahli Pertama</option>
+                                                        <option value="Arsiparis Ahli Pertama" <?= ($old['jabatan'] ?? '') == 'Arsiparis Ahli Pertama' ? 'selected' : '' ?>>Arsiparis Ahli Pertama</option>
+                                                        <option value="Arsiparis Mahir" <?= ($old['jabatan'] ?? '') == 'Arsiparis Mahir' ? 'selected' : '' ?>>Arsiparis Mahir</option>
+                                                        <option value="Cleaning Service" <?= ($old['jabatan'] ?? '') == 'Cleaning Service' ? 'selected' : '' ?>>Cleaning Service</option>
+                                                        <option value="Kepala BPMP Provinsi Bali" <?= ($old['jabatan'] ?? '') == 'Kepala BPMP Provinsi Bali' ? 'selected' : '' ?>>Kepala BPMP Provinsi Bali</option>
+                                                        <option value="Kepala Sub Bagian Umum" <?= ($old['jabatan'] ?? '') == 'Kepala Sub Bagian Umum' ? 'selected' : '' ?>>Kepala Sub Bagian Umum</option>
+                                                        <option value="Penelaah Informasi dan Komunikasi Publik" <?= ($old['jabatan'] ?? '') == 'Penelaah Informasi dan Komunikasi Publik' ? 'selected' : '' ?>>Penelaah Informasi dan Komunikasi Publik</option>
+                                                        <option value="Penelaah Teknis Kebijakan" <?= ($old['jabatan'] ?? '') == 'Penelaah Teknis Kebijakan' ? 'selected' : '' ?>>Penelaah Teknis Kebijakan</option>
+                                                        <option value="Pengadministrasi Keuangan" <?= ($old['jabatan'] ?? '') == 'Pengadministrasi Keuangan' ? 'selected' : '' ?>>Pengadministrasi Keuangan</option>
+                                                        <option value="Pengadministrasi Perkantoran" <?= ($old['jabatan'] ?? '') == 'Pengadministrasi Perkantoran' ? 'selected' : '' ?>>Pengadministrasi Perkantoran</option>
+                                                        <option value="Pengelola Sistem dan Teknologi Informasi" <?= ($old['jabatan'] ?? '') == 'Pengelola Sistem dan Teknologi Informasi' ? 'selected' : '' ?>>Pengelola Sistem dan Teknologi Informasi</option>
+                                                        <option value="Pengolah Data dan Informasi" <?= ($old['jabatan'] ?? '') == 'Pengolah Data dan Informasi' ? 'selected' : '' ?>>Pengolah Data dan Informasi</option>
+                                                        <option value="Pranata Komputer Ahli Pertama" <?= ($old['jabatan'] ?? '') == 'Pranata Komputer Ahli Pertama' ? 'selected' : '' ?>>Pranata Komputer Ahli Pertama</option>
+                                                        <option value="Satpam" <?= ($old['jabatan'] ?? '') == 'Satpam' ? 'selected' : '' ?>>Satpam</option>
+                                                        <option value="Sopir" <?= ($old['jabatan'] ?? '') == 'Sopir' ? 'selected' : '' ?>>Sopir</option>
+                                                        <option value="Teknisi Sarana dan Prasarana" <?= ($old['jabatan'] ?? '') == 'Teknisi Sarana dan Prasarana' ? 'selected' : '' ?>>Teknisi Sarana dan Prasarana</option>
+                                                        <option value="Tenaga Administrasi" <?= ($old['jabatan'] ?? '') == 'Tenaga Administrasi' ? 'selected' : '' ?>>Tenaga Administrasi</option>
+                                                        <option value="Tukang Kebun" <?= ($old['jabatan'] ?? '') == 'Tukang Kebun' ? 'selected' : '' ?>>Tukang Kebun</option>
+                                                        <option value="Widyaprada Ahli Madya" <?= ($old['jabatan'] ?? '') == 'Widyaprada Ahli Madya' ? 'selected' : '' ?>>Widyaprada Ahli Madya</option>
+                                                        <option value="Widyaprada Ahli Muda" <?= ($old['jabatan'] ?? '') == 'Widyaprada Ahli Muda' ? 'selected' : '' ?>>Widyaprada Ahli Muda</option>
+                                                        <option value="Widyaprada Ahli Pertama" <?= ($old['jabatan'] ?? '') == 'Widyaprada Ahli Pertama' ? 'selected' : '' ?>>Widyaprada Ahli Pertama</option>
                                                     </select>
+                                                    <div class="invalid-feedback">
+                                                        <?= $errors['jabatan'] ?? '' ?>
+                                                    </div>
                                                 </div>
                                                 <div class="col-3">
                                                     <label class="form-label">Grade</label>
-                                                    <select class="form-select" name="grade" id="grade">
-                                                        <option value="" disabled selected>Pilih</option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                        <option value="10">10</option>
-                                                        <option value="11">11</option>
-                                                        <option value="12">12</option>
-                                                        <option value="13">13</option>
-                                                        <option value="14">14</option>
-                                                        <option value="15">15</option>
-                                                        <option value="16">16</option>
-                                                        <option value="17">17</option>
+                                                    <select class="form-select <?= isset($errors['grade']) ? 'is-invalid' : '' ?>" name="grade" id="grade">
+                                                        <option value="" disabled <?= empty($old['grade']) ? 'selected' : '' ?>>Pilih</option>
+                                                        <option value="1" <?= ($old['grade'] ?? '') == '1' ? 'selected' : '' ?>>1</option>
+                                                        <option value="2" <?= ($old['grade'] ?? '') == '2' ? 'selected' : '' ?>>2</option>
+                                                        <option value="3" <?= ($old['grade'] ?? '') == '3' ? 'selected' : '' ?>>3</option>
+                                                        <option value="4" <?= ($old['grade'] ?? '') == '4' ? 'selected' : '' ?>>4</option>
+                                                        <option value="5" <?= ($old['grade'] ?? '') == '5' ? 'selected' : '' ?>>5</option>
+                                                        <option value="6" <?= ($old['grade'] ?? '') == '6' ? 'selected' : '' ?>>6</option>
+                                                        <option value="7" <?= ($old['grade'] ?? '') == '7' ? 'selected' : '' ?>>7</option>
+                                                        <option value="8" <?= ($old['grade'] ?? '') == '8' ? 'selected' : '' ?>>8</option>
+                                                        <option value="9" <?= ($old['grade'] ?? '') == '9' ? 'selected' : '' ?>>9</option>
+                                                        <option value="10" <?= ($old['grade'] ?? '') == '10' ? 'selected' : '' ?>>10</option>
+                                                        <option value="11" <?= ($old['grade'] ?? '') == '11' ? 'selected' : '' ?>>11</option>
+                                                        <option value="12" <?= ($old['grade'] ?? '') == '12' ? 'selected' : '' ?>>12</option>
+                                                        <option value="13" <?= ($old['grade'] ?? '') == '13' ? 'selected' : '' ?>>13</option>
+                                                        <option value="14" <?= ($old['grade'] ?? '') == '14' ? 'selected' : '' ?>>14</option>
+                                                        <option value="15" <?= ($old['grade'] ?? '') == '15' ? 'selected' : '' ?>>15</option>
+                                                        <option value="16" <?= ($old['grade'] ?? '') == '16' ? 'selected' : '' ?>>16</option>
+                                                        <option value="17" <?= ($old['grade'] ?? '') == '17' ? 'selected' : '' ?>>17</option>
                                                     </select>
+                                                    <div class="invalid-feedback">
+                                                        <?= $errors['grade'] ?? '' ?>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">No. SK Pengangkatan</label>
-                                        <input type="text" name="nomor_sk_pengangkatan" id="nomor_sk_pengangkatan" class="form-control" placeholder="">
+                                        <input
+                                            type="text"
+                                            name="nomor_sk_pengangkatan"
+                                            id="nomor_sk_pengangkatan"
+                                            placeholder="No. SK Pengangkatan..."
+                                            value="<?= $old['nomor_sk_pengangkatan'] ?? '' ?>"
+                                            class="form-control <?= isset($errors['nomor_sk_pengangkatan']) ? 'is-invalid' : '' ?>" autocomplete="off">
+                                        <div class="invalid-feedback">
+                                            <?= $errors['nomor_sk_pengangkatan'] ?? '' ?>
+                                        </div>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">No. SK SPMT</label>
-                                        <input type="text" name="nomor_sk_spmt" id="nomor_sk_spmt" class="form-control" placeholder="">
+                                        <input
+                                            type="text"
+                                            name="nomor_sk_spmt"
+                                            id="nomor_sk_spmt"
+                                            placeholder="No. SK SPMT..."
+                                            value="<?= $old['nomor_sk_spmt'] ?? '' ?>"
+                                            class="form-control <?= isset($errors['nomor_sk_spmt']) ? 'is-invalid' : '' ?>" autocomplete="off">
+                                        <div class="invalid-feedback">
+                                            <?= $errors['nomor_sk_spmt'] ?? '' ?>
+                                        </div>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">File SK Pengangkatan</label>
                                         <div class="col">
-                                            <input type="file" class="form-control" name="file_sk_pengangkatan" id="file_sk_pengangkatan" accept=".pdf, .jpg, .png">
+                                            <input type="file" class="form-control <?= isset($errors['file_sk_pengangkatan']) ? 'is-invalid' : '' ?>" name="file_sk_pengangkatan" id="file_sk_pengangkatan" accept=".pdf, .jpg, .png">
                                             <small class="form-hint">
                                                 Format: pdf maks 5MB
                                             </small>
+                                            <div class="invalid-feedback">
+                                                <?= $errors['file_sk_pengangkatan'] ?? '' ?>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">File SK SPMT</label>
                                         <div class="col">
-                                            <input type="file" class="form-control" name="file_sk_spmt" id="file_sk_spmt" accept=".pdf, .jpg, .png">
+                                            <input type="file" class="form-control <?= isset($errors['file_sk_spmt']) ? 'is-invalid' : '' ?>" name="file_sk_spmt" id="file_sk_spmt" accept=".pdf, .jpg, .png">
                                             <small class="form-hint">
                                                 Format: pdf maks 5MB
                                             </small>
+                                            <div class="invalid-feedback">
+                                                <?= $errors['file_sk_spmt'] ?? '' ?>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -514,18 +655,8 @@ ob_start();
                     icon: 'success',
                     title: 'Berhasil!',
                     text: message,
-                    showCancelButton: true,
-                    confirmButtonText: 'Input Lagi',
-                    cancelButtonText: 'Lihat Daftar',
-                    reverseButtons: true
-                }).then((result) => {
-
-                    if (result.isConfirmed) {
-                        window.location = "?page=tambah-pegawai";
-                    } else {
-                        window.location = "?page=pegawai";
-                    }
-
+                    timer: 1000,
+                    showConfirmButton: false,
                 });
 
             } else {
@@ -533,6 +664,7 @@ ob_start();
                 Swal.fire({
                     icon: 'error',
                     title: 'Gagal!',
+                    timer: 1500,
                     html: message
                 });
 
@@ -543,52 +675,6 @@ ob_start();
 
     <?php unset($_SESSION['flash']); ?>
 <?php endif; ?>
-
-
-<script>
-    document.querySelector("form").addEventListener("submit", function(e) {
-
-        const judul = document.getElementById("judul_informasi");
-        const ringkasan = document.getElementById("ringkasan");
-        const jenis = document.getElementById("jenis_informasi");
-        const bentuk = document.getElementById("bentuk_informasi");
-        const tanggal = document.getElementById("tanggal_pembuatan");
-        const file = document.getElementById("file");
-
-        let errors = [];
-
-        if (!judul.value.trim())
-            errors.push("Judul wajib diisi");
-
-        if (ringkasan.value.trim().length < 10)
-            errors.push("Ringkasan minimal 10 karakter");
-
-        if (!jenis.value)
-            errors.push("Pilih jenis informasi");
-
-        if (!bentuk.value)
-            errors.push("Pilih bentuk informasi");
-
-        if (!tanggal.value)
-            errors.push("Tanggal wajib diisi");
-
-        if (file.files.length === 0)
-            errors.push("Minimal upload 1 file");
-
-        if (errors.length > 0) {
-
-            e.preventDefault();
-
-            Swal.fire({
-                icon: 'error',
-                title: 'Validasi Gagal',
-                html: errors.join("<br>")
-            });
-
-        }
-
-    });
-</script>
 
 <script>
     function previewImage(input) {
@@ -614,14 +700,7 @@ ob_start();
         const pangkatPNS = document.getElementById("pangkat_golongan_pns");
         const pangkatPPPK = document.getElementById("pangkat_golongan_pppk");
 
-        // default saat halaman load
-        pangkatPNS.style.display = "block";
-        pangkatPPPK.style.display = "none";
-        pangkatPNS.disabled = true;
-
-        statusASN.addEventListener("change", function() {
-
-            const val = this.value;
+        function handleStatusASN(val) {
 
             // reset
             nip.disabled = false;
@@ -650,14 +729,20 @@ ob_start();
 
             } else {
 
-                // jika kembali ke kosong
                 pangkatPNS.style.display = "block";
                 pangkatPPPK.style.display = "none";
                 pangkatPNS.disabled = true;
 
             }
+        }
 
+        // saat user ganti status
+        statusASN.addEventListener("change", function() {
+            handleStatusASN(this.value);
         });
+
+        // saat halaman pertama kali load (untuk old value)
+        handleStatusASN(statusASN.value);
 
     });
 </script>

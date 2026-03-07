@@ -108,6 +108,10 @@ class UserController extends BaseController
 
         $errors = [];
 
+        if (empty($_POST['username'])) {
+            $errors['username'] = "Username wajib diisi";
+        }
+
         if (empty($_POST['nama_lengkap'])) {
             $errors['nama_lengkap'] = "Nama wajib diisi";
         }

@@ -500,10 +500,6 @@ class PublikasiController extends BaseController
 
         $dir = realpath(__DIR__ . '/../uploads') . '/publikasi/';
 
-        if (!is_dir($dir) && !mkdir($dir, 0755, true)) {
-            throw new Exception("Folder upload gagal dibuat");
-        }
-
         foreach ($files['file']['name'] as $i => $nama) {
 
             if (!$nama) continue;
