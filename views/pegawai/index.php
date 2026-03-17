@@ -110,18 +110,35 @@ ob_start();
                                             <td class="">
                                                 <?= htmlspecialchars($d['umur'] ?? '-') ?>
                                             </td>
-                                            <td class="">
+                                            <td>
                                                 <?php
-                                                if ($d['status_pensiun'] === 'BERLAKU') {
+                                                $status = $d['status_pensiun'];
+                                                $bg = 'bg-secondary-lt';
+
+                                                if (strpos($status, 'Sudah pensiun') !== false) {
+                                                    $bg = 'bg-secondary-lt';
+                                                } elseif (strpos($status, '> 5 tahun') !== false) {
                                                     $bg = 'bg-success-lt';
-                                                } else {
+                                                } elseif (strpos($status, 'th') !== false) {
+                                                    $bg = 'bg-primary-lt';
+                                                } elseif (strpos($status, 'bln') !== false) {
                                                     $bg = 'bg-danger-lt';
                                                 }
                                                 ?>
-                                                <span class="badge <?= $bg ?>"><?= $d['status_pensiun'] ?></span>
+
+                                                <span class="badge <?= $bg ?>">
+                                                    <?= $status ?>
+                                                </span>
                                             </td>
                                             <td>
                                                 <div class="btn-group w-100">
+                                                    <a href="<?= url('?page=edit-pegawai&id=' . $d["id"]) ?>" class="text-primary me-1">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-eye" data-bs-toggle="tooltip" data-bs-placement="top" title="Detail">
+                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                            <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                                                            <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
+                                                        </svg>
+                                                    </a>
                                                     <a href="<?= url('?page=edit-pegawai&id=' . $d["id"]) ?>" class="text-yellow me-1">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
                                                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -175,7 +192,7 @@ ob_start();
                     pageLength: {},
                     div: {
                         html: `
-                        <a href="<?= url('?page=dip') ?>" class="btn btn-primary btn-sm btn-6 btn-icon">
+                        <a href="<?= url('?page=pegawai') ?>" class="btn btn-primary btn-sm btn-6 btn-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-refresh">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                 <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"></path>
@@ -204,6 +221,40 @@ ob_start();
 </script>
 
 <script>
+    function confirmDelete(url, id, label = '') {
+
+        Swal.fire({
+            title: 'Yakin ingin menghapus?',
+            html: label ?
+                `Data <strong>${label}</strong> akan dihapus permanen` : 'Data akan dihapus permanen',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, hapus',
+            cancelButtonText: 'Batal',
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = url;
+
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'id';
+                input.value = id;
+
+                form.appendChild(input);
+                document.body.appendChild(form);
+                form.submit();
+            }
+            timer: 5000;
+
+        });
+    }
+</script>
+
+<script>
     document.addEventListener("DOMContentLoaded", function() {
         const spinner = document.getElementById("spinner");
         const pageContent = document.getElementById("page-content");
@@ -215,18 +266,23 @@ ob_start();
     });
 </script>
 
-<script>
-    document.querySelector('#filter-jenis').addEventListener('change', function() {
-        const val = this.value;
-        const list = window.tabler_list["advanced-table"];
+<?php if (isset($_SESSION['flash'])): ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
 
-        if (val === '') {
-            list.search('');
-        } else {
-            list.search(val, ['sort-status-hid']);
-        }
-    });
-</script>
+            Swal.fire({
+                icon: '<?= $_SESSION['flash']['status'] ?>',
+                title: <?= $_SESSION['flash']['status'] === 'success'
+                            ? "'Berhasil!'"
+                            : "'Gagal!'" ?>,
+                text: <?= json_encode($_SESSION['flash']['message']) ?>,
+                timer: 1000
+            });
+
+        });
+    </script>
+    <?php unset($_SESSION['flash']); ?>
+<?php endif; ?>
 
 
 <?php

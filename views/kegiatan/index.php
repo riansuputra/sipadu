@@ -1,33 +1,62 @@
 <?php
+// ================================
+// DASHBOARD STAFF
+// ================================
 
-$title = "DIP";
+// Judul
+$title = "Kegiatan";
 
+
+// Mulai buffer konten
 ob_start();
 ?>
 
 
 <?php
+// echo '<pre>';
+// print_r($data);
+// foreach ($data as $dt => $d):
+//     if ($d['files']) {
 
+//         $files = explode('##', $d['files']);
 
-$tahun = $_GET['tahun'] ?? null;
-$jenis = $_GET['jenis'] ?? null;
+//         foreach ($files as $f) {
+
+//             list($id, $nama, $path) = explode('|', $f);
+
+//             echo "<a href='$path'>$nama</a><br>";
+//         }
+//     }
+
+// endforeach;
+
+// echo '</pre>';
+$tanggalMulai   = $_GET['tanggal_mulai'] ?? null;
+$tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
+$jenis          = $_GET['jenis'] ?? null;
 
 $deskripsi = 'Menampilkan seluruh data';
 
-if ($tahun || $jenis) {
+if ($tanggalMulai || $tanggalSelesai || $jenis) {
 
     $parts = [];
 
-    if ($tahun) {
-        $parts[] = "tahun '<strong>" . htmlspecialchars($tahun) . "</strong>'";
+    if ($tanggalMulai && $tanggalSelesai) {
+        $parts[] = "tanggal <strong>" . htmlspecialchars($tanggalMulai) .
+            "</strong> sampai <strong>" . htmlspecialchars($tanggalSelesai) . "</strong>";
+    } elseif ($tanggalMulai) {
+        $parts[] = "tanggal <strong>" . htmlspecialchars($tanggalMulai) . "</strong>";
     }
 
     if ($jenis) {
-        $parts[] = "jenis informasi '<strong>" . htmlspecialchars(ucwords(strtolower($jenis))) . "</strong>'";
+        $parts[] = "jenis informasi '<strong>" .
+            htmlspecialchars(ucwords(strtolower($jenis))) .
+            "</strong>'";
     }
 
-    $deskripsi = 'Filter data DIP ' . implode(' dan ', $parts);
+    $deskripsi = 'Filter data publikasi ' . implode(' dan ', $parts);
 }
+
 ?>
 
 <div class="page-header d-print-none" aria-label="Page header">
@@ -35,21 +64,21 @@ if ($tahun || $jenis) {
         <div class="row g-2 align-items-center">
             <div class="col">
                 <!-- Page pre-title -->
-                <div class="page-pretitle">DIP</div>
-                <h2 class="page-title">Daftar DIP</h2>
+                <div class="page-pretitle">Kegiatan</div>
+                <h2 class="page-title">Daftar Kegiatan</h2>
             </div>
             <!-- Page title actions -->
             <div class="col-auto ms-auto d-print-none">
                 <div class="btn-list">
-                    <a href="<?= url('/?page=tambah-dip') ?>" class="btn btn-primary btn-5 d-none d-sm-inline-block">
+                    <a href="<?= url('?page=tambah-publikasi') ?>" class="btn btn-primary btn-5 d-none d-sm-inline-block">
 
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">
                             <path d="M12 5l0 14"></path>
                             <path d="M5 12l14 0"></path>
                         </svg>
-                        Tambah DIP
+                        Tambah Kegiatan
                     </a>
-                    <a href="<?= url('/?page=tambah-dip') ?>" class="btn btn-primary btn-6 d-sm-none btn-icon">
+                    <a href="<?= url('?page=tambah-publikasi') ?>" class="btn btn-primary btn-6 d-sm-none btn-icon">
 
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">
                             <path d="M12 5l0 14"></path>
@@ -65,27 +94,84 @@ if ($tahun || $jenis) {
 <div class="page-body" id="page-content" style="display:none;">
 
     <div class="container-xl">
-        <div class="row row-deck row-cards ">
+        <div class="row row-cards ">
+
+            <div class="col-12">
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="col-sm-12">
+
+                            <form method="get">
+                                <div class="row">
+
+                                    <input type="hidden" name="page" value="publikasi">
+
+                                    <div class="col-lg-2">
+                                        <label class="form-label">Tanggal Mulai : </label>
+                                        <input type="date"
+                                            name="tanggal_mulai"
+                                            class="form-control"
+                                            value="<?= htmlspecialchars($_GET['tanggal_mulai'] ?? '') ?>">
+                                    </div>
+
+                                    <div class="col-lg-2">
+                                        <label class="form-label">Tanggal Selesai : </label>
+                                        <input type="date"
+                                            name="tanggal_selesai"
+                                            class="form-control"
+                                            value="<?= htmlspecialchars($_GET['tanggal_selesai'] ?? '') ?>">
+                                    </div>
+
+
+                                    <div class="col-auto ms-auto">
+                                        <label class="form-label">&nbsp;</label>
+                                        <button class="btn btn-primary">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-search">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+                                                <path d="M21 21l-6 -6" />
+                                            </svg>
+                                            Filter
+                                        </button>
+                                        <a href="<?= url('?page=publikasi') ?>" class="btn btn-secondary">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-refresh">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"></path>
+                                                <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"></path>
+                                            </svg>
+                                            Reset
+                                        </a>
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
 
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
+
                         <div class="table-responsive">
-                            <table id="dipTable" class="table table-vcenter table-selectable table-bordered table-striped">
+                            <table id="publikasiTable" class="table table-vcenter table-selectable table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th style="width:1%;">No</th>
-                                        <th style="width:50%;">Nama Informasi</th>
-                                        <th class="text-center" style="width:1%;">Tahun</th>
-                                        <th style="width:1%;">Jenis Informasi</th>
-                                        <th style="width:1%;">Retensi</th>
-                                        <th style="width:1%;">Bentuk</th>
-                                        <th style="width:1%;">File</th>
-                                        <th style="width:1%;">Aksi</th>
+                                        <th class="w-1">No</th>
+                                        <th class="text-center">Judul</th>
+                                        <th class="w-1 text-center">Unit/Tim</th>
+                                        <th class="w-1 text-center">Status <br> Publikasi</th>
+                                        <th class="w-1 text-center">Tanggal <br> Kegiatan</th>
+                                        <th class="w-1 text-center">Tanggal Dibuat <br>& Diperbarui</th>
+                                        <th class="w-1">File</th>
+                                        <th class="w-1">Aksi</th>
                                     </tr>
                                     <tr id="filterRow">
                                         <th></th>
-                                        <th><input type="text" placeholder="Cari nama..." class="form-control w-100 h5 m-0"></th>
+                                        <th><input type="text" placeholder="Cari judul..." class="form-control w-100 h5 m-0"></th>
                                         <th></th>
                                         <th></th>
                                         <th></th>
@@ -97,51 +183,35 @@ if ($tahun || $jenis) {
                                 <tbody class="table-tbody">
                                     <?php foreach ($data as $dt => $d): ?>
                                         <tr>
-                                            <td class=" text-center">
+                                            <td class="text-center">
                                                 <?= $dt + 1 ?>
                                             </td>
                                             <td class="">
-                                                <?= htmlspecialchars($d["nama_informasi"]) ?>
+                                                <?= htmlspecialchars($d['judul'] ?? '-') ?>
                                             </td>
-                                            <td class="text-center">
-                                                <?= htmlspecialchars($d["tahun_pembuatan"]) ?>
-                                            </td>
-                                            <td data-search="<?= $d['jenis_informasi']; ?>" class="">
-                                                <?php if ($d["jenis_informasi"] === "berkala") {
-                                                    $bg = "bg-blue text-blue-fg";
-                                                    $text = 'Berkala';
-                                                } elseif ($d["jenis_informasi"] === "serta_merta") {
-                                                    $bg = "bg-red text-red-fg";
-                                                    $text = 'Serta Merta';
-                                                } elseif ($d["jenis_informasi"] === "setiap_saat") {
-                                                    $bg = "bg-green text-green-fg";
-                                                    $text = 'Setiap Saat';
-                                                } else {
-                                                    $bg = "bg-yellow text-yellow-fg";
-                                                    $text = 'Dikecualikan';
-                                                } ?>
-                                                <span class="badge <?= $bg ?>"><?= $text ?></span>
-                                            </td>
+
                                             <td class="">
-                                                <?= htmlspecialchars($d["retensi_arsip"]) ?>
+                                                <?= htmlspecialchars($d['nama_tim'] ?? '-') ?>
                                             </td>
-                                            <td data-search="<?= $d['bentuk_informasi']; ?>" class="">
-                                                <?php if ($d["bentuk_informasi"] === "hardcopy") {
-                                                    $badge =
-                                                        '<span class="badge badge-outline text-dark">Hardcopy</span>';
-                                                } elseif ($d["bentuk_informasi"] === "softcopy") {
-                                                    $badge =
-                                                        '<span class="badge badge-outline text-dark ">Softcopy&nbsp</span>';
+                                            <td class=" text-nowrap">
+                                                <?php
+                                                if ($d['is_published'] === 1) {
+                                                    $bg = 'success';
+                                                    $text = 'Sudah';
                                                 } else {
-                                                    $badge =
-                                                        '<span class="badge badge-outline text-dark">Hardcopy<br>Softcopy</span>';
+                                                    $bg = 'secondary';
+                                                    $text = 'Belum';
                                                 }
                                                 ?>
-                                                <div class="badges-list">
-                                                    <?= $badge ?>
-                                                </div>
+                                                <span class="badge bg-<?= $bg ?> me-1"></span><?= $text ?? '-' ?>
                                             </td>
                                             <td class="">
+                                                <span class="badge bg-primary-lt"><?= htmlspecialchars(date('d/m/Y', strtotime($d['tanggal_kegiatan'])) ?? '-') ?></span>
+                                            </td>
+                                            <td class="">
+                                                <span class="badge"><?= htmlspecialchars(date('d/m/Y', strtotime($d['tanggal_kegiatan'])) ?? '-') ?></span> <br> <span class="badge bg-success-lt"><?= htmlspecialchars(date('d/m/Y', strtotime($d['tanggal_kegiatan'])) ?? '-') ?></span>
+                                            </td>
+                                            <td class="text-center">
                                                 <div class="btn-group">
                                                     <?php
                                                     $listFile = [];
@@ -277,7 +347,7 @@ if ($tahun || $jenis) {
                                                             <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
                                                         </svg>
                                                     </a>
-                                                    <a href="<?= url('?page=edit-dip&id=' . $d["id"]) ?>" class="text-yellow me-1">
+                                                    <a href="<?= url('?page=edit-publikasi&id=' . $d["id"]) ?>" class="text-yellow me-1">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
                                                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                             <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
@@ -287,9 +357,10 @@ if ($tahun || $jenis) {
                                                     </a>
                                                     <a class="text-red"
                                                         onclick="confirmDelete(
-                                                                '<?= url('?page=dip-delete') ?>',
+                                                                '<?= url('?page=publikasi-delete') ?>',
                                                                 '<?= $d['id'] ?>'
                                                             )">
+
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus">
                                                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                             <path d="M4 7l16 0" />
@@ -304,54 +375,41 @@ if ($tahun || $jenis) {
                                             </td>
                                         </tr>
 
-
-                                        <div class="modal fade" id="modal-detail-<?= $d['id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
+                                        <div class="modal modal-blur fade" id="modal-detail-<?= $d['id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
                                             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                                                 <div class="modal-content">
                                                     <div class="card-header">
-                                                        <h3 class="card-title">Detail DIP</h3>
+                                                        <h3 class="card-title">Detail Publikasi</h3>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                             aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
 
                                                         <dl class="row">
-                                                            <dt class="col-4 text-muted ">Nama Informasi</dt>
-                                                            <dt class="col-1  col-auto text-end">:</dt>
-                                                            <dd class="col-7 text-bold "><strong><?= $d['nama_informasi'] ?? '-' ?></strong></dd>
-                                                            <dt class="col-4 text-muted ">Unit Kerja yang Menyediakan</dt>
-                                                            <dt class="col-1  col-auto text-end">:</dt>
-                                                            <dd class="col-7 text-bold "><strong><?= $d['unit_penyedia'] ?? '-' ?></strong></dd>
-                                                            <dt class="col-4 text-muted ">Penanggung Jawab Informasi</dt>
-                                                            <dt class="col-1  col-auto text-end">:</dt>
-                                                            <dd class="col-7 text-bold "><strong><?= $d['penanggung_jawab'] ?? '-' ?></strong></dd>
-                                                            <dt class="col-4 text-muted ">Waktu dan Tempat Pembuatan</dt>
-                                                            <dt class="col-1  col-auto text-end">:</dt>
-                                                            <dd class="col-7 text-bold "><strong>Tahun <?= $d['tahun_pembuatan'] ?? '-' ?>, <?= $d['tempat_pembuatan'] ?? '-' ?></strong></dd>
-                                                            <dt class="col-4 text-muted ">Jenis Informasi</dt>
-                                                            <dt class="col-1  col-auto text-end">:</dt>
-                                                            <dd class="col-7 text-bold "><span class="badge <?= $bg ?>"><?= $text ?></span></dd>
-                                                            <dt class="col-4 text-muted ">Bentuk Informasi</dt>
-                                                            <dt class="col-1  col-auto text-end">:</dt>
-                                                            <dd class="col-7 text-bold ">
-                                                                <?php if ($d["bentuk_informasi"] === "hardcopy") {
-                                                                    $badge =
-                                                                        '<span class="badge bg-dark text-dark-fg">Hardcopy</span>';
-                                                                } elseif ($d["bentuk_informasi"] === "softcopy") {
-                                                                    $badge =
-                                                                        '<span class="badge badge-outline text-dark ">Softcopy</span>';
-                                                                } else {
-                                                                    $badge =
-                                                                        '<span class="badge bg-dark text-dark-fg">Hardcopy</span><span class="badge badge-outline text-dark ">Softcopy</span>';
-                                                                }
-                                                                ?>
-                                                                <div class="badges-list">
-                                                                    <?= $badge ?>
-                                                                </div>
-                                                            </dd>
-                                                            <dt class="col-4 text-muted ">Retensi Arsip</dt>
-                                                            <dt class="col-1  col-auto text-end">:</dt>
-                                                            <dd class="col-7 text-bold "><strong><?= $d['retensi_arsip'] ?? '-' ?></strong></dd>
+                                                            <dt class="col-4 text-muted mb-3">Judul</dt>
+                                                            <dt class="col-1 mb-3 col-auto text-end">:</dt>
+                                                            <dd class="col-7 text-bold mb-3"><strong><?= $d['judul'] ?? '-' ?></strong></dd>
+                                                            <dt class="col-4 text-muted mb-3">Deskripsi</dt>
+                                                            <dt class="col-1 mb-3 col-auto text-end">:</dt>
+                                                            <dd class="col-7 text-bold mb-3"><strong><?= $d['deskripsi'] ?? '-' ?></strong></dd>
+                                                            <dt class="col-4 text-muted mb-3">Tanggal</dt>
+                                                            <dt class="col-1 mb-3 col-auto text-end">:</dt>
+                                                            <dd class="col-7 text-bold mb-3"><strong><?= htmlspecialchars(date('d/m/Y', strtotime($d['tanggal_kegiatan'])) ?? '-') ?></strong></dd>
+                                                            <dt class="col-4 text-muted mb-3">Lokasi</dt>
+                                                            <dt class="col-1 mb-3 col-auto text-end">:</dt>
+                                                            <dd class="col-7 text-bold mb-3"><strong>Tahun <?= $d['lokasi'] ?? '-' ?></strong></dd>
+                                                            <dt class="col-4 text-muted mb-3">Jenis</dt>
+                                                            <dt class="col-1 mb-3 col-auto text-end">:</dt>
+                                                            <dd class="col-7 text-bold mb-3"><strong><?= $d['jenis'] ?></strong></dd>
+                                                            <dt class="col-4 text-muted mb-3">Penulis</dt>
+                                                            <dt class="col-1 mb-3 col-auto text-end">:</dt>
+                                                            <dd class="col-7 text-bold mb-3"><strong><?= $d['penulis'] ?? '-' ?></strong></dd>
+                                                            <dt class="col-4 text-muted mb-3">Kabupaten / Kota</dt>
+                                                            <dt class="col-1 mb-3 col-auto text-end">:</dt>
+                                                            <dd class="col-7 text-bold mb-3"><strong><?= $d['kabupaten'] ?? '-' ?></strong></dd>
+                                                            <dt class="col-4 text-muted mb-3">Link Media</dt>
+                                                            <dt class="col-1 mb-3 col-auto text-end">:</dt>
+                                                            <dd class="col-7 text-bold mb-3"><a href="<?= empty($d['link']) ? ''  : $d['link'] ?>"><?= empty($d['link']) ? ''  : $d['link'] ?></a></dd>
                                                             <dt class="col-4 text-muted">File</dt>
                                                             <dt class="col-1 col-auto text-end">:</dt>
                                                             <dd class="col-7 text-bold">
@@ -399,7 +457,7 @@ if ($tahun || $jenis) {
                                                                 <path d="M17 18h2" />
                                                                 <path d="M20 15h-3v6" />
                                                                 <path d="M11 15v6h1a2 2 0 0 0 2 -2v-2a2 2 0 0 0 -2 -2h-1" />
-                                                            </svg>';
+                                                            </svg> ';
                                                                     } else if ($ext === 'jpg' || $ext === 'jpeg') {
                                                                         $icon = '
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow icon icon-tabler icons-tabler-outline icon-tabler-file-type-jpg">
@@ -409,7 +467,7 @@ if ($tahun || $jenis) {
                                                                 <path d="M11 18h1.5a1.5 1.5 0 0 0 0 -3h-1.5v6" />
                                                                 <path d="M20 15h-1a2 2 0 0 0 -2 2v2a2 2 0 0 0 2 2h1v-3" />
                                                                 <path d="M5 15h3v4.5a1.5 1.5 0 0 1 -3 0" />
-                                                            </svg>';
+                                                            </svg> ';
                                                                     } else if ($ext === 'png') {
                                                                         $icon = '
                                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-purple icon icon-tabler icons-tabler-outline icon-tabler-file-type-png">
@@ -463,7 +521,7 @@ if ($tahun || $jenis) {
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                 <path d="M14 3v4a1 1 0 0 0 1 1h4" />
                                                                 <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2" />
-                                                            </svg>';
+                                                            </svg> ';
                                                                     }
                                                                 ?>
                                                                     <div class="col-12 mb-0">
@@ -491,7 +549,6 @@ if ($tahun || $jenis) {
                                         </div>
                                     <?php endforeach; ?>
 
-
                                 </tbody>
                             </table>
                         </div>
@@ -507,7 +564,7 @@ if ($tahun || $jenis) {
 <script>
     document.addEventListener("DOMContentLoaded", function() {
 
-        const table = new DataTable('#dipTable', {
+        const table = new DataTable('#publikasiTable', {
             pageLength: 10,
             lengthMenu: [10, 20, 50, 100],
             orderCellsTop: true,
@@ -516,7 +573,7 @@ if ($tahun || $jenis) {
                     pageLength: {},
                     div: {
                         html: `
-                        <a href="<?= url('?page=dip') ?>" class="btn btn-primary btn-sm btn-6 btn-icon">
+                        <a href="<?= url('?page=publikasi') ?>" class="btn btn-primary btn-sm btn-6 btn-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-refresh">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                 <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"></path>
@@ -613,9 +670,7 @@ if ($tahun || $jenis) {
                 // PASANG FILTER SELECT
                 // =============================
                 createSelectFilter(2); // Tahun
-                createSelectFilter(3, jenisMap); // Jenis Informasi
-                createSelectFilter(4); // Retensi
-                createSelectFilter(5, bentukMap); // Bentuk (pakai mapping)
+                createSelectFilter(3); // Jenis Informasi
 
             }
         });
@@ -680,7 +735,7 @@ if ($tahun || $jenis) {
                             ? "'Berhasil!'"
                             : "'Gagal!'" ?>,
                 text: <?= json_encode($_SESSION['flash']['message']) ?>,
-                timer: 1000
+                timer: 1000,
             });
 
         });
@@ -694,4 +749,4 @@ if ($tahun || $jenis) {
 $content = ob_get_clean();
 
 // Load layout utama
-require __DIR__ . "/../layouts/admin.php";
+require __DIR__ . '/../layouts/admin.php';

@@ -332,44 +332,46 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Pangkat, Gol/Ruang</label>
-                                        <select class="form-select <?= isset($errors['pangkat_golongan']) ? 'is-invalid' : '' ?>" name="pangkat_golongan" id="pangkat_golongan_pns">
-                                            <option value="" disabled <?= empty($old['pangkat_golongan']) ? 'selected' : '' ?>>-- Pilih Pangkat/Gol, Ruang --</option>
-                                            <option value="Juru Muda, I/a" <?= ($old['pangkat_golongan'] ?? '') == 'Juru Muda, I/a' ? 'selected' : '' ?>>Juru Muda, I/a</option>
-                                            <option value="Juru Muda Tingkat I, I/a" <?= ($old['pangkat_golongan'] ?? '') == 'Juru Muda Tingkat I, I/a' ? 'selected' : '' ?>>Juru Muda Tingkat I, I/a</option>
-                                            <option value="Juru, I/c" <?= ($old['pangkat_golongan'] ?? '') == 'Juru, I/c' ? 'selected' : '' ?>>Juru, I/c</option>
-                                            <option value="Juru Tingkat I, I/d" <?= ($old['pangkat_golongan'] ?? '') == 'Juru Tingkat I, I/d' ? 'selected' : '' ?>>Juru Tingkat I, I/d</option>
-                                            <option value="Pengatur Muda, II/a" <?= ($old['pangkat_golongan'] ?? '') == 'Pengatur Muda, II/a' ? 'selected' : '' ?>>Pengatur Muda, II/a</option>
-                                            <option value="Pengatur Muda Tingkat I, II/b" <?= ($old['pangkat_golongan'] ?? '') == 'Pengatur Muda Tingkat I, II/b' ? 'selected' : '' ?>>Pengatur Muda Tingkat I, II/b</option>
-                                            <option value="Pengatur Muda, II/c" <?= ($old['pangkat_golongan'] ?? '') == 'Pengatur Muda, II/c' ? 'selected' : '' ?>>Pengatur Muda, II/c</option>
-                                            <option value="Pengatur Muda, II/d" <?= ($old['pangkat_golongan'] ?? '') == 'Pengatur Muda, II/d' ? 'selected' : '' ?>>Pengatur Muda, II/d</option>
-                                            <option value="Penata Muda, III/a" <?= ($old['pangkat_golongan'] ?? '') == 'Penata Muda, III/a' ? 'selected' : '' ?>>Penata Muda, III/a</option>
-                                            <option value="Penata Muda Tingkat I, III/b" <?= ($old['pangkat_golongan'] ?? '') == 'Penata Muda Tingkat I, III/b' ? 'selected' : '' ?>>Penata Muda Tingkat I, III/b</option>
-                                            <option value="Penata, III/c" <?= ($old['pangkat_golongan'] ?? '') == 'Penata, III/c' ? 'selected' : '' ?>>Penata, III/c</option>
-                                            <option value="Penata Tingkat I, III/d" <?= ($old['pangkat_golongan'] ?? '') == 'Penata Tingkat I, III/d' ? 'selected' : '' ?>>Penata Tingkat I, III/d</option>
-                                            <option value="Pembina, IV/a" <?= ($old['pangkat_golongan'] ?? '') == 'Pembina, IV/a' ? 'selected' : '' ?>>Pembina, IV/a</option>
-                                            <option value="Pembina Tingkat I, IV/b" <?= ($old['pangkat_golongan'] ?? '') == 'Pembina Tingkat I, IV/b' ? 'selected' : '' ?>>Pembina Tingkat I, IV/b</option>
-                                            <option value="Pembina Utama Muda, IV/c" <?= ($old['pangkat_golongan'] ?? '') == 'Pembina Utama Muda, IV/c' ? 'selected' : '' ?>>Pembina Utama Muda, IV/c</option>
-                                            <option value="Pembina Utama Madya, IV/d" <?= ($old['pangkat_golongan'] ?? '') == 'Pembina Utama Madya, IV/d' ? 'selected' : '' ?>>Pembina Utama Madya, IV/d</option>
-                                            <option value="Pembina Utama, IV/e" <?= ($old['pangkat_golongan'] ?? '') == 'Pembina Utama, IV/e' ? 'selected' : '' ?>>Pembina Utama, IV/e</option>
+                                        <select class="form-select <?= isset($errors['pangkat_golongan_pns']) ? 'is-invalid' : '' ?>" name="pangkat_golongan_pns" id="pangkat_golongan_pns">
+                                            <option value="" disabled <?= empty($old['pangkat_golongan_pns']) ? 'selected' : '' ?>>-- Pilih Pangkat/Gol, Ruang --</option>
+                                            <option value="Juru Muda, I/a" <?= ($old['pangkat_golongan_pns'] ?? '') == 'Juru Muda, I/a' ? 'selected' : '' ?>>Juru Muda, I/a</option>
+                                            <option value="Juru Muda Tingkat I, I/a" <?= ($old['pangkat_golongan_pns'] ?? '') == 'Juru Muda Tingkat I, I/a' ? 'selected' : '' ?>>Juru Muda Tingkat I, I/a</option>
+                                            <option value="Juru, I/c" <?= ($old['pangkat_golongan_pns'] ?? '') == 'Juru, I/c' ? 'selected' : '' ?>>Juru, I/c</option>
+                                            <option value="Juru Tingkat I, I/d" <?= ($old['pangkat_golongan_pns'] ?? '') == 'Juru Tingkat I, I/d' ? 'selected' : '' ?>>Juru Tingkat I, I/d</option>
+                                            <option value="Pengatur Muda, II/a" <?= ($old['pangkat_golongan_pns'] ?? '') == 'Pengatur Muda, II/a' ? 'selected' : '' ?>>Pengatur Muda, II/a</option>
+                                            <option value="Pengatur Muda Tingkat I, II/b" <?= ($old['pangkat_golongan_pns'] ?? '') == 'Pengatur Muda Tingkat I, II/b' ? 'selected' : '' ?>>Pengatur Muda Tingkat I, II/b</option>
+                                            <option value="Pengatur Muda, II/c" <?= ($old['pangkat_golongan_pns'] ?? '') == 'Pengatur Muda, II/c' ? 'selected' : '' ?>>Pengatur Muda, II/c</option>
+                                            <option value="Pengatur Muda, II/d" <?= ($old['pangkat_golongan_pns'] ?? '') == 'Pengatur Muda, II/d' ? 'selected' : '' ?>>Pengatur Muda, II/d</option>
+                                            <option value="Penata Muda, III/a" <?= ($old['pangkat_golongan_pns'] ?? '') == 'Penata Muda, III/a' ? 'selected' : '' ?>>Penata Muda, III/a</option>
+                                            <option value="Penata Muda Tingkat I, III/b" <?= ($old['pangkat_golongan_pns'] ?? '') == 'Penata Muda Tingkat I, III/b' ? 'selected' : '' ?>>Penata Muda Tingkat I, III/b</option>
+                                            <option value="Penata, III/c" <?= ($old['pangkat_golongan_pns'] ?? '') == 'Penata, III/c' ? 'selected' : '' ?>>Penata, III/c</option>
+                                            <option value="Penata Tingkat I, III/d" <?= ($old['pangkat_golongan_pns'] ?? '') == 'Penata Tingkat I, III/d' ? 'selected' : '' ?>>Penata Tingkat I, III/d</option>
+                                            <option value="Pembina, IV/a" <?= ($old['pangkat_golongan_pns'] ?? '') == 'Pembina, IV/a' ? 'selected' : '' ?>>Pembina, IV/a</option>
+                                            <option value="Pembina Tingkat I, IV/b" <?= ($old['pangkat_golongan_pns'] ?? '') == 'Pembina Tingkat I, IV/b' ? 'selected' : '' ?>>Pembina Tingkat I, IV/b</option>
+                                            <option value="Pembina Utama Muda, IV/c" <?= ($old['pangkat_golongan_pns'] ?? '') == 'Pembina Utama Muda, IV/c' ? 'selected' : '' ?>>Pembina Utama Muda, IV/c</option>
+                                            <option value="Pembina Utama Madya, IV/d" <?= ($old['pangkat_golongan_pns'] ?? '') == 'Pembina Utama Madya, IV/d' ? 'selected' : '' ?>>Pembina Utama Madya, IV/d</option>
+                                            <option value="Pembina Utama, IV/e" <?= ($old['pangkat_golongan_pns'] ?? '') == 'Pembina Utama, IV/e' ? 'selected' : '' ?>>Pembina Utama, IV/e</option>
                                         </select>
-                                        <select class="form-select <?= isset($errors['pangkat_golongan']) ? 'is-invalid' : '' ?>" name="pangkat_golongan" id="pangkat_golongan_pppk">
-                                            <option value="" disabled <?= empty($old['pangkat_golongan']) ? 'selected' : '' ?>>-- Pilih Golongan P3K --</option>
-                                            <option value="P3K/V" <?= ($old['pangkat_golongan'] ?? '') == 'P3K/V' ? 'selected' : '' ?>>P3K/V</option>
-                                            <option value="P3K/VI" <?= ($old['pangkat_golongan'] ?? '') == 'P3K/VI' ? 'selected' : '' ?>>P3K/VI</option>
-                                            <option value="P3K/VII" <?= ($old['pangkat_golongan'] ?? '') == 'P3K/VII' ? 'selected' : '' ?>>P3K/VII</option>
-                                            <option value="P3K/VIII" <?= ($old['pangkat_golongan'] ?? '') == 'P3K/VIII' ? 'selected' : '' ?>>P3K/VIII</option>
-                                            <option value="P3K/IX" <?= ($old['pangkat_golongan'] ?? '') == 'P3K/IX' ? 'selected' : '' ?>>P3K/IX</option>
-                                            <option value="P3K/X" <?= ($old['pangkat_golongan'] ?? '') == 'P3K/X' ? 'selected' : '' ?>>P3K/X</option>
-                                            <option value="P3K/XI" <?= ($old['pangkat_golongan'] ?? '') == 'P3K/XI' ? 'selected' : '' ?>>P3K/XI</option>
-                                            <option value="P3K/XII" <?= ($old['pangkat_golongan'] ?? '') == 'P3K/XII' ? 'selected' : '' ?>>P3K/XII</option>
-                                            <option value="P3K/XIII" <?= ($old['pangkat_golongan'] ?? '') == 'P3K/XIII' ? 'selected' : '' ?>>P3K/XIII</option>
-                                            <option value="P3K/XIV" <?= ($old['pangkat_golongan'] ?? '') == 'P3K/XIV' ? 'selected' : '' ?>>P3K/XIV</option>
-                                            <option value="P3K/XV" <?= ($old['pangkat_golongan'] ?? '') == 'P3K/XV' ? 'selected' : '' ?>>P3K/XV</option>
-                                            <option value="P3K/XVI" <?= ($old['pangkat_golongan'] ?? '') == 'P3K/XVI' ? 'selected' : '' ?>>P3K/XVI</option>
-                                            <option value="P3K/XVII" <?= ($old['pangkat_golongan'] ?? '') == 'P3K/XVII' ? 'selected' : '' ?>>P3K/XVII</option>
+                                        <select class="form-select <?= isset($errors['pangkat_golongan_pppk']) ? 'is-invalid' : '' ?>" name="pangkat_golongan_pppk" id="pangkat_golongan_pppk">
+                                            <option value="" disabled <?= empty($old['pangkat_golongan_pppk']) ? 'selected' : '' ?>>-- Pilih Golongan P3K --</option>
+                                            <option value="P3K/V" <?= ($old['pangkat_golongan_pppk'] ?? '') == 'P3K/V' ? 'selected' : '' ?>>P3K/V</option>
+                                            <option value="P3K/VI" <?= ($old['pangkat_golongan_pppk'] ?? '') == 'P3K/VI' ? 'selected' : '' ?>>P3K/VI</option>
+                                            <option value="P3K/VII" <?= ($old['pangkat_golongan_pppk'] ?? '') == 'P3K/VII' ? 'selected' : '' ?>>P3K/VII</option>
+                                            <option value="P3K/VIII" <?= ($old['pangkat_golongan_pppk'] ?? '') == 'P3K/VIII' ? 'selected' : '' ?>>P3K/VIII</option>
+                                            <option value="P3K/IX" <?= ($old['pangkat_golongan_pppk'] ?? '') == 'P3K/IX' ? 'selected' : '' ?>>P3K/IX</option>
+                                            <option value="P3K/X" <?= ($old['pangkat_golongan_pppk'] ?? '') == 'P3K/X' ? 'selected' : '' ?>>P3K/X</option>
+                                            <option value="P3K/XI" <?= ($old['pangkat_golongan_pppk'] ?? '') == 'P3K/XI' ? 'selected' : '' ?>>P3K/XI</option>
+                                            <option value="P3K/XII" <?= ($old['pangkat_golongan_pppk'] ?? '') == 'P3K/XII' ? 'selected' : '' ?>>P3K/XII</option>
+                                            <option value="P3K/XIII" <?= ($old['pangkat_golongan_pppk'] ?? '') == 'P3K/XIII' ? 'selected' : '' ?>>P3K/XIII</option>
+                                            <option value="P3K/XIV" <?= ($old['pangkat_golongan_pppk'] ?? '') == 'P3K/XIV' ? 'selected' : '' ?>>P3K/XIV</option>
+                                            <option value="P3K/XV" <?= ($old['pangkat_golongan_pppk'] ?? '') == 'P3K/XV' ? 'selected' : '' ?>>P3K/XV</option>
+                                            <option value="P3K/XVI" <?= ($old['pangkat_golongan_pppk'] ?? '') == 'P3K/XVI' ? 'selected' : '' ?>>P3K/XVI</option>
+                                            <option value="P3K/XVII" <?= ($old['pangkat_golongan_pppk'] ?? '') == 'P3K/XVII' ? 'selected' : '' ?>>P3K/XVII</option>
                                         </select>
                                         <div class="invalid-feedback">
-                                            <?= $errors['pangkat_golongan'] ?? '' ?>
+                                            <?= $errors['pangkat_golongan_pns']
+                                                ?? $errors['pangkat_golongan_pppk']
+                                                ?? '' ?>
                                         </div>
                                     </div>
                                     <div class="mb-3 row">
@@ -702,36 +704,43 @@ unset($_SESSION['errors'], $_SESSION['old']);
 
         function handleStatusASN(val) {
 
-            // reset
             nip.disabled = false;
             grade.disabled = false;
-            pangkatPNS.disabled = false;
-            pangkatPPPK.disabled = false;
 
             if (val === "PNS") {
 
                 pangkatPNS.style.display = "block";
                 pangkatPPPK.style.display = "none";
 
+                pangkatPNS.disabled = false;
+                pangkatPPPK.disabled = true;
+
             } else if (val === "PPPK") {
 
                 pangkatPNS.style.display = "none";
                 pangkatPPPK.style.display = "block";
+
+                pangkatPNS.disabled = true;
+                pangkatPPPK.disabled = false;
 
             } else if (val === "PPNPN/OUTSOURCING") {
 
                 pangkatPNS.style.display = "block";
                 pangkatPPPK.style.display = "none";
 
+                pangkatPNS.disabled = true;
+                pangkatPPPK.disabled = true;
+
                 nip.disabled = true;
                 grade.disabled = true;
-                pangkatPNS.disabled = true;
 
             } else {
 
                 pangkatPNS.style.display = "block";
                 pangkatPPPK.style.display = "none";
+
                 pangkatPNS.disabled = true;
+                pangkatPPPK.disabled = true;
 
             }
         }

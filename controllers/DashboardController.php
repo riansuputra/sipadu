@@ -107,4 +107,14 @@ class DashboardController extends BaseController
             'role' => $this->role,
         ]);
     }
+
+    public function link_aplikasi()
+    {
+        $this->auth();
+
+        $this->view('link_aplikasi/index', [
+            'user' => $this->user,
+            'role' => $this->role,
+        ]);
+    }
 }

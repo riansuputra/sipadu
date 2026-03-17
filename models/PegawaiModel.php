@@ -40,6 +40,7 @@ class PegawaiModel
 
             LEFT JOIN pegawai_file pf 
                 ON p.id = pf.pegawai_id
+            WHERE p.is_active = 1
 
             GROUP BY p.id
             ORDER BY p.created_at DESC
@@ -132,6 +133,23 @@ class PegawaiModel
     // Update DIP
     public function update($id, $data)
     {
+        foreach (
+            [
+                'nik',
+                'nip',
+                'email',
+                'grade',
+                'jurusan',
+                'nomor_sk_pengangkatan',
+                'nomor_sk_spmt',
+                'tempat_lahir'
+            ] as $field
+        ) {
+            if (!isset($data[$field]) || trim($data[$field]) === '') {
+                $data[$field] = null;
+            }
+        }
+
         $stmt = $this->db->prepare("
             UPDATE pegawai SET
                 nama = ?,
@@ -173,7 +191,8 @@ class PegawaiModel
             $data['pendidikan'],
             $data['jurusan'],
             $data['nomor_sk_pengangkatan'],
-            $data['nomor_sk_spmt']
+            $data['nomor_sk_spmt'],
+            $id
         ]);
     }
 

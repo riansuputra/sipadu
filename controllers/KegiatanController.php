@@ -2,15 +2,17 @@
 
 require_once __DIR__ . '/../core/BaseController.php';
 
-class PeraturanController extends BaseController
+class KegiatanController extends BaseController
 {
     private $model;
     private $modelJenis;
+    private $modelPegawai;
 
     public function __construct()
     {
-        $this->model = $this->model('PeraturanModel');
-        $this->modelJenis = $this->model('PeraturanJenisModel');
+        $this->model = $this->model('KegiatanModel');
+        $this->modelJenis = $this->model('KegiatanJenisModel');
+        $this->modelPegawai = $this->model('PegawaiModel');
     }
 
     public function index()
@@ -21,14 +23,16 @@ class PeraturanController extends BaseController
         $jenis_filter = $_GET['jenis'] ?? null;
 
         $jenis = $this->modelJenis->getAll();
+        $pegawai = $this->modelPegawai->getAll();
 
         $data = (!empty($tahun) || !empty($jenis_filter))
             ? $this->model->getFiltered($tahun, $jenis_filter)
             : $this->model->getAll();
 
-        $this->view('peraturan/index', [
+        $this->view('kegiatan/index', [
             'data' => $data,
             'jenis' => $jenis,
+            'pegawai' => $pegawai,
             'user' => $this->user,
             'role' => $this->role
         ]);
@@ -39,9 +43,11 @@ class PeraturanController extends BaseController
         $this->auth();
 
         $jenis = $this->modelJenis->getAll();
+        $pegawai = $this->modelPegawai->getAll();
 
-        $this->view('peraturan/create', [
+        $this->view('kegiatan/create', [
             'jenis' => $jenis,
+            'pegawai' => $pegawai,
             'user' => $this->user,
             'role' => $this->role
         ]);
@@ -52,15 +58,17 @@ class PeraturanController extends BaseController
         $this->auth();
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return $this->redirect('?page=peraturan');
+            return $this->redirect('?page=kegiatan');
         }
 
         $errors = $this->validate($_POST, $_FILES);
 
+        // dd($errors, $_POST);
+
         if ($errors) {
             $_SESSION['errors'] = $errors;
             $_SESSION['old'] = $_POST;
-            return $this->redirect('?page=tambah-peraturan');
+            return $this->redirect('?page=tambah-kegiatan');
         }
 
         try {
@@ -83,12 +91,12 @@ class PeraturanController extends BaseController
                 'user_id' => $this->user['id'],
                 'role_id' => $this->user['role_id'],
                 'action' => 'store',
-                'entity_type' => 'peraturan',
+                'entity_type' => 'kegiatan',
                 'entity_id' => $id,
-                'description' => 'Menambah data Peraturan'
+                'description' => 'Menambah data kegiatan'
             ]);
 
-            $this->flash('success', 'Peraturan berhasil disimpan');
+            $this->flash('success', 'Kegiatan berhasil disimpan');
         } catch (Throwable $e) {
 
             $this->model->rollback();
@@ -97,7 +105,28 @@ class PeraturanController extends BaseController
 
             $this->flash('error', 'Gagal menyimpan data');
         }
-        return $this->redirect('?page=tambah-peraturan');
+        // return $this->redirect('?page=tambah-kegiatan');
+        return $this->redirect('?page=detail-kegiatan&id=' . $id);
+    }
+
+    public function show()
+    {
+        $this->auth();
+
+        $id = $_GET['id'] ?? null;
+        if (!$id) die("ID tidak valid");
+
+        $data = $this->model->getById($id);
+        $files = $this->model->getFiles($id);
+        $jenis = $this->modelJenis->getAll();
+
+        $this->view('kegiatan/detail', [
+            'data' => $data,
+            'files' => $files,
+            'jenis' => $jenis,
+            'user' => $this->user,
+            'role' => $this->role
+        ]);
     }
 
     public function edit()
@@ -111,7 +140,7 @@ class PeraturanController extends BaseController
         $files = $this->model->getFiles($id);
         $jenis = $this->modelJenis->getAll();
 
-        $this->view('peraturan/edit', [
+        $this->view('kegiatan/edit', [
             'data' => $data,
             'files' => $files,
             'jenis' => $jenis,
@@ -125,12 +154,12 @@ class PeraturanController extends BaseController
         $this->auth();
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return $this->redirect('?page=peraturan');
+            return $this->redirect('?page=kegiatan');
         }
 
         if (empty($_POST['id']) || !ctype_digit($_POST['id'])) {
             $this->flash('error', 'ID tidak valid');
-            return $this->redirect('?page=peraturan');
+            return $this->redirect('?page=kegiatan');
         }
 
         $errors = $this->validate($_POST, $_FILES, true);
@@ -138,7 +167,7 @@ class PeraturanController extends BaseController
         if ($errors) {
             $_SESSION['errors'] = $errors;
             $_SESSION['old'] = $_POST;
-            return $this->redirect('?page=edit-peraturan&id=' . $_POST['id']);
+            return $this->redirect('?page=edit-kegiatan&id=' . $_POST['id']);
         }
 
         try {
@@ -171,12 +200,12 @@ class PeraturanController extends BaseController
                 'user_id' => $this->user['id'],
                 'role_id' => $this->user['role_id'],
                 'action' => 'update',
-                'entity_type' => 'peraturan',
+                'entity_type' => 'kegiatan',
                 'entity_id' => $data['id'],
-                'description' => 'Mengubah data Peraturan'
+                'description' => 'Mengubah data kegiatan'
             ]);
 
-            $this->flash('success', 'Peraturan berhasil diperbarui');
+            $this->flash('success', 'Kegiatan berhasil diperbarui');
         } catch (Throwable $e) {
 
             $this->model->rollback();
@@ -184,7 +213,7 @@ class PeraturanController extends BaseController
 
             $this->flash('error', 'Gagal update data');
         }
-        return $this->redirect('?page=peraturan');
+        return $this->redirect('?page=kegiatan');
     }
 
     public function delete()
@@ -192,12 +221,12 @@ class PeraturanController extends BaseController
         $this->auth();
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return $this->redirect('?page=peraturan');
+            return $this->redirect('?page=kegiatan');
         }
 
         if (empty($_POST['id']) || !ctype_digit($_POST['id'])) {
             $this->flash('error', 'ID tidak valid');
-            return $this->redirect('?page=peraturan');
+            return $this->redirect('?page=kegiatan');
         }
 
         try {
@@ -216,12 +245,12 @@ class PeraturanController extends BaseController
                 'user_id' => $this->user['id'],
                 'role_id' => $this->user['role_id'],
                 'action' => 'delete',
-                'entity_type' => 'peraturan',
+                'entity_type' => 'kegiatan',
                 'entity_id' => $id,
-                'description' => 'Menghapus data Peraturan'
+                'description' => 'Menghapus data kegiatan'
             ]);
 
-            $this->flash('success', 'Peraturan berhasil dihapus');
+            $this->flash('success', 'Kegiatan berhasil dihapus');
         } catch (Throwable $e) {
 
             $this->model->rollback();
@@ -230,7 +259,7 @@ class PeraturanController extends BaseController
             $this->flash('error', 'Gagal menghapus data');
         }
 
-        return $this->redirect('?page=peraturan');
+        return $this->redirect('?page=kegiatan');
     }
 
     // =================================== Belum dicek ========================================
@@ -266,7 +295,7 @@ class PeraturanController extends BaseController
 
         $totalPage = ceil($total / $limit);
 
-        $this->view('peraturan/publicIndex', [
+        $this->view('kegiatan/publicIndex', [
             'data' => $data,
             'jenis' => $jenis,
             'totalPage' => $totalPage,
@@ -348,7 +377,7 @@ class PeraturanController extends BaseController
         $data  = $this->model->getById($id);
         $files = $this->model->getFiles($id);
 
-        $this->view('peraturan/publicDetail', [
+        $this->view('kegiatan/publicDetail', [
             'data' => $data,
             'files' => $files,
             'user' => $this->user,
@@ -363,35 +392,26 @@ class PeraturanController extends BaseController
         if (empty($data['judul']) || strlen($data['judul']) < 2)
             $errors['judul'] = "Judul minimal 2 karakter";
 
-        if (empty($data['nomor']))
-            $errors['nomor'] = "Nomor wajib diisi";
+        if (empty($data['lokasi']))
+            $errors['lokasi'] = "Lokasi wajib diisi";
 
-        if (empty($data['lembaga']))
-            $errors['lembaga'] = "Lembaga wajib diisi";
+        if (empty($data['tanggal_mulai']))
+            $errors['tanggal_mulai'] = "Tanggal mulai wajib diisi";
+
+        if (empty($data['tanggal_selesai']))
+            $errors['tanggal_selesai'] = "Tanggal selesai wajib diisi";
 
         if (empty($data['jenis_id']))
             $errors['jenis_id'] = "Jenis wajib diisi";
 
-        if (!empty($files['file']['name'][0])) {
-            $allowed = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'jpg', 'jpeg', 'png', 'gif', 'webp'];
-
-            foreach ($files['file']['name'] as $i => $name) {
-                $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
-                $size = $files['file']['size'][$i];
-
-                if (!in_array($ext, $allowed))
-                    $errors['file'] = "File tidak diizinkan";
-            }
-        }
-
         return $errors;
     }
 
-    private function handleUpload($peraturanId, $files)
+    private function handleUpload($kegiatanId, $files)
     {
         if (empty($files['file']['name'][0])) return;
 
-        $dir = realpath(__DIR__ . '/../uploads') . '/peraturan/';
+        $dir = realpath(__DIR__ . '/../uploads') . '/kegiatan/';
 
         foreach ($files['file']['name'] as $i => $nama) {
 
@@ -408,9 +428,9 @@ class PeraturanController extends BaseController
                 throw new Exception("Upload file gagal");
             }
 
-            $this->model->insertFile($peraturanId, [
+            $this->model->insertFile($kegiatanId, [
                 'nama_file' => $nama,
-                'path_file' => 'uploads/peraturan/' . $namaBaru,
+                'path_file' => 'uploads/kegiatan/' . $namaBaru,
                 'tipe_file' => $ext,
                 'ukuran_file' => $size
             ]);

@@ -30,16 +30,8 @@ define('DB_NAME', 'db_sipadu');
 define('DB_USER', 'root');
 define('DB_PASS', '');
 
-// Konfigurasi database server
-// define('DB_HOST', 'localhost');
-// define('DB_NAME', 'db_sipadu');
-// define('DB_USER', 'root');
-// define('DB_PASS', '');
-
-
-// // Konfigurasi database server
-// // $host = 'db.bpmpbali.id';
-// // $db   = 'db_sipadu';
-// // $user = 'root';
-// // $pass = 'Denpasar14';
-// // $charset = 'utf8mb4';
+// Konfigurasi database server free
+// define('DB_HOST', 'sql205.infinityfree.com');
+// define('DB_NAME', 'if0_40988811_db_sipadu');
+// define('DB_USER', 'if0_40988811');
+// define('DB_PASS', '1VbK8FVsXK6');

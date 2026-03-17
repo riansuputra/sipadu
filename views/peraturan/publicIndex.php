@@ -44,7 +44,7 @@ ob_start();
             <div class="col-12">
                 <div class="card">
 
-                    <div class="card-body mb-0">
+                    <div class="card-body mb-0 bg-primary bg-gray-800">
                         <form method="get">
                             <input type="hidden" name="page" value="peraturan-publik">
                             <div class="mb-3">

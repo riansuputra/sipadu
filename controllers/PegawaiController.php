@@ -64,6 +64,10 @@ class PegawaiController extends BaseController
 
             $data = $_POST;
             $data['created_by'] = $this->user['id'];
+            $data['pangkat_golongan'] =
+                !empty($_POST['pangkat_golongan_pns'])
+                ? $_POST['pangkat_golongan_pns']
+                : ($_POST['pangkat_golongan_pppk'] ?? null);
 
             $id = $this->model->insert($data);
 
@@ -89,8 +93,6 @@ class PegawaiController extends BaseController
 
             $this->model->rollback();
 
-            dd($e->getMessage());
-
             $_SESSION['old'] = $_POST;
 
             if ($e instanceof PDOException && $e->getCode() == 23000) {
@@ -104,16 +106,37 @@ class PegawaiController extends BaseController
         return $this->redirect('?page=tambah-pegawai');
     }
 
-    public function edit()
+    public function show()
     {
         $this->auth();
 
-        $id = $_GET['id'];
+        $id = $_GET['id'] ?? null;
+        if (!$id) die("ID tidak valid");
 
         $data = $this->model->getById($id);
         $files = $this->model->getFiles($id);
 
-        // dd($data);
+        // dd($data, $files);
+
+        $this->view('pegawai/detail', [
+            'data' => $data,
+            'files' => $files,
+            'user' => $this->user,
+            'role' => $this->role,
+        ]);
+    }
+
+    public function edit()
+    {
+        $this->auth();
+
+        $id = $_GET['id'] ?? null;
+        if (!$id) die("ID tidak valid");
+
+        $data = $this->model->getById($id);
+        $files = $this->model->getFiles($id);
+
+        // dd($data, $files);
 
         $this->view('pegawai/edit', [
             'data' => $data,
@@ -127,6 +150,8 @@ class PegawaiController extends BaseController
     {
         $this->auth();
 
+        // dd($_POST, $_FILES);
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return $this->redirect('?page=pegawai');
         }
@@ -136,7 +161,7 @@ class PegawaiController extends BaseController
             return $this->redirect('?page=pegawai');
         }
 
-        $errors = $this->validate($_POST, $_FILES, true);
+        $errors = $this->validate($_POST, $_FILES, true, $_POST['id']);
 
         if ($errors) {
             $_SESSION['errors'] = $errors;
@@ -150,6 +175,10 @@ class PegawaiController extends BaseController
 
             $data = $_POST;
             $data['updated_by'] = $this->user['id'];
+            $data['pangkat_golongan'] =
+                !empty($_POST['pangkat_golongan_pns'])
+                ? $_POST['pangkat_golongan_pns']
+                : ($_POST['pangkat_golongan_pppk'] ?? null);
 
             if (!$this->model->update($_POST['id'], $data)) {
                 throw new Exception("Update gagal");
@@ -198,6 +227,7 @@ class PegawaiController extends BaseController
     {
         $this->auth();
 
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return $this->redirect('?page=pegawai');
         }
@@ -212,6 +242,7 @@ class PegawaiController extends BaseController
             $this->model->beginTransaction();
 
             $id = $_POST['id'];
+
 
             if (!$this->model->delete($id, $this->user['id'])) {
                 throw new Exception("Gagal menghapus data");
@@ -280,19 +311,35 @@ class PegawaiController extends BaseController
             $errors['jabatan'] = 'Jabatan wajib diisi';
         }
 
-        if (empty($data['pangkat_golongan'])) {
-            $errors['pangkat_golongan'] = 'Pangkat golongan wajib diisi';
+        if ($data['status_asn'] === 'PNS') {
+
+            if (empty($data['pangkat_golongan_pns'])) {
+                $errors['pangkat_golongan_pns'] = 'Pangkat golongan wajib diisi';
+            }
+        } elseif ($data['status_asn'] === 'PPPK') {
+
+            if (empty($data['pangkat_golongan_pppk'])) {
+                $errors['pangkat_golongan_pppk'] = 'Pangkat golongan wajib diisi';
+            }
         }
 
         if (!$isUpdate && (!isset($files['file_foto']) || $files['file_foto']['error'] === UPLOAD_ERR_NO_FILE)) {
             $errors['file_foto'] = 'File foto wajib diisi';
         }
 
-        if (
-            empty($data['status_asn']) ||
-            !in_array($data['status_asn'], ['PNS', 'PPPK', 'PPNPN/OUTSOURCING'])
-        ) {
-            $errors['status_asn'] = 'Status ASN tidak valid';
+        if (!empty($data['status_asn'])) {
+
+            if ($data['status_asn'] === 'PNS') {
+
+                if (empty($data['pangkat_golongan_pns'])) {
+                    $errors['pangkat_golongan_pns'] = 'Pangkat golongan wajib diisi';
+                }
+            } elseif ($data['status_asn'] === 'PPPK') {
+
+                if (empty($data['pangkat_golongan_pppk'])) {
+                    $errors['pangkat_golongan_pppk'] = 'Golongan P3K wajib diisi';
+                }
+            }
         }
 
         if (empty($data['pendidikan'])) {

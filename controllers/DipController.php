@@ -391,9 +391,6 @@ class DipController extends BaseController
 
                 if (!in_array($ext, $allowed))
                     $errors['file'] = "File tidak diizinkan";
-
-                if ($size > 5 * 1024 * 1024)
-                    $errors['file'] = "File maksimal 5MB";
             }
         }
 

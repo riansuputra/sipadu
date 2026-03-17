@@ -1,12 +1,13 @@
 <?php
 $page = $_GET['page'] ?? '';
 $arsipPages = ['arsip', 'tambah-arsip'];
-$publikasiPages = ['publikasi', 'tambah-publikasi', 'tambah-jenis-publikasi'];
+$publikasiPages = ['publikasi', 'tambah-publikasi', 'tambah-jenis-publikasi', 'edit-publikasi'];
+$kegiatanPages = ['kegiatan', 'tambah-kegiatan', 'tambah-jenis-kegiatan', 'edit-kegiatan'];
 $dokumenPages = ['dokumen', 'tambah-dokumen', 'tambah-jenis-dokumen'];
 $pengaturanPages = ['profil', 'manajemen-file', 'backup-data', 'user', 'tambah-user', 'user-password'];
 $dipPages = ['dip', 'tambah-dip', 'detail-dip', 'edit-dip', 'dip-print-filter'];
 $peraturanPages = ['peraturan', 'tambah-peraturan', 'detail-peraturan', 'edit-peraturan', 'jenis-peraturan', 'tambah-jenis-peraturan'];
-$pegawaiPages = ['pegawai', 'tambah-pegawai', 'detail-pegawai'];
+$pegawaiPages = ['pegawai', 'tambah-pegawai', 'detail-pegawai', 'edit-pegawai'];
 ?>
 
 <div class="collapse navbar-collapse" id="sidebar-menu">
@@ -48,6 +49,34 @@ $pegawaiPages = ['pegawai', 'tambah-pegawai', 'detail-pegawai'];
                 </span>
             </a>
         </li>
+        <li class="nav-item dropdown <?= in_array($page, $kegiatanPages) ? 'active' : '' ?> mb-2">
+            <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
+                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-plane-tilt">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M14.5 6.5l3 -2.9a2.05 2.05 0 0 1 2.9 2.9l-2.9 3l2.5 7.5l-2.5 2.55l-3.5 -6.55l-3 3v3l-2 2l-1.5 -4.5l-4.5 -1.5l2 -2h3l3 -3l-6.5 -3.5l2.5 -2.5l7.5 2.5" />
+                    </svg>
+                </span>
+                <span class="nav-link-title">
+                    Kegiatan
+                </span>
+            </a>
+            <div class="dropdown-menu <?= in_array($page, $kegiatanPages) ? 'show' : '' ?>">
+                <div class="dropdown-menu-columns">
+                    <div class="dropdown-menu-column">
+                        <a class="dropdown-item <?= ($page === 'kegiatan' || $page === 'edit-kegiatan') ? 'active' : '' ?>" href="<?= url('?page=kegiatan') ?>">
+                            Daftar Kegiatan
+                        </a>
+                        <a class="dropdown-item <?= $page === 'tambah-kegiatan' ? 'active' : '' ?>" href="<?= url('?page=tambah-kegiatan') ?>">
+                            Tambah Kegiatan
+                        </a>
+                        <a class="dropdown-item <?= $page === 'tambah-jenis-kegiatan' ? 'active' : '' ?>" href="<?= url('?page=tambah-jenis-kegiatan') ?>">
+                            Jenis Kegiatan
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </li>
         <?php if (
             in_array($user['role'], ['Superadmin', 'Pimpinan'])
             ||
@@ -76,7 +105,7 @@ $pegawaiPages = ['pegawai', 'tambah-pegawai', 'detail-pegawai'];
                 <div class="dropdown-menu <?= in_array($page, $publikasiPages) ? 'show' : '' ?>">
                     <div class="dropdown-menu-columns">
                         <div class="dropdown-menu-column">
-                            <a class="dropdown-item <?= $page === 'publikasi' ? 'active' : '' ?>" href="<?= url('?page=publikasi') ?>">
+                            <a class="dropdown-item <?= ($page === 'publikasi' || $page === 'edit-publikasi') ? 'active' : '' ?>" href="<?= url('?page=publikasi') ?>">
                                 Daftar Publikasi
                             </a>
                             <a class="dropdown-item <?= $page === 'tambah-publikasi' ? 'active' : '' ?>" href="<?= url('?page=tambah-publikasi') ?>">
@@ -213,7 +242,7 @@ $pegawaiPages = ['pegawai', 'tambah-pegawai', 'detail-pegawai'];
                 <div class="dropdown-menu <?= in_array($page, $pegawaiPages) ? 'show' : '' ?>">
                     <div class="dropdown-menu-columns">
                         <div class="dropdown-menu-column">
-                            <a class="dropdown-item <?= $page === 'pegawai' ? 'active' : '' ?>" href="<?= url('?page=pegawai') ?>">
+                            <a class="dropdown-item <?= ($page === 'pegawai' || $page === 'edit-pegawai') ? 'active' : '' ?>" href="<?= url('?page=pegawai') ?>">
                                 Daftar Pegawai
                             </a>
                             <a class="dropdown-item <?= $page === 'tambah-pegawai' ? 'active' : '' ?>" href="<?= url('?page=tambah-pegawai') ?>">
