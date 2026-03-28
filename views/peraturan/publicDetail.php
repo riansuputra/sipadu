@@ -9,7 +9,8 @@ $bannerTitle = "Detail Peraturan";
 $bannerSubtitle = "SIPADU BPMP Provinsi Bali";
 
 // echo '<pre>';
-// print_r($data);
+// dd($files);
+// dd($data["files"]);
 // print_r($files);
 // echo '</pre>';
 
@@ -123,9 +124,9 @@ ob_start();
                                 $listFile = [];
 
                                 if (!empty($data["files"])) {
-                                    $files = explode("##", $data["files"],);
+                                    $file = explode("##", $data["files"],);
 
-                                    foreach ($files as $f) {
+                                    foreach ($file as $f) {
                                         $part = explode("|", $f,);
 
                                         if (count($part) === 4) {

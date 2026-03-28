@@ -7,7 +7,7 @@ ob_start();
 
 
 <?php
-
+// dd($data);
 
 $tahun = $_GET['tahun'] ?? null;
 $jenis = $_GET['jenis'] ?? null;

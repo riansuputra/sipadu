@@ -1,7 +1,7 @@
 <?php
 
 
-class KegiatanJenisModel
+class ArsipJenisModel
 {
     protected $db;
 
@@ -29,8 +29,8 @@ class KegiatanJenisModel
     public function getAll()
     {
         $stmt = $this->db->prepare("
-            SELECT * FROM kegiatan_jenis
-            WHERE kegiatan_jenis.is_active = 1
+            SELECT * FROM arsip_jenis
+            WHERE arsip_jenis.is_active = 1
             ORDER BY nama ASC
         ");
 
@@ -41,7 +41,7 @@ class KegiatanJenisModel
     public function getById($id)
     {
         $stmt = $this->db->prepare("
-            SELECT * FROM kegiatan_jenis
+            SELECT * FROM arsip_jenis
             WHERE id = ?
         ");
 
@@ -53,7 +53,7 @@ class KegiatanJenisModel
     public function insert($data)
     {
         $stmt = $this->db->prepare("
-            INSERT INTO kegiatan_jenis (
+            INSERT INTO arsip_jenis (
                 nama, 
                 keterangan, 
                 is_active
@@ -72,7 +72,7 @@ class KegiatanJenisModel
     public function update($id, $data)
     {
         $stmt = $this->db->prepare("
-            UPDATE kegiatan_jenis SET
+            UPDATE arsip_jenis SET
                 nama = ?, 
                 keterangan = ?, 
                 is_active = ? 
@@ -104,7 +104,7 @@ class KegiatanJenisModel
     public function delete($id)
     {
         $stmt = $this->db->prepare("
-            UPDATE kegiatan_jenis SET is_active = 0 WHERE id = ?
+            UPDATE arsip_jenis SET is_active = 0 WHERE id = ?
         ");
 
         return $stmt->execute([$id]);

@@ -66,6 +66,72 @@
             margin: 0;
             /* supaya rapi */
         }
+
+        .step-indicator {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            border-bottom: 3px solid #ccc;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .step-indicator:hover {
+            background: #f8f9fa;
+        }
+
+        .step-indicator.active {
+            border-color: #0d6efd;
+            color: #0d6efd;
+            font-weight: 600;
+        }
+
+        .step-indicator.disabled {
+            color: #aaa;
+            cursor: not-allowed;
+        }
+
+        .foto-upload {
+            width: 100%;
+            aspect-ratio: 3 / 4;
+            /* ukuran portrait seperti KTP */
+            border: 1px dashed #aaa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            background: #f9f9f9;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+        .foto-upload:hover {
+            background: #f1f1f1;
+        }
+
+        .foto-upload span {
+            color: #666;
+            font-size: 13px;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .foto-upload img {
+            display: none;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #btnHapusFoto {
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+        }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">

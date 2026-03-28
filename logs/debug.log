@@ -53,3 +53,15 @@ SQLSTATE[42S22]: Column not found: 1054 Unknown column 'deskripsi' in 'field lis
 [2026-03-12 11:27:01] STORE ERROR
 SQLSTATE[42S22]: Column not found: 1054 Unknown column 'deskripsi' in 'field list'
 
+[2026-03-25 10:55:32] STORE ERROR
+Upload file gagal
+
+[2026-03-25 10:56:37] STORE ERROR
+Upload file gagal
+
+[2026-03-28 23:24:05] STORE PESERTA ARSIP ERROR
+SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '3-27' for key 'uk_kegiatan_peserta'
+
+[2026-03-28 23:25:25] STORE PESERTA ARSIP ERROR
+SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '3-27' for key 'uk_kegiatan_peserta'
+

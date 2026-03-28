@@ -229,6 +229,79 @@ function routeRequest()
             $controller->delete();
             break;
 
+        case 'arsip-kelola-peserta':
+
+            require __DIR__ . '/../controllers/ArsipController.php';
+            $controller = new ArsipController();
+            $controller->createPeserta();
+            break;
+
+        // Arsip Peserta ==========================================
+        case 'arsip-peserta-store':
+
+            require __DIR__ . '/../controllers/ArsipPesertaController.php';
+            $controller = new ArsipPesertaController();
+            $controller->store();
+            break;
+
+        case 'arsip-peserta-update':
+
+            require __DIR__ . '/../controllers/ArsipPesertaController.php';
+            $controller = new ArsipPesertaController();
+            $controller->update();
+            break;
+
+        case 'arsip-peserta-delete':
+
+            require __DIR__ . '/../controllers/ArsipPesertaController.php';
+            $controller = new ArsipPesertaController();
+            $controller->delete();
+            break;
+
+        // Jenis Arsip =======================================
+        case 'jenis-arsip':
+
+            require __DIR__ . '/../controllers/ArsipJenisController.php';
+            $controller = new ArsipJenisController();
+            $controller->index();
+            break;
+
+        case 'tambah-jenis-arsip':
+
+            require __DIR__ . '/../controllers/ArsipJenisController.php';
+            $controller = new ArsipJenisController();
+            $controller->create();
+            break;
+
+        case 'jenis-arsip-store':
+
+            require __DIR__ . '/../controllers/ArsipJenisController.php';
+            $controller = new ArsipJenisController();
+            $controller->store();
+            break;
+
+        case 'edit-jenis-arsip':
+
+            require __DIR__ . '/../controllers/ArsipJenisController.php';
+            $controller = new ArsipJenisController();
+            $controller->edit();
+            break;
+
+        case 'jenis-arsip-update':
+
+            require __DIR__ . '/../controllers/ArsipJenisController.php';
+            $controller = new ArsipJenisController();
+            $controller->update();
+            break;
+
+        case 'jenis-arsip-delete':
+
+            require __DIR__ . '/../controllers/ArsipJenisController.php';
+            $controller = new PublikasiJenisController();
+            $controller->delete();
+            break;
+
+
         // Publikasi =======================================
         case 'publikasi':
 
@@ -608,6 +681,49 @@ function routeRequest()
 
             require __DIR__ . '/../controllers/PegawaiController.php';
             $controller = new PegawaiController();
+            $controller->delete();
+            break;
+
+        // Jabatan Pegawai =======================================
+        case 'jabatan-pegawai':
+
+            require __DIR__ . '/../controllers/PegawaiJabatanController.php';
+            $controller = new PegawaiJabatanController();
+            $controller->index();
+            break;
+
+        case 'tambah-jabatan-pegawai':
+
+            require __DIR__ . '/../controllers/PegawaiJabatanController.php';
+            $controller = new PegawaiJabatanController();
+            $controller->create();
+            break;
+
+        case 'jabatan-pegawai-store':
+
+            require __DIR__ . '/../controllers/PegawaiJabatanController.php';
+            $controller = new PegawaiJabatanController();
+            $controller->store();
+            break;
+
+        case 'edit-jabatan-pegawai':
+
+            require __DIR__ . '/../controllers/PegawaiJabatanController.php';
+            $controller = new PegawaiJabatanController();
+            $controller->edit();
+            break;
+
+        case 'jabatan-pegawai-update':
+
+            require __DIR__ . '/../controllers/PegawaiJabatanController.php';
+            $controller = new PegawaiJabatanController();
+            $controller->update();
+            break;
+
+        case 'jabatan-pegawai-delete':
+
+            require __DIR__ . '/../controllers/PegawaiJabatanController.php';
+            $controller = new PegawaiJabatanController();
             $controller->delete();
             break;
 

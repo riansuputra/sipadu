@@ -4,7 +4,7 @@
 // ================================
 
 // Judul
-$title = "Tambah Pegawai";
+$title = "Tambah Arsip";
 
 
 // Mulai buffer konten

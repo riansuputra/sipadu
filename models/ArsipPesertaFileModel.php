@@ -1,6 +1,6 @@
 <?php
 
-class PegawaiModel
+class ArsipPesertaFileModel
 {
     protected $db;
 

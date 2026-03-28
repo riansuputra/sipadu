@@ -2,13 +2,13 @@
 
 require_once __DIR__ . '/../core/BaseController.php';
 
-class PublikasiJenisController extends BaseController
+class ArsipJenisController extends BaseController
 {
     private $model;
 
     public function __construct()
     {
-        $this->model = $this->model('PublikasiJenisModel');
+        $this->model = $this->model('ArsipJenisModel');
     }
 
     public function index()
@@ -17,10 +17,10 @@ class PublikasiJenisController extends BaseController
 
         $data  = $this->model->getAll();
 
-        $this->view('jenis_publikasi/index', [
+        $this->view('jenis_arsip/index', [
+            'data' => $data,
             'user' => $this->user,
-            'role' => $this->role,
-            'data' => $data
+            'role' => $this->role
         ]);
     }
 
@@ -30,7 +30,7 @@ class PublikasiJenisController extends BaseController
 
         $data  = $this->model->getAll();
 
-        $this->view('jenis_publikasi/create', [
+        $this->view('jenis_arsip/create', [
             'data' => $data,
             'user' => $this->user,
             'role' => $this->role
@@ -42,7 +42,7 @@ class PublikasiJenisController extends BaseController
         $this->auth();
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return $this->redirect('?page=publikasi');
+            return $this->redirect('?page=arsip');
         }
 
         $errors = $this->validate($_POST);
@@ -50,7 +50,7 @@ class PublikasiJenisController extends BaseController
         if ($errors) {
             $_SESSION['errors'] = $errors;
             $_SESSION['old'] = $_POST;
-            return $this->redirect('?page=tambah-jenis-publikasi');
+            return $this->redirect('?page=tambah-jenis-arsip');
         }
 
         try {
@@ -69,24 +69,24 @@ class PublikasiJenisController extends BaseController
                 'user_id' => $this->user['id'],
                 'role_id' => $this->user['role_id'],
                 'action' => 'store',
-                'entity_type' => 'publikasi_jenis',
+                'entity_type' => 'arsip_jenis',
                 'entity_id' => $id,
-                'description' => 'Menambah data Jenis Publikasi'
+                'description' => 'Menambah data Jenis arsip'
             ]);
 
-            $this->flash('success', 'Jenis publikasi berhasil disimpan');
+            $this->flash('success', 'Jenis arsip berhasil disimpan');
         } catch (Throwable $e) {
-            $this->model->rollback();
+            $this->model->rollbac();
 
             if ($e instanceof PDOException && $e->getCode() == 23000) {
-                $this->flash('error', 'Jenis publikasi sudah digunakan');
+                $this->flash('error', 'Kode sudah digunakan');
             } else {
 
                 debug_log($e->getMessage(), 'UPDATE ERROR');
                 $this->flash('error', 'Gagal menyimpan data');
             }
         }
-        return $this->redirect('?page=tambah-jenis-publikasi');
+        return $this->redirect('?page=tambah-jenis-arsip');
     }
 
     public function edit()
@@ -98,7 +98,7 @@ class PublikasiJenisController extends BaseController
 
         $data = $this->model->getById($id);
 
-        $this->view('jenis_publikasi/edit', [
+        $this->view('jenis_arsip/edit', [
             'data' => $data,
             'user' => $this->user,
             'role' => $this->role
@@ -110,12 +110,12 @@ class PublikasiJenisController extends BaseController
         $this->auth();
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return $this->redirect('?page=publikasi');
+            return $this->redirect('?page=jenis-arsip');
         }
 
         if (empty($_POST['id']) || !ctype_digit($_POST['id'])) {
             $this->flash('error', 'ID tidak valid');
-            return $this->redirect('?page=publikasi');
+            return $this->redirect('?page=jenis-arsip');
         }
 
         $errors = $this->validate($_POST, true);
@@ -123,7 +123,7 @@ class PublikasiJenisController extends BaseController
         if ($errors) {
             $_SESSION['errors'] = $errors;
             $_SESSION['old'] = $_POST;
-            return $this->redirect('?page=edit-jenis-publikasi&id=' . $_POST['id']);
+            return $this->redirect('?page=edit-jenis-peraturan&id=' . $_POST['id']);
         }
 
         try {
@@ -142,25 +142,25 @@ class PublikasiJenisController extends BaseController
                 'user_id' => $this->user['id'],
                 'role_id' => $this->user['role_id'],
                 'action' => 'update',
-                'entity_type' => 'publikasi_jenis',
+                'entity_type' => 'arsip_jenis',
                 'entity_id' => $data['id'],
-                'description' => 'Mengubah data Jenis Publikasi'
+                'description' => 'Mengubah data Jenis arsip'
             ]);
 
-            $this->flash('success', 'Jenis publikasi berhasil diperbarui');
+            $this->flash('success', 'Jenis arsip berhasil diperbarui');
         } catch (Throwable $e) {
 
             $this->model->rollback();
             if ($e instanceof PDOException && $e->getCode() == 23000) {
 
-                $this->flash('error', 'Jenis sudah digunakan');
+                $this->flash('error', 'Kode sudah digunakan');
             } else {
 
                 debug_log($e->getMessage(), 'UPDATE ERROR');
                 $this->flash('error', 'Gagal update data');
             }
         }
-        return $this->redirect('?page=tambah-jenis-publikasi');
+        return $this->redirect('?page=tambah-jenis-arsip');
     }
 
     public function delete()
@@ -168,12 +168,12 @@ class PublikasiJenisController extends BaseController
         $this->auth();
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return $this->redirect('?page=tambah-jenis-publikasi');
+            return $this->redirect('?page=tambah-jenis-arsip');
         }
 
         if (empty($_POST['id']) || !ctype_digit($_POST['id'])) {
             $this->flash('error', 'ID tidak valid');
-            return $this->redirect('?page=tambah-jenis-publikasi');
+            return $this->redirect('?page=tambah-jenis-arsip');
         }
 
         try {
@@ -183,7 +183,7 @@ class PublikasiJenisController extends BaseController
             $id = $_POST['id'];
 
             if ($this->model->isUsed($id)) {
-                throw new Exception("Jenis publikasi masih digunakan");
+                throw new Exception("Jenis arsip masih digunakan");
             }
 
             if (!$this->model->delete($id)) {
@@ -196,21 +196,21 @@ class PublikasiJenisController extends BaseController
                 'user_id' => $this->user['id'],
                 'role_id' => $this->user['role_id'],
                 'action' => 'delete',
-                'entity_type' => 'publikasi_jenis',
+                'entity_type' => 'arsip_jenis',
                 'entity_id' => $id,
-                'description' => 'Menghapus data Jenis Publikasi'
+                'description' => 'Menghapus data Jenis arsip'
             ]);
 
-            $this->flash('success', 'Jenis publikasi berhasil dihapus');
+            $this->flash('success', 'Jenis arsip berhasil dihapus');
         } catch (Throwable $e) {
 
             $this->model->rollback();
             debug_log($e->getMessage(), 'DELETE JENIS ERROR');
 
-            $this->flash('error', 'Jenis publikasi tidak dapat dihapus karena masih digunakan');
+            $this->flash('error', 'Jenis arsip tidak dapat dihapus karena masih digunakan');
         }
 
-        return $this->redirect('?page=tambah-jenis-publikasi');
+        return $this->redirect('?page=tambah-jenis-arsip');
     }
 
     private function validate($data, $isUpdate = false)
@@ -218,7 +218,7 @@ class PublikasiJenisController extends BaseController
         $errors = [];
 
         if (empty($data['nama']))
-            $errors['nama'] = "Jenis publikasi wajib diisi";
+            $errors['nama'] = "Lembaga wajib diisi";
 
         return $errors;
     }

@@ -4,7 +4,7 @@
 // ================================
 
 // Judul
-$title = "Tambah Jenis Kegiatan";
+$title = "Tambah Jenis Arsip";
 
 
 
@@ -31,8 +31,8 @@ unset($_SESSION['errors'], $_SESSION['old']);
         <div class="row g-2 align-items-center">
             <div class="col">
                 <!-- Page pre-title -->
-                <div class="page-pretitle">Kegiatan</div>
-                <h2 class="page-title">Tambah Jenis Kegiatan</h2>
+                <div class="page-pretitle">Arsip</div>
+                <h2 class="page-title">Tambah Jenis Arsip</h2>
             </div>
         </div>
     </div>
@@ -44,20 +44,20 @@ unset($_SESSION['errors'], $_SESSION['old']);
         <div class="row row-cards ">
 
             <div class="col-sm-12 col-lg-6">
-                <form class="card" method="POST" action="<?= url('?page=jenis-kegiatan-store')  ?>" enctype="multipart/form-data">
+                <form class="card" method="POST" action="<?= url('?page=jenis-arsip-store')  ?>" enctype="multipart/form-data">
                     <div class="card-header">
-                        <h3 class="card-title">Form Tambah Jenis Kegiatan</h3>
+                        <h3 class="card-title">Form Tambah Jenis Arsip</h3>
                     </div>
                     <div class="card-body">
                         <div class="form-fieldset">
                             <div class="mb-3">
-                                <label class="form-label required">Jenis Kegiatan :</label>
+                                <label class="form-label required">Jenis Arsip :</label>
                                 <div class="col">
                                     <input
                                         type="text"
                                         name="nama"
                                         id="nama"
-                                        placeholder="Jenis Kegiatan..."
+                                        placeholder="Jenis Arsip..."
                                         value="<?= $old['nama'] ?? '' ?>"
                                         class="form-control <?= isset($errors['nama']) ? 'is-invalid' : '' ?>" autocomplete="off">
                                     <div class="invalid-feedback">
@@ -104,18 +104,18 @@ unset($_SESSION['errors'], $_SESSION['old']);
                     <div class="card-header">
                         <div class="row w-full">
                             <div class="col">
-                                <h3 class="card-title mb-0">Tabel Jenis Kegiatan</h3>
+                                <h3 class="card-title mb-0">Tabel Jenis Arsip</h3>
 
                             </div>
                         </div>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table id="jenisKegiatanTable" class="table table-vcenter table-selectable table-bordered table-striped">
+                            <table id="jenisArsipTable" class="table table-vcenter table-selectable table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th class="w-1">No</th>
-                                        <th class="text-center">Jenis Kegiatan</th>
+                                        <th class="text-center">Jenis Arsip</th>
                                         <th class="w-1">Aksi</th>
                                     </tr>
                                 </thead>
@@ -139,7 +139,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                                         </svg>
                                                     </a>
                                                     <a type="button" class="text-red" onclick="confirmDelete(
-                                                                '<?= url('?page=jenis-kegiatan-delete&id=' . $d['id']) ?>'
+                                                                '<?= url('?page=jenis-arsip-delete&id=' . $d['id']) ?>'
                                                             )">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus">
                                                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -159,21 +159,21 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                                                 <div class="modal-content">
                                                     <div class="card-header">
-                                                        <h3 class="card-title">Edit Jenis Kegiatan</h3>
+                                                        <h3 class="card-title">Edit Jenis Arsip</h3>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                             aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
                                                         <div class="form-fieldset">
-                                                            <form method="POST" action="<?= url('?page=jenis-kegiatan-update&id=' . $d['id']) ?>" enctype="multipart/form-data">
+                                                            <form method="POST" action="<?= url('?page=jenis-arsip-update&id=' . $d['id']) ?>" enctype="multipart/form-data">
                                                                 <div class="mb-3">
-                                                                    <label class="form-label required">Jenis Kegiatan :</label>
+                                                                    <label class="form-label required">Jenis Arsip :</label>
                                                                     <div class="col">
                                                                         <input
                                                                             type="text"
                                                                             name="nama"
                                                                             id="nama"
-                                                                            placeholder="Jenis Kegiatan..."
+                                                                            placeholder="Jenis Arsip..."
                                                                             value="<?= $d['nama'] ?? $old['nama'] ?? '' ?>"
                                                                             class="form-control <?= isset($errors['nama']) ? 'is-invalid' : '' ?>">
                                                                         <div class="invalid-feedback">
@@ -236,7 +236,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
 <script>
     document.addEventListener("DOMContentLoaded", function() {
 
-        const table = new DataTable('#jenisKegiatanTable', {
+        const table = new DataTable('#jenisArsipTable', {
             pageLength: 10,
             lengthMenu: [10, 20, 50, 100],
             orderCellsTop: true,

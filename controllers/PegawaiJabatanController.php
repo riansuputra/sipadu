@@ -2,13 +2,13 @@
 
 require_once __DIR__ . '/../core/BaseController.php';
 
-class KegiatanJenisController extends BaseController
+class PegawaiJabatanController extends BaseController
 {
     private $model;
 
     public function __construct()
     {
-        $this->model = $this->model('KegiatanJenisModel');
+        $this->model = $this->model('PegawaiJabatanModel');
     }
 
     public function index()
@@ -17,10 +17,10 @@ class KegiatanJenisController extends BaseController
 
         $data  = $this->model->getAll();
 
-        $this->view('jenis_kegiatan/index', [
-            'data' => $data,
+        $this->view('jabatan_pegawai/index', [
             'user' => $this->user,
-            'role' => $this->role
+            'role' => $this->role,
+            'data' => $data
         ]);
     }
 
@@ -30,7 +30,7 @@ class KegiatanJenisController extends BaseController
 
         $data  = $this->model->getAll();
 
-        $this->view('jenis_kegiatan/create', [
+        $this->view('jabatan_pegawai/create', [
             'data' => $data,
             'user' => $this->user,
             'role' => $this->role
@@ -42,7 +42,7 @@ class KegiatanJenisController extends BaseController
         $this->auth();
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return $this->redirect('?page=kegiatan');
+            return $this->redirect('?page=pegawai');
         }
 
         $errors = $this->validate($_POST);
@@ -50,7 +50,7 @@ class KegiatanJenisController extends BaseController
         if ($errors) {
             $_SESSION['errors'] = $errors;
             $_SESSION['old'] = $_POST;
-            return $this->redirect('?page=tambah-jenis-kegiatan');
+            return $this->redirect('?page=tambah-jabatan-pegawai');
         }
 
         try {
@@ -69,24 +69,24 @@ class KegiatanJenisController extends BaseController
                 'user_id' => $this->user['id'],
                 'role_id' => $this->user['role_id'],
                 'action' => 'store',
-                'entity_type' => 'kegiatan_jenis',
+                'entity_type' => 'pegawai_jabatan',
                 'entity_id' => $id,
-                'description' => 'Menambah data Jenis kegiatan'
+                'description' => 'Menambah data jabatan pegawai'
             ]);
 
-            $this->flash('success', 'Jenis kegiatan berhasil disimpan');
+            $this->flash('success', 'Jabatan pegawai berhasil disimpan');
         } catch (Throwable $e) {
             $this->model->rollback();
 
             if ($e instanceof PDOException && $e->getCode() == 23000) {
-                $this->flash('error', 'Kode sudah digunakan');
+                $this->flash('error', 'Jabatan pegawai sudah digunakan');
             } else {
 
                 debug_log($e->getMessage(), 'UPDATE ERROR');
                 $this->flash('error', 'Gagal menyimpan data');
             }
         }
-        return $this->redirect('?page=tambah-jenis-kegiatan');
+        return $this->redirect('?page=tambah-jabatan-pegawai');
     }
 
     public function edit()
@@ -98,7 +98,7 @@ class KegiatanJenisController extends BaseController
 
         $data = $this->model->getById($id);
 
-        $this->view('jenis_kegiatan/edit', [
+        $this->view('jabatan_pegawai/edit', [
             'data' => $data,
             'user' => $this->user,
             'role' => $this->role
@@ -110,12 +110,12 @@ class KegiatanJenisController extends BaseController
         $this->auth();
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return $this->redirect('?page=jenis-kegiatan');
+            return $this->redirect('?page=pegawai');
         }
 
         if (empty($_POST['id']) || !ctype_digit($_POST['id'])) {
             $this->flash('error', 'ID tidak valid');
-            return $this->redirect('?page=jenis-kegiatan');
+            return $this->redirect('?page=pegawai');
         }
 
         $errors = $this->validate($_POST, true);
@@ -123,7 +123,7 @@ class KegiatanJenisController extends BaseController
         if ($errors) {
             $_SESSION['errors'] = $errors;
             $_SESSION['old'] = $_POST;
-            return $this->redirect('?page=edit-jenis-peraturan&id=' . $_POST['id']);
+            return $this->redirect('?page=edit-jabatan-pegawai&id=' . $_POST['id']);
         }
 
         try {
@@ -142,25 +142,25 @@ class KegiatanJenisController extends BaseController
                 'user_id' => $this->user['id'],
                 'role_id' => $this->user['role_id'],
                 'action' => 'update',
-                'entity_type' => 'kegiatan_jenis',
+                'entity_type' => 'pegawai_jabatan',
                 'entity_id' => $data['id'],
-                'description' => 'Mengubah data Jenis kegiatan'
+                'description' => 'Mengubah data jabatan pegawai'
             ]);
 
-            $this->flash('success', 'Jenis kegiatan berhasil diperbarui');
+            $this->flash('success', 'Jabatan pegawai berhasil diperbarui');
         } catch (Throwable $e) {
 
             $this->model->rollback();
             if ($e instanceof PDOException && $e->getCode() == 23000) {
 
-                $this->flash('error', 'Kode sudah digunakan');
+                $this->flash('error', 'Jenis sudah digunakan');
             } else {
 
                 debug_log($e->getMessage(), 'UPDATE ERROR');
                 $this->flash('error', 'Gagal update data');
             }
         }
-        return $this->redirect('?page=tambah-jenis-kegiatan');
+        return $this->redirect('?page=tambah-jabatan-pegawai');
     }
 
     public function delete()
@@ -168,12 +168,12 @@ class KegiatanJenisController extends BaseController
         $this->auth();
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return $this->redirect('?page=tambah-jenis-kegiatan');
+            return $this->redirect('?page=tambah-jabatan-pegawai');
         }
 
         if (empty($_POST['id']) || !ctype_digit($_POST['id'])) {
             $this->flash('error', 'ID tidak valid');
-            return $this->redirect('?page=tambah-jenis-kegiatan');
+            return $this->redirect('?page=tambah-jabatan-pegawai');
         }
 
         try {
@@ -183,7 +183,7 @@ class KegiatanJenisController extends BaseController
             $id = $_POST['id'];
 
             if ($this->model->isUsed($id)) {
-                throw new Exception("Jenis kegiatan masih digunakan");
+                throw new Exception("Jabatan pegawai masih digunakan");
             }
 
             if (!$this->model->delete($id)) {
@@ -196,21 +196,21 @@ class KegiatanJenisController extends BaseController
                 'user_id' => $this->user['id'],
                 'role_id' => $this->user['role_id'],
                 'action' => 'delete',
-                'entity_type' => 'kegiatan_jenis',
+                'entity_type' => 'pegawai_jabatan',
                 'entity_id' => $id,
-                'description' => 'Menghapus data Jenis kegiatan'
+                'description' => 'Menghapus data jabatan pegawai'
             ]);
 
-            $this->flash('success', 'Jenis kegiatan berhasil dihapus');
+            $this->flash('success', 'Jabatan pegawai berhasil dihapus');
         } catch (Throwable $e) {
 
             $this->model->rollback();
             debug_log($e->getMessage(), 'DELETE JENIS ERROR');
 
-            $this->flash('error', 'Jenis kegiatan tidak dapat dihapus karena masih digunakan');
+            $this->flash('error', 'Jabatan pegawai tidak dapat dihapus karena masih digunakan');
         }
 
-        return $this->redirect('?page=tambah-jenis-kegiatan');
+        return $this->redirect('?page=tambah-jabatan-pegawai');
     }
 
     private function validate($data, $isUpdate = false)
@@ -218,7 +218,7 @@ class KegiatanJenisController extends BaseController
         $errors = [];
 
         if (empty($data['nama']))
-            $errors['nama'] = "Lembaga wajib diisi";
+            $errors['nama'] = "Jabatan pegawai wajib diisi";
 
         return $errors;
     }

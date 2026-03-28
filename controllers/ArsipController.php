@@ -1,228 +1,525 @@
 <?php
-require_once __DIR__ . '/../models/ArsipModel.php';
-require_once __DIR__ . '/../core/auth.php';
-require_once __DIR__ . '/../core/BaseController.php';
 
+require_once __DIR__ . '/../core/BaseController.php';
 
 class ArsipController extends BaseController
 {
+    private $model;
+    private $modelJenis;
+    private $modelPeserta;
+    private $modelPesertaFile;
+    private $modelPegawai;
+
+    public function __construct()
+    {
+        $this->model = $this->model('ArsipModel');
+        $this->modelJenis = $this->model('ArsipJenisModel');
+        $this->modelPeserta = $this->model('ArsipPesertaModel');
+        $this->modelPesertaFile = $this->model('ArsipPesertaFileModel');
+        $this->modelPegawai = $this->model('PegawaiModel');
+    }
+
     public function index()
     {
         $this->auth();
 
+        $tahun = $_GET['tahun'] ?? null;
+        $jenis_filter = $_GET['jenis'] ?? null;
 
+        $jenis = $this->modelJenis->getAll();
+        $pegawai = $this->modelPegawai->getAll();
 
-        $user = $this->user;
-        $role = $this->role;
+        $data = (!empty($tahun) || !empty($jenis_filter))
+            ? $this->model->getFiltered($tahun, $jenis_filter)
+            : $this->model->getAll();
 
-        $model = new ArsipModel();
-        $data = $model->getAll();
-
-        require __DIR__ . '/../views/arsip/index.php';
+        $this->view('arsip/index', [
+            'data' => $data,
+            'jenis' => $jenis,
+            'pegawai' => $pegawai,
+            'user' => $this->user,
+            'role' => $this->role
+        ]);
     }
 
     public function create()
     {
         $this->auth();
 
-        $user = $this->user;
-        $role = $this->role;
+        $jenis = $this->modelJenis->getAll();
+        $pegawai = $this->modelPegawai->getAll();
 
-        require __DIR__ . '/../views/arsip/create.php';
+        $this->view('arsip/createPeserta', [
+            'jenis' => $jenis,
+            'pegawai' => $pegawai,
+            'user' => $this->user,
+            'role' => $this->role
+        ]);
     }
 
-    // ----------------------------------------------------
-    // Store arsip
-    // ----------------------------------------------------
     public function store()
     {
         $this->auth();
 
-
-        // echo "<pre>";
-        // print_r($_POST);
-        // print_r($_FILES);
-        // echo "</pre>";
-        // die();
-
-        $user = $this->user;
-        $role = $this->role;
-
-        $errors = [];
-
-        if (!empty($errors)) {
-            $_SESSION['flash'] = [
-                'status'  => 'error',
-                'message' => implode("<br>", $errors)
-            ];
-
-            header("Location: " . url('?page=tambah-arsip'));
-            exit;
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return $this->redirect('?page=arsip');
         }
 
-        $model = new ArsipModel();
+        $errors = $this->validate($_POST, $_FILES);
 
-        $data = $_POST;
-        $data['dibuat_oleh'] = $this->user['id'];
+        // dd($errors, $_POST);
 
-        $id = $model->insert($data);
+        if ($errors) {
+            $_SESSION['errors'] = $errors;
+            $_SESSION['old'] = $_POST;
+            return $this->redirect('?page=tambah-arsip');
+        }
 
-        // ============= UPLOAD FILE ==============
-        if (!empty($_FILES['file']['name'][0])) {
+        try {
+            $this->model->beginTransaction();
 
-            $dir = __DIR__ . '/../uploads/arsip/';
+            $data = $_POST;
+            $data['created_by'] = $this->user['id'];
 
-            if (!is_dir($dir))
-                mkdir($dir, 0777, true);
+            $id = $this->model->insert($data);
 
-            foreach ($_FILES['file']['name'] as $i => $nama) {
-
-                if (!$nama) continue;
-
-                $tmp  = $_FILES['file']['tmp_name'][$i];
-                $type = $_FILES['file']['type'][$i];
-                $size = $_FILES['file']['size'][$i];
-
-                $namaBaru = time() . '_' . $i . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $nama);
-
-                move_uploaded_file($tmp, $dir . $namaBaru);
-
-                $model->insertFile($id, [
-                    'nama_file'   => $nama,
-                    'path_file'   => 'uploads/arsip/' . $namaBaru,
-                    'tipe_file'   => $type,
-                    'ukuran_file' => $size
-                ]);
+            if (!$id) {
+                throw new Exception("Insert gagal");
             }
+
+            $this->handleUpload($id, $_FILES);
+
+            $this->model->commit();
+
+            $this->log([
+                'user_id' => $this->user['id'],
+                'role_id' => $this->user['role_id'],
+                'action' => 'store',
+                'entity_type' => 'arsip',
+                'entity_id' => $id,
+                'description' => 'Menambah data arsip'
+            ]);
+
+            $this->flash('success', 'Arsip berhasil disimpan');
+        } catch (Throwable $e) {
+
+            $this->model->rollback();
+
+            debug_log($e->getMessage(), 'STORE ERROR');
+
+            $this->flash('error', 'Gagal menyimpan data');
+            return $this->redirect('?page=tambah-arsip');
         }
-
-        $_SESSION['flash'] = [
-            'status'  => 'success',
-            'message' => 'Arsip berhasil disimpan'
-        ];
-
-        header("Location: " . url('?page=tambah-arsip'));
-        exit;
+        return $this->redirect('?page=detail-arsip&id=' . $id);
     }
 
     public function show()
     {
         $this->auth();
 
+        $id = $_GET['id'] ?? null;
+        if (!$id) die("ID tidak valid");
 
+        // dd($data);
+        $peserta = $this->modelPeserta->getByArsip($id);
+        $data = $this->model->getById($id);
 
-        $user = $this->user;
-        $role = $this->role;
+        $files = $this->model->getFiles($id);
+        $pegawai = $this->model->getAvailablePegawai($id);
+        $jenis = $this->modelJenis->getAll();
 
-        $model = new ArsipModel();
-
-        $id = $_GET['id'];
-
-        $arsip = $model->getById($id);
-        $files = $model->getFiles($id);
-
-        require __DIR__ . '/../views/arsip/detail.php';
+        $this->view('arsip/detail', [
+            'data' => $data,
+            'peserta' => $peserta,
+            'files' => $files,
+            'pegawai' => $pegawai,
+            'jenis' => $jenis,
+            'user' => $this->user,
+            'role' => $this->role
+        ]);
     }
 
     public function edit()
     {
         $this->auth();
 
+        $id = $_GET['id'] ?? null;
+        if (!$id) die("ID tidak valid");
 
+        $data = $this->model->getById($id);
+        $files = $this->model->getFiles($id);
+        $jenis = $this->modelJenis->getAll();
 
-        $user = $this->user;
-        $role = $this->role;
-
-        $model = new ArsipModel();
-
-        $id = $_GET['id'];
-
-        $arsip = $model->getById($id);
-        $files = $model->getFiles($id);
-
-        require __DIR__ . '/../views/arsip/edit.php';
+        $this->view('arsip/edit', [
+            'data' => $data,
+            'files' => $files,
+            'jenis' => $jenis,
+            'user' => $this->user,
+            'role' => $this->role
+        ]);
     }
 
     public function update()
     {
         $this->auth();
 
-
-        // echo "<pre>";
-        // print_r($_POST);
-        // print_r($_FILES);
-        // echo "</pre>";
-        // die();
-
-        $user = $this->user;
-        $role = $this->role;
-
-        $errors = [];
-
-        if (!empty($errors)) {
-            $_SESSION['flash'] = [
-                'status'  => 'error',
-                'message' => implode("<br>", $errors)
-            ];
-
-            header("Location: " . url('?page=edit-arsip&id=' . $_POST['id']));
-            exit;
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return $this->redirect('?page=arsip');
         }
 
-        $model = new ArsipModel();
+        if (empty($_POST['id']) || !ctype_digit($_POST['id'])) {
+            $this->flash('error', 'ID tidak valid');
+            return $this->redirect('?page=arsip');
+        }
 
-        $data = $_POST;
+        $errors = $this->validate($_POST, $_FILES, true);
 
-        $model->update($_POST['id'], $data);
+        if ($errors) {
+            $_SESSION['errors'] = $errors;
+            $_SESSION['old'] = $_POST;
+            return $this->redirect('?page=edit-arsip&id=' . $_POST['id']);
+        }
 
-        // ============= UPLOAD FILE ==============
-        if (!empty($_FILES['file']['name'][0])) {
+        try {
+            $this->model->beginTransaction();
 
-            $dir = __DIR__ . '/../uploads/arsip/';
+            $data = $_POST;
+            $data['updated_by'] = $this->user['id'];
 
-            if (!is_dir($dir))
-                mkdir($dir, 0777, true);
-
-            foreach ($_FILES['file']['name'] as $i => $nama) {
-
-                if (!$nama) continue;
-
-                $tmp  = $_FILES['file']['tmp_name'][$i];
-                $type = $_FILES['file']['type'][$i];
-                $size = $_FILES['file']['size'][$i];
-
-                $namaBaru = time() . '_' . $i . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $nama);
-
-                move_uploaded_file($tmp, $dir . $namaBaru);
-
-                $model->insertFile($_POST['id'], [
-                    'nama_file'   => $nama,
-                    'path_file'   => 'uploads/arsip/' . $namaBaru,
-                    'tipe_file'   => $type,
-                    'ukuran_file' => $size
-                ]);
+            if (!$this->model->update($_POST['id'], $data)) {
+                throw new Exception("Update gagal");
             }
+
+            if (!empty($_POST["hapus_file"])) {
+
+                foreach (explode(",", $_POST["hapus_file"]) as $fileId) {
+
+                    if (!ctype_digit($fileId)) continue;
+
+                    if (!$this->model->deleteFileById($fileId)) {
+                        throw new Exception("Gagal hapus file");
+                    }
+                }
+            }
+
+            $this->handleUpload($_POST['id'], $_FILES);
+
+            $this->model->commit();
+
+            $this->log([
+                'user_id' => $this->user['id'],
+                'role_id' => $this->user['role_id'],
+                'action' => 'update',
+                'entity_type' => 'arsip',
+                'entity_id' => $data['id'],
+                'description' => 'Mengubah data arsip'
+            ]);
+
+            $this->flash('success', 'Arsip berhasil diperbarui');
+        } catch (Throwable $e) {
+
+            $this->model->rollback();
+            debug_log($e->getMessage(), 'UPDATE ERROR');
+
+            $this->flash('error', 'Gagal update data');
         }
-
-        $_SESSION['flash'] = [
-            'status'  => 'success',
-            'message' => 'Arsip berhasil disimpan'
-        ];
-
-        header("Location: " . url('?page=tambah-arsip'));
-        exit;
+        return $this->redirect('?page=arsip');
     }
 
     public function delete()
     {
         $this->auth();
 
-        $user = $this->user;
-        $role = $this->role;
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return $this->redirect('?page=arsip');
+        }
 
-        $model = new ArsipModel();
-        $model->delete($_GET['id']);
+        if (empty($_POST['id']) || !ctype_digit($_POST['id'])) {
+            $this->flash('error', 'ID tidak valid');
+            return $this->redirect('?page=arsip');
+        }
 
-        header("Location: " . url('?page=arsip'));
+        try {
+
+            $this->model->beginTransaction();
+
+            $id = $_POST['id'];
+
+            if (!$this->model->delete($id, $this->user['id'])) {
+                throw new Exception("Gagal menghapus data");
+            }
+
+            $this->model->commit();
+
+            $this->log([
+                'user_id' => $this->user['id'],
+                'role_id' => $this->user['role_id'],
+                'action' => 'delete',
+                'entity_type' => 'arsip',
+                'entity_id' => $id,
+                'description' => 'Menghapus data arsip'
+            ]);
+
+            $this->flash('success', 'Arsip berhasil dihapus');
+        } catch (Throwable $e) {
+
+            $this->model->rollback();
+            debug_log($e->getMessage(), 'DELETE ERROR');
+
+            $this->flash('error', 'Gagal menghapus data');
+        }
+
+        return $this->redirect('?page=arsip');
+    }
+
+    public function createPeserta()
+    {
+        $this->auth();
+
+        $id = $_GET['id'] ?? null;
+        if (!$id) die("ID tidak valid");
+
+        $data = $this->model->getById($id);
+        $pegawai = $this->modelPegawai->getAll();
+        $peserta = $this->modelPeserta->getAll();
+
+        $this->view('arsip/create', [
+            'data' => $data,
+            'peserta' => $peserta,
+            'pegawai' => $pegawai,
+            'user' => $this->user,
+            'role' => $this->role
+        ]);
+    }
+
+    public function storePeserta()
+    {
+        $this->auth();
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return $this->redirect('?page=arsip');
+        }
+
+        $errors = $this->validate($_POST, $_FILES);
+
+        // dd($errors, $_POST);
+
+        if ($errors) {
+            $_SESSION['errors'] = $errors;
+            $_SESSION['old'] = $_POST;
+            return $this->redirect('?page=tambah-arsip');
+        }
+
+        try {
+            $this->model->beginTransaction();
+
+            $data = $_POST;
+            $data['created_by'] = $this->user['id'];
+
+            $id = $this->model->insert($data);
+
+            if (!$id) {
+                throw new Exception("Insert gagal");
+            }
+
+            $this->handleUpload($id, $_FILES);
+
+            $this->model->commit();
+
+            $this->log([
+                'user_id' => $this->user['id'],
+                'role_id' => $this->user['role_id'],
+                'action' => 'store',
+                'entity_type' => 'arsip',
+                'entity_id' => $id,
+                'description' => 'Menambah data arsip'
+            ]);
+
+            $this->flash('success', 'Arsip berhasil disimpan');
+        } catch (Throwable $e) {
+
+            $this->model->rollback();
+
+            debug_log($e->getMessage(), 'STORE ERROR');
+
+            $this->flash('error', 'Gagal menyimpan data');
+            return $this->redirect('?page=tambah-arsip');
+        }
+        return $this->redirect('?page=detail-arsip&id=' . $id);
+    }
+
+    // =================================== Belum dicek ========================================
+
+    public function publicIndex()
+    {
+        $this->auth();
+
+        $jenis = $this->modelJenis->getAll();
+
+        $limit = 5; // data per halaman
+        $page  = isset($_GET['p']) ? (int)$_GET['p'] : 1;
+        if ($page < 1) $page = 1;
+        $offset = ($page - 1) * $limit;
+
+        // Ambil filter dari GET
+        $params = [
+            'judul'   => $_GET['judul'] ?? '',
+            'nomor'   => $_GET['nomor'] ?? '',
+            'tahun'   => $_GET['tahun'] ?? '',
+            'subjek'  => $_GET['subjek'] ?? '',
+            'jenis'   => $_GET['jenis'] ?? '',
+            'status'  => $_GET['status'] ?? ''
+        ];
+
+        // Jika semua filter kosong, tetap tampil 5 data terbaru
+        $allEmpty = array_filter($params) ? false : true;
+
+        $data  = $this->model->filterWithPagination($params, $limit, $offset);
+        $total = $allEmpty
+            ? $this->model->countAll()
+            : $this->model->countFiltered($params);
+
+        $totalPage = ceil($total / $limit);
+
+        $this->view('arsip/publicIndex', [
+            'data' => $data,
+            'jenis' => $jenis,
+            'totalPage' => $totalPage,
+            'page' => $page,
+            'user' => $this->user,
+            'role' => $this->role
+        ]);
+    }
+
+    public function downloadFile()
+    {
+        $this->auth();
+
+
+        $fileId = $_GET['file'];
+        $peraturanId = $_GET['id'];
+
+
+        $file  = $this->model->getFileById($fileId);
+
+        if (!$file) {
+            exit('File tidak ditemukan');
+        }
+
+        // hitung download (di tabel peraturan)
+        $this->model->incrementDownload($peraturanId);
+
+        $fullPath = __DIR__ . '/../' . $file['path_file'];
+
+        if (!file_exists($fullPath)) {
+            exit('File tidak ada di server');
+        }
+
+        // paksa download
+        header('Content-Description: File Transfer');
+        header('Content-Type: ' . $file['tipe_file']);
+        header('Content-Disposition: attachment; filename="' . basename($file['nama_file']) . '"');
+        header('Content-Length: ' . filesize($fullPath));
+
+        readfile($fullPath);
+        exit;
+    }
+
+    public function download()
+    {
+        $this->auth();
+
+        $fileId = $_GET['file'];
+
+        $file  = $this->model->getFileById($fileId);
+
+        if (!$file) {
+            exit('File tidak ditemukan');
+        }
+
+        $this->model->incrementDownload($file['peraturan_id']);
+
+        $fullPath = __DIR__ . '/../' . $file['path_file'];
+
+        if (!file_exists($fullPath)) {
+            exit('File tidak ada di server');
+        }
+
+        header('Content-Description: File Transfer');
+        header('Content-Type: ' . $file['tipe_file']);
+        header('Content-Disposition: attachment; filename="' . basename($file['nama_file']) . '"');
+        header('Content-Length: ' . filesize($fullPath));
+
+        readfile($fullPath);
+        exit;
+    }
+
+    public function detail($id)
+    {
+        $this->auth();
+
+        $this->model->incrementView($id);
+
+        $data  = $this->model->getById($id);
+        $files = $this->model->getFiles($id);
+
+        $this->view('arsip/publicDetail', [
+            'data' => $data,
+            'files' => $files,
+            'user' => $this->user,
+            'role' => $this->role
+        ]);
+    }
+
+    private function validate($data, $files, $isUpdate = false)
+    {
+        $errors = [];
+
+        if (empty($data['judul']) || strlen($data['judul']) < 2)
+            $errors['judul'] = "Judul minimal 2 karakter";
+
+        if (empty($data['lokasi']))
+            $errors['lokasi'] = "Lokasi wajib diisi";
+
+        if (empty($data['tanggal_mulai']))
+            $errors['tanggal_mulai'] = "Tanggal mulai wajib diisi";
+
+        if (empty($data['tanggal_selesai']))
+            $errors['tanggal_selesai'] = "Tanggal selesai wajib diisi";
+
+        if (empty($data['jenis_id']))
+            $errors['jenis_id'] = "Jenis wajib diisi";
+
+        return $errors;
+    }
+
+    private function handleUpload($arsipId, $files)
+    {
+        if (empty($files['file']['name'][0])) return;
+
+        $dir = realpath(__DIR__ . '/../uploads') . '/arsip/';
+
+        foreach ($files['file']['name'] as $i => $nama) {
+
+            if (!$nama) continue;
+
+            $tmp  = $files['file']['tmp_name'][$i];
+            $size = $files['file']['size'][$i];
+            $ext  = strtolower(pathinfo($nama, PATHINFO_EXTENSION));
+
+            $namaBaru = time() . '_' . $i . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $nama);
+            $path = $dir . $namaBaru;
+
+            if (!move_uploaded_file($tmp, $path)) {
+                throw new Exception("Upload file gagal");
+            }
+
+            $this->model->insertFile($arsipId, [
+                'nama_file' => $nama,
+                'path_file' => 'uploads/arsip/' . $namaBaru,
+                'tipe_file' => $ext,
+                'ukuran_file' => $size
+            ]);
+        }
     }
 }
