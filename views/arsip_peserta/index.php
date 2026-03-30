@@ -15,68 +15,57 @@ ob_start();
 
 
 <?php
-// echo '<pre>';
-// print_r($data);
-// foreach ($data as $dt => $d):
-//     if ($d['files']) {
-
-//         $files = explode('##', $d['files']);
-
-//         foreach ($files as $f) {
-
-//             list($id, $nama, $path) = explode('|', $f);
-
-//             echo "<a href='$path'>$nama</a><br>";
-//         }
-//     }
-
-// endforeach;
-
-// echo '</pre>';
 $tanggalMulai   = $_GET['tanggal_mulai'] ?? null;
 $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
 $jenis          = $_GET['jenis'] ?? null;
 
-$deskripsi = 'Menampilkan seluruh data';
+$isFiltered = !empty($tanggalMulai) || !empty($tanggalSelesai) || !empty($jenis);
 
-if ($tanggalMulai || $tanggalSelesai || $jenis) {
+$deskripsi = 'Menampilkan seluruh data arsip';
 
+if ($isFiltered) {
     $parts = [];
 
     if ($tanggalMulai && $tanggalSelesai) {
-        $parts[] = "tanggal <strong>" . htmlspecialchars($tanggalMulai) .
-            "</strong> sampai <strong>" . htmlspecialchars($tanggalSelesai) . "</strong>";
+        $parts[] = "tanggal <strong>" . formatTanggalIndonesia($tanggalMulai) .
+            "</strong> s/d <strong>" . formatTanggalIndonesia($tanggalSelesai) . "</strong>";
     } elseif ($tanggalMulai) {
-        $parts[] = "tanggal <strong>" . htmlspecialchars($tanggalMulai) . "</strong>";
+        $parts[] = "mulai <strong>" . formatTanggalIndonesia($tanggalMulai) . "</strong>";
+    } elseif ($tanggalSelesai) {
+        $parts[] = "sampai <strong>" . formatTanggalIndonesia($tanggalSelesai) . "</strong>";
     }
 
-    if ($jenis) {
-        $parts[] = "jenis informasi '<strong>" .
-            htmlspecialchars(ucwords(strtolower($jenis))) .
-            "</strong>'";
+    if (!empty($jenisNama)) {
+        $parts[] = "jenis <strong>" . htmlspecialchars($jenisNama) . "</strong>";
     }
 
-    $deskripsi = 'Filter data publikasi ' . implode(' dan ', $parts);
+    $deskripsi = 'Filter data aktif: ' . implode(' dan ', $parts);
 }
-
 ?>
 
-<div class="page-header d-print-none" aria-label="Page header">
-    <div class="container-xl">
-        <div class="row g-2 align-items-center">
-            <div class="col">
-                <!-- Page pre-title -->
-                <div class="page-pretitle">Arsip</div>
-                <h2 class="page-title">Daftar Arsip</h2>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="page-body" id="page-content" style="display:none;">
+<div class="page-body mt-3" id="page-content" style="display:none;">
 
     <div class="container-xl">
         <div class="row row-cards ">
+
+            <div class="col-12 mb-0">
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb text-center" aria-label="breadcrumbs">
+                            <li class="breadcrumb-item">
+                                <a href="<?= url('?page=dashboard') ?>" class="h3 mb-0">
+                                    🏠︎&nbsp;&nbsp;Dashboard
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                <a href="<?= url('?page=arsip-saya') ?>" class="h3 mb-0">
+                                    Arsip
+                                </a>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
 
             <div class="col-12">
 
@@ -87,7 +76,7 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
                             <form method="get">
                                 <div class="row">
 
-                                    <input type="hidden" name="page" value="publikasi">
+                                    <input type="hidden" name="page" value="arsip-saya">
 
                                     <div class="col-lg-2">
                                         <label class="form-label">Tanggal Mulai : </label>
@@ -116,7 +105,7 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
                                             </svg>
                                             Filter
                                         </button>
-                                        <a href="<?= url('?page=publikasi') ?>" class="btn btn-secondary">
+                                        <a href="<?= url('?page=arsip-saya') ?>" class="btn btn-secondary">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-refresh">
                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                                 <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"></path>
@@ -137,6 +126,33 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
+
+                        <?php if ($isFiltered): ?>
+                            <div class="alert alert-info d-flex align-items-center justify-content-between" role="alert">
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon me-2" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M12 9h.01" />
+                                        <path d="M11 12h1v4h1" />
+                                        <path d="M12 3a9 9 0 1 0 9 9a9 9 0 0 0 -9 -9" />
+                                    </svg>
+                                    <?= $deskripsi ?>
+                                </div>
+                                <a href="<?= url('?page=arsip-saya') ?>" class="btn btn-sm btn-info">
+                                    Reset Filter
+                                </a>
+                            </div>
+                        <?php else: ?>
+                            <div class="text-muted small">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-info-circle">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                                    <path d="M12 9h.01" />
+                                    <path d="M11 12h1v4h1" />
+                                </svg>
+                                <em><?= $deskripsi ?></em>
+                            </div>
+                        <?php endif; ?>
 
                         <div class="table-responsive">
                             <table id="publikasiTable" class="table table-vcenter table-selectable table-bordered table-striped">

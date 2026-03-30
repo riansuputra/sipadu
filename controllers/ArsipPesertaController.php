@@ -6,12 +6,14 @@ class ArsipPesertaController extends BaseController
 {
     private $model;
     private $modelArsip;
+    private $modelJenis;
     private $modelPegawai;
 
     public function __construct()
     {
         $this->model = $this->model('ArsipPesertaModel');
         $this->modelArsip = $this->model('ArsipModel');
+        $this->modelJenis = $this->model('ArsipJenisModel');
         $this->modelPegawai = $this->model('PegawaiModel');
     }
 
@@ -201,23 +203,24 @@ class ArsipPesertaController extends BaseController
 
         $pegawaiId = $this->user['pegawai_id'] ?? null;
 
-        // dd($pegawaiId);
-
         if (!$pegawaiId) {
             $this->flash('error', 'Akun Anda belum terhubung ke data pegawai');
             return $this->redirect('?page=dashboard');
         }
 
-        $filters = [
-            'judul' => $_GET['judul'] ?? '',
-            'tahun' => $_GET['tahun'] ?? ''
-        ];
+        $tanggalMulai   = $_GET['tanggal_mulai'] ?? null;
+        $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
+        $jenis          = $_GET['jenis'] ?? null;
 
-        $data = $this->model->getArsipSaya($pegawaiId, $filters);
+        $data = (!empty($tanggalMulai) || !empty($tanggalSelesai) || !empty($jenis))
+            ? $this->model->getFilteredArsipSaya($pegawaiId, $tanggalMulai, $tanggalSelesai, $jenis)
+            : $this->model->getArsipSaya($pegawaiId);
+
+        $jenisList = $this->modelJenis->getAll();
 
         $this->view('arsip_peserta/index', [
             'data' => $data,
-            'filters' => $filters,
+            'jenisList' => $jenisList,
             'user' => $this->user,
             'role' => $this->role
         ]);

@@ -23,18 +23,22 @@ class ArsipController extends BaseController
     {
         $this->auth();
 
-        $tahun = $_GET['tahun'] ?? null;
-        $jenis_filter = $_GET['jenis'] ?? null;
+        $tanggalMulai   = $_GET['tanggal_mulai'] ?? null;
+        $tanggalSelesai = $_GET['tanggal_selesai'] ?? null;
+        $jenisFilter    = $_GET['jenis'] ?? null;
+
+        $data = (!empty($tanggalMulai) || !empty($tanggalSelesai) || !empty($jenisFilter))
+            ? $this->model->getFiltered($tanggalMulai, $tanggalSelesai, $jenisFilter)
+            : $this->model->getAll();
+
+        $jenisList = $this->modelJenis->getAll();
 
         $jenis = $this->modelJenis->getAll();
         $pegawai = $this->modelPegawai->getAll();
 
-        $data = (!empty($tahun) || !empty($jenis_filter))
-            ? $this->model->getFiltered($tahun, $jenis_filter)
-            : $this->model->getAll();
-
         $this->view('arsip/index', [
             'data' => $data,
+            'jenisList' => $jenisList,
             'jenis' => $jenis,
             'pegawai' => $pegawai,
             'user' => $this->user,

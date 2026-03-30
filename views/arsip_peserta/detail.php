@@ -24,26 +24,36 @@ $bannerSubtitle = "SIPADU BPMP Provinsi Bali";
 ob_start();
 ?>
 
-<div class="page-header d-print-none" aria-label="Page header">
-    <div class="container-xl">
-        <div class="row g-2 align-items-center">
-            <div class="col">
-                <!-- Page pre-title -->
-                <div class="page-pretitle">Arsip</div>
-                <h2 class="page-title">Detail Arsip</h2>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="page-body mt-3" id="page-content" style="display:none;">
     <div class="container-xl">
 
 
 
-        <div class="row g-3 mb-3">
+        <div class="row row-cards">
 
-
+            <div class="col-12 mb-0">
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb text-center" aria-label="breadcrumbs">
+                            <li class="breadcrumb-item">
+                                <a href="<?= url('?page=dashboard') ?>" class="h3 mb-0">
+                                    🏠︎&nbsp;&nbsp;Dashboard
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="<?= url('?page=arsip-saya') ?>" class="h3 mb-0">
+                                    Arsip
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                <a href="tests" class="h3 mb-0">
+                                    Detail Arsip
+                                </a>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
 
             <div class="col-12">
                 <div class="card">

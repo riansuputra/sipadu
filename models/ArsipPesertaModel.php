@@ -561,4 +561,103 @@ class ArsipPesertaModel
         $stmt->execute([$arsipPesertaId, $pegawaiId]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function getFilteredArsipSaya($pegawaiId, $tanggalMulai = null, $tanggalSelesai = null, $jenis = null)
+    {
+        $stmt = null;
+
+        $sql = "
+        SELECT 
+            ap.id AS arsip_peserta_id,
+            ap.pegawai_id,
+            ap.arsip_id,
+
+            a.judul,
+            a.deskripsi,
+            a.tanggal_mulai,
+            a.tanggal_selesai,
+            a.lokasi,
+            a.kategori,
+            a.created_at,
+
+            aj.nama AS jenis_nama,
+
+            COUNT(apf.id) AS total_file,
+
+            CASE 
+                WHEN COUNT(apf.id) > 0 THEN 'bukti_diunggah'
+                ELSE 'diundang'
+            END AS status_otomatis
+
+        FROM arsip_peserta ap
+
+        JOIN arsip a 
+            ON a.id = ap.arsip_id
+            AND a.deleted_at IS NULL
+            AND a.is_active = 1
+
+        LEFT JOIN arsip_jenis aj
+            ON aj.id = a.jenis_id
+
+        LEFT JOIN arsip_peserta_file apf
+            ON apf.arsip_peserta_id = ap.id
+            AND apf.is_active = 1
+
+        WHERE ap.pegawai_id = ?
+        AND ap.is_active = 1
+    ";
+
+        $params = [$pegawaiId];
+
+        // =========================
+        // FILTER JENIS
+        // =========================
+        if (!empty($jenis) && ctype_digit((string)$jenis)) {
+            $sql .= " AND a.jenis_id = ?";
+            $params[] = $jenis;
+        }
+
+        // =========================
+        // FILTER TANGGAL (OVERLAP)
+        // =========================
+        if (!empty($tanggalMulai) && !empty($tanggalSelesai)) {
+            $sql .= " 
+            AND a.tanggal_mulai <= ?
+            AND COALESCE(a.tanggal_selesai, a.tanggal_mulai) >= ?
+        ";
+            $params[] = $tanggalSelesai;
+            $params[] = $tanggalMulai;
+        } elseif (!empty($tanggalMulai)) {
+            $sql .= " 
+            AND COALESCE(a.tanggal_selesai, a.tanggal_mulai) >= ?
+        ";
+            $params[] = $tanggalMulai;
+        } elseif (!empty($tanggalSelesai)) {
+            $sql .= " 
+            AND a.tanggal_mulai <= ?
+        ";
+            $params[] = $tanggalSelesai;
+        }
+
+        $sql .= "
+        GROUP BY 
+            ap.id,
+            ap.pegawai_id,
+            ap.arsip_id,
+            a.judul,
+            a.deskripsi,
+            a.tanggal_mulai,
+            a.tanggal_selesai,
+            a.lokasi,
+            a.kategori,
+            a.created_at,
+            aj.nama
+        ORDER BY a.tanggal_mulai DESC, a.created_at DESC
+    ";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

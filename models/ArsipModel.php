@@ -78,45 +78,94 @@ class ArsipModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getFiltered($tahun = null, $jenis = null)
+    public function getFiltered($tanggalMulai = null, $tanggalSelesai = null, $jenis = null)
     {
-        $sql = "
-            SELECT 
-                p.*,
-                j.nama AS jenis,
-                j.id AS jenis_ref_id,
-                GROUP_CONCAT(
-                    CONCAT(pf.id, '|', pf.nama_file, '|', pf.path_file, '|', pf.tipe_file) 
-                    SEPARATOR '##'
-                ) AS files
+        $stmt = null;
 
-            FROM arsip p
-            LEFT JOIN arsip_jenis j ON p.jenis_id = j.id
-            LEFT JOIN arsip_peserta_file pf ON p.id = pf.arsip_id
-            WHERE p.is_active = 1
-        ";
+        $sql = "
+        SELECT 
+            a.*,
+            aj.nama AS jenis,
+
+            COUNT(DISTINCT ap.id) AS total_peserta,
+
+            COUNT(DISTINCT CASE 
+                WHEN apf.id IS NOT NULL THEN ap.id 
+            END) AS total_upload,
+
+            (
+                COUNT(DISTINCT ap.id) - 
+                COUNT(DISTINCT CASE 
+                    WHEN apf.id IS NOT NULL THEN ap.id 
+                END)
+            ) AS total_belum,
+
+            CASE
+                WHEN COUNT(DISTINCT ap.id) = 0 THEN 0
+                WHEN COUNT(DISTINCT ap.id) = COUNT(DISTINCT CASE 
+                    WHEN apf.id IS NOT NULL THEN ap.id 
+                END) THEN 1
+                ELSE 0
+            END AS upload_selesai
+
+        FROM arsip a
+
+        LEFT JOIN arsip_jenis aj 
+            ON a.jenis_id = aj.id
+
+        LEFT JOIN arsip_peserta ap 
+            ON a.id = ap.arsip_id
+            AND ap.is_active = 1
+
+        LEFT JOIN arsip_peserta_file apf 
+            ON ap.id = apf.arsip_peserta_id
+            AND apf.is_active = 1
+
+        WHERE a.deleted_at IS NULL
+        AND a.is_active = 1
+    ";
 
         $params = [];
 
-        if (!empty($tahun)) {
-            $sql .= " AND p.tahun_terbit = ?";
-            $params[] = $tahun;
-        }
-
-        if (!empty($jenis)) {
-            $sql .= " AND j.kode = ?";
+        // =====================================
+        // FILTER JENIS
+        // =====================================
+        if (!empty($jenis) && ctype_digit((string)$jenis)) {
+            $sql .= " AND a.jenis_id = ?";
             $params[] = $jenis;
         }
 
-        $sql .= "
-            GROUP BY p.id, j.nama, j.kode
-            ORDER BY p.tahun_terbit DESC, p.created_at DESC
+        // =====================================
+        // FILTER TANGGAL (OVERLAP / IRISAN)
+        // =====================================
+        if (!empty($tanggalMulai) && !empty($tanggalSelesai)) {
+            $sql .= "
+            AND a.tanggal_mulai <= ?
+            AND COALESCE(a.tanggal_selesai, a.tanggal_mulai) >= ?
         ";
+            $params[] = $tanggalSelesai;
+            $params[] = $tanggalMulai;
+        } elseif (!empty($tanggalMulai)) {
+            $sql .= "
+            AND COALESCE(a.tanggal_selesai, a.tanggal_mulai) >= ?
+        ";
+            $params[] = $tanggalMulai;
+        } elseif (!empty($tanggalSelesai)) {
+            $sql .= "
+            AND a.tanggal_mulai <= ?
+        ";
+            $params[] = $tanggalSelesai;
+        }
+
+        $sql .= "
+        GROUP BY a.id
+        ORDER BY a.created_at DESC
+    ";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($params);
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getById($id)
