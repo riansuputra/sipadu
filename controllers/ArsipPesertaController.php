@@ -194,4 +194,252 @@ class ArsipPesertaController extends BaseController
 
         return $this->redirect('?page=detail-arsip&id=' . $arsip_id);
     }
+
+    public function indexPeserta()
+    {
+        $this->auth();
+
+        $pegawaiId = $this->user['pegawai_id'] ?? null;
+
+        // dd($pegawaiId);
+
+        if (!$pegawaiId) {
+            $this->flash('error', 'Akun Anda belum terhubung ke data pegawai');
+            return $this->redirect('?page=dashboard');
+        }
+
+        $filters = [
+            'judul' => $_GET['judul'] ?? '',
+            'tahun' => $_GET['tahun'] ?? ''
+        ];
+
+        $data = $this->model->getArsipSaya($pegawaiId, $filters);
+
+        $this->view('arsip_peserta/index', [
+            'data' => $data,
+            'filters' => $filters,
+            'user' => $this->user,
+            'role' => $this->role
+        ]);
+    }
+
+    public function showPeserta()
+    {
+        $this->auth();
+
+        $pegawaiId = $this->user['pegawai_id'] ?? null;
+        $arsipId = $_GET['id'] ?? null;
+
+
+        if (!$pegawaiId) {
+            $this->flash('error', 'Akun Anda belum terhubung ke data pegawai');
+            return $this->redirect('?page=dashboard');
+        }
+
+        if (!$arsipId || !ctype_digit($arsipId)) {
+            $this->flash('error', 'ID arsip tidak valid');
+            return $this->redirect('?page=arsip-saya');
+        }
+
+        $data = $this->model->getDetailArsipSaya($arsipId, $pegawaiId);
+        // dd($data);
+
+        if (!$data) {
+            $this->flash('error', 'Data arsip tidak ditemukan atau Anda bukan peserta arsip ini');
+            return $this->redirect('?page=arsip-saya');
+        }
+
+        $files = $this->model->getFilesByArsipPeserta($data['arsip_peserta_id']);
+        // dd($files);
+
+
+        $this->view('arsip_peserta/detail', [
+            'data' => $data,
+            'files' => $files,
+            'user' => $this->user,
+            'role' => $this->role
+        ]);
+    }
+
+    public function uploadBukti()
+    {
+        $this->auth();
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return $this->redirect('?page=arsip-saya');
+        }
+
+        $pegawaiId = $this->user['pegawai_id'] ?? null;
+
+        if (!$pegawaiId) {
+            $this->flash('error', 'Akun Anda belum terhubung ke data pegawai');
+            return $this->redirect('?page=dashboard');
+        }
+
+        $arsipPesertaId = $_POST['arsip_peserta_id'] ?? null;
+        $arsipId = $_POST['arsip_id'] ?? null;
+
+        if (!$arsipPesertaId || !ctype_digit($arsipPesertaId)) {
+            $this->flash('error', 'Data peserta arsip tidak valid');
+            return $this->redirect('?page=arsip-saya');
+        }
+
+        if (!$arsipId || !ctype_digit($arsipId)) {
+            $this->flash('error', 'Data arsip tidak valid');
+            return $this->redirect('?page=arsip-saya');
+        }
+
+        $arsipPeserta = $this->model->getArsipPesertaByIdAndPegawai($arsipPesertaId, $pegawaiId);
+
+        if (!$arsipPeserta) {
+            $this->flash('error', 'Anda tidak memiliki akses ke arsip ini');
+            return $this->redirect('?page=arsip-saya');
+        }
+
+        if (empty($_FILES['file']['name'][0])) {
+            $this->flash('error', 'Silakan pilih minimal 1 file');
+            return $this->redirect('?page=detail-arsip-saya&id=' . $arsipId);
+        }
+
+        try {
+            $this->model->beginTransaction();
+
+            $this->handleUploadBukti($arsipPesertaId, $_FILES);
+
+            $this->model->commit();
+
+            $this->log([
+                'user_id' => $this->user['id'],
+                'role_id' => $this->user['role_id'],
+                'action' => 'upload',
+                'entity_type' => 'arsip_peserta_file',
+                'entity_id' => $arsipPesertaId,
+                'description' => 'Mengunggah bukti arsip oleh peserta'
+            ]);
+
+            $this->flash('success', 'Bukti berhasil diunggah');
+        } catch (Throwable $e) {
+            $this->model->rollback();
+            debug_log($e->getMessage(), 'UPLOAD BUKTI ARSIP ERROR');
+            $this->flash('error', 'Gagal mengunggah bukti');
+        }
+
+        return $this->redirect('?page=detail-arsip-saya&id=' . $arsipId);
+    }
+
+    public function deleteBukti()
+    {
+        $this->auth();
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return $this->redirect('?page=arsip-saya');
+        }
+
+        $pegawaiId = $this->user['pegawai_id'] ?? null;
+
+        if (!$pegawaiId) {
+            $this->flash('error', 'Akun Anda belum terhubung ke data pegawai');
+            return $this->redirect('?page=dashboard');
+        }
+
+        $fileId = $_POST['id'] ?? null;
+        $arsipId = $_POST['arsip_id'] ?? null;
+
+        if (!$fileId || !ctype_digit($fileId)) {
+            $this->flash('error', 'ID file tidak valid');
+            return $this->redirect('?page=arsip-saya');
+        }
+
+        if (!$arsipId || !ctype_digit($arsipId)) {
+            $this->flash('error', 'ID arsip tidak valid');
+            return $this->redirect('?page=arsip-saya');
+        }
+
+        $file = $this->model->getFileById($fileId);
+
+        if (!$file) {
+            $this->flash('error', 'File tidak ditemukan');
+            return $this->redirect('?page=detail-arsip-saya&id=' . $arsipId);
+        }
+
+        $cekAkses = $this->model->isFileMilikPegawai($fileId, $pegawaiId);
+
+        if (!$cekAkses) {
+            $this->flash('error', 'Anda tidak memiliki akses ke file ini');
+            return $this->redirect('?page=detail-arsip-saya&id=' . $arsipId);
+        }
+
+        try {
+            $this->model->beginTransaction();
+
+            if (!$this->model->deleteFileById($fileId)) {
+                throw new Exception("Gagal menghapus file");
+            }
+
+            $this->model->commit();
+
+            $this->log([
+                'user_id' => $this->user['id'],
+                'role_id' => $this->user['role_id'],
+                'action' => 'delete',
+                'entity_type' => 'arsip_peserta_file',
+                'entity_id' => $fileId,
+                'description' => 'Menghapus bukti arsip oleh peserta'
+            ]);
+
+            $this->flash('success', 'File bukti berhasil dihapus');
+        } catch (Throwable $e) {
+            $this->model->rollback();
+            debug_log($e->getMessage(), 'DELETE BUKTI ARSIP ERROR');
+            $this->flash('error', 'Gagal menghapus file bukti');
+        }
+
+        return $this->redirect('?page=detail-arsip-saya&id=' . $arsipId);
+    }
+
+    // Upload file bukti arsip peserta
+    private function handleUploadBukti($arsipPesertaId, $files)
+    {
+        if (empty($files['file']['name'][0])) return;
+
+        $dir = realpath(__DIR__ . '/../uploads') . '/arsip_peserta/';
+
+        if (!is_dir($dir)) {
+            mkdir($dir, 0777, true);
+        }
+
+        $allowed = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'jpg', 'jpeg', 'png', 'gif', 'webp'];
+
+        foreach ($files['file']['name'] as $i => $nama) {
+
+            if (!$nama) continue;
+
+            $tmp  = $files['file']['tmp_name'][$i];
+            $size = $files['file']['size'][$i];
+            $ext  = strtolower(pathinfo($nama, PATHINFO_EXTENSION));
+
+            if (!in_array($ext, $allowed)) {
+                throw new Exception("Format file tidak diizinkan");
+            }
+
+            if ($size > 5 * 1024 * 1024) {
+                throw new Exception("Ukuran file maksimal 5MB");
+            }
+
+            $namaBaru = time() . '_' . $i . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $nama);
+            $path = $dir . $namaBaru;
+
+            if (!move_uploaded_file($tmp, $path)) {
+                throw new Exception("Upload file gagal");
+            }
+
+            $this->model->insertFileBukti([
+                'arsip_peserta_id' => $arsipPesertaId,
+                'nama_file' => $nama,
+                'path_file' => 'uploads/arsip_peserta/' . $namaBaru,
+                'tipe_file' => $ext,
+                'ukuran_file' => $size
+            ]);
+        }
+    }
 }

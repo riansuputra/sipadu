@@ -5,8 +5,10 @@
 
 // Judul
 $title = "Arsip";
+$bannerTitle = "Arsip";
+$bannerSubtitle = "SIPADU BPMP Provinsi Bali";
 
-// dd($data);
+
 // Mulai buffer konten
 ob_start();
 ?>
@@ -54,7 +56,7 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
             "</strong>'";
     }
 
-    $deskripsi = 'Filter data arsip ' . implode(' dan ', $parts);
+    $deskripsi = 'Filter data publikasi ' . implode(' dan ', $parts);
 }
 
 ?>
@@ -66,26 +68,6 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
                 <!-- Page pre-title -->
                 <div class="page-pretitle">Arsip</div>
                 <h2 class="page-title">Daftar Arsip</h2>
-            </div>
-            <!-- Page title actions -->
-            <div class="col-auto ms-auto d-print-none">
-                <div class="btn-list">
-                    <a href="<?= url('?page=tambah-arsip') ?>" class="btn btn-primary btn-5 d-none d-sm-inline-block">
-
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">
-                            <path d="M12 5l0 14"></path>
-                            <path d="M5 12l14 0"></path>
-                        </svg>
-                        Tambah Arsip
-                    </a>
-                    <a href="<?= url('?page=tambah-arsip') ?>" class="btn btn-primary btn-6 d-sm-none btn-icon">
-
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">
-                            <path d="M12 5l0 14"></path>
-                            <path d="M5 12l14 0"></path>
-                        </svg>
-                    </a>
-                </div>
             </div>
         </div>
     </div>
@@ -105,7 +87,7 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
                             <form method="get">
                                 <div class="row">
 
-                                    <input type="hidden" name="page" value="arsip">
+                                    <input type="hidden" name="page" value="publikasi">
 
                                     <div class="col-lg-2">
                                         <label class="form-label">Tanggal Mulai : </label>
@@ -134,7 +116,7 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
                                             </svg>
                                             Filter
                                         </button>
-                                        <a href="<?= url('?page=arsip') ?>" class="btn btn-secondary">
+                                        <a href="<?= url('?page=publikasi') ?>" class="btn btn-secondary">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-refresh">
                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                                 <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"></path>
@@ -157,101 +139,71 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
                     <div class="card-body">
 
                         <div class="table-responsive">
-                            <table id="arsipTable" class="table table-vcenter table-selectable table-bordered table-striped">
+                            <table id="publikasiTable" class="table table-vcenter table-selectable table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th class="w-1">No</th>
-                                        <th class="text-center">Judul Arsip <br>& Lokasi</th>
-                                        <th class="w-1 text-center">Jenis</th>
+                                        <th class="text-center w-1">No</th>
+                                        <th class="text-center">Judul Arsip<br> & Lokasi</th>
+                                        <th class="text-center w-1">Jenis</th>
                                         <th class="text-center" style="width: 20%;">Tanggal</th>
-                                        <th class="w-1 text-center">Total <br> Peserta</th>
-                                        <th>Status</th>
-                                        <th class="w-1 text-center">Aksi</th>
-                                    </tr>
-                                    <tr id="filterRow">
-                                        <th></th>
-                                        <th><input type="text" placeholder="Cari judul..." class="form-control w-100 h5 m-0"></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
+                                        <th class="text-center w-1">Status<br> Upload</th>
+                                        <th class="text-center w-1">Bukti</th>
+                                        <th class="text-center w-1">Aksi</th>
                                     </tr>
                                 </thead>
-                                <tbody class="table-tbody">
-                                    <?php foreach ($data as $dt => $d): ?>
+                                <tbody>
+                                    <?php if (!empty($data)): ?>
+                                        <?php foreach ($data as $i => $d): ?>
+                                            <tr>
+                                                <td class="text-center"><?= $i + 1 ?></td>
+                                                <td>
+                                                    <div class="fw-semibold"><?= htmlspecialchars($d['judul'] ?? '-') ?></div>
+                                                    <div class="text-muted small"><?= htmlspecialchars($d['lokasi'] ?? '-') ?></div>
+                                                </td>
+                                                <td><?= htmlspecialchars($d['jenis_nama'] ?? '-') ?></td>
+                                                <td class="text-center">
+                                                    <?= formatTanggalRangeTable($d['tanggal_mulai'] ?? null, $d['tanggal_selesai'] ?? null) ?>
+                                                </td>
+                                                <td class="text-center">
+                                                    <?php if (($d['status_otomatis'] ?? '') === 'bukti_diunggah'): ?>
+                                                        <span class="badge bg-green text-green-fg">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-check">
+                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                                <path d="M5 12l5 5l10 -10" />
+                                                            </svg>
+                                                            Sudah
+                                                        </span>
+
+                                                    <?php else: ?>
+                                                        <span class="badge bg-red text-red-fg">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-x">
+                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                                <path d="M18 6l-12 12" />
+                                                                <path d="M6 6l12 12" />
+                                                            </svg>
+                                                            Belum
+                                                        </span>
+                                                    <?php endif; ?>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span class="badge bg-secondary-lt">
+                                                        <?= (int) ($d['total_file'] ?? 0) ?> file
+                                                    </span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <a href="<?= url('?page=detail-arsip-saya&id=' . $d['arsip_id']) ?>" class="btn btn-sm btn-primary">
+                                                        Detail
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
                                         <tr>
-                                            <td class="text-center">
-                                                <?= $dt + 1 ?>
-                                            </td>
-                                            <td class="">
-                                                <?= htmlspecialchars($d['judul'] ?? '-') ?>
-                                            </td>
-                                            <td class="">
-                                                <?= htmlspecialchars($d['jenis'] ?? '-') ?>
-                                            </td>
-                                            <td class="text-center">
-                                                <?= formatTanggalRangeTable($d['tanggal_mulai'] ?? null, $d['tanggal_selesai'] ?? null) ?>
-                                            </td>
-                                            <td class="text-center">
-                                                <?= htmlspecialchars($d['total_peserta'] ?? '-') ?>
-                                            </td>
-                                            <td class="text-center">
-                                                <?php if ((int)($d['upload_selesai'] ?? 0) === 1): ?>
-                                                    <span class="text-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Semua peserta sudah upload">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#00ff00" class="icon icon-tabler icons-tabler-filled icon-tabler-circle-check">
-                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                            <path d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z" />
-                                                        </svg>
-                                                    </span>
-                                                <?php else: ?>
-                                                    <span class="text-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Masih ada peserta yang belum upload">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#ff0000" class="icon icon-tabler icons-tabler-filled icon-tabler-circle-x">
-                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                            <path d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-6.489 5.8a1 1 0 0 0 -1.218 1.567l1.292 1.293l-1.292 1.293l-.083 .094a1 1 0 0 0 1.497 1.32l1.293 -1.292l1.293 1.292l.094 .083a1 1 0 0 0 1.32 -1.497l-1.292 -1.293l1.292 -1.293l.083 -.094a1 1 0 0 0 -1.497 -1.32l-1.293 1.292l-1.293 -1.292l-.094 -.083z" />
-                                                        </svg>
-                                                    </span>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td>
-                                                <div class="btn-group w-100">
-                                                    <a href="<?= url('?page=detail-arsip&id=' . $d["id"]) ?>" class="text-primary me-1">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-eye" data-bs-toggle="tooltip" data-bs-placement="top" title="Detail">
-                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                            <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
-                                                            <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
-                                                        </svg>
-                                                    </a>
-                                                    <a href="<?= url('?page=edit-arsip&id=' . $d["id"]) ?>" class="text-yellow me-1">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
-                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                            <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
-                                                            <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415" />
-                                                            <path d="M16 5l3 3" />
-                                                        </svg>
-                                                    </a>
-                                                    <a class="text-red"
-                                                        onclick="confirmDelete(
-                                                                '<?= url('?page=arsip-delete') ?>',
-                                                                '<?= $d['id'] ?>'
-                                                            )">
-
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus">
-                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                            <path d="M4 7l16 0" />
-                                                            <path d="M10 11l0 6" />
-                                                            <path d="M14 11l0 6" />
-                                                            <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                                                            <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-                                                        </svg>
-                                                    </a>
-                                                </div>
-
+                                            <td colspan="7" class="text-center text-muted py-4">
+                                                Belum ada arsip yang ditugaskan kepada Anda
                                             </td>
                                         </tr>
-
-                                    <?php endforeach; ?>
-
+                                    <?php endif; ?>
                                 </tbody>
                             </table>
                         </div>
@@ -267,7 +219,7 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
 <script>
     document.addEventListener("DOMContentLoaded", function() {
 
-        const table = new DataTable('#arsipTable', {
+        const table = new DataTable('#publikasiTable', {
             pageLength: 10,
             lengthMenu: [10, 20, 50, 100],
             orderCellsTop: true,
@@ -276,7 +228,7 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
                     pageLength: {},
                     div: {
                         html: `
-                        <a href="<?= url('?page=arsip') ?>" class="btn btn-primary btn-sm btn-6 btn-icon">
+                        <a href="<?= url('?page=publikasi') ?>" class="btn btn-primary btn-sm btn-6 btn-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-refresh">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                 <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"></path>
@@ -373,6 +325,7 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
                 // PASANG FILTER SELECT
                 // =============================
                 createSelectFilter(2); // Tahun
+                createSelectFilter(3); // Jenis Informasi
 
             }
         });
@@ -451,4 +404,4 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
 $content = ob_get_clean();
 
 // Load layout utama
-require __DIR__ . '/../layouts/admin.php';
+require __DIR__ . '/../layouts/main.php';

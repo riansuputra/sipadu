@@ -49,11 +49,13 @@ class AuthController extends BaseController
                 r.id as role_id,
                 r.kode_role,
                 p.id AS pokja_id,
+                pe.id AS pegawai_id,
                 p.pokja_nama,
                 p.pokja_tipe
             FROM users u
             JOIN role r ON u.role_id = r.id
             LEFT JOIN pokja p ON u.pokja_id = p.id
+            LEFT JOIN pegawai pe ON u.pegawai_id = pe.id
             WHERE u.username = ?
             AND u.is_active = 1
             LIMIT 1

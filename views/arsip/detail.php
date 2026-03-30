@@ -39,28 +39,122 @@ ob_start();
 <div class="page-body mt-3" id="page-content" style="display:none;">
     <div class="container-xl">
 
+        <?php
+        $totalPeserta = count($peserta);
+        $totalUpload = count(array_filter($peserta, fn($p) => ($p['status_otomatis'] ?? '') === 'bukti_diunggah'));
+        $totalBelum = $totalPeserta - $totalUpload;
+        ?>
+
+        <div class="row g-3 mb-3">
+
+            <div class="col-md-4">
+                <div class="card card-sm">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <span class="bg-primary text-white avatar">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-users">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+                                        <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                        <path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="col">
+                                <div class="text-muted small">Total Peserta</div>
+                                <div class="fs-2 fw-bold text-primary"><?= $totalPeserta ?></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card card-sm">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <span class="bg-success text-white avatar">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-check">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M5 12l5 5l10 -10" />
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="col">
+                                <div class="text-muted small">Sudah Upload</div>
+                                <div class="fs-2 fw-bold text-success"><?= $totalUpload ?></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card card-sm">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <span class="bg-danger text-white avatar">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-x">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M18 6l-12 12" />
+                                        <path d="M6 6l12 12" />
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="col">
+                                <div class="text-muted small">Belum Upload</div>
+                                <div class="fs-2 fw-bold text-danger"><?= $totalBelum ?></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
         <div class="col-12">
             <div class="card mb-3">
                 <div class="card-header">
                     <h3 class="card-title">Informasi Arsip</h3>
+                    <div class="card-actions">
+                        <a href="<?= url('?page=edit-arsip&id=' . $data["id"]) ?>" class="btn btn-yellow btn-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+                                <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415" />
+                                <path d="M16 5l3 3" />
+                            </svg>
+                            Edit Arsip
+                        </a>
+                    </div>
                 </div>
                 <div class="card-body">
-                    <dl class="row">
-                        <dt class="col-4">Judul</dt>
-                        <dt class="col-1 col-auto text-end">:</dt>
-                        <dd class="col-7 text-bold"><strong><?= $data['judul'] ?? '-' ?></strong></dd>
-                        <dt class="col-4">Jenis</dt>
-                        <dt class="col-1 col-auto text-end">:</dt>
-                        <dd class="col-7 text-bold"><strong><?= $data['jenis'] ?? '-' ?></strong></dd>
-                        <dt class="col-4">Tanggal</dt>
-                        <dt class="col-1 col-auto text-end">:</dt>
-                        <dd class="col-7 text-bold"><strong><?= $data['tanggal_mulai'] ?? '-' ?>-<?= $data['tanggal_selesai'] ?? '-' ?></strong></dd>
-                        <dt class="col-4">Deskripsi</dt>
-                        <dt class="col-1 col-auto text-end">:</dt>
-                        <dd class="col-7 text-bold"><strong><?= $data['deskripsi'] ?></strong></dd>
-                        <dt class="col-4" style="border-bottom: none;">File</dt>
-                        <dt class="col-1 col-auto text-end" style="border-bottom: none;">:</dt>
-                        <dd class="col-7 text-bold" style="border-bottom: none;">
+                    <h2 class="mb-3">"<?= htmlspecialchars($data['judul'] ?? '-') ?>"</h2>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="text-muted small">Jenis Arsip :</div>
+                            <div class="fw-semibold"><?= htmlspecialchars($data['jenis'] ?? '-') ?></div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="text-muted small">Lokasi :</div>
+                            <div class="fw-semibold"><?= htmlspecialchars($data['lokasi'] ?? '-') ?></div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="text-muted small">Tanggal Mulai dan Selesai :</div>
+                            <div class="fw-semibold">
+                                <?= formatTanggalRange($data['tanggal_mulai'] ?? null, $data['tanggal_selesai'] ?? null) ?>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="text-muted small">File :</div>
                             <?php
                             $listFile = [];
 
@@ -176,23 +270,19 @@ ob_start();
                                     <a href='<?= url($path) ?>' target='_blank' class="mb-1">
                                         <?= $icon ?>&nbsp;<?= shortname($nama, 20) ?>
                                     </a>
-                                    <a href="<?= url('?page=arsip-file&file=' . $fid . '&id=' . $data['id']) ?>" class="icon icon-sm text-end mt-0" aria-label="Button" data-bs-toggle="tooltip" data-bs-placement="top" title="Download">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2fb344" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-download">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                            <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
-                                            <path d="M7 11l5 5l5 -5" />
-                                            <path d="M12 4l0 12" />
-                                        </svg>
-                                    </a>
                                 </div>
                             <?php
                             endforeach;
                             ?>
-                        </dd>
-                    </dl>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="text-muted small">Deskripsi :</div>
+                            <div class="fw-semibold"><?= !empty($data['deskripsi']) ? nl2br(htmlspecialchars($data['deskripsi'])) : '-' ?></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
         </div>
 
         <div class="col-12">
@@ -305,14 +395,12 @@ ob_start();
                                             <?= htmlspecialchars($d['nama'] ?? '-') ?>
                                         </td>
                                         <td class="text-center">
-                                            <?php if (($d['status'] ?? '') === 'bukti_diunggah'): ?>
-                                                <span class="badge bg-green text-green-fg">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-check">
-                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                        <path d="M5 12l5 5l10 -10" />
-                                                    </svg>
-                                                    Sudah
-                                                </span>
+                                            <?php if (($d['status_otomatis'] ?? '') === 'bukti_diunggah'): ?>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-check">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                    <path d="M5 12l5 5l10 -10" />
+                                                </svg>
+                                                Sudah
                                             <?php else: ?>
                                                 <span class="badge bg-red text-red-fg">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-x">

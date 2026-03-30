@@ -24,29 +24,58 @@ class ArsipModel
         return $this->db->rollBack();
     }
 
+    // Ambil semua data arsip beserta ringkasan peserta
+    // Ambil semua data arsip beserta ringkasan peserta
     public function getAll()
     {
         $stmt = $this->db->prepare("
-            SELECT 
-                k.*,
-                j.nama AS jenis,
-                GROUP_CONCAT(
-                    CONCAT(kf.id, '|', kf.nama_file, '|', kf.path_file, '|', kf.tipe_file)
-                    SEPARATOR '##'
-                ) AS files
+        SELECT 
+            a.*,
+            aj.nama AS jenis,
 
-            FROM arsip k
-            LEFT JOIN arsip_jenis j ON k.jenis_id = j.id
-            LEFT JOIN arsip_file kf ON k.id = kf.arsip_id
+            COUNT(DISTINCT ap.id) AS total_peserta,
 
-            WHERE k.is_active = 1
+            COUNT(DISTINCT CASE 
+                WHEN apf.id IS NOT NULL THEN ap.id 
+            END) AS total_upload,
 
-            GROUP BY k.id, j.nama
-            ORDER BY k.created_at DESC
-        ");
+            (
+                COUNT(DISTINCT ap.id) - 
+                COUNT(DISTINCT CASE 
+                    WHEN apf.id IS NOT NULL THEN ap.id 
+                END)
+            ) AS total_belum,
+
+            CASE
+                WHEN COUNT(DISTINCT ap.id) = 0 THEN 0
+                WHEN COUNT(DISTINCT ap.id) = COUNT(DISTINCT CASE 
+                    WHEN apf.id IS NOT NULL THEN ap.id 
+                END) THEN 1
+                ELSE 0
+            END AS upload_selesai
+
+        FROM arsip a
+
+        LEFT JOIN arsip_jenis aj 
+            ON a.jenis_id = aj.id
+
+        LEFT JOIN arsip_peserta ap 
+            ON a.id = ap.arsip_id
+            AND ap.is_active = 1
+
+        LEFT JOIN arsip_peserta_file apf 
+            ON ap.id = apf.arsip_peserta_id
+            AND apf.is_active = 1
+
+        WHERE a.deleted_at IS NULL
+        AND a.is_active = 1
+
+        GROUP BY a.id
+        ORDER BY a.created_at DESC
+    ");
 
         $stmt->execute();
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getFiltered($tahun = null, $jenis = null)
@@ -144,38 +173,41 @@ class ArsipModel
         return $this->db->lastInsertId();
     }
 
+    // Update data arsip
     public function update($id, $data)
     {
-        if (empty($data['updated_by']) || !is_numeric($data['updated_by'])) {
-            return false;
-        }
-
         if (empty($id) || !is_numeric($id)) {
             return false;
         }
 
+        if (empty($data['updated_by']) || !is_numeric($data['updated_by'])) {
+            return false;
+        }
+
         $stmt = $this->db->prepare("
-            UPDATE peraturan SET
-                judul = ?,
-                nomor = ?,
-                lembaga = ?,
-                jenis_id = ?,
-                tahun_terbit = ?,
-                tempat_penetapan = ?,
-                penandatangan = ?,
-                updated_at = NOW(),
-                updated_by = ?
-            WHERE id = ?
-        ");
+        UPDATE arsip
+        SET
+            judul = ?,
+            deskripsi = ?,
+            tanggal_mulai = ?,
+            tanggal_selesai = ?,
+            jenis_id = ?,
+            lokasi = ?,
+            kategori = ?,
+            updated_by = ?,
+            updated_at = NOW()
+        WHERE id = ?
+        AND deleted_at IS NULL
+    ");
 
         return $stmt->execute([
-            $data['judul'],
-            $data['nomor'],
-            $data['lembaga'],
-            $data['jenis_id'],
-            $data['tahun_terbit'],
-            $data['tempat_penetapan'],
-            $data['penandatangan'],
+            trim($data['judul']),
+            !empty($data['deskripsi']) ? trim($data['deskripsi']) : null,
+            $data['tanggal_mulai'],
+            !empty($data['tanggal_selesai']) ? $data['tanggal_selesai'] : null,
+            (int)$data['jenis_id'],
+            !empty($data['lokasi']) ? trim($data['lokasi']) : null,
+            !empty($data['kategori']) ? trim($data['kategori']) : null,
             (int)$data['updated_by'],
             (int)$id
         ]);
@@ -184,7 +216,7 @@ class ArsipModel
     public function delete($id, $deletedBy)
     {
         $stmt = $this->db->prepare("
-            UPDATE peraturan SET 
+            UPDATE arsip SET 
                 is_active = 0,
                 deleted_at = NOW(),
                 deleted_by = ?
@@ -263,7 +295,7 @@ class ArsipModel
     public function getLatest($limit = 5)
     {
         $stmt = $this->db->prepare("
-            SELECT * FROM peraturan
+            SELECT * FROM arsip
             WHERE is_active = 1
             ORDER BY created_at DESC
             LIMIT ?
@@ -283,8 +315,8 @@ class ArsipModel
                     CONCAT(pf.id,'|',pf.nama_file,'|',pf.path_file)
                     SEPARATOR '##'
                 ) AS files
-            FROM peraturan p
-            LEFT JOIN peraturan_jenis j ON p.jenis_id = j.id
+            FROM arsip p
+            LEFT JOIN arsip_jenis j ON p.jenis_id = j.id
             LEFT JOIN arsip_file pf ON p.id = pf.arsip_id
             WHERE p.is_active = 1
             -- + kondisi filter dinamis
@@ -297,7 +329,7 @@ class ArsipModel
 
     public function filter($params)
     {
-        $sql = "SELECT * FROM peraturan WHERE is_active = 1";
+        $sql = "SELECT * FROM arsip WHERE is_active = 1";
         $bind = [];
 
         if (!empty($params['judul'])) {
@@ -335,7 +367,7 @@ class ArsipModel
     public function incrementDownload($id)
     {
         $stmt = $this->db->prepare("
-            UPDATE peraturan
+            UPDATE arsip
             SET jumlah_unduhan = jumlah_unduhan + 1
             WHERE id = ?
         ");
@@ -345,7 +377,7 @@ class ArsipModel
     public function incrementView($id)
     {
         $stmt = $this->db->prepare("
-            UPDATE peraturan
+            UPDATE arsip
             SET jumlah_dilihat = jumlah_dilihat + 1
             WHERE id = ?
         ");
@@ -362,8 +394,8 @@ class ArsipModel
                     CONCAT(pf.id,'|',pf.nama_file,'|',pf.path_file)
                     SEPARATOR '##'
                 ) AS files
-            FROM peraturan p
-            LEFT JOIN peraturan_jenis j ON p.jenis_id = j.id
+            FROM arsip p
+            LEFT JOIN arsip_jenis j ON p.jenis_id = j.id
             LEFT JOIN arsip_file pf ON p.id = pf.arsip_id
             WHERE p.is_active = 1
         ";
@@ -407,7 +439,7 @@ class ArsipModel
 
     public function countFiltered($params)
     {
-        $sql = "SELECT COUNT(DISTINCT p.id) FROM peraturan p WHERE p.is_active = 1";
+        $sql = "SELECT COUNT(DISTINCT p.id) FROM arsip p WHERE p.is_active = 1";
         $bind = [];
 
         if (!empty($params['judul'])) {
@@ -442,7 +474,7 @@ class ArsipModel
 
     public function countAll()
     {
-        $stmt = $this->db->prepare("SELECT COUNT(*) FROM peraturan WHERE is_active = 1");
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM arsip WHERE is_active = 1");
         $stmt->execute();
         return $stmt->fetchColumn();
     }

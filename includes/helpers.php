@@ -133,3 +133,104 @@ function debug_log($data, $title = 'DEBUG')
 
     file_put_contents(__DIR__ . '/../logs/debug.log', $log, FILE_APPEND);
 }
+
+// Format ukuran file agar lebih mudah dibaca
+function formatFileSize($bytes)
+{
+    if ($bytes >= 1073741824) {
+        return number_format($bytes / 1073741824, 2) . ' GB';
+    } elseif ($bytes >= 1048576) {
+        return number_format($bytes / 1048576, 2) . ' MB';
+    } elseif ($bytes >= 1024) {
+        return number_format($bytes / 1024, 2) . ' KB';
+    } elseif ($bytes > 1) {
+        return $bytes . ' bytes';
+    } elseif ($bytes == 1) {
+        return $bytes . ' byte';
+    } else {
+        return '0 bytes';
+    }
+}
+
+// Format tanggal ke versi Indonesia
+function formatTanggalIndonesia($tanggal = null)
+{
+    if (empty($tanggal)) return '-';
+
+    $bulan = [
+        1 => 'Januari',
+        'Februari',
+        'Maret',
+        'April',
+        'Mei',
+        'Juni',
+        'Juli',
+        'Agustus',
+        'September',
+        'Oktober',
+        'November',
+        'Desember'
+    ];
+
+    $timestamp = strtotime($tanggal);
+
+    $hari = date('d', $timestamp);
+    $bulanIndex = (int) date('n', $timestamp);
+    $tahun = date('Y', $timestamp);
+
+    return $hari . ' ' . $bulan[$bulanIndex] . ' ' . $tahun;
+}
+
+// Format rentang tanggal kegiatan / arsip
+function formatTanggalRange($mulai = null, $selesai = null)
+{
+    // Jika dua-duanya kosong
+    if (empty($mulai) && empty($selesai)) {
+        return '-';
+    }
+
+    // Jika hanya tanggal mulai yang ada
+    if (!empty($mulai) && empty($selesai)) {
+        return formatTanggalIndonesia($mulai);
+    }
+
+    // Jika hanya tanggal selesai yang ada
+    if (empty($mulai) && !empty($selesai)) {
+        return formatTanggalIndonesia($selesai);
+    }
+
+    // Jika sama, tampilkan sekali saja
+    if ($mulai === $selesai) {
+        return formatTanggalIndonesia($mulai);
+    }
+
+    // Jika berbeda, tampilkan range
+    return formatTanggalIndonesia($mulai) . ' - ' . formatTanggalIndonesia($selesai);
+}
+
+// Format rentang tanggal untuk tampilan tabel (bisa pakai <br>)
+function formatTanggalRangeTable($mulai = null, $selesai = null)
+{
+    // Jika dua-duanya kosong
+    if (empty($mulai) && empty($selesai)) {
+        return '-';
+    }
+
+    // Jika hanya tanggal mulai yang ada
+    if (!empty($mulai) && empty($selesai)) {
+        return formatTanggalIndonesia($mulai);
+    }
+
+    // Jika hanya tanggal selesai yang ada
+    if (empty($mulai) && !empty($selesai)) {
+        return formatTanggalIndonesia($selesai);
+    }
+
+    // Jika sama, tampilkan sekali saja
+    if ($mulai === $selesai) {
+        return formatTanggalIndonesia($mulai);
+    }
+
+    // Jika berbeda, tampilkan bertingkat untuk tabel
+    return formatTanggalIndonesia($mulai) . '<span class="text-muted"> s/d</span><br><span class="">' . formatTanggalIndonesia($selesai) . '</span>';
+}

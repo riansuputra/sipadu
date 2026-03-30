@@ -1,6 +1,6 @@
 <?php
 $page = $_GET['page'] ?? '';
-$arsipPages = ['arsip', 'tambah-arsip', 'tambah-jenis-arsip'];
+$arsipPages = ['arsip', 'tambah-arsip', 'tambah-jenis-arsip', 'detail-arsip', 'edit-arsip'];
 $publikasiPages = ['publikasi', 'tambah-publikasi', 'tambah-jenis-publikasi', 'edit-publikasi'];
 $kegiatanPages = ['kegiatan', 'tambah-kegiatan', 'tambah-jenis-kegiatan', 'edit-kegiatan'];
 $dokumenPages = ['dokumen', 'tambah-dokumen', 'tambah-jenis-dokumen'];
@@ -115,7 +115,7 @@ $pegawaiPages = ['pegawai', 'tambah-pegawai', 'detail-pegawai', 'edit-pegawai', 
                 <div class="dropdown-menu <?= in_array($page, $arsipPages) ? 'show' : '' ?>">
                     <div class="dropdown-menu-columns">
                         <div class="dropdown-menu-column">
-                            <a class="dropdown-item <?= $page === 'arsip' ? 'active' : '' ?>" href="<?= url('?page=arsip') ?>">
+                            <a class="dropdown-item <?= ($page === 'arsip' || $page === 'detail-arsip' || $page === 'edit-arsip') ? 'active' : '' ?>" href="<?= url('?page=arsip') ?>">
                                 Daftar Arsip
                             </a>
                             <a class="dropdown-item <?= $page === 'tambah-arsip' ? 'active' : '' ?>" href="<?= url('?page=tambah-arsip') ?>">

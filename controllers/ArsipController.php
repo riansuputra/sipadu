@@ -172,12 +172,14 @@ class ArsipController extends BaseController
             return $this->redirect('?page=arsip');
         }
 
+        $id = (int) $_POST['id'];
+
         $errors = $this->validate($_POST, $_FILES, true);
 
         if ($errors) {
             $_SESSION['errors'] = $errors;
             $_SESSION['old'] = $_POST;
-            return $this->redirect('?page=edit-arsip&id=' . $_POST['id']);
+            return $this->redirect('?page=edit-arsip&id=' . $id);
         }
 
         try {
@@ -186,23 +188,26 @@ class ArsipController extends BaseController
             $data = $_POST;
             $data['updated_by'] = $this->user['id'];
 
-            if (!$this->model->update($_POST['id'], $data)) {
-                throw new Exception("Update gagal");
+            if (!$this->model->update($id, $data)) {
+                throw new Exception("Update data arsip gagal");
             }
 
-            if (!empty($_POST["hapus_file"])) {
+            // Hapus file yang dipilih
+            if (!empty($_POST['hapus_file'])) {
+                foreach (explode(",", $_POST['hapus_file']) as $fileId) {
 
-                foreach (explode(",", $_POST["hapus_file"]) as $fileId) {
+                    $fileId = trim($fileId);
 
                     if (!ctype_digit($fileId)) continue;
 
                     if (!$this->model->deleteFileById($fileId)) {
-                        throw new Exception("Gagal hapus file");
+                        throw new Exception("Gagal menghapus file arsip");
                     }
                 }
             }
 
-            $this->handleUpload($_POST['id'], $_FILES);
+            // Upload file baru jika ada
+            $this->handleUpload($id, $_FILES);
 
             $this->model->commit();
 
@@ -211,18 +216,19 @@ class ArsipController extends BaseController
                 'role_id' => $this->user['role_id'],
                 'action' => 'update',
                 'entity_type' => 'arsip',
-                'entity_id' => $data['id'],
+                'entity_id' => $id,
                 'description' => 'Mengubah data arsip'
             ]);
 
             $this->flash('success', 'Arsip berhasil diperbarui');
         } catch (Throwable $e) {
-
             $this->model->rollback();
-            debug_log($e->getMessage(), 'UPDATE ERROR');
 
-            $this->flash('error', 'Gagal update data');
+            debug_log($e->getMessage(), 'UPDATE ARSIP ERROR');
+
+            $this->flash('error', 'Gagal memperbarui data arsip');
         }
+
         return $this->redirect('?page=arsip');
     }
 

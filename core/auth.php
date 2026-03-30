@@ -40,6 +40,7 @@ class Auth
             'id'         => $user['id'],
             'username'   => $user['username'],
             'nama'       => $user['nama_lengkap'],
+            'pegawai_id' => $user['pegawai_id'],
             'role'       => $user['kode_role'],
             'role_id'    => $user['role_id'],
             'pokja_id'   => $user['pokja_id'] ?? null,

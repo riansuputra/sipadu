@@ -258,6 +258,41 @@ function routeRequest()
             $controller->delete();
             break;
 
+        case 'arsip-saya':
+
+            require __DIR__ . '/../controllers/ArsipPesertaController.php';
+            $controller = new ArsipPesertaController();
+            $controller->indexPeserta();
+            break;
+
+        case 'detail-arsip-saya':
+
+            require __DIR__ . '/../controllers/ArsipPesertaController.php';
+            $controller = new ArsipPesertaController();
+            $controller->showPeserta();
+            break;
+
+        case 'upload-bukti-arsip-saya':
+
+            require __DIR__ . '/../controllers/ArsipPesertaController.php';
+            $controller = new ArsipPesertaController();
+            $controller->uploadBukti();
+            break;
+
+        case 'hapus-bukti-arsip-saya':
+
+            require __DIR__ . '/../controllers/ArsipPesertaController.php';
+            $controller = new ArsipPesertaController();
+            $controller->deleteBukti();
+            break;
+
+        case 'download-bukti-arsip-saya':
+
+            require __DIR__ . '/../controllers/ArsipPesertaController.php';
+            $controller = new ArsipPesertaController();
+            $controller->downloadBukti();
+            break;
+
         // Jenis Arsip =======================================
         case 'jenis-arsip':
 
@@ -724,99 +759,6 @@ function routeRequest()
 
             require __DIR__ . '/../controllers/PegawaiJabatanController.php';
             $controller = new PegawaiJabatanController();
-            $controller->delete();
-            break;
-
-        // Kegiatan Admin =======================================
-        case 'kegiatan':
-
-            require __DIR__ . '/../controllers/KegiatanController.php';
-            $controller = new KegiatanController();
-            $controller->index();
-            break;
-
-        case 'tambah-kegiatan':
-
-            require __DIR__ . '/../controllers/KegiatanController.php';
-            $controller = new KegiatanController();
-            $controller->create();
-            break;
-
-        case 'kegiatan-store':
-
-            require __DIR__ . '/../controllers/KegiatanController.php';
-            $controller = new KegiatanController();
-            $controller->store();
-            break;
-
-        case 'detail-kegiatan':
-
-            require __DIR__ . '/../controllers/KegiatanController.php';
-            $controller = new KegiatanController();
-            $controller->show();
-            break;
-
-        case 'edit-kegiatan':
-
-            require __DIR__ . '/../controllers/KegiatanController.php';
-            $controller = new KegiatanController();
-            $controller->edit();
-            break;
-
-        case 'kegiatan-update':
-
-            require __DIR__ . '/../controllers/KegiatanController.php';
-            $controller = new KegiatanController();
-            $controller->update();
-            break;
-
-        case 'kegiatan-delete':
-
-            require __DIR__ . '/../controllers/KegiatanController.php';
-            $controller = new KegiatanController();
-            $controller->delete();
-            break;
-
-        // Jenis Publikasi =======================================
-        case 'jenis-kegiatan':
-
-            require __DIR__ . '/../controllers/KegiatanJenisController.php';
-            $controller = new KegiatanJenisController();
-            $controller->index();
-            break;
-
-        case 'tambah-jenis-kegiatan':
-
-            require __DIR__ . '/../controllers/KegiatanJenisController.php';
-            $controller = new KegiatanJenisController();
-            $controller->create();
-            break;
-
-        case 'jenis-kegiatan-store':
-
-            require __DIR__ . '/../controllers/KegiatanJenisController.php';
-            $controller = new KegiatanJenisController();
-            $controller->store();
-            break;
-
-        case 'edit-jenis-kegiatan':
-
-            require __DIR__ . '/../controllers/KegiatanJenisController.php';
-            $controller = new KegiatanJenisController();
-            $controller->edit();
-            break;
-
-        case 'jenis-kegiatan-update':
-
-            require __DIR__ . '/../controllers/KegiatanJenisController.php';
-            $controller = new KegiatanJenisController();
-            $controller->update();
-            break;
-
-        case 'jenis-kegiatan-delete':
-
-            require __DIR__ . '/../controllers/KegiatanJenisController.php';
-            $controller = new KegiatanJenisController();
             $controller->delete();
             break;
 
