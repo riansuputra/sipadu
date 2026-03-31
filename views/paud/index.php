@@ -44,32 +44,54 @@ ob_start();
             </div>
 
 
-            <div class="col-sm-6 col-lg-3 p-1">
-                <a href="<?= url('?page=publikasi-paud') ?>"
-                    class="card card-link card-link-pop">
+            <?php if (!empty($modules)): ?>
+                <?php foreach ($modules as $module): ?>
+                    <?php
+                    $link = $module['link'];
+                    $isExternal = filter_var($link, FILTER_VALIDATE_URL);
 
-                    <div class="img-responsive img-responsive-21x9 card-img-top"
-                        style="background-image: url('<?= url('public/assets/img/publikasi.webp') ?>')">
-                    </div>
+                    $href = $isExternal
+                        ? $link
+                        : url('?page=' . $link);
+                    ?>
 
-                    <div class="card-body text-center fw-bold mb-0">
-                        Publikasi
-                    </div>
-                </a>
-            </div>
-            <!-- <div class="col-sm-6 col-lg-3 p-1">
-                <a href="#"
-                    class="card card-link card-link-pop">
+                    <div class="col-sm-6 col-lg-3 p-1">
+                        <a href="<?= $href ?>"
+                            class="card card-link card-link-pop"
+                            <?= $isExternal ? 'target="_blank" rel="noopener noreferrer"' : '' ?>>
 
-                    <div class="img-responsive img-responsive-21x9 card-img-top"
-                        style="background-image: url('<?= url('public/assets/img/template.webp') ?>')">
-                    </div>
+                            <?php
+                            $gambar = trim($module['gambar'] ?? '');
 
-                    <div class="card-body text-center mb-0">
-                        &nbsp;
+                            $path = "public/assets/img/" . $gambar;
+                            $hasImage = !empty($gambar) && file_exists($path);
+                            ?>
+
+                            <div class="img-responsive img-responsive-21x9 card-img-top position-relative overflow-hidden"
+                                style="<?= $hasImage
+                                            ? "background-image: url('$path'); background-size: cover; background-position: center;"
+                                            : "background-image: url('public/assets/img/default.webp'); background-size: cover; background-position: center;" ?>">
+                            </div>
+
+                            <div class="card-body text-center fw-bold mb-0">
+                                <?= htmlspecialchars($module['judul']) ?>
+                            </div>
+
+
+                        </a>
                     </div>
-                </a>
-            </div> -->
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="col-12">
+                    <div class="empty">
+                        <div class="empty-header">📂</div>
+                        <p class="empty-title">Belum ada modul</p>
+                        <p class="empty-subtitle text-muted">
+                            Modul untuk halaman ini belum tersedia.
+                        </p>
+                    </div>
+                </div>
+            <?php endif; ?>
 
 
         </div>

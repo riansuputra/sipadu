@@ -8,63 +8,11 @@ $title = "Dashboard";
 $bannerTitle = "Halaman Utama";
 $bannerSubtitle = "SIPADU BPMP Provinsi Bali";
 
-// Load model akses halaman
-require_once __DIR__ . '/../../models/ModulModel.php';
-$moduleModel = new ModulModel();
-
-// Daftar card dashboard statis
-$cards = [
-    [
-        'title' => 'Tim Kerja PAUD',
-        'slug' => 'paud',
-        'image' => 'paud.webp',
-    ],
-    [
-        'title' => 'Tim Kerja SD',
-        'slug' => 'sd',
-        'image' => 'sd.webp',
-    ],
-    [
-        'title' => 'Tim Kerja SMP',
-        'slug' => 'smp',
-        'image' => 'smp.webp',
-    ],
-    [
-        'title' => 'Tim Kerja SMA',
-        'slug' => 'sma',
-        'image' => 'sma.webp',
-    ],
-    [
-        'title' => 'Tim Widyaprada',
-        'slug' => 'widyaprada',
-        'image' => 'widyaprada.webp',
-    ],
-    [
-        'title' => 'Link Aplikasi',
-        'slug' => 'link-aplikasi',
-        'image' => 'link-aplikasi.webp',
-    ],
-    [
-        'title' => 'Data Kepegawaian',
-        'slug' => 'pegawai-publik',
-        'image' => 'kepegawaian.webp',
-    ],
-    [
-        'title' => 'Peraturan',
-        'slug' => 'peraturan-publik',
-        'image' => 'peraturan.webp',
-    ],
-    [
-        'title' => 'Arsip',
-        'slug' => 'arsip-saya',
-        'image' => 'arsip.webp',
-    ],
-    [
-        'title' => 'DIP',
-        'slug' => 'dip-publik',
-        'image' => 'dip.webp',
-    ],
-];
+// echo '<pre>';
+// print_r($user);
+// print_r($user['role']);
+// print_r($user['pokja_id']);
+// echo '</pre>';
 
 // Mulai buffer konten
 ob_start();
@@ -88,37 +36,59 @@ ob_start();
                         </ol>
                     </div>
                 </div>
-            </div>
 
+            </div>
             <?php if (
                 in_array($user['role'], ['Superadmin', 'Pimpinan']) ||
                 (in_array($user['role'], ['Admin', 'Staff']) && !in_array($user['pokja_id'], [9], true))
             ): ?>
-                <?php foreach ($cards as $card): ?>
+                <?php foreach ($modules as $module): ?>
+
                     <?php
-                    $hasAccess = $moduleModel->canAccessPage(
+                    $hasAccess = $moduleModel->canAccess(
                         $user['role'],
-                        $user['pokja_nama'] ?? null,
-                        $card['slug']
+                        $user['pokja_id'],
+                        $module['link']
                     );
 
-                    $href = $hasAccess ? url('?page=' . $card['slug']) : '#';
+                    $link = $module['link'];
+                    $isExternal = filter_var($link, FILTER_VALIDATE_URL);
+
+                    // tentukan href
+                    if (!$hasAccess) {
+                        $href = '#';
+                    } elseif ($isExternal) {
+                        $href = $link;
+                    } else {
+                        $href = BASE_URL . '/?page=' . $link;
+                    }
+
+
+                    // echo '<pre>';
+                    // print_r($hasAccess);
+                    // print_r($user['role_id']);
+                    // print_r($module['link']);
+                    // print_r($module['gambar']);
+                    // echo '</pre>';
                     ?>
 
                     <div class="col-sm-6 col-lg-3 p-1">
                         <a href="<?= $href ?>"
                             class="card card-link card-link-pop"
-                            <?= !$hasAccess ? 'onclick="noAccessAlert(); return false;"' : '' ?>>
+                            <?= !$hasAccess ? "onclick=\"noAccessAlert()\"" : "" ?>
+                            <?= $hasAccess && $isExternal ? 'target="_blank" rel="noopener noreferrer"' : '' ?>>
 
                             <div class="img-responsive img-responsive-21x9 card-img-top"
-                                style="background-image: url('public/assets/img/<?= htmlspecialchars($card['image']) ?>')">
+                                style="background-image: url('public/assets/img/<?= htmlspecialchars($module['gambar']) ?>')">
                             </div>
 
                             <div class="card-body text-center fw-bold mb-0">
-                                <?= htmlspecialchars($card['title']) ?>
+                                <?= htmlspecialchars($module['judul']) ?>
                             </div>
                         </a>
                     </div>
+
+
                 <?php endforeach; ?>
             <?php endif; ?>
 

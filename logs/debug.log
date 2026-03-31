@@ -65,3 +65,9 @@ SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '3-27' for
 [2026-03-28 23:25:25] STORE PESERTA ARSIP ERROR
 SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '3-27' for key 'uk_kegiatan_peserta'
 
+[2026-03-30 15:22:12] STORE ERROR
+Call to undefined method ModulModel::syncPokjas()
+
+[2026-03-31 09:17:52] STORE ERROR
+SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'test' for key 'uq_modul_link'
+

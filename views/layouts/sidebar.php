@@ -8,6 +8,7 @@ $pengaturanPages = ['profil', 'manajemen-file', 'backup-data', 'user', 'tambah-u
 $dipPages = ['dip', 'tambah-dip', 'detail-dip', 'edit-dip', 'dip-print-filter'];
 $peraturanPages = ['peraturan', 'tambah-peraturan', 'detail-peraturan', 'edit-peraturan', 'jenis-peraturan', 'tambah-jenis-peraturan'];
 $pegawaiPages = ['pegawai', 'tambah-pegawai', 'detail-pegawai', 'edit-pegawai', 'tambah-jabatan-pegawai'];
+$modulPages = ['modul', 'tambah-modul', 'edit-modul'];
 ?>
 
 <div class="collapse navbar-collapse" id="sidebar-menu">
@@ -233,6 +234,35 @@ $pegawaiPages = ['pegawai', 'tambah-pegawai', 'detail-pegawai', 'edit-pegawai', 
                 </div>
             </li>
 
+            <li class="nav-item dropdown <?= in_array($page, $modulPages) ? 'active' : '' ?> mb-2">
+                <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
+                    <span class="nav-link-icon d-md-none d-lg-inline-block">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-library">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666" />
+                            <path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1" />
+                            <path d="M11 7h5" />
+                            <path d="M11 10h6" />
+                            <path d="M11 13h3" />
+                        </svg>
+                    </span>
+                    <span class="nav-link-title">
+                        Modul
+                    </span>
+                </a>
+                <div class="dropdown-menu <?= in_array($page, $modulPages) ? 'show' : '' ?>">
+                    <div class="dropdown-menu-columns">
+                        <div class="dropdown-menu-column">
+                            <a class="dropdown-item <?= ($page === 'modul' || $page === 'edit-modul') ? 'active' : '' ?>" href="<?= url('?page=modul') ?>">
+                                Daftar Modul
+                            </a>
+                            <a class="dropdown-item <?= $page === 'tambah-modul' ? 'active' : '' ?>" href="<?= url('?page=tambah-modul') ?>">
+                                Tambah Modul
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </li>
 
             <li class="nav-item dropdown <?= in_array($page, $pengaturanPages) ? 'active' : '' ?> mb-2">
                 <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
@@ -250,14 +280,11 @@ $pegawaiPages = ['pegawai', 'tambah-pegawai', 'detail-pegawai', 'edit-pegawai', 
                 <div class="dropdown-menu <?= in_array($page, $pengaturanPages) ? 'show' : '' ?>">
                     <div class="dropdown-menu-columns">
                         <div class="dropdown-menu-column">
-                            <a class="dropdown-item" href="<?= url('?page=dashboard&mode=staff') ?>">
-                                Dashboard Staff
-                            </a>
                             <a class="dropdown-item <?= $page === 'user' ? 'active' : '' ?>" href="<?= url('?page=user') ?>">
-                                Manajemen User
+                                Kelola User
                             </a>
                             <a class="dropdown-item <?= $page === 'manajemen-file' ? 'active' : '' ?>" href="<?= url('?page=manajemen-file') ?>">
-                                Manajemen File
+                                Kelola File
                             </a>
                             <a class="dropdown-item <?= $page === 'backup-data' ? 'active' : '' ?>" href="<?= url('?page=backup-data') ?>">
                                 Backup Data

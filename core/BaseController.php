@@ -89,6 +89,15 @@ class BaseController
         }
     }
 
+    protected function pageAccessOr403(string $pageSlug)
+    {
+        $moduleModel = $this->model('ModulModel');
+
+        if (!$moduleModel->canAccessPage($this->role, $this->pokja, $pageSlug)) {
+            $this->abort403();
+        }
+    }
+
     protected function guest()
     {
         if (Auth::check()) {

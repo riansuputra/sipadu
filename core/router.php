@@ -37,6 +37,55 @@ function routeRequest()
             Auth::logout();
             break;
 
+        // Modul ==========================================
+        case 'modul':
+
+            require __DIR__ . '/../controllers/ModulController.php';
+            $controller = new ModulController();
+            $controller->index();
+            break;
+
+        case 'tambah-modul':
+
+            require __DIR__ . '/../controllers/ModulController.php';
+            $controller = new ModulController();
+            $controller->create();
+            break;
+
+        case 'modul-store':
+
+            require __DIR__ . '/../controllers/ModulController.php';
+            $controller = new ModulController();
+            $controller->store();
+            break;
+
+        case 'detail-modul':
+
+            require __DIR__ . '/../controllers/ModulController.php';
+            $controller = new ModulController();
+            $controller->show();
+            break;
+
+        case 'edit-modul':
+
+            require __DIR__ . '/../controllers/ModulController.php';
+            $controller = new ModulController();
+            $controller->edit();
+            break;
+
+        case 'modul-update':
+
+            require __DIR__ . '/../controllers/ModulController.php';
+            $controller = new ModulController();
+            $controller->update();
+            break;
+
+        case 'modul-delete':
+
+            require __DIR__ . '/../controllers/ModulController.php';
+            $controller = new ModulController();
+            $controller->delete();
+            break;
 
         // Autentikasi ================================
         case 'notifikasi-unread-count':
@@ -284,13 +333,6 @@ function routeRequest()
             require __DIR__ . '/../controllers/ArsipPesertaController.php';
             $controller = new ArsipPesertaController();
             $controller->deleteBukti();
-            break;
-
-        case 'download-bukti-arsip-saya':
-
-            require __DIR__ . '/../controllers/ArsipPesertaController.php';
-            $controller = new ArsipPesertaController();
-            $controller->downloadBukti();
             break;
 
         // Jenis Arsip =======================================

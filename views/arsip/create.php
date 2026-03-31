@@ -51,7 +51,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                     <div class="card-body">
                         <div class="form-fieldset">
                             <div class="mb-3">
-                                <label class="form-label required">Judul Arsip</label>
+                                <label class="form-label required">Judul Arsip :</label>
                                 <div class="col">
                                     <input
                                         type="text"
@@ -66,7 +66,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Deskripsi</label>
+                                <label class="form-label">Deskripsi :</label>
                                 <div class="col">
                                     <textarea
                                         name="deskripsi"
@@ -80,7 +80,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label required">Jenis</label>
+                                <label class="form-label required">Jenis :</label>
                                 <div class="col">
                                     <select class="form-select <?= isset($errors['jenis_id']) ? 'is-invalid' : '' ?>" name="jenis_id" id="jenis_id">
                                         <option value="" disabled <?= empty($old['jenis_id']) ? 'selected' : '' ?>>-- Pilih Jenis --</option>
@@ -111,7 +111,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                 </div>
                                 <div class="col">
 
-                                    <label class="form-label required">Tanggal Selesai:</label>
+                                    <label class="form-label required">Tanggal Selesai :</label>
                                     <input
                                         type="date"
                                         name="tanggal_selesai"
@@ -124,7 +124,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label required">Lokasi</label>
+                                <label class="form-label required">Lokasi :</label>
                                 <div class="col">
                                     <input
                                         type="text"
