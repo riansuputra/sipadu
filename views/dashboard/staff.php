@@ -8,6 +8,8 @@ $title = "Dashboard";
 $bannerTitle = "Halaman Utama";
 $bannerSubtitle = "SIPADU BPMP Provinsi Bali";
 
+// dd($user);
+
 // Load model akses halaman
 require_once __DIR__ . '/../../models/ModulModel.php';
 $moduleModel = new ModulModel();
@@ -44,11 +46,11 @@ $cards = [
         'slug' => 'link-aplikasi',
         'image' => 'link-aplikasi.webp',
     ],
-    [
-        'title' => 'Data Kepegawaian',
-        'slug' => 'pegawai-publik',
-        'image' => 'kepegawaian.webp',
-    ],
+    // [
+    //     'title' => 'Data Kepegawaian',
+    //     'slug' => 'pegawai-publik',
+    //     'image' => 'kepegawaian.webp',
+    // ],
     [
         'title' => 'Peraturan',
         'slug' => 'peraturan-publik',
@@ -63,6 +65,11 @@ $cards = [
         'title' => 'DIP',
         'slug' => 'dip-publik',
         'image' => 'dip.webp',
+    ],
+    [
+        'title' => 'Kegiatan',
+        'slug' => 'kegiatan',
+        'image' => 'default.webp',
     ],
 ];
 
@@ -92,7 +99,7 @@ ob_start();
 
             <?php if (
                 in_array($user['role'], ['Superadmin', 'Pimpinan']) ||
-                (in_array($user['role'], ['Admin', 'Staff']) && !in_array($user['pokja_id'], [9], true))
+                (in_array($user['role'], ['Admin', 'Staff']) && !in_array($user['pokja_nama'], ['Publikasi'], true))
             ): ?>
                 <?php foreach ($cards as $card): ?>
                     <?php
@@ -123,7 +130,26 @@ ob_start();
             <?php endif; ?>
 
             <?php if (
-                (in_array($user['role'], ['Admin', 'Staff']) && in_array($user['pokja_id'], [9], true))
+                in_array($user['role'], ['Superadmin', 'Pimpinan']) ||
+                (in_array($user['role'], ['Admin', 'Staff']) && in_array($user['pokja_nama'], ['Kepegawaian'], true))
+            ): ?>
+                <div class="col-sm-6 col-lg-3 p-1">
+                    <a href="<?= url('?page=kepegawaian')  ?>"
+                        class="card card-link card-link-pop">
+
+                        <div class="img-responsive img-responsive-21x9 card-img-top"
+                            style="background-image: url('public/assets/img/kepegawaian.webp')">
+                        </div>
+
+                        <div class="card-body text-center fw-bold mb-0">
+                            Data Kepegawaian
+                        </div>
+                    </a>
+                </div>
+            <?php endif; ?>
+
+            <?php if (
+                (in_array($user['role'], ['Admin', 'Staff']) && in_array($user['pokja_nama'], ['Publikasi'], true))
             ): ?>
                 <div class="col-sm-6 col-lg-3 p-1">
                     <a href="<?= url('?page=timpublikasi')  ?>"
@@ -135,19 +161,6 @@ ob_start();
 
                         <div class="card-body text-center fw-bold mb-0">
                             Publikasi
-                        </div>
-                    </a>
-                </div>
-                <div class="col-sm-6 col-lg-3 p-1">
-                    <a href="<?= url('?page=kepegawaian')  ?>"
-                        class="card card-link card-link-pop">
-
-                        <div class="img-responsive img-responsive-21x9 card-img-top"
-                            style="background-image: url('public/assets/img/kepegawaian.webp')">
-                        </div>
-
-                        <div class="card-body text-center fw-bold mb-0">
-                            Data Kepegawaian
                         </div>
                     </a>
                 </div>
@@ -165,7 +178,7 @@ ob_start();
                     </a>
                 </div>
                 <div class="col-sm-6 col-lg-3 p-1">
-                    <a href="<?= url('?page=arsip-publik')  ?>"
+                    <a href="<?= url('?page=arsip-saya')  ?>"
                         class="card card-link card-link-pop">
 
                         <div class="img-responsive img-responsive-21x9 card-img-top"
@@ -200,6 +213,19 @@ ob_start();
 
                         <div class="card-body text-center fw-bold mb-0">
                             Peraturan
+                        </div>
+                    </a>
+                </div>
+                <div class="col-sm-6 col-lg-3 p-1">
+                    <a href="<?= url('?page=kegiatan')  ?>"
+                        class="card card-link card-link-pop">
+
+                        <div class="img-responsive img-responsive-21x9 card-img-top"
+                            style="background-image: url('public/assets/img/default.webp')">
+                        </div>
+
+                        <div class="card-body text-center fw-bold mb-0">
+                            Kegiatan
                         </div>
                     </a>
                 </div>

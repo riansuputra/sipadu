@@ -93,6 +93,7 @@ class PegawaiJabatanModel
         SELECT COUNT(*) 
         FROM pegawai 
         WHERE jabatan_id = ?
+        AND is_active = 1
     ");
 
         $stmt->execute([$id]);
@@ -106,6 +107,30 @@ class PegawaiJabatanModel
         $stmt = $this->db->prepare("
             UPDATE pegawai_jabatan SET is_active = 0 WHERE id = ?
         ");
+
+        return $stmt->execute([$id]);
+    }
+
+    public function findByName($nama)
+    {
+        $stmt = $this->db->prepare("
+        SELECT *
+        FROM pegawai_jabatan
+        WHERE nama = ?
+        LIMIT 1
+    ");
+
+        $stmt->execute([$nama]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function reactivate($id)
+    {
+        $stmt = $this->db->prepare("
+        UPDATE pegawai_jabatan
+        SET is_active = 1
+        WHERE id = ?
+    ");
 
         return $stmt->execute([$id]);
     }

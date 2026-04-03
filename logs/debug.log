@@ -71,3 +71,48 @@ Call to undefined method ModulModel::syncPokjas()
 [2026-03-31 09:17:52] STORE ERROR
 SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'test' for key 'uq_modul_link'
 
+[2026-03-31 13:30:34] DEBUG
+SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens
+
+[2026-03-31 13:31:18] DEBUG
+SQLSTATE[21S01]: Insert value list does not match column list: 1136 Column count doesn't match value count at row 1
+
+[2026-04-02 09:50:37] UPDATE ERROR
+SQLSTATE[01000]: Warning: 1265 Data truncated for column 'pokja_tipe' at row 1
+
+[2026-04-02 09:51:43] UPDATE ERROR
+SQLSTATE[01000]: Warning: 1265 Data truncated for column 'pokja_tipe' at row 1
+
+[2026-04-02 09:53:11] UPDATE ERROR
+SQLSTATE[01000]: Warning: 1265 Data truncated for column 'pokja_tipe' at row 1
+
+[2026-04-02 10:37:51] DELETE JENIS ERROR
+Jenis peraturan masih digunakan
+
+[2026-04-02 11:13:55] DELETE JENIS ERROR
+Jabatan pegawai masih digunakan
+
+[2026-04-02 11:14:26] DELETE JENIS ERROR
+Jenis peraturan masih digunakan
+
+[2026-04-02 11:14:32] DELETE JENIS ERROR
+Jenis peraturan masih digunakan
+
+[2026-04-02 11:20:47] DELETE JENIS ERROR
+Jenis peraturan masih digunakan
+
+[2026-04-02 11:20:50] DELETE JENIS ERROR
+Jenis peraturan masih digunakan
+
+[2026-04-02 11:20:52] DELETE JENIS ERROR
+Jenis peraturan masih digunakan
+
+[2026-04-02 11:20:54] DELETE JENIS ERROR
+Jenis peraturan masih digunakan
+
+[2026-04-02 12:59:51] DELETE JENIS ERROR
+Jenis publikasi masih digunakan
+
+[2026-04-02 13:07:32] DELETE JENIS ERROR
+Jenis kegiatan arsip masih digunakan
+

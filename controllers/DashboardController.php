@@ -175,6 +175,81 @@ class DashboardController extends BaseController
         ]);
     }
 
+    public function kegiatan()
+    {
+        $this->auth();
+
+        $this->view('kegiatan/index', [
+            'user' => $this->user,
+            'role' => $this->role,
+        ]);
+    }
+
+    public function kegiatanPaud()
+    {
+        $this->auth();
+
+        $modules = $this->moduleModel->getByParentSlug('kegiatan-paud');
+
+        $this->view('kegiatan/paud', [
+            'user' => $this->user,
+            'role' => $this->role,
+            'modules' => $modules,
+        ]);
+    }
+
+    public function kegiatanSd()
+    {
+        $this->auth();
+
+        $modules = $this->moduleModel->getByParentSlug('kegiatan-sd');
+
+        $this->view('kegiatan/sd', [
+            'user' => $this->user,
+            'role' => $this->role,
+            'modules' => $modules,
+        ]);
+    }
+
+    public function kegiatanSmp()
+    {
+        $this->auth();
+
+        $modules = $this->moduleModel->getByParentSlug('kegiatan-smp');
+
+        $this->view('kegiatan/smp', [
+            'user' => $this->user,
+            'role' => $this->role,
+            'modules' => $modules,
+        ]);
+    }
+
+    public function kegiatanSma()
+    {
+        $this->auth();
+
+        $modules = $this->moduleModel->getByParentSlug('kegiatan-sma');
+
+        $this->view('kegiatan/sma', [
+            'user' => $this->user,
+            'role' => $this->role,
+            'modules' => $modules,
+        ]);
+    }
+
+    public function kegiatanWp()
+    {
+        $this->auth();
+
+        $modules = $this->moduleModel->getByParentSlug('kegiatan-widyaprada');
+
+        $this->view('kegiatan/widyaprada', [
+            'user' => $this->user,
+            'role' => $this->role,
+            'modules' => $modules,
+        ]);
+    }
+
     private function canAccessPage(string $page): bool
     {
         $moduleModel = new ModulModel();

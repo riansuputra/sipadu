@@ -1,14 +1,15 @@
 <?php
 $page = $_GET['page'] ?? '';
-$arsipPages = ['arsip', 'tambah-arsip', 'tambah-jenis-arsip', 'detail-arsip', 'edit-arsip'];
-$publikasiPages = ['publikasi', 'tambah-publikasi', 'tambah-jenis-publikasi', 'edit-publikasi'];
-$kegiatanPages = ['kegiatan', 'tambah-kegiatan', 'tambah-jenis-kegiatan', 'edit-kegiatan'];
+$arsipPages = ['arsip', 'tambah-arsip', 'tambah-jenis-arsip', 'edit-jenis-arsip', 'detail-arsip', 'edit-arsip'];
+$publikasiPages = ['publikasi', 'tambah-publikasi', 'tambah-jenis-publikasi', 'edit-jenis-publikasi', 'edit-publikasi'];
+$kegiatanPages = ['kegiatan', 'tambah-kegiatan', 'tambah-jenis-kegiatan', 'edit-jenis-kegiatan', 'edit-kegiatan'];
 $dokumenPages = ['dokumen', 'tambah-dokumen', 'tambah-jenis-dokumen'];
-$pengaturanPages = ['profil', 'manajemen-file', 'backup-data', 'user', 'tambah-user', 'user-password'];
+$pengaturanPages = ['profil', 'manajemen-file', 'backup-data'];
 $dipPages = ['dip', 'tambah-dip', 'detail-dip', 'edit-dip', 'dip-print-filter'];
-$peraturanPages = ['peraturan', 'tambah-peraturan', 'detail-peraturan', 'edit-peraturan', 'jenis-peraturan', 'tambah-jenis-peraturan'];
-$pegawaiPages = ['pegawai', 'tambah-pegawai', 'detail-pegawai', 'edit-pegawai', 'tambah-jabatan-pegawai'];
+$peraturanPages = ['peraturan', 'tambah-peraturan', 'detail-peraturan', 'edit-peraturan', 'jenis-peraturan', 'tambah-jenis-peraturan', 'edit-jenis-peraturan'];
+$pegawaiPages = ['pegawai', 'tambah-pegawai', 'detail-pegawai', 'edit-pegawai', 'tambah-jabatan-pegawai', 'edit-jabatan-pegawai'];
 $modulPages = ['modul', 'tambah-modul', 'edit-modul'];
+$userPages = ['user', 'tambah-user', 'edit-user', 'tambah-tim'];
 ?>
 
 <div class="collapse navbar-collapse" id="sidebar-menu">
@@ -85,7 +86,7 @@ $modulPages = ['modul', 'tambah-modul', 'edit-modul'];
                             <a class="dropdown-item <?= $page === 'tambah-publikasi' ? 'active' : '' ?>" href="<?= url('?page=tambah-publikasi') ?>">
                                 Tambah Publikasi
                             </a>
-                            <a class="dropdown-item <?= $page === 'tambah-jenis-publikasi' ? 'active' : '' ?>" href="<?= url('?page=tambah-jenis-publikasi') ?>">
+                            <a class="dropdown-item <?= ($page === 'tambah-jenis-publikasi' || $page === 'edit-jenis-publikasi') ? 'active' : '' ?>" href="<?= url('?page=tambah-jenis-publikasi') ?>">
                                 Jenis Publikasi
                             </a>
                         </div>
@@ -122,8 +123,8 @@ $modulPages = ['modul', 'tambah-modul', 'edit-modul'];
                             <a class="dropdown-item <?= $page === 'tambah-arsip' ? 'active' : '' ?>" href="<?= url('?page=tambah-arsip') ?>">
                                 Tambah Arsip
                             </a>
-                            <a class="dropdown-item <?= $page === 'tambah-jenis-arsip' ? 'active' : '' ?>" href="<?= url('?page=tambah-jenis-arsip') ?>">
-                                Jenis Arsip
+                            <a class="dropdown-item <?= ($page === 'tambah-jenis-arsip' || $page === 'edit-jenis-arsip') ? 'active' : '' ?>" href="<?= url('?page=tambah-jenis-arsip') ?>">
+                                Jenis Kegiatan
                             </a>
 
                         </div>
@@ -155,7 +156,7 @@ $modulPages = ['modul', 'tambah-modul', 'edit-modul'];
                             <a class="dropdown-item <?= $page === 'tambah-peraturan' ? 'active' : '' ?>" href="<?= url('?page=tambah-peraturan') ?>">
                                 Tambah Peraturan
                             </a>
-                            <a class="dropdown-item <?= $page === 'tambah-jenis-peraturan' ? 'active' : '' ?>" href="<?= url('?page=tambah-jenis-peraturan') ?>">
+                            <a class="dropdown-item <?= ($page === 'tambah-jenis-peraturan' || $page === 'edit-jenis-peraturan') ? 'active' : '' ?>" href="<?= url('?page=tambah-jenis-peraturan') ?>">
                                 Jenis Peraturan
                             </a>
                         </div>
@@ -226,7 +227,7 @@ $modulPages = ['modul', 'tambah-modul', 'edit-modul'];
                             <a class="dropdown-item <?= $page === 'tambah-pegawai' ? 'active' : '' ?>" href="<?= url('?page=tambah-pegawai') ?>">
                                 Tambah Pegawai
                             </a>
-                            <a class="dropdown-item <?= $page === 'tambah-jabatan-pegawai' ? 'active' : '' ?>" href="<?= url('?page=tambah-jabatan-pegawai') ?>">
+                            <a class="dropdown-item <?= ($page === 'tambah-jabatan-pegawai' || $page === 'edit-jabatan-pegawai') ? 'active' : '' ?>" href="<?= url('?page=tambah-jabatan-pegawai') ?>">
                                 Jabatan Pegawai
                             </a>
                         </div>
@@ -264,6 +265,42 @@ $modulPages = ['modul', 'tambah-modul', 'edit-modul'];
                 </div>
             </li>
 
+            <li class="nav-item dropdown <?= in_array($page, $userPages) ? 'active' : '' ?> mb-2">
+                <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
+                    <span class="nav-link-icon d-md-none d-lg-inline-block">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-user-cog">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+                            <path d="M6 21v-2a4 4 0 0 1 4 -4h2.5" />
+                            <path d="M17.001 19a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                            <path d="M19.001 15.5v1.5" />
+                            <path d="M19.001 21v1.5" />
+                            <path d="M22.032 17.25l-1.299 .75" />
+                            <path d="M17.27 20l-1.3 .75" />
+                            <path d="M15.97 17.25l1.3 .75" />
+                            <path d="M20.733 20l1.3 .75" />
+                        </svg>
+                    </span>
+                    <span class="nav-link-title">
+                        Kelola User
+                    </span>
+                </a>
+                <div class="dropdown-menu <?= in_array($page, $userPages) ? 'show' : '' ?>">
+                    <div class="dropdown-menu-columns">
+                        <div class="dropdown-menu-column">
+                            <a class="dropdown-item <?= $page === 'user' ? 'active' : '' ?>" href="<?= url('?page=user') ?>">
+                                Daftar User
+                            </a>
+                            <a class="dropdown-item <?= $page === 'tambah-user' ? 'active' : '' ?>" href="<?= url('?page=tambah-user') ?>">
+                                Tambah User
+                            </a>
+                            <a class="dropdown-item <?= $page === 'tambah-tim' ? 'active' : '' ?>" href="<?= url('?page=tambah-tim') ?>">
+                                Kelola Tim/Unit
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </li>
             <li class="nav-item dropdown <?= in_array($page, $pengaturanPages) ? 'active' : '' ?> mb-2">
                 <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
                     <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -280,9 +317,6 @@ $modulPages = ['modul', 'tambah-modul', 'edit-modul'];
                 <div class="dropdown-menu <?= in_array($page, $pengaturanPages) ? 'show' : '' ?>">
                     <div class="dropdown-menu-columns">
                         <div class="dropdown-menu-column">
-                            <a class="dropdown-item <?= $page === 'user' ? 'active' : '' ?>" href="<?= url('?page=user') ?>">
-                                Kelola User
-                            </a>
                             <a class="dropdown-item <?= $page === 'manajemen-file' ? 'active' : '' ?>" href="<?= url('?page=manajemen-file') ?>">
                                 Kelola File
                             </a>

@@ -29,22 +29,50 @@ class PegawaiModel
         $this->db->exec("SET SESSION group_concat_max_len = 100000");
 
         $stmt = $this->db->prepare("
-            SELECT 
+        SELECT 
             p.*,
-            GROUP_CONCAT(
-                CONCAT(pf.id, '|', pf.jenis_dokumen, '|', pf.nama_file, '|', pf.path_file, '|', pf.tipe_file)
-                SEPARATOR '##'
-            ) AS files
+            j.nama as nama_jabatan,
+            u.pokja_id,
+            pk.pokja_nama,
+            CASE 
+                WHEN LOWER(pk.pokja_nama) LIKE '%widyaprada%' THEN 1
+                ELSE 0
+            END AS is_widyaprada,
+            pf.files
 
-            FROM pegawai p
+        FROM pegawai p
 
-            LEFT JOIN pegawai_file pf 
-                ON p.id = pf.pegawai_id
-            WHERE p.is_active = 1
+        LEFT JOIN pegawai_jabatan j 
+            ON j.id = p.jabatan_id
 
-            GROUP BY p.id
-            ORDER BY p.created_at DESC
-        ");
+        LEFT JOIN users u
+            ON u.pegawai_id = p.id
+
+        LEFT JOIN pokja pk
+            ON pk.id = u.pokja_id
+
+        LEFT JOIN (
+            SELECT 
+                pegawai_id,
+                GROUP_CONCAT(
+                    CONCAT(
+                        id, '|',
+                        jenis_dokumen, '|',
+                        nama_file, '|',
+                        path_file, '|',
+                        tipe_file
+                    )
+                    SEPARATOR '##'
+                ) AS files
+            FROM pegawai_file
+            GROUP BY pegawai_id
+        ) pf ON pf.pegawai_id = p.id
+
+        WHERE p.is_active = 1
+        AND p.deleted_at IS NULL
+
+        ORDER BY p.created_at DESC
+    ");
 
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -53,8 +81,32 @@ class PegawaiModel
     public function getById($id)
     {
         $stmt = $this->db->prepare("
-            SELECT * FROM pegawai WHERE id = ?
-        ");
+        SELECT 
+            p.*,
+            j.nama as nama_jabatan,
+            u.pokja_id,
+            pk.pokja_nama AS pokja_nama,
+
+            CASE 
+                WHEN LOWER(pk.pokja_nama) LIKE '%widyaprada%' THEN 1
+                ELSE 0
+            END AS is_widyaprada
+
+        FROM pegawai p
+
+        LEFT JOIN pegawai_jabatan j 
+            ON j.id = p.jabatan_id
+
+        LEFT JOIN users u
+            ON u.pegawai_id = p.id
+
+        LEFT JOIN pokja pk
+            ON pk.id = u.pokja_id
+
+        WHERE p.id = ?
+        AND p.deleted_at IS NULL
+        LIMIT 1
+    ");
 
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -73,10 +125,14 @@ class PegawaiModel
                 'jurusan',
                 'nomor_sk_pengangkatan',
                 'nomor_sk_spmt',
-                'tempat_lahir'
+                'tempat_lahir',
+                'alamat_domisili',
+                'no_telepon',
+                'pangkat_golongan',
+                'jabatan_id'
             ] as $field
         ) {
-            if (!isset($data[$field]) || trim($data[$field]) === '') {
+            if (!isset($data[$field]) || trim((string)$data[$field]) === '') {
                 $data[$field] = null;
             }
         }
@@ -86,7 +142,6 @@ class PegawaiModel
             nama,
             nik,
             nip,
-            tempat_lahir,
             tempat_lahir,
             tanggal_lahir,
             jenis_kelamin,
@@ -100,10 +155,11 @@ class PegawaiModel
             jabatan_id,
             pendidikan,
             jurusan,
+            tmt_masuk,
             nomor_sk_pengangkatan,
             nomor_sk_spmt,
             created_by
-        ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+        ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
     ");
 
         $stmt->execute([
@@ -123,6 +179,7 @@ class PegawaiModel
             $data['jabatan_id'],
             $data['pendidikan'],
             $data['jurusan'],
+            $data['tmt_masuk'],
             $data['nomor_sk_pengangkatan'],
             $data['nomor_sk_spmt'],
             $data['created_by']
@@ -131,9 +188,9 @@ class PegawaiModel
         return $this->db->lastInsertId();
     }
 
-    // Update DIP
     public function update($id, $data)
     {
+        // Normalisasi field optional
         foreach (
             [
                 'nik',
@@ -143,36 +200,41 @@ class PegawaiModel
                 'jurusan',
                 'nomor_sk_pengangkatan',
                 'nomor_sk_spmt',
-                'tempat_lahir'
+                'tempat_lahir',
+                'alamat_domisili',
+                'no_telepon',
+                'pangkat_golongan',
+                'jabatan_id'
             ] as $field
         ) {
-            if (!isset($data[$field]) || trim($data[$field]) === '') {
+            if (!isset($data[$field]) || trim((string)$data[$field]) === '') {
                 $data[$field] = null;
             }
         }
 
         $stmt = $this->db->prepare("
-            UPDATE pegawai SET
-                nama = ?,
-                nik = ?,
-                nip = ?,
-                tempat_lahir = ?,
-                tanggal_lahir = ?,
-                jenis_kelamin = ?,
-                agama = ?,
-                alamat_domisili = ?,
-                no_telepon = ?,
-                email = ?,
-                status_asn = ?,
-                pangkat_golongan = ?,
-                grade = ?,
-                jabatan_id = ?,
-                pendidikan = ?,
-                jurusan = ?,
-                nomor_sk_pengangkatan = ?,
-                nomor_sk_spmt = ?
-            WHERE id = ? 
-        ");
+        UPDATE pegawai SET
+            nama = ?,
+            nik = ?,
+            nip = ?,
+            tempat_lahir = ?,
+            tanggal_lahir = ?,
+            jenis_kelamin = ?,
+            agama = ?,
+            alamat_domisili = ?,
+            no_telepon = ?,
+            email = ?,
+            status_asn = ?,
+            pangkat_golongan = ?,
+            grade = ?,
+            jabatan_id = ?,
+            pendidikan = ?,
+            jurusan = ?,
+            tmt_masuk = ?,
+            nomor_sk_pengangkatan = ?,
+            nomor_sk_spmt = ?
+        WHERE id = ?
+    ");
 
         return $stmt->execute([
             $data['nama'],
@@ -191,6 +253,7 @@ class PegawaiModel
             $data['jabatan_id'],
             $data['pendidikan'],
             $data['jurusan'],
+            $data['tmt_masuk'],
             $data['nomor_sk_pengangkatan'],
             $data['nomor_sk_spmt'],
             $id

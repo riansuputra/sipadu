@@ -379,33 +379,26 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                             <div class="row">
                                                 <div class="col">
                                                     <label class="form-label required">Jabatan</label>
-                                                    <select class="form-select <?= isset($errors['jabatan']) ? 'is-invalid' : '' ?>" name="jabatan" id="jabatan" placeholder="-- Pilih Jabatan --" autocomplete="off">
-                                                        <option value="" disabled <?= empty($old['jabatan']) ? 'selected' : '' ?>>-- Pilih Jabatan --</option>
-                                                        <option value="Analis Kemitraan" <?= ($old['jabatan'] ?? '') == 'Analis Kemitraan' ? 'selected' : '' ?>>Analis Kemitraan</option>
-                                                        <option value="Analis Sumber Daya Manusia Aparatur Ahli Pertama" <?= ($old['jabatan'] ?? '') == 'Analis Sumber Daya Manusia Aparatur Ahli Pertama' ? 'selected' : '' ?>>Analis Sumber Daya Manusia Aparatur Ahli Pertama</option>
-                                                        <option value="Arsiparis Ahli Pertama" <?= ($old['jabatan'] ?? '') == 'Arsiparis Ahli Pertama' ? 'selected' : '' ?>>Arsiparis Ahli Pertama</option>
-                                                        <option value="Arsiparis Mahir" <?= ($old['jabatan'] ?? '') == 'Arsiparis Mahir' ? 'selected' : '' ?>>Arsiparis Mahir</option>
-                                                        <option value="Cleaning Service" <?= ($old['jabatan'] ?? '') == 'Cleaning Service' ? 'selected' : '' ?>>Cleaning Service</option>
-                                                        <option value="Kepala BPMP Provinsi Bali" <?= ($old['jabatan'] ?? '') == 'Kepala BPMP Provinsi Bali' ? 'selected' : '' ?>>Kepala BPMP Provinsi Bali</option>
-                                                        <option value="Kepala Sub Bagian Umum" <?= ($old['jabatan'] ?? '') == 'Kepala Sub Bagian Umum' ? 'selected' : '' ?>>Kepala Sub Bagian Umum</option>
-                                                        <option value="Penelaah Informasi dan Komunikasi Publik" <?= ($old['jabatan'] ?? '') == 'Penelaah Informasi dan Komunikasi Publik' ? 'selected' : '' ?>>Penelaah Informasi dan Komunikasi Publik</option>
-                                                        <option value="Penelaah Teknis Kebijakan" <?= ($old['jabatan'] ?? '') == 'Penelaah Teknis Kebijakan' ? 'selected' : '' ?>>Penelaah Teknis Kebijakan</option>
-                                                        <option value="Pengadministrasi Keuangan" <?= ($old['jabatan'] ?? '') == 'Pengadministrasi Keuangan' ? 'selected' : '' ?>>Pengadministrasi Keuangan</option>
-                                                        <option value="Pengadministrasi Perkantoran" <?= ($old['jabatan'] ?? '') == 'Pengadministrasi Perkantoran' ? 'selected' : '' ?>>Pengadministrasi Perkantoran</option>
-                                                        <option value="Pengelola Sistem dan Teknologi Informasi" <?= ($old['jabatan'] ?? '') == 'Pengelola Sistem dan Teknologi Informasi' ? 'selected' : '' ?>>Pengelola Sistem dan Teknologi Informasi</option>
-                                                        <option value="Pengolah Data dan Informasi" <?= ($old['jabatan'] ?? '') == 'Pengolah Data dan Informasi' ? 'selected' : '' ?>>Pengolah Data dan Informasi</option>
-                                                        <option value="Pranata Komputer Ahli Pertama" <?= ($old['jabatan'] ?? '') == 'Pranata Komputer Ahli Pertama' ? 'selected' : '' ?>>Pranata Komputer Ahli Pertama</option>
-                                                        <option value="Satpam" <?= ($old['jabatan'] ?? '') == 'Satpam' ? 'selected' : '' ?>>Satpam</option>
-                                                        <option value="Sopir" <?= ($old['jabatan'] ?? '') == 'Sopir' ? 'selected' : '' ?>>Sopir</option>
-                                                        <option value="Teknisi Sarana dan Prasarana" <?= ($old['jabatan'] ?? '') == 'Teknisi Sarana dan Prasarana' ? 'selected' : '' ?>>Teknisi Sarana dan Prasarana</option>
-                                                        <option value="Tenaga Administrasi" <?= ($old['jabatan'] ?? '') == 'Tenaga Administrasi' ? 'selected' : '' ?>>Tenaga Administrasi</option>
-                                                        <option value="Tukang Kebun" <?= ($old['jabatan'] ?? '') == 'Tukang Kebun' ? 'selected' : '' ?>>Tukang Kebun</option>
-                                                        <option value="Widyaprada Ahli Madya" <?= ($old['jabatan'] ?? '') == 'Widyaprada Ahli Madya' ? 'selected' : '' ?>>Widyaprada Ahli Madya</option>
-                                                        <option value="Widyaprada Ahli Muda" <?= ($old['jabatan'] ?? '') == 'Widyaprada Ahli Muda' ? 'selected' : '' ?>>Widyaprada Ahli Muda</option>
-                                                        <option value="Widyaprada Ahli Pertama" <?= ($old['jabatan'] ?? '') == 'Widyaprada Ahli Pertama' ? 'selected' : '' ?>>Widyaprada Ahli Pertama</option>
+                                                    <select
+                                                        class="form-select <?= isset($errors['jabatan_id']) ? 'is-invalid' : '' ?>"
+                                                        name="jabatan_id"
+                                                        id="jabatan_id"
+                                                        autocomplete="off">
+                                                        <option value="" disabled <?= empty($old['jabatan_id']) ? 'selected' : '' ?>>
+                                                            -- Pilih Jabatan --
+                                                        </option>
+
+                                                        <?php foreach (($jabatan ?? []) as $j): ?>
+                                                            <option
+                                                                value="<?= $j['id'] ?>"
+                                                                <?= (string)($old['jabatan_id'] ?? '') === (string)$j['id'] ? 'selected' : '' ?>>
+                                                                <?= htmlspecialchars($j['nama']) ?>
+                                                            </option>
+                                                        <?php endforeach; ?>
                                                     </select>
+
                                                     <div class="invalid-feedback">
-                                                        <?= $errors['jabatan'] ?? '' ?>
+                                                        <?= $errors['jabatan_id'] ?? '' ?>
                                                     </div>
                                                 </div>
                                                 <div class="col-3">
@@ -461,6 +454,18 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                             class="form-control <?= isset($errors['nomor_sk_spmt']) ? 'is-invalid' : '' ?>" autocomplete="off">
                                         <div class="invalid-feedback">
                                             <?= $errors['nomor_sk_spmt'] ?? '' ?>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label required">Tgl. Masuk</label>
+                                        <input
+                                            type="date"
+                                            name="tmt_masuk"
+                                            id="tmt_masuk"
+                                            value="<?= $old['tmt_masuk'] ?? '' ?>"
+                                            class="form-control <?= isset($errors['tmt_masuk']) ? 'is-invalid' : '' ?>" autocomplete="off">
+                                        <div class="invalid-feedback">
+                                            <?= $errors['tmt_masuk'] ?? '' ?>
                                         </div>
                                     </div>
                                     <div class="mb-3">

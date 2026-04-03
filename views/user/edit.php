@@ -71,10 +71,35 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                         name="nama_lengkap"
                                         id="nama_lengkap"
                                         placeholder="Nama Lengkap..."
-                                        value="<?= $data['nama_lengkap'] ?? $old['nama_lengkap'] ?? '' ?>"
+                                        value="<?= $data['pegawai_nama'] ?? $data['nama_lengkap'] ?? $old['nama_lengkap'] ?? '' ?>"
                                         class="form-control <?= isset($errors['nama_lengkap']) ? 'is-invalid' : '' ?>" autocomplete="off">
                                     <div class="invalid-feedback">
                                         <?= $errors['nama_lengkap'] ?? '' ?>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Pilih Pegawai :</label>
+                                    <select
+                                        name="pegawai_id"
+                                        id="pegawai_id"
+                                        class="form-select <?= isset($errors['pegawai_id']) ? 'is-invalid' : '' ?>">
+
+                                        <option value="">-- Pilih Pegawai --</option>
+
+                                        <?php foreach ($pegawai as $p): ?>
+                                            <option
+                                                value="<?= $p['id'] ?>"
+                                                data-nama="<?= htmlspecialchars($p['nama'] ?? '', ENT_QUOTES) ?>"
+                                                data-nip="<?= htmlspecialchars($p['nip'] ?? '', ENT_QUOTES) ?>"
+                                                data-jabatan="<?= htmlspecialchars($p['jabatan'] ?? '', ENT_QUOTES) ?>"
+                                                <?= (($old['pegawai_id'] ?? $data['pegawai_id'] ?? '') == $p['id']) ? 'selected' : '' ?>>
+                                                <?= htmlspecialchars($p['nama'] ?? '-') ?> - <?= htmlspecialchars($p['nip'] ?? '-') ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+
+                                    <div class="invalid-feedback">
+                                        <?= $errors['pegawai_id'] ?? '' ?>
                                     </div>
                                 </div>
                                 <div class="mb-3">

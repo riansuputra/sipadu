@@ -59,13 +59,6 @@ function routeRequest()
             $controller->store();
             break;
 
-        case 'detail-modul':
-
-            require __DIR__ . '/../controllers/ModulController.php';
-            $controller = new ModulController();
-            $controller->show();
-            break;
-
         case 'edit-modul':
 
             require __DIR__ . '/../controllers/ModulController.php';
@@ -165,6 +158,32 @@ function routeRequest()
             (new UserController())->active();
             break;
 
+        // Tim ================================
+        case 'tambah-tim':
+
+            require __DIR__ . '/../controllers/TimController.php';
+            $controller = new TimController();
+            $controller->create();
+            break;
+
+        case 'tim-store':
+
+            require __DIR__ . '/../controllers/TimController.php';
+            $controller = new TimController();
+            $controller->store();
+            break;
+
+        case 'tim-update':
+
+            require __DIR__ . '/../controllers/TimController.php';
+            (new TimController())->update();
+            break;
+
+        case 'tim-delete':
+
+            require __DIR__ . '/../controllers/TimController.php';
+            (new TimController())->delete();
+            break;
 
         // Dashboard =================================
         case 'dashboard':
@@ -226,6 +245,42 @@ function routeRequest()
             // wajib login
             require __DIR__ . '/../controllers/DashboardController.php';
             (new DashboardController())->link_aplikasi();
+            break;
+
+        case 'kegiatan':
+            // wajib login
+            require __DIR__ . '/../controllers/DashboardController.php';
+            (new DashboardController())->kegiatan();
+            break;
+
+        case 'kegiatan-paud':
+            // wajib login
+            require __DIR__ . '/../controllers/DashboardController.php';
+            (new DashboardController())->kegiatanPaud();
+            break;
+
+        case 'kegiatan-sd':
+            // wajib login
+            require __DIR__ . '/../controllers/DashboardController.php';
+            (new DashboardController())->kegiatanSd();
+            break;
+
+        case 'kegiatan-smp':
+            // wajib login
+            require __DIR__ . '/../controllers/DashboardController.php';
+            (new DashboardController())->kegiatanSmp();
+            break;
+
+        case 'kegiatan-sma':
+            // wajib login
+            require __DIR__ . '/../controllers/DashboardController.php';
+            (new DashboardController())->kegiatanSma();
+            break;
+
+        case 'kegiatan-widyaprada':
+            // wajib login
+            require __DIR__ . '/../controllers/DashboardController.php';
+            (new DashboardController())->kegiatanWp();
             break;
 
         // Arsip ==========================================
@@ -374,7 +429,7 @@ function routeRequest()
         case 'jenis-arsip-delete':
 
             require __DIR__ . '/../controllers/ArsipJenisController.php';
-            $controller = new PublikasiJenisController();
+            $controller = new ArsipJenisController();
             $controller->delete();
             break;
 

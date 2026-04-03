@@ -213,12 +213,30 @@ class PublikasiJenisController extends BaseController
         return $this->redirect('?page=tambah-jenis-publikasi');
     }
 
-    private function validate($data, $isUpdate = false)
+    private function validate($data, $isUpdate = false, $id = null)
     {
         $errors = [];
 
-        if (empty($data['nama']))
+        $nama = trim($data['nama'] ?? '');
+
+        if ($nama === '') {
             $errors['nama'] = "Jenis publikasi wajib diisi";
+            return $errors;
+        }
+
+        $existing = $this->model->findByName($nama);
+
+        if ($existing) {
+            // kalau update, abaikan data dirinya sendiri
+            if ($isUpdate && (int)$existing['id'] === (int)$id) {
+                return $errors;
+            }
+
+            // kalau data yang ketemu masih aktif, baru error
+            if ((int)$existing['is_active'] === 1) {
+                $errors['nama'] = "Jenis publikasi sudah ada";
+            }
+        }
 
         return $errors;
     }

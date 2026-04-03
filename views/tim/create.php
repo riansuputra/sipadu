@@ -4,7 +4,7 @@
 // ================================
 
 // Judul
-$title = "Tambah Jabatan Pegawai";
+$title = "Tambah Tim";
 
 
 
@@ -17,7 +17,7 @@ ob_start();
 
 <?php
 // echo '<pre>';
-// print_r($data);
+// dd($data);
 // echo '</pre>';
 $errors = $_SESSION['errors'] ?? [];
 $old    = $_SESSION['old'] ?? [];
@@ -31,8 +31,8 @@ unset($_SESSION['errors'], $_SESSION['old']);
         <div class="row g-2 align-items-center">
             <div class="col">
                 <!-- Page pre-title -->
-                <div class="page-pretitle">Pegawai</div>
-                <h2 class="page-title">Tambah Jabatan Pegawai</h2>
+                <div class="page-pretitle">Kelola User</div>
+                <h2 class="page-title">Tambah Tim</h2>
             </div>
         </div>
     </div>
@@ -44,38 +44,35 @@ unset($_SESSION['errors'], $_SESSION['old']);
         <div class="row row-cards ">
 
             <div class="col-sm-12 col-lg-6">
-                <form class="card" method="POST" action="<?= url('?page=jabatan-pegawai-store')  ?>" enctype="multipart/form-data">
+                <form class="card" method="POST" action="<?= url('?page=tim-store')  ?>" enctype="multipart/form-data">
                     <div class="card-header">
-                        <h3 class="card-title">Form Tambah Jabatan Pegawai</h3>
+                        <h3 class="card-title">Form Tambah Tim</h3>
                     </div>
                     <div class="card-body">
                         <div class="form-fieldset">
                             <div class="mb-3">
-                                <label class="form-label required">Jabatan Pegawai :</label>
+                                <label class="form-label required">Pilih Tim / Unit</label>
+                                <select class="form-select <?= isset($errors['pokja_tipe']) ? 'is-invalid' : '' ?>" name="pokja_tipe" id="pokja_tipe">
+                                    <option value="" disabled <?= empty($old['pokja_tipe']) ? 'selected' : '' ?>>-- Pilih Tim / Unit --</option>
+                                    <option value="Tim" <?= ($old['pokja_tipe'] ?? '') == 'Tim' ? 'selected' : '' ?>>Tim</option>
+                                    <option value="Unit" <?= ($old['pokja_tipe'] ?? '') == 'Unit' ? 'selected' : '' ?>>Unit</option>
+                                </select>
+                                <div class="invalid-feedback">
+                                    <?= $errors['pokja_tipe'] ?? '' ?>
+                                </div>
+                            </div>
+                            <div class="">
+                                <label class="form-label required">Nama Tim :</label>
                                 <div class="col">
                                     <input
                                         type="text"
-                                        name="nama"
-                                        id="nama"
-                                        placeholder="Jabatan Pegawai..."
-                                        value="<?= $old['nama'] ?? '' ?>"
-                                        class="form-control <?= isset($errors['nama']) ? 'is-invalid' : '' ?>" autocomplete="off">
+                                        name="pokja_nama"
+                                        id="pokja_nama"
+                                        placeholder="Nama Tim..."
+                                        value="<?= $old['pokja_nama'] ?? '' ?>"
+                                        class="form-control <?= isset($errors['pokja_nama']) ? 'is-invalid' : '' ?>" autocomplete="off">
                                     <div class="invalid-feedback">
-                                        <?= $errors['nama'] ?? '' ?>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="mb-3 row">
-                                <label class="form-label">Keterangan :</label>
-                                <div class="col">
-                                    <textarea
-                                        placeholder="Keterangan..."
-                                        name="keterangan"
-                                        id="keterangan"
-                                        rows="3"
-                                        class="form-control <?= isset($errors['keterangan']) ? 'is-invalid' : '' ?>" autocomplete="off"><?= $old['keterangan'] ?? '' ?></textarea>
-                                    <div class="invalid-feedback">
-                                        <?= $errors['keterangan'] ?? '' ?>
+                                        <?= $errors['pokja_nama'] ?? '' ?>
                                     </div>
                                 </div>
                             </div>
@@ -104,7 +101,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                     <div class="card-header">
                         <div class="row w-full">
                             <div class="col">
-                                <h3 class="card-title mb-0">Tabel Jabatan Pegawai</h3>
+                                <h3 class="card-title mb-0">Tabel Nama Tim / Unit</h3>
 
                             </div>
                         </div>
@@ -115,7 +112,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                 <thead>
                                     <tr>
                                         <th class="w-1">No</th>
-                                        <th>Jabatan Pegawai</th>
+                                        <th>Tim / Unit</th>
                                         <th class="w-1">Aksi</th>
                                     </tr>
                                 </thead>
@@ -126,11 +123,11 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                                 <?= $dt + 1 ?>
                                             </td>
                                             <td class="">
-                                                <?= htmlspecialchars($d['nama'] ?? '-') ?>
+                                                <?= htmlspecialchars($d['pokja_nama'] ?? '-') ?>
                                             </td>
                                             <td>
                                                 <div class="btn-group w-100">
-                                                    <a href="<?= url('?page=edit-jabatan-pegawai&id=' . $d['id']) ?>" class="text-yellow me-2">
+                                                    <a href="" class="text-yellow me-2" data-bs-toggle="modal" data-bs-target="#modal-edit-<?= $d['id'] ?>">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
                                                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                             <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
@@ -139,8 +136,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                                         </svg>
                                                     </a>
                                                     <a type="button" class="text-red" onclick="confirmDelete(
-                                                                '<?= url('?page=jabatan-pegawai-delete') ?>',
-                                                                '<?= $d['id'] ?>'
+                                                                '<?= url('?page=tim-delete&id=' . $d['id']) ?>'
                                                             )">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus">
                                                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -156,7 +152,67 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                             </td>
                                         </tr>
 
-
+                                        <div class="modal modal-blur fade" id="modal-edit-<?= $d['id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="card-header">
+                                                        <h3 class="card-title">Edit Tim / Unit</h3>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="form-fieldset">
+                                                            <form method="POST" action="<?= url('?page=tim-update&id=' . $d['id']) ?>" enctype="multipart/form-data">
+                                                                <div class="mb-3">
+                                                                    <label class="form-label required">Nama Tim / Unit :</label>
+                                                                    <div class="col">
+                                                                        <input
+                                                                            type="text"
+                                                                            name="pokja_nama"
+                                                                            id="pokja_nama"
+                                                                            placeholder="pokja_nama Tim / Unit..."
+                                                                            value="<?= $d['pokja_nama'] ?? $old['pokja_nama'] ?? '' ?>"
+                                                                            class="form-control <?= isset($errors['pokja_nama']) ? 'is-invalid' : '' ?>">
+                                                                        <div class="invalid-feedback">
+                                                                            <?= $errors['pokja_nama'] ?? '' ?>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="mb-3">
+                                                                    <label class="form-label required">Pilih Tim / Unit</label>
+                                                                    <select class="form-select <?= isset($errors['pokja_tipe']) ? 'is-invalid' : '' ?>" name="pokja_tipe" id="pokja_tipe">
+                                                                        <option value="" disabled <?= empty($d['pokja_tipe']) ? 'selected' : '' ?>>-- Pilih Tim / Unit --</option>
+                                                                        <option value="Tim" <?= ($d['pokja_tipe'] ?? '') == 'Tim' ? 'selected' : '' ?>>Tim</option>
+                                                                        <option value="Unit" <?= ($d['pokja_tipe'] ?? '') == 'Unit' ? 'selected' : '' ?>>Unit</option>
+                                                                    </select>
+                                                                    <div class="invalid-feedback">
+                                                                        <?= $errors['pokja_tipe'] ?? '' ?>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="mb-3" hidden>
+                                                                    <label class="form-label required">Tampilkan :</label>
+                                                                    <?php $is_active = $old['is_active'] ?? $d['is_active']; ?>
+                                                                    <div class="col">
+                                                                        <label class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="is_active" id="is_active" value="1" <?= $is_active == 1 ? 'checked' : '' ?>>
+                                                                            <span class="form-check-label">Ya</span>
+                                                                        </label>
+                                                                        <label class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="is_active" id="is_active" value="0" <?= $is_active == 0 ? 'checked' : '' ?>>
+                                                                            <span class="form-check-label">Tidak</span>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <input type="text" name="id" id="id" value="<?= $d['id'] ?>" hidden>
+                                                                <div class="">
+                                                                    <button type="submit" class="btn btn-success">Simpan</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     <?php endforeach; ?>
 
                                 </tbody>
@@ -248,7 +304,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
             },
             {
                 "data-sort": "sort-nama",
-                name: "Jabatan Pegawai"
+                name: "Jenis Publikasi"
             },
             {
                 "data-sort": "sort-aksi",
@@ -287,7 +343,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
     });
 </script>
 <script>
-    function confirmDelete(url, id, label = '') {
+    function confirmDelete(url, label = '') {
 
         Swal.fire({
             title: 'Yakin ingin menghapus?',
@@ -296,26 +352,12 @@ unset($_SESSION['errors'], $_SESSION['old']);
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Ya, hapus',
-            cancelButtonText: 'Batal',
+            cancelButtonText: 'Batal'
         }).then((result) => {
 
             if (result.isConfirmed) {
-
-                // buat form POST dinamis
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = url;
-
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'id';
-                input.value = id;
-
-                form.appendChild(input);
-                document.body.appendChild(form);
-                form.submit();
+                window.location.href = url;
             }
-            timer: 5000;
 
         });
     }

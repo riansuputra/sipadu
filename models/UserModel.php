@@ -27,16 +27,19 @@ class UserModel
     public function getAll()
     {
         $stmt = $this->db->prepare("
-            SELECT 
-                u.*,
-                r.nama_role,
-                r.kode_role,
-                p.pokja_nama
-            FROM users u
-            JOIN role r ON u.role_id = r.id
-            LEFT JOIN pokja p ON u.pokja_id = p.id
-            ORDER BY u.created_at DESC
-        ");
+        SELECT 
+            u.*,
+            r.nama_role,
+            r.kode_role,
+            p.pokja_nama,
+            pg.nama AS pegawai_nama,
+            pg.nip AS pegawai_nip
+        FROM users u
+        JOIN role r ON u.role_id = r.id
+        LEFT JOIN pokja p ON u.pokja_id = p.id
+        LEFT JOIN pegawai pg ON u.pegawai_id = pg.id
+        ORDER BY u.created_at DESC
+    ");
 
         $stmt->execute();
         return $stmt->fetchAll();
@@ -92,8 +95,21 @@ class UserModel
     public function findById(int $id)
     {
         $stmt = $this->db->prepare("
-            SELECT * FROM users WHERE id = ?
-        ");
+        SELECT 
+            u.*,
+            r.nama_role,
+            r.kode_role,
+            p.pokja_nama,
+            pg.nama AS pegawai_nama,
+            pg.nip AS pegawai_nip
+        FROM users u
+        JOIN role r ON u.role_id = r.id
+        LEFT JOIN pokja p ON u.pokja_id = p.id
+        LEFT JOIN pegawai pg ON u.pegawai_id = pg.id
+        WHERE u.id = ?
+        LIMIT 1
+    ");
+
         $stmt->execute([$id]);
         return $stmt->fetch();
     }
@@ -108,16 +124,18 @@ class UserModel
                 username,
                 password_hash,
                 nama_lengkap,
+                pegawai_id,
                 role_id,
                 pokja_id,
                 is_active
-            ) VALUES (?,?,?,?,?,1)
+            ) VALUES (?,?,?,?,?,?,1)
         ");
 
         return $stmt->execute([
             $data['username'],
             password_hash($data['password'], PASSWORD_DEFAULT),
             $data['nama_lengkap'],
+            $data['pegawai_id'],
             $data['role_id'],
             $data['pokja_id'] ?: null
         ]);
@@ -139,6 +157,7 @@ class UserModel
             UPDATE users SET
                 nama_lengkap = ?,
                 username = ?,
+                pegawai_id = ?,
                 role_id = ?,
                 pokja_id = ?,
                 password_hash = ?,
@@ -149,6 +168,7 @@ class UserModel
             return $stmt->execute([
                 $data['nama_lengkap'],
                 $data['username'],
+                $data['pegawai_id'],
                 $data['role_id'],
                 $data['pokja_id'] ?? null,
                 password_hash(trim($data['password_baru']), PASSWORD_DEFAULT),
@@ -162,6 +182,7 @@ class UserModel
         UPDATE users SET
             nama_lengkap = ?,
             username = ?,
+            pegawai_id = ?,
             role_id = ?,
             pokja_id = ?,
             is_active = ?
@@ -171,6 +192,7 @@ class UserModel
         return $stmt->execute([
             $data['nama_lengkap'],
             $data['username'],
+            $data['pegawai_id'],
             $data['role_id'],
             $data['pokja_id'],
             $isActive,

@@ -1,7 +1,7 @@
 <?php
 
 
-class ArsipJenisModel
+class TimModel
 {
     protected $db;
 
@@ -29,9 +29,8 @@ class ArsipJenisModel
     public function getAll()
     {
         $stmt = $this->db->prepare("
-            SELECT * FROM arsip_jenis
-            WHERE arsip_jenis.is_active = 1
-            ORDER BY nama ASC
+            SELECT * FROM pokja
+            ORDER BY pokja_nama ASC
         ");
 
         $stmt->execute();
@@ -41,7 +40,7 @@ class ArsipJenisModel
     public function getById($id)
     {
         $stmt = $this->db->prepare("
-            SELECT * FROM arsip_jenis
+            SELECT * FROM pokja
             WHERE id = ?
         ");
 
@@ -53,17 +52,15 @@ class ArsipJenisModel
     public function insert($data)
     {
         $stmt = $this->db->prepare("
-            INSERT INTO arsip_jenis (
-                nama, 
-                keterangan, 
-                is_active
-            ) VALUES (?, ?, ?)
+            INSERT INTO pokja (
+                pokja_tipe, 
+                pokja_nama
+            ) VALUES (?, ?)
         ");
 
         $stmt->execute([
-            $data['nama'],
-            $data['keterangan'],
-            $data['is_active']
+            $data['pokja_tipe'],
+            $data['pokja_nama']
         ]);
 
         return $this->db->lastInsertId();
@@ -72,17 +69,15 @@ class ArsipJenisModel
     public function update($id, $data)
     {
         $stmt = $this->db->prepare("
-            UPDATE arsip_jenis SET
-                nama = ?, 
-                keterangan = ?, 
-                is_active = ? 
+            UPDATE pokja SET
+                pokja_tipe = ?, 
+                pokja_nama = ?
             WHERE id = ? 
         ");
 
         return $stmt->execute([
-            $data['nama'],
-            $data['keterangan'],
-            $data['is_active'],
+            $data['pokja_tipe'],
+            $data['pokja_nama'],
             $id
         ]);
     }
@@ -91,8 +86,8 @@ class ArsipJenisModel
     {
         $stmt = $this->db->prepare("
         SELECT COUNT(*) 
-        FROM arsip 
-        WHERE jenis_id = ?
+        FROM users 
+        WHERE pokja_id = ?
     ");
 
         $stmt->execute([$id]);
@@ -104,32 +99,8 @@ class ArsipJenisModel
     public function delete($id)
     {
         $stmt = $this->db->prepare("
-            UPDATE arsip_jenis SET is_active = 0 WHERE id = ?
+            DELETE FROM pokja WHERE id = ?
         ");
-
-        return $stmt->execute([$id]);
-    }
-
-    public function findByName($nama)
-    {
-        $stmt = $this->db->prepare("
-        SELECT *
-        FROM arsip_jenis
-        WHERE nama = ?
-        LIMIT 1
-    ");
-
-        $stmt->execute([$nama]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
-    public function reactivate($id)
-    {
-        $stmt = $this->db->prepare("
-        UPDATE arsip_jenis
-        SET is_active = 1
-        WHERE id = ?
-    ");
 
         return $stmt->execute([$id]);
     }

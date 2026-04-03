@@ -4,7 +4,7 @@
 // ================================
 
 // Judul
-$title = "Tambah Jabatan Pegawai";
+$title = "Edit Jenis Publikasi";
 
 
 
@@ -17,7 +17,7 @@ ob_start();
 
 <?php
 // echo '<pre>';
-// print_r($data);
+// print_r($dataata);
 // echo '</pre>';
 $errors = $_SESSION['errors'] ?? [];
 $old    = $_SESSION['old'] ?? [];
@@ -31,8 +31,8 @@ unset($_SESSION['errors'], $_SESSION['old']);
         <div class="row g-2 align-items-center">
             <div class="col">
                 <!-- Page pre-title -->
-                <div class="page-pretitle">Pegawai</div>
-                <h2 class="page-title">Tambah Jabatan Pegawai</h2>
+                <div class="page-pretitle">Publikasi</div>
+                <h2 class="page-title">Edit Jenis Publikasi</h2>
             </div>
         </div>
     </div>
@@ -44,127 +44,62 @@ unset($_SESSION['errors'], $_SESSION['old']);
         <div class="row row-cards ">
 
             <div class="col-sm-12 col-lg-6">
-                <form class="card" method="POST" action="<?= url('?page=jabatan-pegawai-store')  ?>" enctype="multipart/form-data">
+                <form class="card" method="POST" action="<?= url('?page=jenis-publikasi-update&id=' . $data['id']) ?>" enctype="multipart/form-data">
                     <div class="card-header">
-                        <h3 class="card-title">Form Tambah Jabatan Pegawai</h3>
+                        <h3 class="card-title">Form Edit Jenis Publikasi</h3>
                     </div>
                     <div class="card-body">
                         <div class="form-fieldset">
                             <div class="mb-3">
-                                <label class="form-label required">Jabatan Pegawai :</label>
+                                <label class="form-label required">Jenis Publikasi :</label>
                                 <div class="col">
                                     <input
                                         type="text"
                                         name="nama"
                                         id="nama"
-                                        placeholder="Jabatan Pegawai..."
-                                        value="<?= $old['nama'] ?? '' ?>"
-                                        class="form-control <?= isset($errors['nama']) ? 'is-invalid' : '' ?>" autocomplete="off">
+                                        placeholder="Jenis Publikasi..."
+                                        value="<?= $data['nama'] ?? $old['nama'] ?? '' ?>"
+                                        class="form-control <?= isset($errors['nama']) ? 'is-invalid' : '' ?>">
                                     <div class="invalid-feedback">
                                         <?= $errors['nama'] ?? '' ?>
                                     </div>
                                 </div>
                             </div>
-                            <div class="mb-3 row">
+                            <div class="mb-3">
                                 <label class="form-label">Keterangan :</label>
                                 <div class="col">
                                     <textarea
-                                        placeholder="Keterangan..."
                                         name="keterangan"
                                         id="keterangan"
                                         rows="3"
-                                        class="form-control <?= isset($errors['keterangan']) ? 'is-invalid' : '' ?>" autocomplete="off"><?= $old['keterangan'] ?? '' ?></textarea>
+                                        placeholder="Keterangan..."
+                                        class="form-control <?= isset($errors['keterangan']) ? 'is-invalid' : '' ?>"><?= $data['keterangan'] ?? $old['keterangan'] ?? '' ?></textarea>
                                     <div class="invalid-feedback">
                                         <?= $errors['keterangan'] ?? '' ?>
                                     </div>
                                 </div>
                             </div>
-                            <div class="mb-3 row" hidden>
-                                <label class="form-label required">Tampilkan</label>
+                            <div class="mb-3" hidden>
+                                <label class="form-label required">Tampilkan :</label>
+                                <?php $is_active = $old['is_active'] ?? $data['is_active']; ?>
                                 <div class="col">
                                     <label class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="is_active" id="is_active" value="1" checked="">
+                                        <input class="form-check-input" type="radio" name="is_active" id="is_active" value="1" <?= $is_active == 1 ? 'checked' : '' ?>>
                                         <span class="form-check-label">Ya</span>
                                     </label>
                                     <label class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="is_active" id="is_active" value="0">
+                                        <input class="form-check-input" type="radio" name="is_active" id="is_active" value="0" <?= $is_active == 0 ? 'checked' : '' ?>>
                                         <span class="form-check-label">Tidak</span>
                                     </label>
                                 </div>
                             </div>
                         </div>
+                        <input type="text" name="id" id="id" value="<?= $data['id'] ?>" hidden>
                         <div class="">
                             <button type="submit" class="btn btn-success">Simpan</button>
                         </div>
                     </div>
                 </form>
-            </div>
-            <div class="col-md-12 col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="row w-full">
-                            <div class="col">
-                                <h3 class="card-title mb-0">Tabel Jabatan Pegawai</h3>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table id="jenisPublikasiTable" class="table table-vcenter table-selectable table-bordered table-striped">
-                                <thead>
-                                    <tr>
-                                        <th class="w-1">No</th>
-                                        <th>Jabatan Pegawai</th>
-                                        <th class="w-1">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="table-tbody">
-                                    <?php foreach ($data as $dt => $d): ?>
-                                        <tr>
-                                            <td class="text-center">
-                                                <?= $dt + 1 ?>
-                                            </td>
-                                            <td class="">
-                                                <?= htmlspecialchars($d['nama'] ?? '-') ?>
-                                            </td>
-                                            <td>
-                                                <div class="btn-group w-100">
-                                                    <a href="<?= url('?page=edit-jabatan-pegawai&id=' . $d['id']) ?>" class="text-yellow me-2">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
-                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                            <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
-                                                            <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415" />
-                                                            <path d="M16 5l3 3" />
-                                                        </svg>
-                                                    </a>
-                                                    <a type="button" class="text-red" onclick="confirmDelete(
-                                                                '<?= url('?page=jabatan-pegawai-delete') ?>',
-                                                                '<?= $d['id'] ?>'
-                                                            )">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus">
-                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                            <path d="M4 7l16 0" />
-                                                            <path d="M10 11l0 6" />
-                                                            <path d="M14 11l0 6" />
-                                                            <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                                                            <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-                                                        </svg>
-                                                    </a>
-                                                </div>
-
-                                            </td>
-                                        </tr>
-
-
-                                    <?php endforeach; ?>
-
-                                </tbody>
-                            </table>
-
-                        </div>
-                    </div>
-                </div>
             </div>
 
         </div>
@@ -248,7 +183,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
             },
             {
                 "data-sort": "sort-nama",
-                name: "Jabatan Pegawai"
+                name: "Jenis Publikasi"
             },
             {
                 "data-sort": "sort-aksi",
@@ -287,7 +222,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
     });
 </script>
 <script>
-    function confirmDelete(url, id, label = '') {
+    function confirmDelete(url, label = '') {
 
         Swal.fire({
             title: 'Yakin ingin menghapus?',
@@ -296,26 +231,12 @@ unset($_SESSION['errors'], $_SESSION['old']);
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Ya, hapus',
-            cancelButtonText: 'Batal',
+            cancelButtonText: 'Batal'
         }).then((result) => {
 
             if (result.isConfirmed) {
-
-                // buat form POST dinamis
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = url;
-
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'id';
-                input.value = id;
-
-                form.appendChild(input);
-                document.body.appendChild(form);
-                form.submit();
+                window.location.href = url;
             }
-            timer: 5000;
 
         });
     }

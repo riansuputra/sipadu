@@ -57,10 +57,20 @@ class PegawaiJabatanController extends BaseController
             $this->model->beginTransaction();
 
             $data = $_POST;
-            $id = $this->model->insert($data);
+            $nama = trim($data['nama']);
 
-            if (!$id) {
-                throw new Exception("Insert gagal");
+            $existing = $this->model->findByName($nama);
+
+            // kalau ada tapi nonaktif, aktifkan lagi
+            if ($existing && (int)$existing['is_active'] === 0) {
+                $this->model->reactivate($existing['id']);
+                $id = $existing['id'];
+            } else {
+                $id = $this->model->insert($data);
+
+                if (!$id) {
+                    throw new Exception("Insert gagal");
+                }
             }
 
             $this->model->commit();
@@ -79,13 +89,13 @@ class PegawaiJabatanController extends BaseController
             $this->model->rollback();
 
             if ($e instanceof PDOException && $e->getCode() == 23000) {
-                $this->flash('error', 'Jabatan pegawai sudah digunakan');
+                $this->flash('error', 'Nama jabatan sudah ada');
             } else {
-
-                debug_log($e->getMessage(), 'UPDATE ERROR');
+                debug_log($e->getMessage(), 'STORE ERROR');
                 $this->flash('error', 'Gagal menyimpan data');
             }
         }
+
         return $this->redirect('?page=tambah-jabatan-pegawai');
     }
 
@@ -107,6 +117,7 @@ class PegawaiJabatanController extends BaseController
 
     public function update()
     {
+        // dd($_POST);
         $this->auth();
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -213,12 +224,30 @@ class PegawaiJabatanController extends BaseController
         return $this->redirect('?page=tambah-jabatan-pegawai');
     }
 
-    private function validate($data, $isUpdate = false)
+    private function validate($data, $isUpdate = false, $id = null)
     {
         $errors = [];
 
-        if (empty($data['nama']))
+        $nama = trim($data['nama'] ?? '');
+
+        if ($nama === '') {
             $errors['nama'] = "Jabatan pegawai wajib diisi";
+            return $errors;
+        }
+
+        $existing = $this->model->findByName($nama);
+
+        if ($existing) {
+            // kalau update, abaikan data dirinya sendiri
+            if ($isUpdate && (int)$existing['id'] === (int)$id) {
+                return $errors;
+            }
+
+            // kalau data yang ketemu masih aktif, baru error
+            if ((int)$existing['is_active'] === 1) {
+                $errors['nama'] = "Nama jabatan sudah ada";
+            }
+        }
 
         return $errors;
     }

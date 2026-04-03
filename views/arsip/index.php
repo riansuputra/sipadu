@@ -76,6 +76,78 @@ if ($isFiltered) {
 <div class="page-body" id="page-content" style="display:none;">
 
     <div class="container-xl">
+        <div class="row g-3 mb-3">
+
+            <div class="col-md-4">
+                <div class="card card-sm">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <span class="bg-primary text-white avatar">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-users">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+                                        <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                        <path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="col">
+                                <div class="text-muted small">Total Arsip</div>
+                                <div class="fs-2 fw-bold text-primary"><?= $totalArsip ?></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card card-sm">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <span class="bg-success text-white avatar">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-check">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M5 12l5 5l10 -10" />
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="col">
+                                <div class="text-muted small">Sudah Upload</div>
+                                <div class="fs-2 fw-bold text-success"><?= $totalSudah ?></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card card-sm">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <span class="bg-danger text-white avatar">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-x">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M18 6l-12 12" />
+                                        <path d="M6 6l12 12" />
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="col">
+                                <div class="text-muted small">Belum Upload</div>
+                                <div class="fs-2 fw-bold text-danger"><?= $totalBelum ?></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
         <div class="row row-cards ">
 
             <div class="col-12">
@@ -174,7 +246,7 @@ if ($isFiltered) {
                                         <th class="w-1 text-center">Jenis</th>
                                         <th class="text-center" style="width: 20%;">Tanggal</th>
                                         <th class="w-1 text-center">Total <br> Peserta</th>
-                                        <th>Status</th>
+                                        <th class="text-center">Status <br> Upload</th>
                                         <th class="w-1 text-center">Aksi</th>
                                     </tr>
                                     <tr id="filterRow">
@@ -205,7 +277,7 @@ if ($isFiltered) {
                                             <td class="text-center">
                                                 <?= htmlspecialchars($d['total_peserta'] ?? '-') ?>
                                             </td>
-                                            <td class="text-center">
+                                            <td class="text-center" data-search="<?= ((int)($d['upload_selesai'] ?? 0) === 1) ? '1' : '0' ?>">
                                                 <?php if ((int)($d['upload_selesai'] ?? 0) === 1): ?>
                                                     <span class="text-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Semua peserta sudah upload">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#00ff00" class="icon icon-tabler icons-tabler-filled icon-tabler-circle-check">
@@ -378,10 +450,16 @@ if ($isFiltered) {
                     'dikecualikan': 'Dikecualikan'
                 };
 
+                const uploadMap = {
+                    '1': 'Sudah',
+                    '0': 'Belum'
+                };
+
                 // =============================
                 // PASANG FILTER SELECT
                 // =============================
                 createSelectFilter(2); // Tahun
+                createSelectFilter(5, uploadMap);
 
             }
         });

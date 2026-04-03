@@ -54,6 +54,32 @@ unset($_SESSION['errors'], $_SESSION['old']);
                             <div class="form-fieldset">
 
                                 <div class="mb-3">
+                                    <label class="form-label">Pilih Pegawai :</label>
+                                    <select
+                                        name="pegawai_id"
+                                        id="pegawai_id"
+                                        class="form-select <?= isset($errors['pegawai_id']) ? 'is-invalid' : '' ?>">
+
+                                        <option value="">-- Pilih Pegawai --</option>
+
+                                        <?php foreach ($pegawai as $p): ?>
+                                            <option
+                                                value="<?= $p['id'] ?>"
+                                                data-nama="<?= htmlspecialchars($p['nama'] ?? '', ENT_QUOTES) ?>"
+                                                data-nip="<?= htmlspecialchars($p['nip'] ?? '', ENT_QUOTES) ?>"
+                                                data-jabatan="<?= htmlspecialchars($p['jabatan'] ?? '', ENT_QUOTES) ?>"
+                                                <?= ($old['pegawai_id'] ?? '') == $p['id'] ? 'selected' : '' ?>>
+                                                <?= htmlspecialchars($p['nama'] ?? '-') ?> - <?= htmlspecialchars($p['nip'] ?? '-') ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+
+                                    <div class="invalid-feedback">
+                                        <?= $errors['pegawai_id'] ?? '' ?>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
                                     <label class="form-label required">Nama Lengkap : </label>
                                     <input
                                         type="text"
@@ -239,6 +265,24 @@ unset($_SESSION['errors'], $_SESSION['old']);
 
     <?php unset($_SESSION['flash']); ?>
 <?php endif; ?>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const pegawaiSelect = document.getElementById('pegawai_id');
+        const namaLengkapInput = document.getElementById('nama_lengkap');
+        const usernameInput = document.getElementById('username');
+
+        pegawaiSelect?.addEventListener('change', function() {
+            const selected = this.options[this.selectedIndex];
+            const nama = selected.getAttribute('data-nama') || '';
+
+            // isi nama lengkap otomatis
+            if (namaLengkapInput && nama) {
+                namaLengkapInput.value = nama;
+            }
+        });
+    });
+</script>
 
 <script>
     $(document).ready(function() {

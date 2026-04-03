@@ -111,10 +111,7 @@ ob_start();
                                                 </td>
                                             </tr>
                                         <?php endforeach; ?>
-                                    <?php else: ?>
-                                        <tr>
-                                            <td colspan="9" class="text-center text-muted">Belum ada data modul</td>
-                                        </tr>
+
                                     <?php endif; ?>
                                 </tbody>
                             </table>

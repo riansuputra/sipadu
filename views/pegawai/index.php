@@ -27,7 +27,7 @@ ob_start();
 //             echo "<a href='$path'>$nama</a><br>";
 //         }
 //     }
-
+// dd($data);
 // endforeach;
 
 // echo '</pre>';
@@ -81,15 +81,21 @@ ob_start();
                                         <th class="w-1">No</th>
                                         <th class="text-center">Nama</th>
                                         <th class="text-center">NIP/<br>NIPPPK</th>
-                                        <th class="text-center">Pangkat, <br>Gol/Ruang</th>
-                                        <th class="text-center">Jabatan</th>
+                                        <th class="text-center">Tanggal<br>Lahir</th>
                                         <th class="w-1">Umur</th>
                                         <th class="w-1 text-center">Proyeksi <br>Pensiun</th>
+                                        <th class="text-center">Masa Kerja</th>
                                         <th class="w-1 text-center">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-tbody">
                                     <?php foreach ($data as $dt => $d): ?>
+
+                                        <?php
+                                        $usiaPensiun = usiaPensiunPegawai(!empty($d['is_widyaprada']));
+                                        $infoPensiun = infoPensiunPegawai($d['tanggal_lahir'], $usiaPensiun);
+                                        ?>
+
                                         <tr>
                                             <td class=" text-center">
                                                 <?= $dt + 1 ?>
@@ -98,38 +104,22 @@ ob_start();
                                                 <?= htmlspecialchars($d['nama'] ?? '-') ?>
                                             </td>
 
-                                            <td class="text-center">
+                                            <td class="" style="text-align: left;">
                                                 <?= htmlspecialchars($d['nip'] ?? '-') ?>
                                             </td>
-                                            <td class="">
-                                                <?= htmlspecialchars($d['pangkat_golongan'] ?? '-') ?>
+                                            <td class="text-center">
+                                                <?= !empty($d['tanggal_lahir']) ? date('d-m-Y', strtotime($d['tanggal_lahir'])) : '-' ?>
                                             </td>
-                                            <td class="">
-                                                <?= htmlspecialchars($d['jabatan'] ?? '-') ?>
-                                            </td>
-                                            <td class="">
+                                            <td class="text-center">
                                                 <?= htmlspecialchars($d['umur'] ?? '-') ?>
                                             </td>
-                                            <td>
-                                                <?php
-                                                $status = $d['status_pensiun'];
-                                                $bg = 'bg-secondary-lt';
 
-                                                if (strpos($status, 'Sudah pensiun') !== false) {
-                                                    $bg = 'bg-secondary-lt';
-                                                } elseif (strpos($status, '> 5 tahun') !== false) {
-                                                    $bg = 'bg-success-lt';
-                                                } elseif (strpos($status, 'th') !== false) {
-                                                    $bg = 'bg-primary-lt';
-                                                } elseif (strpos($status, 'bln') !== false) {
-                                                    $bg = 'bg-danger-lt';
-                                                }
-                                                ?>
-
-                                                <span class="badge <?= $bg ?>">
-                                                    <?= $status ?>
+                                            <td class="text-center">
+                                                <span class="badge bg-<?= $infoPensiun['badge'] ?>">
+                                                    <?= $infoPensiun['text'] ?>
                                                 </span>
                                             </td>
+                                            <td class="text-center"><?= masaKerjaPegawai($d['tmt_masuk']) ?></td>
                                             <td>
                                                 <div class="btn-group w-100">
                                                     <a href="<?= url('?page=edit-pegawai&id=' . $d["id"]) ?>" class="text-primary me-1">

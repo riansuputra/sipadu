@@ -5,10 +5,12 @@ require_once __DIR__ . '/../core/BaseController.php';
 class PegawaiController extends BaseController
 {
     private $model;
+    private $modelJabatan;
 
     public function __construct()
     {
         $this->model = $this->model('PegawaiModel');
+        $this->modelJabatan = $this->model('PegawaiJabatanModel');
     }
 
     public function index()
@@ -34,9 +36,12 @@ class PegawaiController extends BaseController
     {
         $this->auth();
 
+        $jabatan = $this->modelJabatan->getAll();
+
         $this->view('pegawai/create', [
             'user' => $this->user,
             'role' => $this->role,
+            'jabatan' => $jabatan,
         ]);
     }
 
@@ -135,12 +140,14 @@ class PegawaiController extends BaseController
 
         $data = $this->model->getById($id);
         $files = $this->model->getFiles($id);
+        $jabatan = $this->modelJabatan->getAll();
 
         // dd($data, $files);
 
         $this->view('pegawai/edit', [
             'data' => $data,
             'files' => $files,
+            'jabatan' => $jabatan,
             'user' => $this->user,
             'role' => $this->role,
         ]);
@@ -307,8 +314,8 @@ class PegawaiController extends BaseController
             $errors['alamat_domisili'] = 'Alamat wajib diisi';
         }
 
-        if (empty($data['jabatan'])) {
-            $errors['jabatan'] = 'Jabatan wajib diisi';
+        if (empty($data['jabatan_id'])) {
+            $errors['jabatan_id'] = 'Jabatan wajib diisi';
         }
 
         if ($data['status_asn'] === 'PNS') {
@@ -344,6 +351,10 @@ class PegawaiController extends BaseController
 
         if (empty($data['pendidikan'])) {
             $errors['pendidikan'] = 'Pendidikan wajib diisi';
+        }
+
+        if (empty($data['tmt_masuk'])) {
+            $errors['tmt_masuk'] = 'Tgl. masuk wajib diisi';
         }
 
         // ================= NIK =================

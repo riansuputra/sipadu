@@ -70,7 +70,7 @@ ob_start();
 
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <div class="text-muted small">Jenis Arsip :</div>
+                                <div class="text-muted small">Jenis Kegiatan :</div>
                                 <div class="fw-semibold"><?= htmlspecialchars($data['jenis_nama'] ?? '-') ?></div>
                             </div>
 

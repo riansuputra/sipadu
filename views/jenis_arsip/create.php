@@ -4,7 +4,7 @@
 // ================================
 
 // Judul
-$title = "Tambah Jenis Arsip";
+$title = "Tambah Jenis Kegiatan";
 
 
 
@@ -32,7 +32,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
             <div class="col">
                 <!-- Page pre-title -->
                 <div class="page-pretitle">Arsip</div>
-                <h2 class="page-title">Tambah Jenis Arsip</h2>
+                <h2 class="page-title">Tambah Jenis Kegiatan</h2>
             </div>
         </div>
     </div>
@@ -46,18 +46,18 @@ unset($_SESSION['errors'], $_SESSION['old']);
             <div class="col-sm-12 col-lg-6">
                 <form class="card" method="POST" action="<?= url('?page=jenis-arsip-store')  ?>" enctype="multipart/form-data">
                     <div class="card-header">
-                        <h3 class="card-title">Form Tambah Jenis Arsip</h3>
+                        <h3 class="card-title">Form Tambah Jenis Kegiatan</h3>
                     </div>
                     <div class="card-body">
                         <div class="form-fieldset">
                             <div class="mb-3">
-                                <label class="form-label required">Jenis Arsip :</label>
+                                <label class="form-label required">Jenis Kegiatan :</label>
                                 <div class="col">
                                     <input
                                         type="text"
                                         name="nama"
                                         id="nama"
-                                        placeholder="Jenis Arsip..."
+                                        placeholder="Jenis Kegiatan..."
                                         value="<?= $old['nama'] ?? '' ?>"
                                         class="form-control <?= isset($errors['nama']) ? 'is-invalid' : '' ?>" autocomplete="off">
                                     <div class="invalid-feedback">
@@ -104,7 +104,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                     <div class="card-header">
                         <div class="row w-full">
                             <div class="col">
-                                <h3 class="card-title mb-0">Tabel Jenis Arsip</h3>
+                                <h3 class="card-title mb-0">Tabel Jenis Kegiatan</h3>
 
                             </div>
                         </div>
@@ -115,7 +115,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                 <thead>
                                     <tr>
                                         <th class="w-1">No</th>
-                                        <th class="text-center">Jenis Arsip</th>
+                                        <th class="text-center">Jenis Kegiatan</th>
                                         <th class="w-1">Aksi</th>
                                     </tr>
                                 </thead>
@@ -130,7 +130,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                             </td>
                                             <td>
                                                 <div class="btn-group w-100">
-                                                    <a href="" class="text-yellow me-2" data-bs-toggle="modal" data-bs-target="#modal-edit-<?= $d['id'] ?>">
+                                                    <a href="<?= url('?page=edit-jenis-arsip&id=' . $d['id']) ?>" class="text-yellow me-2">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
                                                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                             <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
@@ -139,7 +139,8 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                                         </svg>
                                                     </a>
                                                     <a type="button" class="text-red" onclick="confirmDelete(
-                                                                '<?= url('?page=jenis-arsip-delete&id=' . $d['id']) ?>'
+                                                                '<?= url('?page=jenis-arsip-delete') ?>',
+                                                                '<?= $d['id'] ?>'
                                                             )">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus">
                                                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -155,70 +156,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                             </td>
                                         </tr>
 
-                                        <div class="modal modal-blur fade" id="modal-edit-<?= $d['id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
-                                            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-                                                <div class="modal-content">
-                                                    <div class="card-header">
-                                                        <h3 class="card-title">Edit Jenis Arsip</h3>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <div class="form-fieldset">
-                                                            <form method="POST" action="<?= url('?page=jenis-arsip-update&id=' . $d['id']) ?>" enctype="multipart/form-data">
-                                                                <div class="mb-3">
-                                                                    <label class="form-label required">Jenis Arsip :</label>
-                                                                    <div class="col">
-                                                                        <input
-                                                                            type="text"
-                                                                            name="nama"
-                                                                            id="nama"
-                                                                            placeholder="Jenis Arsip..."
-                                                                            value="<?= $d['nama'] ?? $old['nama'] ?? '' ?>"
-                                                                            class="form-control <?= isset($errors['nama']) ? 'is-invalid' : '' ?>">
-                                                                        <div class="invalid-feedback">
-                                                                            <?= $errors['nama'] ?? '' ?>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="mb-3">
-                                                                    <label class="form-label">Keterangan :</label>
-                                                                    <div class="col">
-                                                                        <textarea
-                                                                            name="keterangan"
-                                                                            id="keterangan"
-                                                                            rows="3"
-                                                                            placeholder="Keterangan..."
-                                                                            class="form-control <?= isset($errors['keterangan']) ? 'is-invalid' : '' ?>"><?= $d['keterangan'] ?? $old['keterangan'] ?? '' ?></textarea>
-                                                                        <div class="invalid-feedback">
-                                                                            <?= $errors['keterangan'] ?? '' ?>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="mb-3" hidden>
-                                                                    <label class="form-label required">Tampilkan :</label>
-                                                                    <?php $is_active = $old['is_active'] ?? $d['is_active']; ?>
-                                                                    <div class="col">
-                                                                        <label class="form-check form-check-inline">
-                                                                            <input class="form-check-input" type="radio" name="is_active" id="is_active" value="1" <?= $is_active == 1 ? 'checked' : '' ?>>
-                                                                            <span class="form-check-label">Ya</span>
-                                                                        </label>
-                                                                        <label class="form-check form-check-inline">
-                                                                            <input class="form-check-input" type="radio" name="is_active" id="is_active" value="0" <?= $is_active == 0 ? 'checked' : '' ?>>
-                                                                            <span class="form-check-label">Tidak</span>
-                                                                        </label>
-                                                                    </div>
-                                                                </div>
-                                                                <input type="text" name="id" id="id" value="<?= $d['id'] ?>" hidden>
-                                                                <div class="">
-                                                                    <button type="submit" class="btn btn-success">Simpan</button>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+
                                     <?php endforeach; ?>
 
                                 </tbody>
@@ -267,43 +205,9 @@ unset($_SESSION['errors'], $_SESSION['old']);
     });
 </script>
 
-<?php if (isset($_SESSION['flash'])): ?>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-
-            let status = <?= json_encode($_SESSION['flash']['status']) ?>;
-            let message = <?= json_encode($_SESSION['flash']['message']) ?>;
-
-            if (status === 'success') {
-
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil!',
-                    text: message,
-                    timer: 1000,
-                    showConfirmButton: false,
-                });
-
-            } else {
-
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Gagal!',
-                    timer: 1500,
-                    html: message
-                });
-
-            }
-
-        });
-    </script>
-
-    <?php unset($_SESSION['flash']); ?>
-<?php endif; ?>
 
 <script>
-    function confirmDelete(url, label = '') {
+    function confirmDelete(url, id, label = '') {
 
         Swal.fire({
             title: 'Yakin ingin menghapus?',
@@ -312,12 +216,26 @@ unset($_SESSION['errors'], $_SESSION['old']);
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Ya, hapus',
-            cancelButtonText: 'Batal'
+            cancelButtonText: 'Batal',
         }).then((result) => {
 
             if (result.isConfirmed) {
-                window.location.href = url;
+
+                // buat form POST dinamis
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = url;
+
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'id';
+                input.value = id;
+
+                form.appendChild(input);
+                document.body.appendChild(form);
+                form.submit();
             }
+            timer: 5000;
 
         });
     }

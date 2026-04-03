@@ -57,10 +57,20 @@ class PeraturanJenisController extends BaseController
             $this->model->beginTransaction();
 
             $data = $_POST;
-            $id = $this->model->insert($data);
+            $nama = trim($data['nama']);
 
-            if (!$id) {
-                throw new Exception("Insert gagal");
+            $existing = $this->model->findByName($nama);
+
+            // kalau ada tapi nonaktif, aktifkan lagi
+            if ($existing && (int)$existing['isactive'] === 0) {
+                $this->model->reactivate($existing['id']);
+                $id = $existing['id'];
+            } else {
+                $id = $this->model->insert($data);
+
+                if (!$id) {
+                    throw new Exception("Insert gagal");
+                }
             }
 
             $this->model->commit();
@@ -79,7 +89,7 @@ class PeraturanJenisController extends BaseController
             $this->model->rollback();
 
             if ($e instanceof PDOException && $e->getCode() == 23000) {
-                $this->flash('error', 'Kode sudah digunakan');
+                $this->flash('error', 'Jenis sudah digunakan');
             } else {
 
                 debug_log($e->getMessage(), 'UPDATE ERROR');
@@ -153,7 +163,7 @@ class PeraturanJenisController extends BaseController
             $this->model->rollback();
             if ($e instanceof PDOException && $e->getCode() == 23000) {
 
-                $this->flash('error', 'Kode sudah digunakan');
+                $this->flash('error', 'Jenis sudah digunakan');
             } else {
 
                 debug_log($e->getMessage(), 'UPDATE ERROR');

@@ -130,7 +130,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                             </td>
                                             <td>
                                                 <div class="btn-group w-100">
-                                                    <a href="" class="text-yellow me-2" data-bs-toggle="modal" data-bs-target="#modal-edit-<?= $d['id'] ?>">
+                                                    <a href="<?= url('?page=edit-jenis-publikasi&id=' . $d['id']) ?>" class="text-yellow me-2">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
                                                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                             <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
@@ -139,7 +139,8 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                                         </svg>
                                                     </a>
                                                     <a type="button" class="text-red" onclick="confirmDelete(
-                                                                '<?= url('?page=jenis-publikasi-delete&id=' . $d['id']) ?>'
+                                                                '<?= url('?page=jenis-publikasi-delete') ?>',
+                                                                '<?= $d['id'] ?>'
                                                             )">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus">
                                                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -267,41 +268,6 @@ unset($_SESSION['errors'], $_SESSION['old']);
     });
 </script>
 
-<?php if (isset($_SESSION['flash'])): ?>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-
-            let status = <?= json_encode($_SESSION['flash']['status']) ?>;
-            let message = <?= json_encode($_SESSION['flash']['message']) ?>;
-
-            if (status === 'success') {
-
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil!',
-                    text: message,
-                    timer: 1000,
-                    showConfirmButton: false,
-                });
-
-            } else {
-
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Gagal!',
-                    timer: 1500,
-                    html: message
-                });
-
-            }
-
-        });
-    </script>
-
-    <?php unset($_SESSION['flash']); ?>
-<?php endif; ?>
-
 <script>
     const advancedTable = {
         headers: [{
@@ -349,7 +315,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
     });
 </script>
 <script>
-    function confirmDelete(url, label = '') {
+    function confirmDelete(url, id, label = '') {
 
         Swal.fire({
             title: 'Yakin ingin menghapus?',
@@ -358,12 +324,26 @@ unset($_SESSION['errors'], $_SESSION['old']);
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Ya, hapus',
-            cancelButtonText: 'Batal'
+            cancelButtonText: 'Batal',
         }).then((result) => {
 
             if (result.isConfirmed) {
-                window.location.href = url;
+
+                // buat form POST dinamis
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = url;
+
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'id';
+                input.value = id;
+
+                form.appendChild(input);
+                document.body.appendChild(form);
+                form.submit();
             }
+            timer: 5000;
 
         });
     }

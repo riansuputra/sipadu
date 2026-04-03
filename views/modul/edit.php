@@ -58,7 +58,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                 <label class="form-label required">Judul :</label>
                                 <input type="text" name="judul"
                                     class="form-control <?= isset($errors['judul']) ? 'is-invalid' : '' ?>"
-                                    value="<?= htmlspecialchars($form['judul'] ?? '') ?>">
+                                    value="<?= htmlspecialchars($form['judul'] ?? '') ?>" autocomplete="off">
                                 <?php if (isset($errors['judul'])): ?>
                                     <div class="invalid-feedback"><?= $errors['judul'] ?></div>
                                 <?php endif; ?>
@@ -68,29 +68,38 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                 <label class="form-label required">Link :</label>
                                 <input type="text" name="link"
                                     class="form-control <?= isset($errors['link']) ? 'is-invalid' : '' ?>"
-                                    value="<?= htmlspecialchars($form['link'] ?? '') ?>">
+                                    placeholder="https://drive.google.com"
+                                    value="<?= htmlspecialchars($form['link'] ?? '') ?>" autocomplete="off">
+                                <small class="text-muted d-block mb-1">Gunakan URL lengkap, contoh: https://drive.google.com</small>
                                 <?php if (isset($errors['link'])): ?>
                                     <div class="invalid-feedback"><?= $errors['link'] ?></div>
                                 <?php endif; ?>
                             </div>
 
+                            <?php
+                            $selectedParent = $old['parent_slug'] ?? $form['parent_slug'] ?? '';
+                            ?>
+
                             <div class="mb-3">
                                 <label class="form-label required">Halaman :</label>
                                 <select name="parent_slug" class="form-select <?= isset($errors['parent_slug']) ? 'is-invalid' : '' ?>">
                                     <option value="">-- Pilih Halaman --</option>
-                                    <?php
-                                    $parents = ['paud', 'sd', 'smp', 'sma', 'widyaprada', 'link-aplikasi'];
-                                    foreach ($parents as $parent):
-                                    ?>
-                                        <option value="<?= $parent ?>" <?= (($form['parent_slug'] ?? '') === $parent) ? 'selected' : '' ?>>
-                                            <?= strtoupper($parent) ?>
-                                        </option>
-                                    <?php endforeach; ?>
+                                    <option value="paud" <?= $selectedParent === 'paud' ? 'selected' : '' ?>>PAUD</option>
+                                    <option value="sd" <?= $selectedParent === 'sd' ? 'selected' : '' ?>>SD</option>
+                                    <option value="smp" <?= $selectedParent === 'smp' ? 'selected' : '' ?>>SMP</option>
+                                    <option value="sma" <?= $selectedParent === 'sma' ? 'selected' : '' ?>>SMA</option>
+                                    <option value="widyaprada" <?= $selectedParent === 'widyaprada' ? 'selected' : '' ?>>Widyaprada</option>
+                                    <option value="link-aplikasi" <?= $selectedParent === 'link-aplikasi' ? 'selected' : '' ?>>Link Aplikasi</option>
+                                    <option value="kegiatan-paud" <?= $selectedParent === 'kegiatan-paud' ? 'selected' : '' ?>>Kegiatan PAUD</option>
+                                    <option value="kegiatan-sd" <?= $selectedParent === 'kegiatan-sd' ? 'selected' : '' ?>>Kegiatan SD</option>
+                                    <option value="kegiatan-smp" <?= $selectedParent === 'kegiatan-smp' ? 'selected' : '' ?>>Kegiatan SMP</option>
+                                    <option value="kegiatan-sma" <?= $selectedParent === 'kegiatan-sma' ? 'selected' : '' ?>>Kegiatan SMA</option>
+                                    <option value="kegiatan-widyaprada" <?= $selectedParent === 'kegiatan-widyaprada' ? 'selected' : '' ?>>Kegiatan Widyaprada</option>
                                 </select>
+
                                 <?php if (isset($errors['parent_slug'])): ?>
                                     <div class="invalid-feedback"><?= $errors['parent_slug'] ?></div>
                                 <?php endif; ?>
-
                             </div>
 
                             <div class="mb-3">
@@ -112,7 +121,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
 
                             <div class="mb-3">
                                 <label class="form-label">Deskripsi :</label>
-                                <textarea name="deskripsi" class="form-control" rows="3"><?= htmlspecialchars($form['deskripsi'] ?? '') ?></textarea>
+                                <textarea name="deskripsi" class="form-control" rows="3" autocomplete="off"><?= htmlspecialchars($form['deskripsi'] ?? '') ?></textarea>
                             </div>
 
 

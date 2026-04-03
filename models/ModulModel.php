@@ -363,6 +363,7 @@ class ModulModel
             'peraturan-publik',
             'arsip-saya',
             'dip-publik',
+            'kegiatan',
             'zi-wbbm-publik',
         ];
 

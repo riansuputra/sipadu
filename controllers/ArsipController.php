@@ -36,10 +36,17 @@ class ArsipController extends BaseController
         $jenis = $this->modelJenis->getAll();
         $pegawai = $this->modelPegawai->getAll();
 
+        $totalArsip = count($data);
+        $totalSudah = count(array_filter($data, fn($d) => (int)($d['upload_selesai'] ?? 0) === 1));
+        $totalBelum = $totalArsip - $totalSudah;
+
         $this->view('arsip/index', [
             'data' => $data,
             'jenisList' => $jenisList,
             'jenis' => $jenis,
+            'totalArsip' => $totalArsip,
+            'totalSudah' => $totalSudah,
+            'totalBelum' => $totalBelum,
             'pegawai' => $pegawai,
             'user' => $this->user,
             'role' => $this->role

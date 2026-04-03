@@ -31,13 +31,155 @@ function shortName($text, $limit = 20)
         : $text;
 }
 
-function umurTahun($tanggalLahir)
-{
-    if (empty($tanggalLahir)) return '-';
+if (!function_exists('umurTahun')) {
+    function umurTahun($tanggalLahir)
+    {
+        if (empty($tanggalLahir)) return '-';
 
-    return (new DateTime($tanggalLahir))
-        ->diff(new DateTime())
-        ->y;
+        return (new DateTime($tanggalLahir))
+            ->diff(new DateTime())
+            ->y;
+    }
+}
+
+if (!function_exists('usiaPensiunPegawai')) {
+    function usiaPensiunPegawai($isWidyaprada = false)
+    {
+        return $isWidyaprada ? 60 : 58;
+    }
+}
+
+if (!function_exists('tanggalPensiunPegawai')) {
+    function tanggalPensiunPegawai($tanggalLahir, $usiaPensiun = 58)
+    {
+        if (empty($tanggalLahir)) return null;
+
+        $lahir = new DateTime($tanggalLahir);
+
+        // Tanggal ulang tahun usia pensiun
+        $ulangTahunPensiun = (clone $lahir)->modify("+{$usiaPensiun} years");
+
+        // Pensiun resmi: tanggal 1 bulan berikutnya
+        $tanggalPensiun = (clone $ulangTahunPensiun)->modify('first day of next month');
+
+        return $tanggalPensiun->format('Y-m-d');
+    }
+}
+
+if (!function_exists('statusPegawai')) {
+    function statusPegawai($tanggalLahir, $usiaPensiun = 58)
+    {
+        $tanggalPensiun = tanggalPensiunPegawai($tanggalLahir, $usiaPensiun);
+
+        if (empty($tanggalPensiun)) return '-';
+
+        $today = new DateTime(date('Y-m-d'));
+        $pensiun = new DateTime($tanggalPensiun);
+
+        return $today >= $pensiun ? 'Pensiun' : 'Aktif';
+    }
+}
+
+if (!function_exists('infoPensiunPegawai')) {
+    function infoPensiunPegawai($tanggalLahir, $usiaPensiun = 58)
+    {
+        if (empty($tanggalLahir)) {
+            return [
+                'text' => '-',
+                'badge' => 'secondary',
+                'status' => '-',
+                'tanggal_pensiun' => null,
+                'tahun_pensiun' => null,
+                'sisa_bulan' => null
+            ];
+        }
+
+        $tanggalPensiun = tanggalPensiunPegawai($tanggalLahir, $usiaPensiun);
+
+        $today = new DateTime(date('Y-m-d'));
+        $pensiun = new DateTime($tanggalPensiun);
+
+        $tahunPensiun = $pensiun->format('Y');
+
+        // Kalau sudah pensiun
+        if ($today >= $pensiun) {
+            return [
+                'text' => "Sudah pensiun<br>({$tahunPensiun})",
+                'badge' => 'danger',
+                'status' => 'Pensiun',
+                'tanggal_pensiun' => $tanggalPensiun,
+                'tahun_pensiun' => $tahunPensiun,
+                'sisa_bulan' => 0
+            ];
+        }
+
+        $diff = $today->diff($pensiun);
+        $totalBulan = ($diff->y * 12) + $diff->m;
+
+        $text = [];
+
+        if ($diff->y > 0) {
+            $text[] = $diff->y . ' th';
+        }
+
+        if ($diff->m > 0) {
+            $text[] = $diff->m . ' bln';
+        }
+
+        if ($diff->y == 0 && $diff->m == 0) {
+            $text[] = $diff->d . ' hr';
+        }
+
+        $label = implode(' ', $text) . "<br>({$tahunPensiun})";
+
+        // Warna badge
+        if ($totalBulan < 3) {
+            $badge = 'danger';
+        } elseif ($totalBulan < 6) {
+            $badge = 'warning';
+        } else {
+            $badge = 'success';
+        }
+
+        return [
+            'text' => $label,
+            'badge' => $badge,
+            'status' => 'Aktif',
+            'tanggal_pensiun' => $tanggalPensiun,
+            'tahun_pensiun' => $tahunPensiun,
+            'sisa_bulan' => $totalBulan
+        ];
+    }
+}
+
+if (!function_exists('masaKerjaPegawai')) {
+    function masaKerjaPegawai($tmtMasuk)
+    {
+        if (empty($tmtMasuk)) return '-';
+
+        $tmt = new DateTime($tmtMasuk);
+        $today = new DateTime(date('Y-m-d'));
+
+        if ($tmt > $today) return '-';
+
+        $diff = $tmt->diff($today);
+
+        $hasil = [];
+
+        if ($diff->y > 0) {
+            $hasil[] = $diff->y . ' th';
+        }
+
+        if ($diff->m > 0) {
+            $hasil[] = $diff->m . ' bln';
+        }
+
+        if ($diff->y == 0 && $diff->m == 0) {
+            $hasil[] = $diff->d . ' hr';
+        }
+
+        return implode(' ', $hasil);
+    }
 }
 
 

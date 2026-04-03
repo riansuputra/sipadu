@@ -88,7 +88,7 @@ ob_start();
                                                 <?= $dt + 1 ?>
                                             </td>
                                             <td class="">
-                                                <?= htmlspecialchars($d['nama_lengkap'] ?? '-') ?>
+                                                <?= htmlspecialchars(!empty($d['pegawai_nama']) ? $d['pegawai_nama'] : ($d['nama_lengkap'] ?? '-')) ?>
                                             </td>
                                             <td class="">
                                                 <?= htmlspecialchars($d['username'] ?? '-') ?>

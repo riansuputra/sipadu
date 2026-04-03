@@ -4,7 +4,7 @@
 // ================================
 
 // Judul
-$title = "Tambah Jabatan Pegawai";
+$title = "Edit Jabatan Pegawai";
 
 
 
@@ -32,7 +32,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
             <div class="col">
                 <!-- Page pre-title -->
                 <div class="page-pretitle">Pegawai</div>
-                <h2 class="page-title">Tambah Jabatan Pegawai</h2>
+                <h2 class="page-title">Edit Jabatan Pegawai</h2>
             </div>
         </div>
     </div>
@@ -44,9 +44,10 @@ unset($_SESSION['errors'], $_SESSION['old']);
         <div class="row row-cards ">
 
             <div class="col-sm-12 col-lg-6">
-                <form class="card" method="POST" action="<?= url('?page=jabatan-pegawai-store')  ?>" enctype="multipart/form-data">
+                <form class="card" method="POST" action="<?= url('?page=jabatan-pegawai-update&id=' . $data['id']) ?>" enctype="multipart/form-data">
+                    <input type="text" name="id" id="id" value="<?= $data['id'] ?>" hidden>
                     <div class="card-header">
-                        <h3 class="card-title">Form Tambah Jabatan Pegawai</h3>
+                        <h3 class="card-title">Form Edit Jabatan Pegawai</h3>
                     </div>
                     <div class="card-body">
                         <div class="form-fieldset">
@@ -58,7 +59,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                         name="nama"
                                         id="nama"
                                         placeholder="Jabatan Pegawai..."
-                                        value="<?= $old['nama'] ?? '' ?>"
+                                        value="<?= $data['nama'] ?? $old['nama'] ?? '' ?>"
                                         class="form-control <?= isset($errors['nama']) ? 'is-invalid' : '' ?>" autocomplete="off">
                                     <div class="invalid-feedback">
                                         <?= $errors['nama'] ?? '' ?>
@@ -73,7 +74,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                         name="keterangan"
                                         id="keterangan"
                                         rows="3"
-                                        class="form-control <?= isset($errors['keterangan']) ? 'is-invalid' : '' ?>" autocomplete="off"><?= $old['keterangan'] ?? '' ?></textarea>
+                                        class="form-control <?= isset($errors['keterangan']) ? 'is-invalid' : '' ?>" autocomplete="off"><?= $data['keterangan'] ?? $old['keterangan'] ?? '' ?></textarea>
                                     <div class="invalid-feedback">
                                         <?= $errors['keterangan'] ?? '' ?>
                                     </div>
@@ -98,73 +99,6 @@ unset($_SESSION['errors'], $_SESSION['old']);
                         </div>
                     </div>
                 </form>
-            </div>
-            <div class="col-md-12 col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="row w-full">
-                            <div class="col">
-                                <h3 class="card-title mb-0">Tabel Jabatan Pegawai</h3>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table id="jenisPublikasiTable" class="table table-vcenter table-selectable table-bordered table-striped">
-                                <thead>
-                                    <tr>
-                                        <th class="w-1">No</th>
-                                        <th>Jabatan Pegawai</th>
-                                        <th class="w-1">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="table-tbody">
-                                    <?php foreach ($data as $dt => $d): ?>
-                                        <tr>
-                                            <td class="text-center">
-                                                <?= $dt + 1 ?>
-                                            </td>
-                                            <td class="">
-                                                <?= htmlspecialchars($d['nama'] ?? '-') ?>
-                                            </td>
-                                            <td>
-                                                <div class="btn-group w-100">
-                                                    <a href="<?= url('?page=edit-jabatan-pegawai&id=' . $d['id']) ?>" class="text-yellow me-2">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
-                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                            <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
-                                                            <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415" />
-                                                            <path d="M16 5l3 3" />
-                                                        </svg>
-                                                    </a>
-                                                    <a type="button" class="text-red" onclick="confirmDelete(
-                                                                '<?= url('?page=jabatan-pegawai-delete') ?>',
-                                                                '<?= $d['id'] ?>'
-                                                            )">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus">
-                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                            <path d="M4 7l16 0" />
-                                                            <path d="M10 11l0 6" />
-                                                            <path d="M14 11l0 6" />
-                                                            <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                                                            <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-                                                        </svg>
-                                                    </a>
-                                                </div>
-
-                                            </td>
-                                        </tr>
-
-
-                                    <?php endforeach; ?>
-
-                                </tbody>
-                            </table>
-
-                        </div>
-                    </div>
-                </div>
             </div>
 
         </div>
