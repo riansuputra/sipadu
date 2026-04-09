@@ -76,19 +76,6 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                     </div>
                                 </div>
                             </div>
-                            <div class="mb-3 row" hidden>
-                                <label class="form-label required">Tampilkan</label>
-                                <div class="col">
-                                    <label class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="is_active" id="is_active" value="1" checked="">
-                                        <span class="form-check-label">Ya</span>
-                                    </label>
-                                    <label class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="is_active" id="is_active" value="0">
-                                        <span class="form-check-label">Tidak</span>
-                                    </label>
-                                </div>
-                            </div>
                         </div>
                         <div class="">
                             <button type="submit" class="btn btn-success">Simpan</button>
@@ -136,7 +123,8 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                                         </svg>
                                                     </a>
                                                     <a type="button" class="text-red" onclick="confirmDelete(
-                                                                '<?= url('?page=tim-delete&id=' . $d['id']) ?>'
+                                                                '<?= url('?page=tim-delete') ?>',
+                                                                '<?= $d['id'] ?>'
                                                             )">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus">
                                                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -187,20 +175,6 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                                                     </select>
                                                                     <div class="invalid-feedback">
                                                                         <?= $errors['pokja_tipe'] ?? '' ?>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="mb-3" hidden>
-                                                                    <label class="form-label required">Tampilkan :</label>
-                                                                    <?php $is_active = $old['is_active'] ?? $d['is_active']; ?>
-                                                                    <div class="col">
-                                                                        <label class="form-check form-check-inline">
-                                                                            <input class="form-check-input" type="radio" name="is_active" id="is_active" value="1" <?= $is_active == 1 ? 'checked' : '' ?>>
-                                                                            <span class="form-check-label">Ya</span>
-                                                                        </label>
-                                                                        <label class="form-check form-check-inline">
-                                                                            <input class="form-check-input" type="radio" name="is_active" id="is_active" value="0" <?= $is_active == 0 ? 'checked' : '' ?>>
-                                                                            <span class="form-check-label">Tidak</span>
-                                                                        </label>
                                                                     </div>
                                                                 </div>
                                                                 <input type="text" name="id" id="id" value="<?= $d['id'] ?>" hidden>
@@ -342,8 +316,9 @@ unset($_SESSION['errors'], $_SESSION['old']);
         }
     });
 </script>
+
 <script>
-    function confirmDelete(url, label = '') {
+    function confirmDelete(url, id, label = '') {
 
         Swal.fire({
             title: 'Yakin ingin menghapus?',
@@ -352,16 +327,31 @@ unset($_SESSION['errors'], $_SESSION['old']);
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Ya, hapus',
-            cancelButtonText: 'Batal'
+            cancelButtonText: 'Batal',
         }).then((result) => {
 
             if (result.isConfirmed) {
-                window.location.href = url;
+
+                // buat form POST dinamis
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = url;
+
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'id';
+                input.value = id;
+
+                form.appendChild(input);
+                document.body.appendChild(form);
+                form.submit();
             }
+            timer: 5000;
 
         });
     }
 </script>
+
 <?php if (isset($_SESSION['flash'])): ?>
     <script>
         document.addEventListener('DOMContentLoaded', function() {

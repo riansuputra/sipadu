@@ -7,7 +7,7 @@ $dokumenPages = ['dokumen', 'tambah-dokumen', 'tambah-jenis-dokumen'];
 $pengaturanPages = ['profil', 'manajemen-file', 'backup-data'];
 $dipPages = ['dip', 'tambah-dip', 'detail-dip', 'edit-dip', 'dip-print-filter'];
 $peraturanPages = ['peraturan', 'tambah-peraturan', 'detail-peraturan', 'edit-peraturan', 'jenis-peraturan', 'tambah-jenis-peraturan', 'edit-jenis-peraturan'];
-$pegawaiPages = ['pegawai', 'tambah-pegawai', 'detail-pegawai', 'edit-pegawai', 'tambah-jabatan-pegawai', 'edit-jabatan-pegawai'];
+$pegawaiPages = ['pegawai', 'tambah-pegawai', 'detail-pegawai', 'edit-pegawai', 'tambah-jabatan-pegawai', 'edit-jabatan-pegawai', 'pegawai-pensiun'];
 $modulPages = ['modul', 'tambah-modul', 'edit-modul'];
 $userPages = ['user', 'tambah-user', 'edit-user', 'tambah-tim'];
 ?>
@@ -221,7 +221,7 @@ $userPages = ['user', 'tambah-user', 'edit-user', 'tambah-tim'];
                 <div class="dropdown-menu <?= in_array($page, $pegawaiPages) ? 'show' : '' ?>">
                     <div class="dropdown-menu-columns">
                         <div class="dropdown-menu-column">
-                            <a class="dropdown-item <?= ($page === 'pegawai' || $page === 'edit-pegawai') ? 'active' : '' ?>" href="<?= url('?page=pegawai') ?>">
+                            <a class="dropdown-item <?= ($page === 'pegawai' || $page === 'edit-pegawai' || $page === 'detail-pegawai') ? 'active' : '' ?>" href="<?= url('?page=pegawai') ?>">
                                 Daftar Pegawai
                             </a>
                             <a class="dropdown-item <?= $page === 'tambah-pegawai' ? 'active' : '' ?>" href="<?= url('?page=tambah-pegawai') ?>">
@@ -229,6 +229,9 @@ $userPages = ['user', 'tambah-user', 'edit-user', 'tambah-tim'];
                             </a>
                             <a class="dropdown-item <?= ($page === 'tambah-jabatan-pegawai' || $page === 'edit-jabatan-pegawai') ? 'active' : '' ?>" href="<?= url('?page=tambah-jabatan-pegawai') ?>">
                                 Jabatan Pegawai
+                            </a>
+                            <a class="dropdown-item <?= $page === 'pegawai-pensiun' ? 'active' : '' ?>" href="<?= url('?page=pegawai-pensiun') ?>">
+                                Daftar Pensiun
                             </a>
                         </div>
                     </div>

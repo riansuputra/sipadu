@@ -2,7 +2,8 @@
 
 // Judul
 $title = "Detail Pegawai";
-
+$bannerTitle = "Detail Pegawai";
+$bannerSubtitle = "SIPADU BPMP Provinsi Bali";
 
 
 
@@ -30,23 +31,35 @@ $old    = $_SESSION['old'] ?? [];
 unset($_SESSION['errors'], $_SESSION['old']);
 ?>
 
-<div class="page-header d-print-none" aria-label="Page header">
-    <div class="container-xl">
-        <div class="row g-2 align-items-center">
-            <div class="col">
-                <!-- Page pre-title -->
-                <div class="page-pretitle">Pegawai</div>
-                <h2 class="page-title">Detail Pegawai</h2>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="page-body" id="page-content" style="display:none;">
 
     <div class="container-xl">
 
-        <div class="row">
+        <div class="row ">
+
+            <div class="col-12 mb-3">
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb text-center" aria-label="breadcrumbs">
+                            <li class="breadcrumb-item">
+                                <a href="<?= url('?page=dashboard') ?>" class="h3 mb-0">
+                                    🏠︎&nbsp;&nbsp;Dashboard
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="<?= url('?page=kepegawaian') ?>" class="h3 mb-0">
+                                    Kepegawaian
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                <a href="<?= url('?page=kepegawaian') ?>" class="h3 mb-0">
+                                    Detail Pegawai
+                                </a>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
 
 
             <div class="col-md-4">
@@ -687,4 +700,4 @@ unset($_SESSION['errors'], $_SESSION['old']);
 $content = ob_get_clean();
 
 // Load layout utama
-require __DIR__ . '/../layouts/admin.php';
+require __DIR__ . '/../layouts/main.php';

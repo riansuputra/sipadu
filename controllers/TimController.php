@@ -170,9 +170,12 @@ class TimController extends BaseController
 
             $id = $_POST['id'];
 
+
             if ($this->model->isUsed($id)) {
                 throw new Exception("Tim/unit masih digunakan");
             }
+
+            // dd(!$this->model->delete($id));
 
             if (!$this->model->delete($id)) {
                 throw new Exception("Gagal menghapus jenis");
@@ -198,7 +201,7 @@ class TimController extends BaseController
             $this->flash('error', 'Tim/unit tidak dapat dihapus karena masih digunakan');
         }
 
-        return $this->redirect('?page=kelola-tim');
+        return $this->redirect('?page=tambah-tim');
     }
 
     private function validate($data, $isUpdate = false)
@@ -208,8 +211,15 @@ class TimController extends BaseController
         if (empty($data['pokja_tipe']))
             $errors['pokja_tipe'] = "Tim / Unit wajib diisi";
 
-        if (empty($data['pokja_nama']))
+        if (empty($data['pokja_nama'])) {
             $errors['pokja_nama'] = "Nama tim / unit wajib diisi";
+        } else {
+            $id = $isUpdate ? ($data['id'] ?? null) : null;
+
+            if ($this->model->kodeExists($data['pokja_nama'], $id)) {
+                $errors['pokja_nama'] = "Nama tim / unit sudah digunakan";
+            }
+        }
 
         return $errors;
     }

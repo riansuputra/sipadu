@@ -94,6 +94,24 @@ class TimModel
         return $stmt->fetchColumn() > 0;
     }
 
+    public function kodeExists($kode, $excludeId = null)
+    {
+        $sql = "SELECT COUNT(*) FROM pokja WHERE pokja_nama = ?";
+
+        $params = [$kode];
+
+        // untuk update (ignore id sendiri)
+        if ($excludeId) {
+            $sql .= " AND id != ?";
+            $params[] = $excludeId;
+        }
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+
+        return $stmt->fetchColumn() > 0;
+    }
+
 
     // hapus
     public function delete($id)

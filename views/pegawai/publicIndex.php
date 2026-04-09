@@ -4,8 +4,9 @@
 // ================================
 
 // Judul
-$title = "Daftar Pegawai";
-
+$title = "Kepegawaian";
+$bannerTitle = "Kepegawaian";
+$bannerSubtitle = "SIPADU BPMP Provinsi Bali";
 
 // Mulai buffer konten
 ob_start();
@@ -13,49 +14,50 @@ ob_start();
 
 
 <?php
-// dd($ringkasanPensiun);
-// dd($pensiunTahunan);
-// dd($tahunPensiun);
-// dd($rataRataUmur);
-// dd($statistikStatusAsn);
+// echo '<pre>';
+// dd($data);
+// foreach ($data as $dt => $d):
+//     if ($d['files']) {
+
+//         $files = explode('##', $d['files']);
+
+//         foreach ($files as $f) {
+
+//             list($id, $nama, $path) = explode('|', $f);
+
+//             echo "<a href='$path'>$nama</a><br>";
+//         }
+//     }
+// dd($data);
+// endforeach;
+
+// echo '</pre>';
 ?>
 
-<div class="page-header d-print-none" aria-label="Page header">
-    <div class="container-xl">
-        <div class="row g-2 align-items-center">
-            <div class="col">
-                <!-- Page pre-title -->
-                <div class="page-pretitle">Pegawai</div>
-                <h2 class="page-title">Daftar Pegawai</h2>
-            </div>
-            <!-- Page title actions -->
-            <div class="col-auto ms-auto d-print-none">
-                <div class="btn-list">
-                    <a href="<?= BASE_URL ?>/?page=tambah-pegawai" class="btn btn-primary btn-5 d-none d-sm-inline-block">
-
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">
-                            <path d="M12 5l0 14"></path>
-                            <path d="M5 12l14 0"></path>
-                        </svg>
-                        Tambah Pegawai
-                    </a>
-                    <a href="#" class="btn btn-primary btn-6 d-sm-none btn-icon">
-
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">
-                            <path d="M12 5l0 14"></path>
-                            <path d="M5 12l14 0"></path>
-                        </svg>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <div class="page-body" id="page-content" style="display:none;">
 
     <div class="container-xl">
         <div class="row row-deck row-cards ">
+
+            <div class="col-12">
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb text-center" aria-label="breadcrumbs">
+                            <li class="breadcrumb-item">
+                                <a href="<?= url('?page=dashboard') ?>" class="h3 mb-0">
+                                    🏠︎&nbsp;&nbsp;Dashboard
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                <a href="<?= url('?page=kepegawaian') ?>" class="h3 mb-0">
+                                    Kepegawaian
+                                </a>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
 
             <div class="col-md-4">
                 <div class="card">
@@ -144,7 +146,7 @@ ob_start();
                                 <div class="fs-2 fw-bold"><?= array_sum($ringkasanPensiun) ?></div>
                             </div>
                             <div class="col-auto">
-                                <a class="btn btn-sm btn-primary text-white" href="<?= url('?page=pegawai-pensiun') ?>">Detail</a>
+                                <a class="btn btn-sm btn-primary text-white" href="<?= url('?page=kepegawaian-pensiun') ?>">Detail</a>
 
                                 <div class="fs-2 fw-bold">&nbsp;</div>
                             </div>
@@ -208,33 +210,11 @@ ob_start();
                                             </td>
                                             <td>
                                                 <div class="btn-group w-100">
-                                                    <a href="<?= url('?page=detail-pegawai&id=' . $d["id"]) ?>" class="text-primary me-1">
+                                                    <a href="<?= url('?page=detail-kepegawaian&id=' . $d["id"]) ?>" class="text-primary me-1">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-eye" data-bs-toggle="tooltip" data-bs-placement="top" title="Detail">
                                                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                             <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
                                                             <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
-                                                        </svg>
-                                                    </a>
-                                                    <a href="<?= url('?page=edit-pegawai&id=' . $d["id"]) ?>" class="text-yellow me-1">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
-                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                            <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
-                                                            <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415" />
-                                                            <path d="M16 5l3 3" />
-                                                        </svg>
-                                                    </a>
-                                                    <a class="text-red"
-                                                        onclick="confirmDelete(
-                                                                '<?= url('?page=pegawai-delete') ?>',
-                                                                '<?= $d['id'] ?>'
-                                                            )">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus">
-                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                            <path d="M4 7l16 0" />
-                                                            <path d="M10 11l0 6" />
-                                                            <path d="M14 11l0 6" />
-                                                            <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                                                            <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
                                                         </svg>
                                                     </a>
                                                 </div>
@@ -366,4 +346,4 @@ ob_start();
 $content = ob_get_clean();
 
 // Load layout utama
-require __DIR__ . '/../layouts/admin.php';
+require __DIR__ . '/../layouts/main.php';

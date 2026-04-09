@@ -94,7 +94,7 @@ if ($isFiltered) {
                                 </span>
                             </div>
                             <div class="col">
-                                <div class="text-muted small">Total Arsip</div>
+                                <div class="subheader">Total Arsip</div>
                                 <div class="fs-2 fw-bold text-primary"><?= $totalArsip ?></div>
                             </div>
                         </div>
@@ -115,7 +115,7 @@ if ($isFiltered) {
                                 </span>
                             </div>
                             <div class="col">
-                                <div class="text-muted small">Sudah Upload</div>
+                                <div class="subheader">Sudah Upload</div>
                                 <div class="fs-2 fw-bold text-success"><?= $totalSudah ?></div>
                             </div>
                         </div>
@@ -137,7 +137,7 @@ if ($isFiltered) {
                                 </span>
                             </div>
                             <div class="col">
-                                <div class="text-muted small">Belum Upload</div>
+                                <div class="subheader">Belum Upload</div>
                                 <div class="fs-2 fw-bold text-danger"><?= $totalBelum ?></div>
                             </div>
                         </div>
@@ -226,7 +226,7 @@ if ($isFiltered) {
                                 </a>
                             </div>
                         <?php else: ?>
-                            <div class="text-muted small">
+                            <div class="subheader">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-info-circle">
                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                     <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />

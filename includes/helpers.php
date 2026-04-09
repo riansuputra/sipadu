@@ -104,8 +104,8 @@ if (!function_exists('infoPensiunPegawai')) {
         // Kalau sudah pensiun
         if ($today >= $pensiun) {
             return [
-                'text' => "Sudah pensiun<br>({$tahunPensiun})",
-                'badge' => 'danger',
+                'text' => "Pensiun<br>({$tahunPensiun})",
+                'badge' => 'danger w-100',
                 'status' => 'Pensiun',
                 'tanggal_pensiun' => $tanggalPensiun,
                 'tahun_pensiun' => $tahunPensiun,
@@ -131,6 +131,78 @@ if (!function_exists('infoPensiunPegawai')) {
         }
 
         $label = implode(' ', $text) . "<br>({$tahunPensiun})";
+
+        // Warna badge
+        if ($totalBulan < 3) {
+            $badge = 'danger w-100';
+        } elseif ($totalBulan < 6) {
+            $badge = 'warning w-100';
+        } else {
+            $badge = 'success w-100';
+        }
+
+        return [
+            'text' => $label,
+            'badge' => $badge,
+            'status' => 'Aktif',
+            'tanggal_pensiun' => $tanggalPensiun,
+            'tahun_pensiun' => $tahunPensiun,
+            'sisa_bulan' => $totalBulan
+        ];
+    }
+}
+
+if (!function_exists('infoPensiunPegawaiDetail')) {
+    function infoPensiunPegawaiDetail($tanggalLahir, $usiaPensiun = 58)
+    {
+        if (empty($tanggalLahir)) {
+            return [
+                'text' => '-',
+                'badge' => 'secondary',
+                'status' => '-',
+                'tanggal_pensiun' => null,
+                'tahun_pensiun' => null,
+                'sisa_bulan' => null
+            ];
+        }
+
+        $tanggalPensiun = tanggalPensiunPegawai($tanggalLahir, $usiaPensiun);
+
+        $today = new DateTime(date('Y-m-d'));
+        $pensiun = new DateTime($tanggalPensiun);
+
+        $tahunPensiun = $pensiun->format('Y');
+
+        // Kalau sudah pensiun
+        if ($today >= $pensiun) {
+            return [
+                'text' => "Pensiun ({$tahunPensiun})",
+                'badge' => 'danger',
+                'status' => 'Pensiun',
+                'tanggal_pensiun' => $tanggalPensiun,
+                'tahun_pensiun' => $tahunPensiun,
+                'sisa_bulan' => 0
+            ];
+        }
+
+        $diff = $today->diff($pensiun);
+        $totalBulan = ($diff->y * 12) + $diff->m;
+
+        $text = [];
+
+        if ($diff->y > 0) {
+            $text[] = $diff->y . ' th';
+        }
+
+        if ($diff->m > 0) {
+            $text[] = $diff->m . ' bln';
+        }
+
+        if ($diff->y == 0 && $diff->m == 0) {
+            $text[] = $diff->d . ' hr';
+        }
+
+        $label = implode(' ', $text) . " ({$tahunPensiun})";
 
         // Warna badge
         if ($totalBulan < 3) {

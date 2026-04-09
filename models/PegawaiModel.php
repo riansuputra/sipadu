@@ -363,4 +363,232 @@ class PegawaiModel
 
         return $stmt->fetch(PDO::FETCH_ASSOC) ? true : false;
     }
+
+    // Ambil statistik jumlah pegawai berdasarkan status ASN
+    public function getStatistikStatusAsn()
+    {
+        $stmt = $this->db->prepare("
+        SELECT 
+            status_asn,
+            COUNT(*) AS total
+        FROM pegawai
+        WHERE is_active = 1
+        AND deleted_at IS NULL
+        GROUP BY status_asn
+    ");
+
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Default agar selalu ada semua key
+        $result = [
+            'PNS' => 0,
+            'PPPK' => 0,
+            'PPNPN/OUTSOURCING' => 0,
+            'total' => 0
+        ];
+
+        foreach ($rows as $row) {
+            $status = strtoupper(trim($row['status_asn']));
+            $total = (int) $row['total'];
+
+            if (isset($result[$status])) {
+                $result[$status] = $total;
+            }
+
+            $result['total'] += $total;
+        }
+
+        return $result;
+    }
+
+    // Ambil rata-rata umur seluruh pegawai aktif
+    public function getRataRataUmur()
+    {
+        $stmt = $this->db->prepare("
+        SELECT 
+            ROUND(AVG(TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE())), 1) AS rata_rata_umur
+        FROM pegawai
+        WHERE is_active = 1
+        AND deleted_at IS NULL
+        AND tanggal_lahir IS NOT NULL
+    ");
+
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $row['rata_rata_umur'] ?? 0;
+    }
+
+    // Ambil daftar pegawai yang pensiun pada tahun tertentu
+    public function getPensiunTahunan($tahun = null)
+    {
+        $tahun = $tahun ?: date('Y');
+
+        $stmt = $this->db->prepare("
+        SELECT 
+            p.id,
+            p.nama,
+            p.nip,
+            p.tanggal_lahir,
+            p.tmt_masuk,
+            p.status_asn,
+            j.nama,
+            pk.pokja_nama,
+            CASE 
+                WHEN LOWER(pk.pokja_nama) LIKE '%widyaprada%' THEN 1
+                ELSE 0
+            END AS is_widyaprada
+        FROM pegawai p
+        LEFT JOIN pegawai_jabatan j 
+            ON j.id = p.jabatan_id
+        LEFT JOIN users u
+            ON u.pegawai_id = p.id
+        LEFT JOIN pokja pk
+            ON pk.id = u.pokja_id
+        WHERE p.is_active = 1
+        AND p.deleted_at IS NULL
+        ORDER BY p.tanggal_lahir ASC
+    ");
+
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $hasil = [];
+
+        foreach ($rows as $row) {
+            $usiaPensiun = usiaPensiunPegawai(!empty($row['is_widyaprada']));
+            $tanggalPensiun = tanggalPensiunPegawai($row['tanggal_lahir'], $usiaPensiun);
+
+            if (!$tanggalPensiun) {
+                continue;
+            }
+
+            $tahunPensiun = date('Y', strtotime($tanggalPensiun));
+
+            if ((int)$tahunPensiun === (int)$tahun) {
+                $row['usia_pensiun'] = $usiaPensiun;
+                $row['tanggal_pensiun'] = $tanggalPensiun;
+                $row['status_pegawai'] = statusPegawai($row['tanggal_lahir'], $usiaPensiun);
+                $row['umur'] = umurTahun($row['tanggal_lahir']);
+                $row['masa_kerja'] = masaKerjaPegawai($row['tmt_masuk']);
+                $row['info_pensiun'] = infoPensiunPegawaiDetail($row['tanggal_lahir'], $usiaPensiun);
+
+                $hasil[] = $row;
+            }
+        }
+
+        return $hasil;
+    }
+
+    // Ambil ringkasan jumlah pegawai pensiun per tahun
+    public function getRingkasanPensiunPerTahun($mulai = null, $sampai = null)
+    {
+        $mulai = $mulai ?: date('Y');
+        $sampai = $sampai ?: date('Y') + 5;
+
+        $stmt = $this->db->prepare("
+        SELECT 
+            p.id,
+            p.nama,
+            p.tanggal_lahir,
+            pk.pokja_nama,
+            CASE 
+                WHEN LOWER(pk.pokja_nama) LIKE '%widyaprada%' THEN 1
+                ELSE 0
+            END AS is_widyaprada
+        FROM pegawai p
+        LEFT JOIN users u
+            ON u.pegawai_id = p.id
+        LEFT JOIN pokja pk
+            ON pk.id = u.pokja_id
+        WHERE p.is_active = 1
+        AND p.deleted_at IS NULL
+    ");
+
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $ringkasan = [];
+
+        for ($tahun = $mulai; $tahun <= $sampai; $tahun++) {
+            $ringkasan[$tahun] = 0;
+        }
+
+        foreach ($rows as $row) {
+            $usiaPensiun = usiaPensiunPegawai(!empty($row['is_widyaprada']));
+            $tanggalPensiun = tanggalPensiunPegawai($row['tanggal_lahir'], $usiaPensiun);
+
+            if (!$tanggalPensiun) continue;
+
+            $tahunPensiun = (int) date('Y', strtotime($tanggalPensiun));
+
+            if ($tahunPensiun >= $mulai && $tahunPensiun <= $sampai) {
+                $ringkasan[$tahunPensiun]++;
+            }
+        }
+
+        return $ringkasan;
+    }
+
+    public function getDaftarPensiun($mulai = null, $sampai = null)
+    {
+        $mulai = $mulai ?: date('Y');
+        $sampai = $sampai ?: $mulai;
+
+        $stmt = $this->db->prepare("
+        SELECT 
+            p.id,
+            p.nama AS nama_pegawai,
+            p.nip,
+            p.tanggal_lahir,
+            p.tmt_masuk,
+            p.status_asn,
+            j.nama AS nama_jabatan,
+            pk.pokja_nama,
+            CASE 
+                WHEN LOWER(pk.pokja_nama) LIKE '%widyaprada%' THEN 1
+                ELSE 0
+            END AS is_widyaprada
+        FROM pegawai p
+        LEFT JOIN pegawai_jabatan j 
+            ON j.id = p.jabatan_id
+        LEFT JOIN users u
+            ON u.pegawai_id = p.id
+        LEFT JOIN pokja pk
+            ON pk.id = u.pokja_id
+        WHERE p.is_active = 1
+        AND p.deleted_at IS NULL
+        ORDER BY p.tanggal_lahir ASC
+    ");
+
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $hasil = [];
+
+        foreach ($rows as $row) {
+            $usiaPensiun = usiaPensiunPegawai(!empty($row['is_widyaprada']));
+            $tanggalPensiun = tanggalPensiunPegawai($row['tanggal_lahir'], $usiaPensiun);
+
+            if (!$tanggalPensiun) {
+                continue;
+            }
+
+            $tahunPensiun = (int) date('Y', strtotime($tanggalPensiun));
+
+            if ($tahunPensiun >= (int)$mulai && $tahunPensiun <= (int)$sampai) {
+                $row['usia_pensiun'] = $usiaPensiun;
+                $row['tanggal_pensiun'] = $tanggalPensiun;
+                $row['status_pegawai'] = statusPegawai($row['tanggal_lahir'], $usiaPensiun);
+                $row['umur'] = umurTahun($row['tanggal_lahir']);
+                $row['masa_kerja'] = masaKerjaPegawai($row['tmt_masuk']);
+                $row['info_pensiun'] = infoPensiunPegawaiDetail($row['tanggal_lahir'], $usiaPensiun);
+
+                $hasil[] = $row;
+            }
+        }
+
+        return $hasil;
+    }
 }

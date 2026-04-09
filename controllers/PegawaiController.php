@@ -25,10 +25,31 @@ class PegawaiController extends BaseController
         }
         unset($dt);
 
+        // Statistik status ASN
+        $statistikStatusAsn = $this->model->getStatistikStatusAsn();
+
+        // Rata-rata umur pegawai
+        $rataRataUmur = $this->model->getRataRataUmur();
+
+        // Tahun filter pensiun (default tahun sekarang)
+        $tahunPensiun = $_GET['tahun_pensiun'] ?? date('Y');
+
+        // Daftar pensiun tahunan
+        $pensiunTahunan = $this->model->getPensiunTahunan($tahunPensiun);
+
+        // Ringkasan pensiun beberapa tahun ke depan
+        $ringkasanPensiun = $this->model->getRingkasanPensiunPerTahun(date('Y'), date('Y'));
+
         $this->view('pegawai/index', [
             'data' => $data,
             'user' => $this->user,
             'role' => $this->role,
+
+            'statistikStatusAsn' => $statistikStatusAsn,
+            'rataRataUmur' => $rataRataUmur,
+            'tahunPensiun' => $tahunPensiun,
+            'pensiunTahunan' => $pensiunTahunan,
+            'ringkasanPensiun' => $ringkasanPensiun,
         ]);
     }
 
@@ -118,10 +139,27 @@ class PegawaiController extends BaseController
         $id = $_GET['id'] ?? null;
         if (!$id) die("ID tidak valid");
 
-        $data = $this->model->getById($id);
+        $pegawai = $this->model->getById($id);
         $files = $this->model->getFiles($id);
 
-        // dd($data, $files);
+        if (!$pegawai) die("Data pegawai tidak ditemukan");
+
+        // Tentukan usia pensiun berdasarkan pokja
+        $usiaPensiun = usiaPensiunPegawai(!empty($pegawai['is_widyaprada']));
+
+        // Ambil info pensiun lengkap
+        $infoPensiun = infoPensiunPegawaiDetail($pegawai['tanggal_lahir'], $usiaPensiun);
+
+        $data = [
+            'title' => 'Detail Pegawai',
+            'pegawai' => $pegawai,
+            'usiaPensiun' => $usiaPensiun,
+            'infoPensiun' => $infoPensiun,
+            'umur' => umurTahun($pegawai['tanggal_lahir']),
+            'masaKerja' => masaKerjaPegawai($pegawai['tmt_masuk']),
+            'statusPegawai' => statusPegawai($pegawai['tanggal_lahir'], $usiaPensiun),
+            'tanggalPensiun' => tanggalPensiunPegawai($pegawai['tanggal_lahir'], $usiaPensiun),
+        ];
 
         $this->view('pegawai/detail', [
             'data' => $data,
@@ -499,5 +537,324 @@ class PegawaiController extends BaseController
                 'ukuran_file' => $size
             ]);
         }
+    }
+
+    public function print()
+    {
+        $this->auth();
+
+        $id = $_GET['id'] ?? null;
+        if (!$id) die("ID tidak valid");
+
+        $pegawai = $this->model->getById($id);
+        $files = $this->model->getFiles($id);
+
+        if (!$pegawai) die("Data pegawai tidak ditemukan");
+
+        // Tentukan usia pensiun berdasarkan pokja
+        $usiaPensiun = usiaPensiunPegawai(!empty($pegawai['is_widyaprada']));
+
+        // Ambil info pensiun lengkap
+        $infoPensiun = infoPensiunPegawaiDetail($pegawai['tanggal_lahir'], $usiaPensiun);
+
+        $data = [
+            'title' => 'Print Data Pegawai',
+            'pegawai' => $pegawai,
+            'usiaPensiun' => $usiaPensiun,
+            'infoPensiun' => $infoPensiun,
+            'umur' => umurTahun($pegawai['tanggal_lahir']),
+            'masaKerja' => masaKerjaPegawai($pegawai['tmt_masuk']),
+            'statusPegawai' => statusPegawai($pegawai['tanggal_lahir'], $usiaPensiun),
+            'tanggalPensiun' => tanggalPensiunPegawai($pegawai['tanggal_lahir'], $usiaPensiun),
+        ];
+
+        $this->view('pegawai/print', [
+            'data' => $data,
+            'files' => $files,
+            'user' => $this->user,
+            'role' => $this->role,
+        ]);
+    }
+
+    public function download()
+    {
+        $this->auth();
+
+        $id = $_GET['id'] ?? null;
+        if (!$id) die("ID tidak valid");
+
+        $pegawai = $this->model->getById($id);
+        if (!$pegawai) die("Data pegawai tidak ditemukan");
+
+        $files = $this->model->getFiles($id);
+
+        if (empty($files)) {
+            die("Tidak ada file yang bisa diunduh");
+        }
+
+        // Jenis dokumen yang ingin dimasukkan ke ZIP
+        $allowedJenis = [
+            'file_kk',
+            'file_ktp',
+            'file_foto',
+            'file_sk_spmt',
+            'file_sk_pengangkatan'
+        ];
+
+        // Mapping nama file di dalam ZIP
+        $namaMap = [
+            'file_kk' => 'KK',
+            'file_ktp' => 'KTP',
+            'file_foto' => 'Foto',
+            'file_sk_spmt' => 'SK_SPMT',
+            'file_sk_pengangkatan' => 'SK_Pengangkatan'
+        ];
+
+        $zip = new ZipArchive();
+
+        // Amankan nama file zip
+        $safeNama = preg_replace('/[^A-Za-z0-9_\-]/', '_', $pegawai['nama'] ?? 'pegawai');
+        $zipFileName = 'berkas_pegawai_' . $safeNama . '_' . date('Ymd_His') . '.zip';
+        $zipFilePath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $zipFileName;
+
+        if ($zip->open($zipFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+            die("Gagal membuat file ZIP");
+        }
+
+        $jumlahFileMasuk = 0;
+
+        foreach ($files as $file) {
+            if (
+                empty($file['jenis_dokumen']) ||
+                empty($file['path_file']) ||
+                !in_array($file['jenis_dokumen'], $allowedJenis)
+            ) {
+                continue;
+            }
+
+            // Ubah path database menjadi path fisik server
+            $relativePath = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $file['path_file']);
+            $fullPath = dirname(__DIR__) . DIRECTORY_SEPARATOR . $relativePath;
+
+            if (!file_exists($fullPath) || !is_file($fullPath)) {
+                continue;
+            }
+
+            $extension = pathinfo($fullPath, PATHINFO_EXTENSION);
+            $namaDalamZip = $namaMap[$file['jenis_dokumen']] ?? $file['jenis_dokumen'];
+
+            if (!empty($extension)) {
+                $namaDalamZip .= '.' . $extension;
+            }
+
+            $zip->addFile($fullPath, $namaDalamZip);
+            $jumlahFileMasuk++;
+        }
+
+        $zip->close();
+
+        // Kalau tidak ada file valid
+        if ($jumlahFileMasuk === 0) {
+            if (file_exists($zipFilePath)) {
+                unlink($zipFilePath);
+            }
+
+            die("Tidak ada file valid yang bisa diunduh");
+        }
+
+        // Download ZIP
+        header('Content-Type: application/zip');
+        header('Content-Disposition: attachment; filename="' . basename($zipFileName) . '"');
+        header('Content-Length: ' . filesize($zipFilePath));
+        header('Pragma: no-cache');
+        header('Expires: 0');
+
+        readfile($zipFilePath);
+
+        // Hapus file temp setelah didownload
+        unlink($zipFilePath);
+        exit;
+    }
+
+    public function indexPublic()
+    {
+        $this->auth();
+
+        $data = $this->model->getAll();
+
+        foreach ($data as &$dt) {
+            $dt['umur'] = umurTahun($dt['tanggal_lahir']) . ' th';
+            $dt['status_pensiun'] = statusPensiunSingkat($dt['tanggal_lahir'], 58);
+        }
+        unset($dt);
+        // Statistik status ASN
+        $statistikStatusAsn = $this->model->getStatistikStatusAsn();
+
+        // Rata-rata umur pegawai
+        $rataRataUmur = $this->model->getRataRataUmur();
+
+        // Tahun filter pensiun (default tahun sekarang)
+        $tahunPensiun = $_GET['tahun_pensiun'] ?? date('Y');
+
+        // Daftar pensiun tahunan
+        $pensiunTahunan = $this->model->getPensiunTahunan($tahunPensiun);
+
+        // Ringkasan pensiun beberapa tahun ke depan
+        $ringkasanPensiun = $this->model->getRingkasanPensiunPerTahun(date('Y'), date('Y'));
+
+        $this->view('pegawai/publicIndex', [
+            'data' => $data,
+            'user' => $this->user,
+            'role' => $this->role,
+
+            'statistikStatusAsn' => $statistikStatusAsn,
+            'rataRataUmur' => $rataRataUmur,
+            'tahunPensiun' => $tahunPensiun,
+            'pensiunTahunan' => $pensiunTahunan,
+            'ringkasanPensiun' => $ringkasanPensiun,
+        ]);
+    }
+
+    public function detailPublic()
+    {
+        $this->auth();
+
+        $id = $_GET['id'] ?? null;
+        if (!$id) die("ID tidak valid");
+
+        $pegawai = $this->model->getById($id);
+        $files = $this->model->getFiles($id);
+
+        if (!$pegawai) die("Data pegawai tidak ditemukan");
+
+        // Tentukan usia pensiun berdasarkan pokja
+        $usiaPensiun = usiaPensiunPegawai(!empty($pegawai['is_widyaprada']));
+
+        // Ambil info pensiun lengkap
+        $infoPensiun = infoPensiunPegawaiDetail($pegawai['tanggal_lahir'], $usiaPensiun);
+
+        $data = [
+            'title' => 'Detail Pegawai',
+            'pegawai' => $pegawai,
+            'usiaPensiun' => $usiaPensiun,
+            'infoPensiun' => $infoPensiun,
+            'umur' => umurTahun($pegawai['tanggal_lahir']),
+            'masaKerja' => masaKerjaPegawai($pegawai['tmt_masuk']),
+            'statusPegawai' => statusPegawai($pegawai['tanggal_lahir'], $usiaPensiun),
+            'tanggalPensiun' => tanggalPensiunPegawai($pegawai['tanggal_lahir'], $usiaPensiun),
+        ];
+
+        $this->view('pegawai/publicDetail', [
+            'data' => $data,
+            'files' => $files,
+            'user' => $this->user,
+            'role' => $this->role,
+        ]);
+    }
+
+    public function pensiun()
+    {
+        $this->auth();
+
+        // Data umum pegawai
+        $data = $this->model->getAll();
+
+        foreach ($data as &$dt) {
+            $dt['umur'] = umurTahun($dt['tanggal_lahir']) . ' th';
+            $dt['status_pensiun'] = statusPensiunSingkat($dt['tanggal_lahir'], 58);
+        }
+        unset($dt);
+
+        // Statistik umum
+        $statistikStatusAsn = $this->model->getStatistikStatusAsn();
+        $rataRataUmur = $this->model->getRataRataUmur();
+
+        // ==========================
+        // FILTER INFORMASI PENSIUN
+        // ==========================
+        $tahunMulai = isset($_GET['tahun_mulai']) ? (int) $_GET['tahun_mulai'] : (int) date('Y');
+        $tahunSampai = isset($_GET['tahun_sampai']) ? (int) $_GET['tahun_sampai'] : (int) date('Y');
+
+        // Validasi: jika tahun sampai lebih kecil dari mulai
+        if ($tahunSampai < $tahunMulai) {
+            $tahunSampai = $tahunMulai;
+        }
+
+        // Ambil daftar pegawai pensiun berdasarkan rentang tahun
+        $daftarPensiun = $this->model->getDaftarPensiun($tahunMulai, $tahunSampai);
+
+        // Ambil ringkasan jumlah pensiun per tahun
+        $ringkasanPensiun = $this->model->getRingkasanPensiunPerTahun($tahunMulai, $tahunSampai);
+
+        $this->view('pegawai/pensiun', [
+            'data' => $data,
+            'user' => $this->user,
+            'role' => $this->role,
+
+            // Statistik umum
+            'statistikStatusAsn' => $statistikStatusAsn,
+            'rataRataUmur' => $rataRataUmur,
+
+            // Filter pensiun
+            'tahunMulai' => $tahunMulai,
+            'tahunSampai' => $tahunSampai,
+
+            // Hasil pensiun
+            'daftarPensiun' => $daftarPensiun,
+            'ringkasanPensiun' => $ringkasanPensiun,
+        ]);
+    }
+
+    public function pensiunPublic()
+    {
+        $this->auth();
+
+        // Data umum pegawai
+        $data = $this->model->getAll();
+
+        foreach ($data as &$dt) {
+            $dt['umur'] = umurTahun($dt['tanggal_lahir']) . ' th';
+            $dt['status_pensiun'] = statusPensiunSingkat($dt['tanggal_lahir'], 58);
+        }
+        unset($dt);
+
+        // Statistik umum
+        $statistikStatusAsn = $this->model->getStatistikStatusAsn();
+        $rataRataUmur = $this->model->getRataRataUmur();
+
+        // ==========================
+        // FILTER INFORMASI PENSIUN
+        // ==========================
+        $tahunMulai = isset($_GET['tahun_mulai']) ? (int) $_GET['tahun_mulai'] : (int) date('Y');
+        $tahunSampai = isset($_GET['tahun_sampai']) ? (int) $_GET['tahun_sampai'] : (int) date('Y');
+
+        // Validasi: jika tahun sampai lebih kecil dari mulai
+        if ($tahunSampai < $tahunMulai) {
+            $tahunSampai = $tahunMulai;
+        }
+
+        // Ambil daftar pegawai pensiun berdasarkan rentang tahun
+        $daftarPensiun = $this->model->getDaftarPensiun($tahunMulai, $tahunSampai);
+
+        // Ambil ringkasan jumlah pensiun per tahun
+        $ringkasanPensiun = $this->model->getRingkasanPensiunPerTahun($tahunMulai, $tahunSampai);
+
+        $this->view('pegawai/publicPensiun', [
+            'data' => $data,
+            'user' => $this->user,
+            'role' => $this->role,
+
+            // Statistik umum
+            'statistikStatusAsn' => $statistikStatusAsn,
+            'rataRataUmur' => $rataRataUmur,
+
+            // Filter pensiun
+            'tahunMulai' => $tahunMulai,
+            'tahunSampai' => $tahunSampai,
+
+            // Hasil pensiun
+            'daftarPensiun' => $daftarPensiun,
+            'ringkasanPensiun' => $ringkasanPensiun,
+        ]);
     }
 }

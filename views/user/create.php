@@ -16,6 +16,7 @@ ob_start();
 
 
 <?php
+// dd($pegawai);
 // echo '<pre>';
 // print_r($roles);
 // print_r($pokja);
@@ -272,15 +273,30 @@ unset($_SESSION['errors'], $_SESSION['old']);
         const namaLengkapInput = document.getElementById('nama_lengkap');
         const usernameInput = document.getElementById('username');
 
-        pegawaiSelect?.addEventListener('change', function() {
-            const selected = this.options[this.selectedIndex];
-            const nama = selected.getAttribute('data-nama') || '';
+        if (!pegawaiSelect) return;
 
-            // isi nama lengkap otomatis
-            if (namaLengkapInput && nama) {
+        function isiDataPegawai() {
+            const selectedOption = pegawaiSelect.options[pegawaiSelect.selectedIndex];
+
+            if (!selectedOption) return;
+
+            const nama = selectedOption.dataset.nama || '';
+            const nip = selectedOption.dataset.nip || '';
+
+            if (namaLengkapInput) {
                 namaLengkapInput.value = nama;
             }
-        });
+
+            if (usernameInput) {
+                usernameInput.value = nip;
+            }
+        }
+
+        // saat user ganti pilihan
+        pegawaiSelect.addEventListener('change', isiDataPegawai);
+
+        // saat halaman load kalau sudah ada selected
+        isiDataPegawai();
     });
 </script>
 

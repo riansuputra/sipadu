@@ -30,7 +30,7 @@ define('DB_NAME', 'db_sipadu');
 define('DB_USER', 'root');
 define('DB_PASS', '');
 
-// Konfigurasi database server free
+// // Konfigurasi database server free
 // define('DB_HOST', 'sql205.infinityfree.com');
 // define('DB_NAME', 'if0_40988811_db_sipadu');
 // define('DB_USER', 'if0_40988811');

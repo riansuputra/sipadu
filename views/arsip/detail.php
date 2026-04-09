@@ -63,7 +63,7 @@ ob_start();
                                 </span>
                             </div>
                             <div class="col">
-                                <div class="text-muted small">Total Peserta</div>
+                                <div class="subheader">Total Peserta</div>
                                 <div class="fs-2 fw-bold text-primary"><?= $totalPeserta ?></div>
                             </div>
                         </div>
@@ -84,7 +84,7 @@ ob_start();
                                 </span>
                             </div>
                             <div class="col">
-                                <div class="text-muted small">Sudah Upload</div>
+                                <div class="subheader">Sudah Upload</div>
                                 <div class="fs-2 fw-bold text-success"><?= $totalUpload ?></div>
                             </div>
                         </div>
@@ -106,7 +106,7 @@ ob_start();
                                 </span>
                             </div>
                             <div class="col">
-                                <div class="text-muted small">Belum Upload</div>
+                                <div class="subheader">Belum Upload</div>
                                 <div class="fs-2 fw-bold text-danger"><?= $totalBelum ?></div>
                             </div>
                         </div>

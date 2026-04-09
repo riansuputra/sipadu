@@ -816,6 +816,48 @@ function routeRequest()
             $controller->delete();
             break;
 
+        case 'print-pegawai':
+
+            require __DIR__ . '/../controllers/PegawaiController.php';
+            $controller = new PegawaiController();
+            $controller->print();
+            break;
+
+        case 'download-pegawai':
+
+            require __DIR__ . '/../controllers/PegawaiController.php';
+            $controller = new PegawaiController();
+            $controller->download();
+            break;
+
+        case 'kepegawaian':
+
+            require __DIR__ . '/../controllers/PegawaiController.php';
+            $controller = new PegawaiController();
+            $controller->indexPublic();
+            break;
+
+        case 'detail-kepegawaian':
+
+            require __DIR__ . '/../controllers/PegawaiController.php';
+            $controller = new PegawaiController();
+            $controller->detailPublic();
+            break;
+
+        case 'pegawai-pensiun':
+
+            require __DIR__ . '/../controllers/PegawaiController.php';
+            $controller = new PegawaiController();
+            $controller->pensiun();
+            break;
+
+        case 'kepegawaian-pensiun':
+
+            require __DIR__ . '/../controllers/PegawaiController.php';
+            $controller = new PegawaiController();
+            $controller->pensiunPublic();
+            break;
+
         // Jabatan Pegawai =======================================
         case 'jabatan-pegawai':
 
