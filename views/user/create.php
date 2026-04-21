@@ -56,24 +56,24 @@ unset($_SESSION['errors'], $_SESSION['old']);
 
                                 <div class="mb-3">
                                     <label class="form-label">Pilih Pegawai :</label>
-                                    <select
+
+                                    <!-- hidden value -->
+                                    <input
+                                        type="hidden"
                                         name="pegawai_id"
                                         id="pegawai_id"
-                                        class="form-select <?= isset($errors['pegawai_id']) ? 'is-invalid' : '' ?>">
+                                        value="<?= $old['pegawai_id'] ?? $data['pegawai_id'] ?? '' ?>">
 
-                                        <option value="">-- Pilih Pegawai --</option>
-
-                                        <?php foreach ($pegawai as $p): ?>
-                                            <option
-                                                value="<?= $p['id'] ?>"
-                                                data-nama="<?= htmlspecialchars($p['nama'] ?? '', ENT_QUOTES) ?>"
-                                                data-nip="<?= htmlspecialchars($p['nip'] ?? '', ENT_QUOTES) ?>"
-                                                data-jabatan="<?= htmlspecialchars($p['jabatan'] ?? '', ENT_QUOTES) ?>"
-                                                <?= ($old['pegawai_id'] ?? '') == $p['id'] ? 'selected' : '' ?>>
-                                                <?= htmlspecialchars($p['nama'] ?? '-') ?> - <?= htmlspecialchars($p['nip'] ?? '-') ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
+                                    <!-- tampilan -->
+                                    <input
+                                        type="text"
+                                        id="pegawai_display"
+                                        class="form-control <?= isset($errors['pegawai_id']) ? 'is-invalid' : '' ?>"
+                                        placeholder="Pilih Pegawai..."
+                                        readonly
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modalPilihPegawai"
+                                        value="<?= $data['pegawai_nama'] ?? '' ?>">
 
                                     <div class="invalid-feedback">
                                         <?= $errors['pegawai_id'] ?? '' ?>
@@ -164,8 +164,64 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                                     <?= $errors['pokja_id'] ?? '' ?>
                                                 </div>
                                             </div>
+
                                         </div>
                                     </div>
+                                </div>
+                                <div class="">
+                                    <label class="form-label mb-0">Akses Pokja (Multi):</label>
+
+                                    <div class="table-responsive">
+                                        <table id="pokjaTable" class="table table-bordered table-hover bg-white">
+                                            <thead>
+                                                <tr>
+                                                    <th class="w-1">
+                                                        <input type="checkbox" id="checkAll">
+                                                    </th>
+                                                    <th>Pokja</th>
+                                                    <th class="w-1">Default</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($pokja as $p): ?>
+                                                    <tr>
+                                                        <td>
+                                                            <input
+                                                                class="form-check-input"
+                                                                type="checkbox"
+                                                                name="pokja_ids[]"
+                                                                value="<?= $p['id'] ?>"
+                                                                id="pokja_<?= $p['id'] ?>"
+                                                                <?= in_array($p['id'], $old['pokja_ids'] ?? []) ? 'checked' : '' ?>>
+                                                        </td>
+
+                                                        <td>
+                                                            <label for="pokja_<?= $p['id'] ?>" class="mb-0">
+                                                                <?= $p['pokja_tipe'] ?> <?= $p['pokja_nama'] ?>
+                                                            </label>
+                                                        </td>
+
+                                                        <td class="text-center">
+                                                            <input
+                                                                class="form-check-input"
+                                                                type="radio"
+                                                                name="pokja_default"
+                                                                value="<?= $p['id'] ?>"
+                                                                <?= ($old['pokja_default'] ?? $old['pokja_id'] ?? '') == $p['id'] ? 'checked' : '' ?>>
+                                                        </td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <small class="text-muted mt-0 mb-0">
+                                        *Pilih lebih dari satu pokja, lalu tentukan salah satu sebagai default
+                                    </small>
+
+                                    <?php if (!empty($errors['pokja_default'])): ?>
+                                        <div class="text-danger"><?= $errors['pokja_default'] ?></div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
 
@@ -194,28 +250,187 @@ unset($_SESSION['errors'], $_SESSION['old']);
     </div>
 </div>
 
+<div class="modal fade" id="modalPilihPegawai" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Pilih Pegawai</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <!-- search -->
+                <input
+                    type="text"
+                    class="form-control mb-3"
+                    id="searchPegawai"
+                    placeholder="Cari nama / NIP / jabatan...">
+
+                <!-- list -->
+                <div class="list-group" id="listPegawai" style="max-height: 400px; overflow-y:auto;">
+
+                    <?php foreach ($pegawai as $p): ?>
+                        <label class="list-group-item pegawai-item cursor-pointer">
+                            <div class="d-flex align-items-center">
+
+                                <!-- RADIO (fix bug disini) -->
+                                <input
+                                    class="form-check-input me-3 pegawai-radio"
+                                    type="radio"
+                                    name="pegawai_radio"
+                                    value="<?= $p['id'] ?>"
+                                    data-nama="<?= htmlspecialchars($p['nama']) ?>"
+                                    data-nip="<?= htmlspecialchars($p['nip']) ?>">
+
+                                <div class="flex-fill">
+                                    <div class="fw-semibold">
+                                        <?= htmlspecialchars($p['nama'] ?? '-')  ?>
+                                    </div>
+
+                                    <small class="text-muted d-block">
+                                        NIP: <?= htmlspecialchars($p['nip'] ?? '-')  ?>
+                                    </small>
+
+                                    <small class="text-muted d-block">
+                                        Jabatan: <?= htmlspecialchars($p['nama_jabatan'] ?? '-')  ?>
+                                    </small>
+                                </div>
+
+                            </div>
+                        </label>
+                    <?php endforeach; ?>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+
+        const hiddenInput = document.getElementById('pegawai_id');
+        const displayInput = document.getElementById('pegawai_display');
+
+        // pilih pegawai
+        document.querySelectorAll('.pegawai-radio').forEach(radio => {
+            radio.addEventListener('change', function() {
+
+                let id = this.value;
+                let nama = this.dataset.nama;
+
+                hiddenInput.value = id;
+                displayInput.value = nama;
+
+                // tutup modal otomatis
+                let modal = bootstrap.Modal.getInstance(document.getElementById('modalPilihPegawai'));
+                modal.hide();
+            });
+        });
+
+        // search
+        document.getElementById('searchPegawai').addEventListener('keyup', function() {
+            let keyword = this.value.toLowerCase();
+            let items = document.querySelectorAll('#listPegawai .pegawai-item');
+
+            items.forEach(item => {
+                let text = item.innerText.toLowerCase();
+                item.style.display = text.includes(keyword) ? '' : 'none';
+            });
+        });
+
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+
+        new DataTable('#pokjaTable', {
+            paging: false,
+            searching: false,
+            info: false,
+            lengthChange: false,
+            ordering: false
+        });
+
+    });
+</script>
+
+<script>
+    document.getElementById("checkAll").addEventListener("click", function() {
+
+        const checkboxes = document.querySelectorAll("input[name='pokja_ids[]']");
+
+        checkboxes.forEach(cb => {
+            cb.checked = this.checked;
+
+            const radio = document.querySelector("input[name='pokja_default'][value='" + cb.value + "']");
+
+            if (!this.checked) {
+                radio.checked = false;
+            }
+        });
+
+        // kalau check all → set default ke pertama
+        if (this.checked) {
+            const first = checkboxes[0];
+            const firstRadio = document.querySelector("input[name='pokja_default'][value='" + first.value + "']");
+            firstRadio.checked = true;
+        }
+    });
+</script>
+
 <script>
     document.addEventListener("DOMContentLoaded", function() {
 
         const roleSelect = document.getElementById("role_id");
-        const pokjaSelect = document.getElementById("pokja_id");
+        const pokjaCheckboxes = document.querySelectorAll("input[name='pokja_ids[]']");
+        const pokjaRadios = document.querySelectorAll("input[name='pokja_default']");
+        const checkAll = document.getElementById("checkAll");
 
         function togglePokja() {
             const selectedOption = roleSelect.options[roleSelect.selectedIndex];
-            const kodeRole = selectedOption.getAttribute("data-kode");
+            const kodeRole = selectedOption?.getAttribute("data-kode");
 
-            if (kodeRole === "Pimpinan") {
-                pokjaSelect.disabled = true;
-                pokjaSelect.value = ""; // reset pilihan
+            // 🔥 ROLE YANG TIDAK BOLEH PILIH POKJA
+            const disablePokja = (kodeRole === "Pimpinan" || kodeRole === "Superadmin");
+
+            if (disablePokja) {
+
+                pokjaCheckboxes.forEach(cb => {
+                    cb.checked = false;
+                    cb.disabled = true;
+                });
+
+                pokjaRadios.forEach(r => {
+                    r.checked = false;
+                    r.disabled = true;
+                });
+
+                if (checkAll) {
+                    checkAll.checked = false;
+                    checkAll.disabled = true;
+                }
+
             } else {
-                pokjaSelect.disabled = false;
+
+                pokjaCheckboxes.forEach(cb => cb.disabled = false);
+                pokjaRadios.forEach(r => r.disabled = false);
+
+                if (checkAll) {
+                    checkAll.disabled = false;
+                }
             }
         }
 
-        // Jalankan saat load (edit mode)
+        // INIT
         togglePokja();
 
-        // Jalankan saat role berubah
+        // EVENT
         roleSelect.addEventListener("change", togglePokja);
     });
 </script>
@@ -310,6 +525,155 @@ unset($_SESSION['errors'], $_SESSION['old']);
                 passwordInput.attr('type', 'password');
             }
         });
+    });
+</script>
+
+<script>
+    document.querySelectorAll("input[name='pokja_ids[]']").forEach(cb => {
+        cb.addEventListener("change", function() {
+
+            const radios = document.querySelectorAll("input[name='pokja_default']");
+            const checkedCheckboxes = Array.from(document.querySelectorAll("input[name='pokja_ids[]']:checked"));
+
+            const currentRadio = document.querySelector("input[name='pokja_default'][value='" + this.value + "']");
+
+            if (!this.checked) {
+                // ❌ jika uncheck → matikan radio terkait
+                if (currentRadio.checked) {
+                    currentRadio.checked = false;
+                }
+            }
+
+            // 🔥 CEK: apakah masih ada default?
+            const activeDefault = document.querySelector("input[name='pokja_default']:checked");
+
+            if (!activeDefault && checkedCheckboxes.length > 0) {
+                // ✅ set default ke checkbox pertama yang masih aktif
+                const first = checkedCheckboxes[0];
+                const firstRadio = document.querySelector("input[name='pokja_default'][value='" + first.value + "']");
+                firstRadio.checked = true;
+            }
+
+            // 🔥 disable radio kalau checkbox tidak aktif
+            radios.forEach(r => {
+                const relatedCheckbox = document.querySelector("input[name='pokja_ids[]'][value='" + r.value + "']");
+                r.disabled = !relatedCheckbox.checked;
+            });
+
+        });
+    });
+</script>
+
+<script>
+    function initPokjaState() {
+
+        const radios = document.querySelectorAll("input[name='pokja_default']");
+
+        radios.forEach(r => {
+            const cb = document.querySelector("input[name='pokja_ids[]'][value='" + r.value + "']");
+            r.disabled = !cb.checked;
+        });
+
+        const activeDefault = document.querySelector("input[name='pokja_default']:checked");
+        const checkedCheckboxes = document.querySelectorAll("input[name='pokja_ids[]']:checked");
+
+        if (!activeDefault && checkedCheckboxes.length > 0) {
+            const first = checkedCheckboxes[0];
+            document.querySelector("input[name='pokja_default'][value='" + first.value + "']").checked = true;
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", initPokjaState);
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+
+        const hiddenInput = document.getElementById('pegawai_id');
+        const displayInput = document.getElementById('pegawai_display');
+
+        const namaLengkapInput = document.getElementById('nama_lengkap');
+        const usernameInput = document.getElementById('username');
+
+        // =========================
+        // PILIH PEGAWAI
+        // =========================
+        document.querySelectorAll('.pegawai-radio').forEach(radio => {
+            radio.addEventListener('change', function() {
+
+                let id = this.value;
+                let nama = this.dataset.nama || '';
+                let nip = this.dataset.nip || '';
+
+                // isi hidden
+                hiddenInput.value = id;
+
+                // tampilkan di input
+                displayInput.value = nama;
+
+                // isi otomatis field lain
+                if (namaLengkapInput) {
+                    namaLengkapInput.value = nama;
+                }
+
+                if (usernameInput) {
+                    usernameInput.value = nip;
+                }
+
+                // tutup modal
+                let modal = bootstrap.Modal.getInstance(document.getElementById('modalPilihPegawai'));
+                modal.hide();
+            });
+        });
+
+        // =========================
+        // SEARCH
+        // =========================
+        const searchInput = document.getElementById('searchPegawai');
+        if (searchInput) {
+            searchInput.addEventListener('keyup', function() {
+                let keyword = this.value.toLowerCase();
+                let items = document.querySelectorAll('#listPegawai .pegawai-item');
+
+                items.forEach(item => {
+                    let text = item.innerText.toLowerCase();
+                    item.style.display = text.includes(keyword) ? '' : 'none';
+                });
+            });
+        }
+
+        // =========================
+        // AUTO LOAD (EDIT MODE)
+        // =========================
+        function loadSelectedPegawai() {
+            let selectedId = hiddenInput.value;
+
+            if (!selectedId) return;
+
+            let selectedRadio = document.querySelector('.pegawai-radio[value="' + selectedId + '"]');
+
+            if (selectedRadio) {
+                selectedRadio.checked = true;
+
+                let nama = selectedRadio.dataset.nama || '';
+                let nip = selectedRadio.dataset.nip || '';
+
+                if (displayInput) {
+                    displayInput.value = nama;
+                }
+
+                if (namaLengkapInput) {
+                    namaLengkapInput.value = nama;
+                }
+
+                if (usernameInput) {
+                    usernameInput.value = nip;
+                }
+            }
+        }
+
+        loadSelectedPegawai();
+
     });
 </script>
 

@@ -65,7 +65,7 @@ ob_start();
                         <div class="col-12">
 
                             <div class="row">
-                                <span class="bg-primary text-white avatar me-2">
+                                <span class="bg-orange text-white avatar me-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-users">
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                         <path d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
@@ -146,9 +146,20 @@ ob_start();
                                 <div class="fs-2 fw-bold"><?= array_sum($ringkasanPensiun) ?></div>
                             </div>
                             <div class="col-auto">
-                                <a class="btn btn-sm btn-primary text-white" href="<?= url('?page=kepegawaian-pensiun') ?>">Detail</a>
+                                <a class="" href="<?= url('?page=kepegawaian-pensiun') ?>">
 
-                                <div class="fs-2 fw-bold">&nbsp;</div>
+                                    <span class="bg-primary text-white avatar" data-bs-toggle="tooltip" data-bs-placement="top" title="Detail">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#ffffff" class="icon icon-tabler icons-tabler-filled icon-tabler-list">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M21 6a1 1 0 0 1 -1 1h-10a1 1 0 1 1 0 -2h10a1 1 0 0 1 1 1" />
+                                            <path d="M21 12a1 1 0 0 1 -1 1h-10a1 1 0 0 1 0 -2h10a1 1 0 0 1 1 1" />
+                                            <path d="M21 18a1 1 0 0 1 -1 1h-10a1 1 0 0 1 0 -2h10a1 1 0 0 1 1 1" />
+                                            <path d="M7 5.995v.02c0 1.099 -.895 1.99 -2 1.99s-2 -.891 -2 -1.99v-.02c0 -1.099 .895 -1.99 2 -1.99s2 .891 2 1.99" />
+                                            <path d="M7 11.995v.02c0 1.099 -.895 1.99 -2 1.99s-2 -.891 -2 -1.99v-.02c0 -1.099 .895 -1.99 2 -1.99s2 .891 2 1.99" />
+                                            <path d="M7 17.995v.02c0 1.099 -.895 1.99 -2 1.99s-2 -.891 -2 -1.99v-.02c0 -1.099 .895 -1.99 2 -1.99s2 .891 2 1.99" />
+                                        </svg>
+                                    </span>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -211,7 +222,7 @@ ob_start();
                                             <td>
                                                 <div class="btn-group w-100">
                                                     <a href="<?= url('?page=detail-kepegawaian&id=' . $d["id"]) ?>" class="text-primary me-1">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-eye" data-bs-toggle="tooltip" data-bs-placement="top" title="Detail">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-eye">
                                                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                             <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
                                                             <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />

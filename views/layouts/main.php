@@ -3,6 +3,7 @@
 // LAYOUT UTAMA APLIKASI
 // ================================
 $headerImage = $headerImage ?? url('public/assets/img/banner.webp');
+// dd($_SESSION);
 ?>
 
 <!DOCTYPE html>
@@ -227,6 +228,35 @@ $headerImage = $headerImage ?? url('public/assets/img/banner.webp');
             <?= $content ?>
         </div>
 
+        <div class="modal fade" id="modalPilihRole" tabindex="-1">
+            <div class="modal-dialog modal-sm modal-dialog-scrollable modal-dialog-centered">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title">Ganti Role</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body">
+
+                        <span class="mb-3">Silakan pilih tim/unit untuk diganti.</span>
+
+                        <div class="row mt-3">
+                            <div style="display:flex; flex-wrap:wrap; gap:10px;">
+                                <?php foreach ($pokjaList as $pokja): ?>
+                                    <a href="<?= url('?page=switch-pokja&id=' . $pokja['id']) ?>" class="btn btn-<?= ($currentPokja == $pokja['id']) ? 'success' : 'secondary' ?>">
+                                        <?= htmlspecialchars($pokja['pokja_nama']) ?>
+                                    </a>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
         <script>
             let lastCount = 0;
 
@@ -341,6 +371,24 @@ $headerImage = $headerImage ?? url('public/assets/img/banner.webp');
             loadNotifCount();
             loadNotifList();
         </script>
+
+        <?php if (isset($_SESSION['flash'])): ?>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+
+                    Swal.fire({
+                        icon: '<?= $_SESSION['flash']['status'] ?>',
+                        title: <?= $_SESSION['flash']['status'] === 'success'
+                                    ? "'Berhasil!'"
+                                    : "'Gagal!'" ?>,
+                        text: <?= json_encode($_SESSION['flash']['message']) ?>,
+                        timer: 1000,
+                    });
+
+                });
+            </script>
+            <?php unset($_SESSION['flash']); ?>
+        <?php endif; ?>
 
         <?php
         // ----------------------------

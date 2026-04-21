@@ -34,6 +34,20 @@ class BaseController
 
     protected function view($path, $data = [])
     {
+        // 🔥 pastikan user sudah valid
+        if (Auth::check()) {
+
+            $userModel = $this->model('UserModel');
+            $pokjaList = $userModel->getUserPokjaList(Auth::user()['id']);
+        } else {
+            $pokjaList = [];
+        }
+
+        $data['user'] = Auth::user();
+        $data['role'] = Auth::role();
+        $data['currentPokja'] = Auth::pokja();
+        $data['pokjaList'] = $pokjaList;
+
         extract($data);
 
         require __DIR__ . "/../views/$path.php";

@@ -291,7 +291,7 @@ $userPages = ['user', 'tambah-user', 'edit-user', 'tambah-tim'];
                 <div class="dropdown-menu <?= in_array($page, $userPages) ? 'show' : '' ?>">
                     <div class="dropdown-menu-columns">
                         <div class="dropdown-menu-column">
-                            <a class="dropdown-item <?= $page === 'user' ? 'active' : '' ?>" href="<?= url('?page=user') ?>">
+                            <a class="dropdown-item <?= ($page === 'user' || $page === 'edit-user') ? 'active' : '' ?>" href="<?= url('?page=user') ?>">
                                 Daftar User
                             </a>
                             <a class="dropdown-item <?= $page === 'tambah-user' ? 'active' : '' ?>" href="<?= url('?page=tambah-user') ?>">

@@ -305,7 +305,7 @@ ob_start();
                 </div>
 
                 <div class="modal modal-blur fade" id="modalTambahPeserta" tabindex="-1" aria-labelledby="modalTambahPesertaLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                    <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
                         <div class="modal-content">
                             <form action="?page=arsip-peserta-store" method="POST">
                                 <div class="modal-header">
@@ -447,7 +447,7 @@ ob_start();
                                     </tr>
 
                                     <div class="modal fade" id="modalEditPeserta<?= $d['id'] ?>" tabindex="-1" aria-labelledby="modalEditPesertaLabel<?= $d['id'] ?>" aria-hidden="true">
-                                        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                                        <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
                                             <div class="modal-content">
                                                 <form action="<?= url('?page=arsip-peserta-update') ?>" method="POST">
                                                     <div class="modal-header">
@@ -558,7 +558,7 @@ ob_start();
 </div>
 
 <div class="modal fade" id="modalEditPeserta<?= $d['id'] ?>" tabindex="-1" aria-labelledby="modalEditPesertaLabel<?= $d['id'] ?>" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
         <div class="modal-content">
             <form action="<?= url('?page=update-peserta-arsip') ?>" method="POST">
                 <div class="modal-header">

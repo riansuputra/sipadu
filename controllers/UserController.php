@@ -56,11 +56,17 @@ class UserController extends BaseController
         $nama         = trim($_POST['nama_lengkap'] ?? '');
         $roleId       = $_POST['role_id'] ?? '';
         $pokjaId      = $_POST['pokja_id'] ?? null;
+        $pokjaIds      = $_POST['pokja_ids'] ?? [];
+        $pokjaDefault  = $_POST['pokja_default'] ?? $pokjaId;
 
         if ($username === '') {
             $errors['username'] = 'Username wajib diisi';
         } elseif ($this->model->usernameExists($_POST['username'])) {
             $errors['username'] = 'Username sudah digunakan';
+        }
+
+        if (!in_array($pokjaDefault, $pokjaIds)) {
+            $errors['pokja_default'] = 'Default pokja harus dipilih dari daftar';
         }
 
         if ($password === '') {
@@ -73,12 +79,30 @@ class UserController extends BaseController
             $errors['nama_lengkap'] = 'Nama lengkap wajib diisi';
         }
 
+        if ($_POST['pegawai_id'] === '') {
+            $errors['pegawai_id'] = 'Pegawai wajib diisi';
+        }
+
         if ($roleId === '') {
             $errors['role_id'] = 'Role wajib dipilih';
         }
 
-        if (in_array($roleId, getRoleButuhPokja()) && empty($pokjaId)) {
-            $errors['pokja_id'] = 'Pokja wajib diisi untuk role ini';
+        $pokjaIds = $_POST['pokja_ids'] ?? [];
+        $pokjaDefault = $_POST['pokja_default'] ?? null;
+
+        if (in_array($roleId, getRoleButuhPokja())) {
+
+            if (empty($pokjaIds)) {
+                $errors['pokja_ids'] = 'Minimal pilih 1 pokja';
+            }
+
+            if (empty($pokjaDefault)) {
+                $errors['pokja_default'] = 'Pilih 1 default pokja';
+            }
+
+            if (!empty($pokjaDefault) && !in_array($pokjaDefault, $pokjaIds)) {
+                $errors['pokja_default'] = 'Default harus dari pokja yang dipilih';
+            }
         }
 
         if (!empty($errors)) {
@@ -94,7 +118,9 @@ class UserController extends BaseController
             'nama_lengkap' => $nama,
             'pegawai_id'   => $_POST['pegawai_id'] ?? null,
             'role_id'      => $roleId,
-            'pokja_id'     => $pokjaId
+            'pokja_id'     => $pokjaDefault,
+            'pokja_ids'      => $pokjaIds,
+            'pokja_default'  => $pokjaDefault
         ]);
 
         $_SESSION['flash'] = [
@@ -110,6 +136,8 @@ class UserController extends BaseController
         $this->auth();
 
         $id = $_POST['id'];
+        $_POST['pokja_ids']     = $_POST['pokja_ids'] ?? [];
+        $_POST['pokja_default'] = $_POST['pokja_default'] ?? $_POST['pokja_id'];
 
         $errors = [];
 
@@ -119,6 +147,10 @@ class UserController extends BaseController
 
         if (empty($_POST['nama_lengkap'])) {
             $errors['nama_lengkap'] = "Nama wajib diisi";
+        }
+
+        if (empty($_POST['pegawai_id']) === '') {
+            $errors['pegawai_id'] = 'Pegawai wajib diisi';
         }
 
         if (empty($_POST['role_id'])) {
@@ -187,13 +219,29 @@ class UserController extends BaseController
         $pokja = $this->model->getPokja();
         $pegawai = $this->modelPegawai->getAll();
 
+        $selectedPokja = [];
+        $defaultPokja  = null;
+
+        $userPokja = $this->model->getUserPokja($id);
+        // dd($userPokja);
+        foreach ($userPokja as $up) {
+            $selectedPokja[] = (string)$up['pokja_id'];
+
+            if ($up['is_default']) {
+                $defaultPokja = (string)$up['pokja_id'];
+            }
+        }
+
         $this->view('user/edit', [
             'data' => $data,
             'roles' => $roles,
             'pokja' => $pokja,
             'pegawai' => $pegawai,
+            'userPokja' => $userPokja,
             'user' => $this->user,
-            'role' => $this->role
+            'role' => $this->role,
+            'selectedPokja' => $selectedPokja,
+            'defaultPokja'  => $defaultPokja
         ]);
     }
 

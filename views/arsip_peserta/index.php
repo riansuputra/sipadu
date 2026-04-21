@@ -213,12 +213,6 @@ if ($isFiltered) {
                                                 </td>
                                             </tr>
                                         <?php endforeach; ?>
-                                    <?php else: ?>
-                                        <tr>
-                                            <td colspan="7" class="text-center text-muted py-4">
-                                                Belum ada arsip yang ditugaskan kepada Anda
-                                            </td>
-                                        </tr>
                                     <?php endif; ?>
                                 </tbody>
                             </table>

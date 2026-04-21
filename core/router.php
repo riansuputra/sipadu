@@ -920,6 +920,18 @@ function routeRequest()
             (new PengaturanController())->profil();
             break;
 
+        case 'switch-pokja':
+            require __DIR__ . '/../controllers/AuthController.php';
+            $controller = new AuthController();
+            $controller->switchPokja();
+            break;
+
+        case 'pilih-pokja':
+            require __DIR__ . '/../controllers/AuthController.php';
+            $controller = new AuthController();
+            $controller->switchPokjaPage();
+            break;
+
         // Default ========================================
         default:
             abort404();

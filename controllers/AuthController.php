@@ -75,6 +75,89 @@ class AuthController extends BaseController
 
         Auth::login($user);
 
+        $userModel = $this->model('UserModel');
+        $aksesPokja = $userModel->getUserPokja($user['id']);
+
+        $_SESSION['akses_pokja'] = $aksesPokja;
+
+        if (count($aksesPokja) === 1) {
+
+            // langsung set active
+            $_SESSION['active_pokja'] = [
+                'id'   => $aksesPokja[0]['pokja_id'],
+                'nama' => $aksesPokja[0]['nama'],
+                'slug' => $aksesPokja[0]['slug'],
+                'tipe' => $aksesPokja[0]['tipe'],
+            ];
+
+            $this->redirect('?page=dashboard');
+        }
+
+        // 🔥 kalau lebih dari 1 → ke halaman pilih
+        $this->redirect('?page=pilih-pokja');
+    }
+
+    // ================================
+    // HALAMAN SWITCH POKJA
+    // ================================
+    public function switchPokjaPage()
+    {
+        $this->auth();
+
+        $userModel = $this->model('UserModel');
+
+        $pokjaList = $userModel->getUserPokjaList($this->user['id']);
+
+        $this->view('auth/switch-pokja', [
+            'pokjaList' => $pokjaList,
+            'currentPokja' => $this->user['pokja_id']
+        ]);
+    }
+
+    // ================================
+    // PROSES SWITCH POKJA
+    // ================================
+    public function switchPokja()
+    {
+        $this->auth();
+
+        $pokjaId = (int)($_GET['id'] ?? 0);
+
+        if (!$pokjaId) {
+            $this->abort403();
+        }
+
+        $userModel = $this->model('UserModel');
+        $pokjaList = $userModel->getUserPokjaList($this->user['id']);
+
+        $valid = false;
+
+        foreach ($pokjaList as $pokja) {
+            if ((int)$pokja['id'] === $pokjaId) {
+                $valid = true;
+                break;
+            }
+        }
+
+        if (!$valid) {
+            $this->abort403();
+        }
+
+        // 🔥 INI INTI SISTEM
+        $_SESSION['user']['pokja_id'] = $pokjaId;
+
+        foreach ($pokjaList as $pokja) {
+            if ((int)$pokja['id'] === $pokjaId) {
+                $_SESSION['user']['pokja_nama'] = $pokja['pokja_nama'];
+                $_SESSION['user']['pokja_tipe'] = $pokja['pokja_tipe'];
+                break;
+            }
+        }
+
+        Auth::init();
+
+        $this->flash('success', 'Berhasil pindah pokja.');
+
         $this->redirect('?page=dashboard');
     }
 }
