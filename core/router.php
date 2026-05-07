@@ -540,6 +540,13 @@ function routeRequest()
             $controller->editStatus();
             break;
 
+        case 'edit-status-publikasi-admin':
+
+            require __DIR__ . '/../controllers/PublikasiController.php';
+            $controller = new PublikasiController();
+            $controller->editStatusAdmin();
+            break;
+
         // Jenis Publikasi =======================================
         case 'jenis-publikasi':
 

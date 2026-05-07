@@ -1,16 +1,21 @@
 <?php
 
 require_once __DIR__ . '/../models/ModulModel.php';
+require_once __DIR__ . '/../models/DashboardModel.php';
 require_once __DIR__ . '/../core/BaseController.php';
 
 class DashboardController extends BaseController
 {
     protected $moduleModel;
+    protected $dashboardModel;
+    protected $publikasiModel;
 
     public function __construct()
     {
         parent::__construct();
         $this->moduleModel = new ModulModel();
+        $this->dashboardModel = new DashboardModel();
+        $this->publikasiModel = new PublikasiModel();
     }
 
     public function index()
@@ -19,39 +24,111 @@ class DashboardController extends BaseController
 
         $mode = $_GET['mode'] ?? null;
 
+        $pokjaId = $this->user['pokja_id'];
+
+
+        // Mode staff preview
         if ($mode === 'staff' && in_array($this->role, ['Admin', 'Superadmin', 'Pimpinan'])) {
-            $this->view('dashboard/staff', [
+            return $this->view('dashboard/staff', [
                 'user' => $this->user,
                 'role' => $this->role,
             ]);
-            return;
         }
 
+        // Staff & pimpinan default
         if (in_array($this->role, ['Staff', 'Pimpinan'])) {
-            $this->view('dashboard/staff', [
+            return $this->view('dashboard/staff', [
                 'user' => $this->user,
                 'role' => $this->role,
             ]);
-            return;
         }
 
-        switch ($this->role) {
-            case 'Superadmin':
-            case 'Admin':
-                $this->view('dashboard/admin', [
-                    'user' => $this->user,
-                    'role' => $this->role,
-                ]);
-                break;
+        // 🔥 SUPERADMIN
+        if ($this->role === 'Superadmin') {
+            $dashboardData = [
+                'card' => $this->dashboardModel->getDashboardAdmin(),
+                'arsip_chart' => $this->dashboardModel->getArsipChartBulanan(), // 🔥 baru
+                'publikasi_chart' => $this->dashboardModel->getPublikasiChartBulanan(), // 🔥 baru
+                'pegawai_chart' => $this->dashboardModel->getPegawaiChart(), // 🔥 baru
+                'publikasi_pokja_chart' => $this->dashboardModel->getPublikasiPerPokjaChartTahunIni(),
+                'logs' => $this->dashboardModel->getLogDashboard(),
+                'arsiparis' => $this->dashboardModel->getDashboardArsiparis(),
+                'jenis_informasi_chart' => $this->dashboardModel->getJenisInformasiChart(),
+                'dip' => $this->dashboardModel->getDashboardDip(),
+                // nanti:
+                // 'publikasi_chart' => ...
+                // 'pegawai_chart' => ...
+            ];
 
-            case 'Pimpinan':
-            case 'Staff':
-                $this->view('dashboard/staff', [
-                    'user' => $this->user,
-                    'role' => $this->role,
-                ]);
-                break;
+            return $this->view('dashboard/superadmin', array_merge([
+                'user' => $this->user,
+                'role' => $this->role,
+            ], $dashboardData));
         }
+
+        // 🔥 ADMIN (DIPECAH BERDASARKAN POKJA)
+        if ($this->role === 'Admin') {
+
+            $dashboardData = [
+                'card' => $this->dashboardModel->getDashboardAdmin(),
+                'arsip_chart' => $this->dashboardModel->getArsipChartBulanan(), // 🔥 baru
+                'publikasi_chart' => $this->dashboardModel->getPublikasiChartBulanan(), // 🔥 baru
+                'pegawai_chart' => $this->dashboardModel->getPegawaiChart(), // 🔥 baru
+                'publikasi_pokja_chart' => $this->dashboardModel->getPublikasiPerPokjaChartTahunIni(),
+                'logs' => $this->dashboardModel->getLogDashboard(),
+                'arsiparis' => $this->dashboardModel->getDashboardArsiparis(),
+                'jenis_informasi_chart' => $this->dashboardModel->getJenisInformasiChart(),
+                'dip' => $this->dashboardModel->getDashboardDip(),
+                'kepegawaian' => $this->dashboardModel->getDashboardKepegawaian(),
+                'publikasi' => $this->dashboardModel->getDashboardTimPublikasi(),
+                'timker' => $this->getDashboardTim(),
+                // nanti:
+                // 'publikasi_chart' => ...
+                // 'pegawai_chart' => ...
+            ];
+
+
+            $slug = $this->user['pokja_nama'] ?? null;
+
+            $baseData = array_merge([
+                'user' => $this->user,
+                'role' => $this->role,
+            ], $dashboardData);
+
+            switch ($slug) {
+                case 'DIP':
+                    return $this->view('dashboard/dip', $baseData);
+
+                case 'Arsiparis':
+                    return $this->view('dashboard/arsiparis', $baseData);
+
+                case 'Kepegawaian':
+                    return $this->view('dashboard/kepegawaian', $baseData);
+
+                case 'Publikasi':
+                    return $this->view('dashboard/publikasi', $baseData);
+
+                default:
+                    return $this->view('dashboard/umum', $baseData);
+            }
+        }
+
+        $this->abort403();
+    }
+
+    public function getDashboardTim()
+    {
+        $this->auth();
+        $pokjaId = $this->user['pokja_id'];
+
+        return [
+            'total_file' => $this->publikasiModel->getTotalFile($pokjaId),
+            'size_publikasi' => formatSize($this->publikasiModel->getTotalUkuran($pokjaId)),
+            'terpublikasi' => $this->publikasiModel->getTotalPublished($pokjaId),
+            'total_publikasi' => $this->publikasiModel->countAll($pokjaId),
+            'publikasi_chart' => $this->dashboardModel->getPublikasiChartBulanan($pokjaId),
+            'publikasi_jenis' => $this->dashboardModel->getPublikasiJenisChart($pokjaId),
+        ];
     }
 
     // ================================

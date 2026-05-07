@@ -144,9 +144,20 @@ ob_start();
                                 <div class="fs-2 fw-bold"><?= array_sum($ringkasanPensiun) ?></div>
                             </div>
                             <div class="col-auto">
-                                <a class="btn btn-sm btn-primary text-white" href="<?= url('?page=pegawai-pensiun') ?>">Detail</a>
+                                <a class="" href="<?= url('?page=pegawai-pensiun') ?>">
 
-                                <div class="fs-2 fw-bold">&nbsp;</div>
+                                    <span class="bg-primary text-white avatar" data-bs-toggle="tooltip" data-bs-placement="top" title="Detail">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#ffffff" class="icon icon-tabler icons-tabler-filled icon-tabler-list">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M21 6a1 1 0 0 1 -1 1h-10a1 1 0 1 1 0 -2h10a1 1 0 0 1 1 1" />
+                                            <path d="M21 12a1 1 0 0 1 -1 1h-10a1 1 0 0 1 0 -2h10a1 1 0 0 1 1 1" />
+                                            <path d="M21 18a1 1 0 0 1 -1 1h-10a1 1 0 0 1 0 -2h10a1 1 0 0 1 1 1" />
+                                            <path d="M7 5.995v.02c0 1.099 -.895 1.99 -2 1.99s-2 -.891 -2 -1.99v-.02c0 -1.099 .895 -1.99 2 -1.99s2 .891 2 1.99" />
+                                            <path d="M7 11.995v.02c0 1.099 -.895 1.99 -2 1.99s-2 -.891 -2 -1.99v-.02c0 -1.099 .895 -1.99 2 -1.99s2 .891 2 1.99" />
+                                            <path d="M7 17.995v.02c0 1.099 -.895 1.99 -2 1.99s-2 -.891 -2 -1.99v-.02c0 -1.099 .895 -1.99 2 -1.99s2 .891 2 1.99" />
+                                        </svg>
+                                    </span>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -163,7 +174,7 @@ ob_start();
                                     <tr>
                                         <th class="w-1">No</th>
                                         <th class="text-center">Nama</th>
-                                        <th class="text-center w-1">Nama</th>
+                                        <th class="text-center w-1">Status</th>
                                         <th class="text-center">NIP/<br>NIPPPK</th>
                                         <th class="text-center">Tanggal<br>Lahir</th>
                                         <th class="w-1">Umur</th>

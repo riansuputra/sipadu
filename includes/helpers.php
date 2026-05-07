@@ -448,3 +448,55 @@ function formatTanggalRangeTable($mulai = null, $selesai = null)
     // Jika berbeda, tampilkan bertingkat untuk tabel
     return formatTanggalIndonesia($mulai) . '<span class="text-muted"> s/d</span><br><span class="">' . formatTanggalIndonesia($selesai) . '</span>';
 }
+
+
+// Format waktu jadi "human readable"
+function timeAgo($datetime)
+{
+    $timestamp = strtotime($datetime);
+    $diff = time() - $timestamp;
+
+    if ($diff < 60) {
+        return $diff . ' detik lalu';
+    }
+
+    $minutes = floor($diff / 60);
+    if ($minutes < 60) {
+        return $minutes . ' menit lalu';
+    }
+
+    $hours = floor($diff / 3600);
+    if ($hours < 24) {
+        return $hours . ' jam lalu';
+    }
+
+    $days = floor($diff / 86400);
+    if ($days < 7) {
+        return $days . ' hari lalu';
+    }
+
+    $weeks = floor($diff / 604800);
+    if ($weeks < 4) {
+        return $weeks . ' minggu lalu';
+    }
+
+    $months = floor($diff / 2592000);
+    if ($months < 12) {
+        return $months . ' bulan lalu';
+    }
+
+    $years = floor($diff / 31536000);
+    return $years . ' tahun lalu';
+}
+
+function formatSize($bytes)
+{
+    if ($bytes >= 1073741824) {
+        return round($bytes / 1073741824, 2) . ' GB';
+    } elseif ($bytes >= 1048576) {
+        return round($bytes / 1048576, 2) . ' MB';
+    } elseif ($bytes >= 1024) {
+        return round($bytes / 1024, 2) . ' KB';
+    }
+    return $bytes . ' B';
+}

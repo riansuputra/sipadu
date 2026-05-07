@@ -333,6 +333,24 @@
             </div>
         </div>
 
+        <?php if (isset($_SESSION['flash'])): ?>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+
+                    Swal.fire({
+                        icon: '<?= $_SESSION['flash']['status'] ?>',
+                        title: <?= $_SESSION['flash']['status'] === 'success'
+                                    ? "'Berhasil!'"
+                                    : "'Gagal!'" ?>,
+                        text: <?= json_encode($_SESSION['flash']['message']) ?>,
+                        timer: 1000,
+                    });
+
+                });
+            </script>
+            <?php unset($_SESSION['flash']); ?>
+        <?php endif; ?>
+
         <script>
             let lastCount = 0;
 
@@ -448,23 +466,7 @@
             loadNotifList();
         </script>
 
-        <?php if (isset($_SESSION['flash'])): ?>
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
 
-                    Swal.fire({
-                        icon: '<?= $_SESSION['flash']['status'] ?>',
-                        title: <?= $_SESSION['flash']['status'] === 'success'
-                                    ? "'Berhasil!'"
-                                    : "'Gagal!'" ?>,
-                        text: <?= json_encode($_SESSION['flash']['message']) ?>,
-                        timer: 1000,
-                    });
-
-                });
-            </script>
-            <?php unset($_SESSION['flash']); ?>
-        <?php endif; ?>
 
 
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

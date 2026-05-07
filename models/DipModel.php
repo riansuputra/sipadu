@@ -303,4 +303,85 @@ class DipModel
 
         return $stmt->fetchAll();
     }
+
+    // Total semua DIP
+    public function getTotalDip()
+    {
+        $stmt = $this->db->prepare("
+        SELECT COUNT(*) as total
+        FROM dip
+        WHERE deleted_at IS NULL
+    ");
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
+
+    // Total DIP tahun ini
+    public function getDipTahunIni()
+    {
+        $stmt = $this->db->prepare("
+        SELECT COUNT(*) as total
+        FROM dip
+        WHERE deleted_at IS NULL
+        AND tahun_pembuatan = YEAR(CURDATE())
+    ");
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
+
+    // DIP per tahun
+    public function getDipPerTahun()
+    {
+        $stmt = $this->db->prepare("
+        SELECT 
+            tahun_pembuatan as tahun,
+            COUNT(*) as total
+        FROM dip
+        WHERE deleted_at IS NULL
+        GROUP BY tahun_pembuatan
+        ORDER BY tahun ASC
+    ");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Ambil komposisi jenis informasi
+    public function getJenisInformasi()
+    {
+        $stmt = $this->db->prepare("
+        SELECT 
+            jenis_informasi,
+            COUNT(*) as total
+        FROM dip
+        WHERE deleted_at IS NULL
+        GROUP BY jenis_informasi
+    ");
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // total file
+    public function getTotalFile()
+    {
+        $stmt = $this->db->prepare("
+        SELECT COUNT(*) as total
+        FROM dip_file
+        WHERE is_active = 1
+    ");
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
+
+    // total ukuran (dalam byte)
+    public function getTotalUkuran()
+    {
+        $stmt = $this->db->prepare("
+        SELECT SUM(ukuran_file) as total
+        FROM dip_file
+        WHERE is_active = 1
+    ");
+        $stmt->execute();
+        return $stmt->fetchColumn() ?? 0;
+    }
 }

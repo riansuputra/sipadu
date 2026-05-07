@@ -1,7 +1,11 @@
 <?php
+
+/** @var array $user */
+
+
 $page = $_GET['page'] ?? '';
 $arsipPages = ['arsip', 'tambah-arsip', 'tambah-jenis-arsip', 'edit-jenis-arsip', 'detail-arsip', 'edit-arsip'];
-$publikasiPages = ['publikasi', 'tambah-publikasi', 'tambah-jenis-publikasi', 'edit-jenis-publikasi', 'edit-publikasi'];
+$publikasiPages = ['publikasi', 'tambah-publikasi', 'tambah-jenis-publikasi', 'edit-jenis-publikasi', 'edit-publikasi', 'edit-status-publikasi-admin'];
 $kegiatanPages = ['kegiatan', 'tambah-kegiatan', 'tambah-jenis-kegiatan', 'edit-jenis-kegiatan', 'edit-kegiatan'];
 $dokumenPages = ['dokumen', 'tambah-dokumen', 'tambah-jenis-dokumen'];
 $pengaturanPages = ['profil', 'manajemen-file', 'backup-data'];
@@ -57,7 +61,7 @@ $userPages = ['user', 'tambah-user', 'edit-user', 'tambah-tim'];
             ||
             (
                 in_array($user['role'], ['Admin', 'Staff'])
-                && !in_array($user['pokja_nama'], ['Arsiparis', 'DIP'], true)
+                && !in_array($user['pokja_nama'], ['Arsiparis', 'DIP', 'Kepegawaian'], true)
             )
         ): ?>
 
@@ -80,7 +84,7 @@ $userPages = ['user', 'tambah-user', 'edit-user', 'tambah-tim'];
                 <div class="dropdown-menu <?= in_array($page, $publikasiPages) ? 'show' : '' ?>">
                     <div class="dropdown-menu-columns">
                         <div class="dropdown-menu-column">
-                            <a class="dropdown-item <?= ($page === 'publikasi' || $page === 'edit-publikasi') ? 'active' : '' ?>" href="<?= url('?page=publikasi') ?>">
+                            <a class="dropdown-item <?= ($page === 'publikasi' || $page === 'edit-publikasi' || $page === 'edit-status-publikasi-admin') ? 'active' : '' ?>" href="<?= url('?page=publikasi') ?>">
                                 Daftar Publikasi
                             </a>
                             <a class="dropdown-item <?= $page === 'tambah-publikasi' ? 'active' : '' ?>" href="<?= url('?page=tambah-publikasi') ?>">
@@ -96,8 +100,7 @@ $userPages = ['user', 'tambah-user', 'edit-user', 'tambah-tim'];
         <?php endif; ?>
 
         <?php if (
-            in_array($user['role'], ['Superadmin', 'Pimpinan']) ||
-            (in_array($user['role'], ['Admin', 'Staff']) && in_array($user['pokja_nama'], ['Arsiparis'], true))
+            in_array($user['role'], ['Superadmin', 'Pimpinan'])
         ): ?>
             <li class="nav-item dropdown <?= in_array($page, $arsipPages) ? 'active' : '' ?> mb-2">
                 <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
@@ -131,6 +134,12 @@ $userPages = ['user', 'tambah-user', 'edit-user', 'tambah-tim'];
                     </div>
                 </div>
             </li>
+        <?php endif; ?>
+
+        <?php if (
+            in_array($user['role'], ['Superadmin', 'Pimpinan']) ||
+            (in_array($user['role'], ['Admin', 'Staff']) && in_array($user['pokja_nama'], ['Arsiparis'], true))
+        ): ?>
             <li class="nav-item dropdown <?= in_array($page, $peraturanPages) ? 'active' : '' ?> mb-2">
                 <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
                     <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -166,7 +175,7 @@ $userPages = ['user', 'tambah-user', 'edit-user', 'tambah-tim'];
         <?php endif; ?>
         <?php if (
             in_array($user['role'], ['Superadmin', 'Pimpinan']) ||
-            (in_array($user['role'], ['Admin', 'Staff']) && in_array($user['pokja_nama'], ['DIP'], true))
+            (in_array($user['role'], ['Admin', 'Staff']) && in_array($user['pokja_nama'], ['DIP', 'Arsiparis'], true))
         ): ?>
             <li class="nav-item dropdown <?= in_array($page, $dipPages) ? 'active' : '' ?> mb-2">
                 <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
@@ -200,8 +209,10 @@ $userPages = ['user', 'tambah-user', 'edit-user', 'tambah-tim'];
             </li>
 
         <?php endif; ?>
+
         <?php if (
-            in_array($user['role'], ['Superadmin', 'Pimpinan'])
+            in_array($user['role'], ['Superadmin', 'Pimpinan']) ||
+            (in_array($user['role'], ['Admin', 'Staff']) && in_array($user['pokja_nama'], ['Kepegawaian'], true))
         ): ?>
             <li class="nav-item dropdown <?= in_array($page, $pegawaiPages) ? 'active' : '' ?> mb-2">
                 <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
@@ -231,12 +242,16 @@ $userPages = ['user', 'tambah-user', 'edit-user', 'tambah-tim'];
                                 Jabatan Pegawai
                             </a>
                             <a class="dropdown-item <?= $page === 'pegawai-pensiun' ? 'active' : '' ?>" href="<?= url('?page=pegawai-pensiun') ?>">
-                                Daftar Pensiun
+                                Data Pensiun
                             </a>
                         </div>
                     </div>
                 </div>
             </li>
+        <?php endif; ?>
+        <?php if (
+            in_array($user['role'], ['Superadmin', 'Pimpinan'])
+        ): ?>
 
             <li class="nav-item dropdown <?= in_array($page, $modulPages) ? 'active' : '' ?> mb-2">
                 <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
@@ -304,7 +319,7 @@ $userPages = ['user', 'tambah-user', 'edit-user', 'tambah-tim'];
                     </div>
                 </div>
             </li>
-            <li class="nav-item dropdown <?= in_array($page, $pengaturanPages) ? 'active' : '' ?> mb-2">
+            <!-- <li class="nav-item dropdown <?= in_array($page, $pengaturanPages) ? 'active' : '' ?> mb-2">
                 <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
                     <span class="nav-link-icon d-md-none d-lg-inline-block">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-settings">
@@ -329,7 +344,7 @@ $userPages = ['user', 'tambah-user', 'edit-user', 'tambah-tim'];
                         </div>
                     </div>
                 </div>
-            </li>
+            </li> -->
         <?php endif; ?>
 
         <li class="nav-item">

@@ -4,7 +4,7 @@
 // ================================
 
 // Judul
-$title = "Daftar Pegawai Pensiun";
+$title = "Data Pegawai Pensiun";
 
 
 // Mulai buffer konten
@@ -37,7 +37,7 @@ if ($isFiltered) {
             <div class="col">
                 <!-- Page pre-title -->
                 <div class="page-pretitle">Pegawai</div>
-                <h2 class="page-title">Daftar Pegawai Pensiun</h2>
+                <h2 class="page-title">Data Pegawai Pensiun</h2>
             </div>
         </div>
     </div>
@@ -144,7 +144,7 @@ if ($isFiltered) {
                                     <tr>
                                         <th class="w-1">No</th>
                                         <th class="text-center">Nama</th>
-                                        <th class="text-center w-1">Nama</th>
+                                        <th class="text-center w-1">Status</th>
                                         <th class="text-center">NIP/<br>NIPPPK</th>
                                         <th class="text-center">Tanggal<br>Lahir</th>
                                         <th class="w-1">Umur</th>

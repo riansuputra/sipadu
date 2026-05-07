@@ -518,4 +518,252 @@ class PublikasiModel
 
         return $stmt->execute([$publikasi_id]);
     }
+
+    // Total publikasi
+    public function countAll($pokjaId = null)
+    {
+        $sql = "
+        SELECT COUNT(*)
+        FROM publikasi
+        WHERE is_active = 1
+        AND deleted_at IS NULL
+    ";
+
+        // Filter pokja jika ada
+        if ($pokjaId) {
+            $sql .= " AND pokja_id = :pokja_id";
+        }
+
+        $stmt = $this->db->prepare($sql);
+
+        if ($pokjaId) {
+            $stmt->execute([
+                ':pokja_id' => $pokjaId
+            ]);
+        } else {
+            $stmt->execute();
+        }
+
+        return (int) $stmt->fetchColumn();
+    }
+
+    // Ambil jumlah publikasi 7 hari terakhir (GLOBAL)
+    public function getPublikasiPerHari()
+    {
+        $stmt = $this->db->prepare("
+        SELECT DATE(created_at) as tanggal, COUNT(*) as total
+        FROM publikasi
+        WHERE deleted_at IS NULL
+        AND created_at >= CURDATE() - INTERVAL 6 DAY
+        GROUP BY DATE(created_at)
+        ORDER BY tanggal ASC
+    ");
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Ambil jumlah publikasi per pokja
+    public function getPublikasiPerPokja()
+    {
+        $stmt = $this->db->prepare("
+    SELECT 
+        pk.pokja_nama,
+        COUNT(p.id) as total
+    FROM publikasi p
+    LEFT JOIN users u ON u.id = p.created_by
+    LEFT JOIN pokja pk ON pk.id = u.pokja_id
+    WHERE p.deleted_at IS NULL
+    AND pk.pokja_nama IN ('Widyaprada', 'SD', 'SMP', 'SMA', 'PAUD')
+    GROUP BY pk.pokja_nama
+    ORDER BY total DESC
+");
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Statistik publikasi per bulan
+    public function getPublikasiPerBulan($pokjaId = null)
+    {
+        $sql = "
+        SELECT 
+            MONTH(created_at) as bulan,
+            COUNT(*) as total
+        FROM publikasi
+        WHERE deleted_at IS NULL
+        AND is_active = 1
+        AND YEAR(created_at) = YEAR(CURDATE())
+    ";
+
+        // Filter pokja jika ada
+        if ($pokjaId) {
+            $sql .= " AND pokja_id = :pokja_id";
+        }
+
+        $sql .= "
+        GROUP BY MONTH(created_at)
+        ORDER BY bulan ASC
+    ";
+
+        $stmt = $this->db->prepare($sql);
+
+        if ($pokjaId) {
+            $stmt->execute([
+                ':pokja_id' => $pokjaId
+            ]);
+        } else {
+            $stmt->execute();
+        }
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getPublikasiPerPokjaTahunIni()
+    {
+        $stmt = $this->db->prepare("
+        SELECT 
+            pk.pokja_nama,
+            COUNT(p.id) as total
+        FROM publikasi p
+        LEFT JOIN users u ON u.id = p.created_by
+        LEFT JOIN pokja pk ON pk.id = u.pokja_id
+        WHERE p.deleted_at IS NULL
+        AND YEAR(p.created_at) = YEAR(CURDATE())
+        AND pk.pokja_nama IN ('Widyaprada','SD','SMP','SMA','PAUD')
+        GROUP BY pk.pokja_nama
+        ORDER BY total DESC
+    ");
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Total file publikasi
+    public function getTotalFile($pokjaId = null)
+    {
+        $sql = "
+        SELECT COUNT(*) as total
+        FROM publikasi_file pf
+        INNER JOIN publikasi p 
+            ON p.id = pf.publikasi_id
+        WHERE pf.is_active = 1
+        AND p.deleted_at IS NULL
+    ";
+
+        // Filter pokja jika ada
+        if ($pokjaId) {
+            $sql .= " AND p.pokja_id = :pokja_id";
+        }
+
+        $stmt = $this->db->prepare($sql);
+
+        if ($pokjaId) {
+            $stmt->execute([
+                ':pokja_id' => $pokjaId
+            ]);
+        } else {
+            $stmt->execute();
+        }
+
+        return (int) $stmt->fetchColumn();
+    }
+
+    // total ukuran (dalam byte)
+    // Total ukuran file publikasi
+    public function getTotalUkuran($pokjaId = null)
+    {
+        $sql = "
+        SELECT SUM(pf.ukuran_file) as total
+        FROM publikasi_file pf
+        INNER JOIN publikasi p 
+            ON p.id = pf.publikasi_id
+        WHERE pf.is_active = 1
+        AND p.deleted_at IS NULL
+    ";
+
+        // Filter pokja jika ada
+        if ($pokjaId) {
+            $sql .= " AND p.pokja_id = :pokja_id";
+        }
+
+        $stmt = $this->db->prepare($sql);
+
+        if ($pokjaId) {
+            $stmt->execute([
+                ':pokja_id' => $pokjaId
+            ]);
+        } else {
+            $stmt->execute();
+        }
+
+        return (int) ($stmt->fetchColumn() ?? 0);
+    }
+
+    // Hitung total publikasi terpublish
+    // Hitung total publikasi publish
+    public function getTotalPublished($pokjaId = null)
+    {
+        $sql = "
+        SELECT COUNT(*) as total
+        FROM publikasi
+        WHERE is_active = 1
+        AND deleted_at IS NULL
+        AND is_published = 1
+    ";
+
+        // Filter pokja jika ada
+        if ($pokjaId) {
+            $sql .= " AND pokja_id = :pokja_id";
+        }
+
+        $stmt = $this->db->prepare($sql);
+
+        if ($pokjaId) {
+            $stmt->execute([
+                ':pokja_id' => $pokjaId
+            ]);
+        } else {
+            $stmt->execute();
+        }
+
+        return (int) $stmt->fetchColumn();
+    }
+
+    // Komposisi publikasi per jenis
+    public function getPublikasiPerJenis($pokjaId = null)
+    {
+        $sql = "
+        SELECT 
+            pj.nama as jenis,
+            COUNT(*) as total
+        FROM publikasi p
+        INNER JOIN publikasi_jenis pj
+            ON pj.id = p.jenis_id
+        WHERE p.is_active = 1
+        AND p.deleted_at IS NULL
+    ";
+
+        // Filter pokja jika ada
+        if ($pokjaId) {
+            $sql .= " AND p.pokja_id = :pokja_id";
+        }
+
+        $sql .= "
+        GROUP BY p.jenis_id
+        ORDER BY total DESC
+    ";
+
+        $stmt = $this->db->prepare($sql);
+
+        if ($pokjaId) {
+            $stmt->execute([
+                ':pokja_id' => $pokjaId
+            ]);
+        } else {
+            $stmt->execute();
+        }
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

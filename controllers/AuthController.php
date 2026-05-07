@@ -79,6 +79,10 @@ class AuthController extends BaseController
         $aksesPokja = $userModel->getUserPokja($user['id']);
 
         $_SESSION['akses_pokja'] = $aksesPokja;
+        if (count($aksesPokja) === 0) {
+
+            $this->redirect('?page=dashboard');
+        }
 
         if (count($aksesPokja) === 1) {
 
@@ -156,7 +160,7 @@ class AuthController extends BaseController
 
         Auth::init();
 
-        $this->flash('success', 'Berhasil pindah pokja.');
+        $this->flash('success', 'Berhasil login sebagai tim/unit ' . $pokja['pokja_nama'] . '.');
 
         $this->redirect('?page=dashboard');
     }

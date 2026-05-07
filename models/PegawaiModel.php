@@ -591,4 +591,113 @@ class PegawaiModel
 
         return $hasil;
     }
+
+    public function countAll()
+    {
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM pegawai WHERE is_active = 1");
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
+
+    // Ambil semua pegawai aktif (belum difilter pensiun)
+    public function getAllPegawaiAktif()
+    {
+        $stmt = $this->db->prepare("
+        SELECT 
+            p.id,
+            p.nama,
+            p.tanggal_lahir,
+            p.status_asn,
+            pk.pokja_nama,
+            CASE 
+                WHEN LOWER(pk.pokja_nama) LIKE '%widyaprada%' THEN 1
+                ELSE 0
+            END AS is_widyaprada
+        FROM pegawai p
+        LEFT JOIN users u ON u.pegawai_id = p.id
+        LEFT JOIN pokja pk ON pk.id = u.pokja_id
+        WHERE p.is_active = 1
+        AND p.deleted_at IS NULL
+    ");
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Ambil log terbaru (limit biar ringan)
+    public function getLatestLog($limit = 10)
+    {
+        $stmt = $this->db->prepare("
+        SELECT 
+            l.created_at,
+            l.action,
+            l.entity_type,
+            l.description,
+            u.username,
+            r.nama_role
+        FROM log l
+        LEFT JOIN users u ON u.id = l.user_id
+        LEFT JOIN role r ON r.id = l.role_id
+        ORDER BY l.created_at DESC
+        LIMIT :limit
+    ");
+
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Komposisi Golongan Ruang
+    public function getGolonganRuang()
+    {
+        $stmt = $this->db->prepare("
+        SELECT 
+            pangkat_golongan,
+            COUNT(*) as total
+        FROM pegawai
+        WHERE is_active = 1 
+        AND deleted_at IS NULL
+        AND pangkat_golongan IS NOT NULL
+        AND pangkat_golongan != ''
+        GROUP BY pangkat_golongan
+        ORDER BY pangkat_golongan ASC
+    ");
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getGender()
+    {
+        $stmt = $this->db->prepare("
+        SELECT 
+            jenis_kelamin,
+            COUNT(*) as total
+        FROM pegawai
+        WHERE is_active = 1 
+        AND deleted_at IS NULL
+        GROUP BY jenis_kelamin
+    ");
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getPendidikan()
+    {
+        $stmt = $this->db->prepare("
+        SELECT 
+            pendidikan,
+            COUNT(*) as total
+        FROM pegawai
+        WHERE is_active = 1 
+        AND deleted_at IS NULL
+        GROUP BY pendidikan
+        ORDER BY total DESC
+    ");
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

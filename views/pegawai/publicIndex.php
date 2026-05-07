@@ -176,7 +176,7 @@ ob_start();
                                     <tr>
                                         <th class="w-1">No</th>
                                         <th class="text-center">Nama</th>
-                                        <th class="text-center w-1">Nama</th>
+                                        <th class="text-center w-1">Status</th>
                                         <th class="text-center">NIP/<br>NIPPPK</th>
                                         <th class="text-center">Tanggal<br>Lahir</th>
                                         <th class="w-1">Umur</th>

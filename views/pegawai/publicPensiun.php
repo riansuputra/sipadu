@@ -4,8 +4,8 @@
 // ================================
 
 // Judul
-$title = "Daftar Pegawai Pensiun";
-$bannerTitle = "Daftar Pegawai Pensiun";
+$title = "Data Pegawai Pensiun";
+$bannerTitle = "Data Pegawai Pensiun";
 $bannerSubtitle = "SIPADU BPMP Provinsi Bali";
 
 // Mulai buffer konten
@@ -54,7 +54,7 @@ if ($isFiltered) {
                             </li>
                             <li class="breadcrumb-item active">
                                 <a href="<?= url('?page=kepegawaian-pensiun') ?>" class="h3 mb-0">
-                                    Daftar Pegawai Pensiun
+                                    Data Pegawai Pensiun
                                 </a>
                             </li>
                         </ol>
@@ -158,7 +158,7 @@ if ($isFiltered) {
                                     <tr>
                                         <th class="w-1">No</th>
                                         <th class="text-center">Nama</th>
-                                        <th class="text-center w-1">Nama</th>
+                                        <th class="text-center w-1">Status</th>
                                         <th class="text-center">NIP/<br>NIPPPK</th>
                                         <th class="text-center">Tanggal<br>Lahir</th>
                                         <th class="w-1">Umur</th>

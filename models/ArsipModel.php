@@ -521,13 +521,6 @@ class ArsipModel
         return $stmt->fetchColumn();
     }
 
-    public function countAll()
-    {
-        $stmt = $this->db->prepare("SELECT COUNT(*) FROM arsip WHERE is_active = 1");
-        $stmt->execute();
-        return $stmt->fetchColumn();
-    }
-
     public function getAvailablePegawai($arsip_id)
     {
         $stmt = $this->db->prepare("
@@ -554,6 +547,45 @@ class ArsipModel
     ");
 
         $stmt->execute([$arsip_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function countAll()
+    {
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM arsip WHERE is_active = 1");
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
+
+    // Ambil jumlah arsip 7 hari terakhir (GLOBAL, tanpa filter pokja)
+    public function getArsipPerHari()
+    {
+        $stmt = $this->db->prepare("
+            SELECT DATE(created_at) as tanggal, COUNT(*) as total
+            FROM arsip
+            WHERE deleted_at IS NULL
+            AND created_at >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+            GROUP BY DATE(created_at)
+            ORDER BY tanggal ASC
+        ");
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function getArsipPerBulan()
+    {
+        $stmt = $this->db->prepare("
+        SELECT 
+            MONTH(created_at) as bulan,
+            COUNT(*) as total
+        FROM arsip
+        WHERE deleted_at IS NULL
+        AND YEAR(created_at) = YEAR(CURDATE())
+        GROUP BY MONTH(created_at)
+        ORDER BY bulan ASC
+    ");
+
+        $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

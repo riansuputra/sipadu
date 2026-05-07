@@ -98,9 +98,18 @@ class PeraturanModel
     public function getById($id)
     {
         $stmt = $this->db->prepare("
-            SELECT p.*, j.nama as jenis, j.kode as kode
+            SELECT 
+                p.*, 
+                j.nama as jenis, 
+                j.kode as kode,
+                GROUP_CONCAT(
+                    CONCAT(pf.id, '|', pf.nama_file, '|', pf.path_file, '|', pf.tipe_file)
+                    SEPARATOR '##'
+                ) AS files
             FROM peraturan p
             LEFT JOIN peraturan_jenis j ON p.jenis_id = j.id
+            LEFT JOIN peraturan_file pf ON p.id = pf.peraturan_id
+
             WHERE p.id = ? AND p.is_active = 1
         ");
 
@@ -456,5 +465,57 @@ class PeraturanModel
         $stmt = $this->db->prepare("SELECT COUNT(*) FROM peraturan WHERE is_active = 1");
         $stmt->execute();
         return $stmt->fetchColumn();
+    }
+
+    // Total semua peraturan
+    public function getTotalPeraturan()
+    {
+        $stmt = $this->db->prepare("
+        SELECT COUNT(*) as total
+        FROM peraturan
+        WHERE deleted_at IS NULL
+    ");
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
+
+    // Peraturan tahun ini
+    public function getPeraturanTahunIni()
+    {
+        $stmt = $this->db->prepare("
+        SELECT COUNT(*) as total
+        FROM peraturan
+        WHERE deleted_at IS NULL
+        AND tahun_terbit = YEAR(CURDATE())
+    ");
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
+
+    // Peraturan per tahun
+    public function getPeraturanPerTahun()
+    {
+        $stmt = $this->db->prepare("
+        SELECT 
+            tahun_terbit as tahun,
+            COUNT(*) as total
+        FROM peraturan
+        WHERE deleted_at IS NULL
+        GROUP BY tahun_terbit
+        ORDER BY tahun ASC
+    ");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getTotalUkuran()
+    {
+        $stmt = $this->db->prepare("
+        SELECT SUM(ukuran_file) as total
+        FROM peraturan_file
+        WHERE is_active = 1
+    ");
+        $stmt->execute();
+        return $stmt->fetchColumn() ?? 0;
     }
 }

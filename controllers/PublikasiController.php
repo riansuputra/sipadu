@@ -277,6 +277,25 @@ class PublikasiController extends BaseController
         ]);
     }
 
+    public function editStatusAdmin()
+    {
+        $this->auth();
+
+        $id = $_GET['id'];
+
+        $data = $this->model->getById($id);
+        $files = $this->model->getFiles($id);
+        $jenis = $this->modelJenis->getAll();
+
+        $this->view('publikasi/editStatusAdmin', [
+            'user' => $this->user,
+            'role' => $this->role,
+            'data' => $data,
+            'files' => $files,
+            'jenis' => $jenis
+        ]);
+    }
+
     public function approve()
     {
         $this->auth();
@@ -377,7 +396,11 @@ class PublikasiController extends BaseController
             $this->flash('error', 'Gagal mengubah status publikasi');
         }
 
-        return $this->redirect('?page=timpublikasi');
+        if (in_array($this->role, ['Superadmin', 'Admin'])) {
+            return $this->redirect('?page=publikasi');
+        } else {
+            return $this->redirect('?page=timpublikasi');
+        }
     }
 
     public function publicIndex()

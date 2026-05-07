@@ -12,6 +12,7 @@ $bannerSubtitle = "SIPADU BPMP Provinsi Bali";
 // dd($data, $peserta, $files, $pegawai, $jenis, $this->user, $this->role);
 // dd($peserta);
 // dd($files);
+// dd($data['files']);
 // dd($pegawai);
 // dd($jenis);
 // dd($this->user);
