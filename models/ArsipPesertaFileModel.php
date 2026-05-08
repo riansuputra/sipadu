@@ -300,4 +300,39 @@ class ArsipPesertaFileModel
 
         return $stmt->fetch(PDO::FETCH_ASSOC) ? true : false;
     }
+
+    // ambil semua file peserta berdasarkan arsip
+    public function getPesertaFilesByArsip($arsipId)
+    {
+        $stmt = $this->db->prepare("
+        SELECT 
+            apf.*,
+
+            ap.id as arsip_peserta_id,
+            ap.status,
+
+            p.id as pegawai_id,
+            p.nama as nama_pegawai
+
+        FROM arsip_peserta_file apf
+
+        INNER JOIN arsip_peserta ap 
+            ON ap.id = apf.arsip_peserta_id
+
+        INNER JOIN pegawai p 
+            ON p.id = ap.pegawai_id
+
+        WHERE ap.arsip_id = :arsip_id
+        AND ap.is_active = 1
+        AND apf.is_active = 1
+
+        ORDER BY apf.uploaded_at DESC
+    ");
+
+        $stmt->execute([
+            ':arsip_id' => $arsipId
+        ]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

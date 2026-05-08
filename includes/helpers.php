@@ -340,12 +340,26 @@ function dump(...$vars)
     echo "</pre>";
 }
 
+// simpan log debug
 function debug_log($data, $title = 'DEBUG')
 {
-    $log = "[" . date('Y-m-d H:i:s') . "] $title\n";
-    $log .= print_r($data, true) . "\n\n";
+    $dir = __DIR__ . '/../logs';
 
-    file_put_contents(__DIR__ . '/../logs/debug.log', $log, FILE_APPEND);
+    // buat folder logs jika belum ada
+    if (!is_dir($dir)) {
+        mkdir($dir, 0777, true);
+    }
+
+    $file = $dir . '/debug.log';
+
+    $log  = "[" . date('Y-m-d H:i:s') . "] ";
+    $log .= $title . PHP_EOL;
+    $log .= print_r($data, true);
+    $log .= PHP_EOL;
+    $log .= str_repeat("=", 80);
+    $log .= PHP_EOL . PHP_EOL;
+
+    file_put_contents($file, $log, FILE_APPEND);
 }
 
 // Format ukuran file agar lebih mudah dibaca

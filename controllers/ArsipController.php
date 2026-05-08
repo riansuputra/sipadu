@@ -131,12 +131,12 @@ class ArsipController extends BaseController
         $id = $_GET['id'] ?? null;
         if (!$id) die("ID tidak valid");
 
-        // dd($data);
         $peserta = $this->modelPeserta->getByArsip($id);
         $data = $this->model->getById($id);
 
         $files = $this->model->getFiles($id);
         $pegawai = $this->model->getAvailablePegawai($id);
+        // dd($peserta);
         $jenis = $this->modelJenis->getAll();
 
         $this->view('arsip/detail', [

@@ -77,6 +77,8 @@ class ArsipPesertaModel
 
     public function getByArsip($id)
     {
+        $this->db->exec("SET SESSION group_concat_max_len = 100000");
+
         $stmt = $this->db->prepare("
         SELECT 
             ap.id,
@@ -95,7 +97,12 @@ class ArsipPesertaModel
             CASE 
                 WHEN COUNT(apf.id) > 0 THEN 'bukti_diunggah'
                 ELSE 'diundang'
-            END AS status_otomatis
+            END AS status_otomatis,
+
+            GROUP_CONCAT(
+                    CONCAT(apf.id, '|', apf.nama_file, '|', apf.path_file, '|', apf.tipe_file)
+                    SEPARATOR '##'
+                ) AS files
 
         FROM arsip_peserta ap
 
@@ -127,7 +134,26 @@ class ArsipPesertaModel
     ");
 
         $stmt->execute([$id]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // ubah hasil concat menjadi array
+        foreach ($results as &$row) {
+
+            $row['file_ids'] = !empty($row['file_ids'])
+                ? explode('|', $row['file_ids'])
+                : [];
+
+            $row['nama_files'] = !empty($row['nama_files'])
+                ? explode('|', $row['nama_files'])
+                : [];
+
+            $row['path_files'] = !empty($row['path_files'])
+                ? explode('|', $row['path_files'])
+                : [];
+        }
+
+        return $results;
     }
 
     public function insert($data)

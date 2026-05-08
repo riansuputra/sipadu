@@ -547,6 +547,20 @@ function routeRequest()
             $controller->editStatusAdmin();
             break;
 
+        case 'debug':
+
+            require __DIR__ . '/../controllers/DebugController.php';
+            $controller = new DebugController();
+            $controller->index();
+            break;
+
+        case 'debug/clear':
+
+            require __DIR__ . '/../controllers/DebugController.php';
+            $controller = new DebugController();
+            $controller->clear();
+            break;
+
         // Jenis Publikasi =======================================
         case 'jenis-publikasi':
 
@@ -554,6 +568,8 @@ function routeRequest()
             $controller = new PublikasiJenisController();
             $controller->index();
             break;
+
+
 
         case 'tambah-jenis-publikasi':
 
