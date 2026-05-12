@@ -1,8 +1,8 @@
 <?php
 // dd(Auth::pokja());
-// dd($pokjaList);
+// dd($user);
 // dd($userModel->getUserPokjaList($this->user['id']));
-// dd($this->user);
+// dd($_SESSION['user']['foto_profile']);
 
 ?>
 
@@ -78,6 +78,7 @@
             cursor: pointer;
             transition: 0.2s;
         }
+
 
         .step-indicator:hover {
             background: #f8f9fa;
@@ -158,10 +159,24 @@
                 <h1 class="navbar-brand navbar-brand">
                     S I P A D U
                 </h1>
+                <?php if ($_SESSION["user"]["role"] === "Admin") {
+                    $bgRole = "bg-yellow text-yellow-fg";
+                } elseif ($_SESSION["user"]["role"] === "Superadmin") {
+                    $bgRole = "bg-red text-red-fg";
+                } elseif ($_SESSION["user"]["role"] === "Pimpinan") {
+                    $bgRole = "bg-orange text-orange-fg";
+                } else {
+                    $bgRole = "bg-secondary text-secondary-fg";
+                } ?>
                 <div class="navbar-nav flex-row d-lg-none">
                     <div class="nav-item dropdown">
                         <a href="" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu">
-                            <span class="avatar avatar-sm" style="background-image: url(<?= url('public/assets/img/icon-profile.webp') ?>)"> </span>
+                            <span
+                                class="avatar avatar-sm"
+                                style="background-image: url('<?= !empty($_SESSION['user']['foto_profile'])
+                                                                    ? url($_SESSION['user']['foto_profile'])
+                                                                    : url('public/assets/img/icon-profile.webp') ?>')">
+                            </span>
 
                             <div class="d-none d-xl-block ps-2 text-white">
                                 <div><?= htmlspecialchars($user['nama']) ?></div>
@@ -169,6 +184,32 @@
                             </div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                            <a class="dropdown-item">
+                                <div class="col mb-0">
+
+                                    <span class="fw-bold"><?= htmlspecialchars($user['nama']) ?></span>
+                                    <div class="">@<?= htmlspecialchars($user['username']) ?></div>
+
+                                    <p class="mb-0 mt-1">
+                                        <?php if (!empty($user['pokja_nama'])): ?>
+                                            <?= htmlspecialchars($_SESSION['user']['pokja_nama']) ?> <span class="badge <?= $bgRole ?>"><?= htmlspecialchars($_SESSION['user']['role']) ?></span>
+                                        <?php endif; ?>
+                                    </p>
+                                </div>
+                            </a>
+                            <div class="dropdown-divider mb-0 mt-0"></div>
+                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modalPilihRole">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-inline me-1">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M21 11v-3c0 -.53 -.211 -1.039 -.586 -1.414c-.375 -.375 -.884 -.586 -1.414 -.586h-6m0 0l3 3m-3 -3l3 -3" />
+                                    <path d="M3 13.013v3c0 .53 .211 1.039 .586 1.414c.375 .375 .884 .586 1.414 .586h6m0 0l-3 -3m3 3l-3 3" />
+                                    <path d="M16 16.502c0 .53 .211 1.039 .586 1.414c.375 .375 .884 .586 1.414 .586c.53 0 1.039 -.211 1.414 -.586c.375 -.375 .586 -.884 .586 -1.414c0 -.53 -.211 -1.039 -.586 -1.414c-.375 -.375 -.884 -.586 -1.414 -.586c-.53 0 -1.039 .211 -1.414 .586c-.375 .375 -.586 .884 -.586 1.414" />
+                                    <path d="M4 4.502c0 .53 .211 1.039 .586 1.414c.375 .375 .884 .586 1.414 .586c.53 0 1.039 -.211 1.414 -.586c.375 -.375 .586 -.884 .586 -1.414c0 -.53 -.211 -1.039 -.586 -1.414c-.375 -.375 -.884 -.586 -1.414 -.586c-.53 0 -1.039 .211 -1.414 .586c-.375 .375 -.586 .884 -.586 1.414" />
+                                    <path d="M21 21.499c0 -.53 -.211 -1.039 -.586 -1.414c-.375 -.375 -.884 -.586 -1.414 -.586h-2c-.53 0 -1.039 .211 -1.414 .586c-.375 .375 -.586 .884 -.586 1.414" />
+                                    <path d="M9 9.499c0 -.53 -.211 -1.039 -.586 -1.414c-.375 -.375 -.884 -.586 -1.414 -.586h-2c-.53 0 -1.039 .211 -1.414 .586c-.375 .375 -.586 .884 -.586 1.414" />
+                                </svg>
+                                Ganti Akses
+                            </a>
                             <a class="dropdown-item" href="<?= url('?page=logout') ?>">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                     <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -239,23 +280,31 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="nav-item dropdown">
                         <a href="" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu">
-                            <span class="avatar avatar-sm" style="background-image: url(<?= url('public/assets/img/icon-profile.webp') ?>)"> </span>
+                            <span
+                                class="avatar avatar-sm"
+                                style="background-image: url('<?= !empty($_SESSION['user']['foto_profile'])
+                                                                    ? url($_SESSION['user']['foto_profile'])
+                                                                    : url('public/assets/img/icon-profile.webp') ?>')">
+                            </span>
 
                             <div class="d-none d-xl-block ps-2 text-white">
                                 <div><?= htmlspecialchars($user['nama']) ?></div>
-                                <div class="mt-1 small"><?= htmlspecialchars($user['username']) ?></div>
+                                <div class="mt-1 ">@<?= htmlspecialchars($user['username']) ?></div>
                             </div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                            <a class="dropdown-item" href="<?= url('?page=logout') ?>">
+                            <a class="dropdown-item">
                                 <div class="col mb-0">
 
                                     <span class="fw-bold"><?= htmlspecialchars($user['nama']) ?></span>
-                                    <p class="mb-0">
+                                    <div class="">@<?= htmlspecialchars($user['username']) ?></div>
+
+                                    <p class="mb-0 mt-1">
                                         <?php if (!empty($user['pokja_nama'])): ?>
-                                            <?= htmlspecialchars($_SESSION['user']['pokja_tipe']) ?> <?= htmlspecialchars($_SESSION['user']['pokja_nama']) ?>
+                                            <?= htmlspecialchars($_SESSION['user']['pokja_nama']) ?> <span class="badge <?= $bgRole ?>"><?= htmlspecialchars($_SESSION['user']['role']) ?></span>
                                         <?php endif; ?>
                                     </p>
                                 </div>
@@ -271,7 +320,7 @@
                                     <path d="M21 21.499c0 -.53 -.211 -1.039 -.586 -1.414c-.375 -.375 -.884 -.586 -1.414 -.586h-2c-.53 0 -1.039 .211 -1.414 .586c-.375 .375 -.586 .884 -.586 1.414" />
                                     <path d="M9 9.499c0 -.53 -.211 -1.039 -.586 -1.414c-.375 -.375 -.884 -.586 -1.414 -.586h-2c-.53 0 -1.039 .211 -1.414 .586c-.375 .375 -.586 .884 -.586 1.414" />
                                 </svg>
-                                Ganti Role
+                                Ganti Akses
                             </a>
                             <a class="dropdown-item" href="<?= url('?page=logout') ?>">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -309,20 +358,45 @@
                 <div class="modal-content">
 
                     <div class="modal-header">
-                        <h5 class="modal-title">Ganti Role</h5>
+                        <h5 class="modal-title">Ganti Akses</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
 
                     <div class="modal-body">
 
-                        <span class="mb-3 mt-0">Silakan pilih tim/unit untuk diganti.</span>
+                        <span class="mb-3 mt-0">Silakan pilih akses untuk diganti.</span>
 
                         <div class="row mt-3">
                             <div style="display:flex; flex-wrap:wrap; gap:10px;">
                                 <?php foreach ($pokjaList as $pokja): ?>
-                                    <a href="<?= url('?page=switch-pokja&id=' . $pokja['id']) ?>" class="btn btn-<?= ($currentPokja == $pokja['id']) ? 'success' : 'secondary' ?>">
-                                        <?= htmlspecialchars($pokja['pokja_nama']) ?>
+
+                                    <?php
+                                    $active = ($currentPokja == $pokja['id']);
+                                    ?>
+
+                                    <?php if ($pokja["kode_role"] === "Admin") {
+                                        $bgRole = "bg-yellow text-yellow-fg";
+                                    } elseif ($pokja["kode_role"] === "Superadmin") {
+                                        $bgRole = "bg-red text-red-fg";
+                                    } elseif ($pokja["kode_role"] === "Pimpinan") {
+                                        $bgRole = "bg-orange text-orange-fg";
+                                    } else {
+                                        $bgRole = "bg-secondary text-secondary-fg";
+                                    } ?>
+
+                                    <a href="<?= url('?page=switch-pokja&id=' . $pokja['id']) ?>"
+                                        class="btn w-100 text-start <?= $active ? 'btn-primary' : 'btn-light border' ?>">
+
+                                        <div class="fw-bold me-1">
+                                            <?= htmlspecialchars($pokja['pokja_nama']) ?>
+                                        </div>
+
+                                        <small class="badge <?= $bgRole ?> ms-auto me-1">
+                                            <?= htmlspecialchars($pokja['kode_role']) ?>
+                                        </small>
+
                                     </a>
+
                                 <?php endforeach; ?>
                             </div>
                         </div>
@@ -343,7 +417,7 @@
                                     ? "'Berhasil!'"
                                     : "'Gagal!'" ?>,
                         text: <?= json_encode($_SESSION['flash']['message']) ?>,
-                        timer: 1000,
+                        timer: 3000,
                     });
 
                 });

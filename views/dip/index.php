@@ -108,16 +108,16 @@ if ($tahun || $jenis) {
                                             </td>
                                             <td data-search="<?= $d['jenis_informasi']; ?>" class="">
                                                 <?php if ($d["jenis_informasi"] === "berkala") {
-                                                    $bg = "bg-blue text-blue-fg";
+                                                    $bg = "bg-blue w-100 text-blue-fg";
                                                     $text = 'Berkala';
                                                 } elseif ($d["jenis_informasi"] === "serta_merta") {
-                                                    $bg = "bg-red text-red-fg";
+                                                    $bg = "bg-red w-100 text-red-fg";
                                                     $text = 'Serta Merta';
                                                 } elseif ($d["jenis_informasi"] === "setiap_saat") {
-                                                    $bg = "bg-green text-green-fg";
+                                                    $bg = "bg-green w-100 text-green-fg";
                                                     $text = 'Setiap Saat';
                                                 } else {
-                                                    $bg = "bg-yellow text-yellow-fg";
+                                                    $bg = "bg-yellow w-100 text-yellow-fg";
                                                     $text = 'Dikecualikan';
                                                 } ?>
                                                 <span class="badge <?= $bg ?>"><?= $text ?></span>
@@ -128,13 +128,13 @@ if ($tahun || $jenis) {
                                             <td data-search="<?= $d['bentuk_informasi']; ?>" class="">
                                                 <?php if ($d["bentuk_informasi"] === "hardcopy") {
                                                     $badge =
-                                                        '<span class="badge badge-outline text-dark">Hardcopy</span>';
+                                                        '<span class="badge w-100 badge-outline text-dark">Hardcopy</span>';
                                                 } elseif ($d["bentuk_informasi"] === "softcopy") {
                                                     $badge =
-                                                        '<span class="badge badge-outline text-dark ">Softcopy&nbsp</span>';
+                                                        '<span class="badge w-100 badge-outline text-dark ">Softcopy&nbsp</span>';
                                                 } else {
                                                     $badge =
-                                                        '<span class="badge badge-outline text-dark">Hardcopy<br>Softcopy</span>';
+                                                        '<span class="badge w-100 badge-outline text-dark">Hardcopy<br>Softcopy</span>';
                                                 }
                                                 ?>
                                                 <div class="badges-list">

@@ -136,69 +136,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                         Kosongkan jika tidak ingin diubah.
                                     </small>
                                 </div>
-                                <div class="mb-3 row">
-                                    <div class="col">
-                                        <div class="row">
-                                            <div class="col">
-                                                <label class="form-label required">Role :</label>
-                                                <select class="form-select <?= isset($errors['role_id']) ? 'is-invalid' : '' ?>" name="role_id" id="role_id">
 
-                                                    <?php $selectedRole = $old['role_id'] ?? $data['role_id'] ?? ''; ?>
-
-                                                    <option value="" disabled <?= empty($selectedRole) ? 'selected' : '' ?>>
-                                                        -- Pilih Role --
-                                                    </option>
-
-                                                    <?php foreach ($roles as $j): ?>
-
-                                                        <?php
-                                                        // skip superadmin
-                                                        if ($j['kode_role'] === 'Superadmin') continue;
-                                                        ?>
-
-                                                        <option value="<?= $j['id'] ?>"
-                                                            data-kode="<?= $j['kode_role'] ?>"
-                                                            <?= $selectedRole == $j['id'] ? 'selected' : '' ?>>
-                                                            <?= $j['nama_role'] ?>
-                                                        </option>
-
-                                                    <?php endforeach; ?>
-
-                                                </select>
-
-
-                                                <div class="invalid-feedback">
-                                                    <?= $errors['role_id'] ?? '' ?>
-                                                </div>
-
-                                            </div>
-                                            <div class="col">
-                                                <label class="form-label">Tim / Unit :</label>
-                                                <select class="form-select <?= isset($errors['pokja_id']) ? 'is-invalid' : '' ?>" name="pokja_id" id="pokja_id">
-
-                                                    <?php $selectedPokjaSingle = $old['pokja_id'] ?? $data['pokja_id'] ?? ''; ?>
-
-                                                    <option value="" disabled <?= empty($selectedPokja) ? 'selected' : '' ?>>
-                                                        -- Pilih Tim/Unit --
-                                                    </option>
-
-                                                    <?php foreach ($pokja as $j): ?>
-                                                        <option value="<?= $j['id'] ?>"
-                                                            <?= $selectedPokjaSingle == $j['id'] ? 'selected' : '' ?>>
-                                                            <?= $j['pokja_tipe'] ?> <?= $j['pokja_nama'] ?>
-                                                        </option>
-                                                    <?php endforeach; ?>
-
-                                                </select>
-
-                                                <div class="invalid-feedback">
-                                                    <?= $errors['pokja_id'] ?? '' ?>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="">
                                     <label class="form-label mb-0">Akses Pokja (Multi):</label>
 
@@ -210,12 +148,28 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                                         <input type="checkbox" id="checkAll">
                                                     </th>
                                                     <th>Pokja</th>
+                                                    <th>Role di Pokja</th>
                                                     <th class="w-1">Default</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <?php foreach ($pokja as $p): ?>
+
+                                                    <?php
+                                                    $selectedRolePokja = '';
+
+                                                    foreach ($userPokja as $up) {
+
+                                                        if ($up['pokja_id'] == $p['id']) {
+                                                            $selectedRolePokja = $up['role_id'];
+                                                            break;
+                                                        }
+                                                    }
+                                                    ?>
+
                                                     <tr>
+
+                                                        <!-- checkbox -->
                                                         <td>
                                                             <input
                                                                 class="form-check-input"
@@ -226,12 +180,47 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                                                 <?= in_array((string)$p['id'], (array)($selectedPokja ?? [])) ? 'checked' : '' ?>>
                                                         </td>
 
+                                                        <!-- nama pokja -->
                                                         <td>
                                                             <label for="pokja_<?= $p['id'] ?>" class="mb-0">
                                                                 <?= $p['pokja_tipe'] ?> <?= $p['pokja_nama'] ?>
                                                             </label>
                                                         </td>
 
+                                                        <!-- role per pokja -->
+                                                        <td style="min-width:200px;">
+
+                                                            <select
+                                                                class="form-select role-per-pokja"
+                                                                name="role_per_pokja[<?= $p['id'] ?>]"
+                                                                data-pokja="<?= $p['id'] ?>">
+
+                                                                <option value="">-- Pilih Role --</option>
+
+                                                                <?php foreach ($roles as $r): ?>
+
+
+                                                                    <option
+                                                                        value="<?= $r['id'] ?>"
+                                                                        <?= $selectedRolePokja == $r['id'] ? 'selected' : '' ?>>
+
+                                                                        <?= $r['nama_role'] ?>
+
+                                                                    </option>
+
+                                                                <?php endforeach; ?>
+
+                                                            </select>
+
+                                                            <?php if (!empty($errors['role_' . $p['id']])): ?>
+                                                                <div class="text-danger small">
+                                                                    <?= $errors['role_' . $p['id']] ?>
+                                                                </div>
+                                                            <?php endif; ?>
+
+                                                        </td>
+
+                                                        <!-- default -->
                                                         <td class="text-center">
                                                             <input
                                                                 class="form-check-input"
@@ -240,7 +229,9 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                                                 value="<?= $p['id'] ?>"
                                                                 <?= ($defaultPokja ?? '') == $p['id'] ? 'checked' : '' ?>>
                                                         </td>
+
                                                     </tr>
+
                                                 <?php endforeach; ?>
                                             </tbody>
                                         </table>
@@ -440,6 +431,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
         const roleSelect = document.getElementById("role_id");
         const pokjaCheckboxes = document.querySelectorAll("input[name='pokja_ids[]']");
         const pokjaRadios = document.querySelectorAll("input[name='pokja_default']");
+        const rolePokjaSelects = document.querySelectorAll(".role-per-pokja");
         const checkAll = document.getElementById("checkAll");
 
         function togglePokja() {
@@ -466,6 +458,11 @@ unset($_SESSION['errors'], $_SESSION['old']);
                     checkAll.disabled = true;
                 }
 
+                rolePokjaSelects.forEach(s => {
+                    s.disabled = true;
+                    s.value = '';
+                });
+
             } else {
 
                 pokjaCheckboxes.forEach(cb => cb.disabled = false);
@@ -474,6 +471,10 @@ unset($_SESSION['errors'], $_SESSION['old']);
                 if (checkAll) {
                     checkAll.disabled = false;
                 }
+
+                rolePokjaSelects.forEach(s => {
+                    s.disabled = false;
+                });
             }
         }
 
@@ -536,6 +537,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+
         const pegawaiSelect = document.getElementById('pegawai_id');
         const namaLengkapInput = document.getElementById('nama_lengkap');
         const usernameInput = document.getElementById('username');
@@ -543,7 +545,9 @@ unset($_SESSION['errors'], $_SESSION['old']);
         if (!pegawaiSelect) return;
 
         function isiDataPegawai() {
-            const selectedOption = pegawaiSelect.options[pegawaiSelect.selectedIndex];
+
+            const selectedOption =
+                pegawaiSelect.options[pegawaiSelect.selectedIndex];
 
             if (!selectedOption) return;
 
@@ -554,7 +558,8 @@ unset($_SESSION['errors'], $_SESSION['old']);
                 namaLengkapInput.value = nama;
             }
 
-            if (usernameInput) {
+            // hanya isi username kalau masih kosong
+            if (usernameInput && !usernameInput.value.trim()) {
                 usernameInput.value = nip;
             }
         }
@@ -562,7 +567,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
         // saat user ganti pilihan
         pegawaiSelect.addEventListener('change', isiDataPegawai);
 
-        // saat halaman load kalau sudah ada selected
+        // saat load pertama
         isiDataPegawai();
     });
 </script>
@@ -706,13 +711,79 @@ unset($_SESSION['errors'], $_SESSION['old']);
                     namaLengkapInput.value = nama;
                 }
 
-                if (usernameInput) {
+                if (usernameInput && !usernameInput.value.trim()) {
                     usernameInput.value = nip;
                 }
             }
         }
 
         loadSelectedPegawai();
+
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+
+        const pokjaIdInput =
+            document.getElementById("pokja_id");
+
+        const radios =
+            document.querySelectorAll("input[name='pokja_default']");
+
+        function syncPokjaDefault() {
+
+            const active =
+                document.querySelector("input[name='pokja_default']:checked");
+
+            if (active && pokjaIdInput) {
+                pokjaIdInput.value = active.value;
+            } else if (pokjaIdInput) {
+                pokjaIdInput.value = '';
+            }
+        }
+
+        // saat radio berubah
+        radios.forEach(radio => {
+            radio.addEventListener("change", syncPokjaDefault);
+        });
+
+        // init pertama
+        syncPokjaDefault();
+
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+
+        function syncRolePokja() {
+
+            document.querySelectorAll("input[name='pokja_ids[]']").forEach(cb => {
+
+                const select = document.querySelector(
+                    ".role-per-pokja[data-pokja='" + cb.value + "']"
+                );
+
+                if (!select) return;
+
+                select.disabled = !cb.checked;
+
+                if (!cb.checked) {
+                    select.value = '';
+                }
+            });
+        }
+
+        // init
+        syncRolePokja();
+
+        // event
+        document.querySelectorAll("input[name='pokja_ids[]']").forEach(cb => {
+
+            cb.addEventListener("change", syncRolePokja);
+
+        });
 
     });
 </script>

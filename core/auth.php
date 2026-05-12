@@ -46,6 +46,7 @@ class Auth
             'pokja_id'   => $user['pokja_id'] ?? null,
             'pokja_nama' => $user['pokja_nama'] ?? null,
             'pokja_tipe' => $user['pokja_tipe'] ?? null,
+            'foto_profile' => $user['foto_profile'] ?? null,
         ];
 
         self::$user = $_SESSION['user'];

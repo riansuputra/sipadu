@@ -59,15 +59,27 @@ $user = $_SESSION['user'];
                     </div>
                 </div>
             </div>
+            <?php if ($_SESSION["user"]["role"] === "Admin") {
+                $bgRole = "bg-yellow text-yellow-fg";
+            } elseif ($_SESSION["user"]["role"] === "Superadmin") {
+                $bgRole = "bg-red text-red-fg";
+            } elseif ($_SESSION["user"]["role"] === "Pimpinan") {
+                $bgRole = "bg-orange text-orange-fg";
+            } else {
+                $bgRole = "bg-secondary text-secondary-fg";
+            } ?>
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link d-flex lh-1 p-0 px-2" data-bs-toggle="dropdown" aria-label="Open user menu" aria-expanded="true">
-                    <span class="avatar avatar-sm" style="background-image: url(<?= url('public/assets/img/icon-profile.webp') ?>)"> </span>
+                    <span
+                        class="avatar avatar-sm"
+                        style="background-image: url('<?= !empty($_SESSION['user']['foto_profile'])
+                                                            ? url($_SESSION['user']['foto_profile'])
+                                                            : url('public/assets/img/icon-profile.webp') ?>')">
+                    </span>
                     <div class="d-none d-xl-block ps-2">
                         <div class="fw-bold"><?= htmlspecialchars($user['nama']) ?></div>
-                        <div class="mt-1 small text-primary fw-bold">
-                            <?php if (!empty($user['pokja_nama'])): ?>
-                                <?= htmlspecialchars($_SESSION['user']['pokja_tipe']) ?> <?= htmlspecialchars($_SESSION['user']['pokja_nama']) ?>
-                            <?php endif; ?>
+                        <div class="mt-1 small fw-bold">
+                            @<?= htmlspecialchars($_SESSION['user']['username']) ?>
                         </div>
                     </div>
                 </a>
@@ -76,9 +88,11 @@ $user = $_SESSION['user'];
                         <div class="col mb-0">
 
                             <span class="fw-bold"><?= htmlspecialchars($user['nama']) ?></span>
-                            <p class="mb-0">
+                            <div class="">@<?= htmlspecialchars($user['username']) ?></div>
+
+                            <p class="mb-0 mt-1">
                                 <?php if (!empty($user['pokja_nama'])): ?>
-                                    <?= htmlspecialchars($_SESSION['user']['pokja_tipe']) ?> <?= htmlspecialchars($_SESSION['user']['pokja_nama']) ?>
+                                    <?= htmlspecialchars($_SESSION['user']['pokja_nama']) ?> <span class="badge <?= $bgRole ?>"><?= htmlspecialchars($_SESSION['user']['role']) ?></span>
                                 <?php endif; ?>
                             </p>
                         </div>
@@ -94,7 +108,7 @@ $user = $_SESSION['user'];
                             <path d="M21 21.499c0 -.53 -.211 -1.039 -.586 -1.414c-.375 -.375 -.884 -.586 -1.414 -.586h-2c-.53 0 -1.039 .211 -1.414 .586c-.375 .375 -.586 .884 -.586 1.414" />
                             <path d="M9 9.499c0 -.53 -.211 -1.039 -.586 -1.414c-.375 -.375 -.884 -.586 -1.414 -.586h-2c-.53 0 -1.039 .211 -1.414 .586c-.375 .375 -.586 .884 -.586 1.414" />
                         </svg>
-                        Ganti Role
+                        Ganti Akses
                     </a>
                     <a class="dropdown-item" href="<?= url('?page=logout') ?>">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">

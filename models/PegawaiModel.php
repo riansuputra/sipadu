@@ -700,4 +700,22 @@ class PegawaiModel
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    // ambil foto profile pegawai
+    public function getFotoProfile($pegawaiId)
+    {
+        $stmt = $this->db->prepare("
+        SELECT path_file
+        FROM pegawai_file
+        WHERE pegawai_id = ?
+        AND jenis_dokumen = 'file_foto'
+        AND is_active = 1
+        ORDER BY id DESC
+        LIMIT 1
+    ");
+
+        $stmt->execute([$pegawaiId]);
+
+        return $stmt->fetchColumn();
+    }
 }

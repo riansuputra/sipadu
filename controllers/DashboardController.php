@@ -22,6 +22,11 @@ class DashboardController extends BaseController
     {
         $this->auth();
 
+        // dd([
+        //     'user' => $this->user,
+        //     'role' => $this->role
+        // ]);
+
         $mode = $_GET['mode'] ?? null;
 
         $pokjaId = $this->user['pokja_id'];

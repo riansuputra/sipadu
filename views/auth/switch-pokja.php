@@ -140,14 +140,39 @@ unset($_SESSION['errors'], $_SESSION['old']);
                     <div class="card-body text-center">
 
                         <h2 class="h3 text-center mb-0">Selamat datang, <?= htmlspecialchars($_SESSION['user']['nama']) ?> !</h2>
-                        <span class="mb-3">Silakan pilih tim/unit untuk melanjutkan ke sistem.</span>
+                        <span class="mb-3">Silakan pilih akses untuk melanjutkan ke sistem.</span>
 
                         <div class="row mt-3">
                             <div style="display:flex; flex-wrap:wrap; gap:10px;">
                                 <?php foreach ($pokjaList as $pokja): ?>
-                                    <a href="<?= url('?page=switch-pokja&id=' . $pokja['id']) ?>" class="btn btn-<?= ($currentPokja == $pokja['id']) ? 'success' : 'secondary' ?>">
-                                        <?= htmlspecialchars($pokja['pokja_nama']) ?>
+
+                                    <?php
+                                    $active = ($currentPokja == $pokja['id']);
+                                    ?>
+
+                                    <?php if ($pokja["kode_role"] === "Admin") {
+                                        $bgRole = "bg-yellow text-yellow-fg";
+                                    } elseif ($pokja["kode_role"] === "Superadmin") {
+                                        $bgRole = "bg-red text-red-fg";
+                                    } elseif ($pokja["kode_role"] === "Pimpinan") {
+                                        $bgRole = "bg-orange text-orange-fg";
+                                    } else {
+                                        $bgRole = "bg-secondary text-secondary-fg";
+                                    } ?>
+
+                                    <a href="<?= url('?page=switch-pokja&id=' . $pokja['id']) ?>"
+                                        class="btn w-100 text-start <?= $active ? 'btn-primary' : 'btn-light border' ?>">
+
+                                        <div class="fw-bold me-1">
+                                            <?= htmlspecialchars($pokja['pokja_nama']) ?>
+                                        </div>
+
+                                        <small class="badge <?= $bgRole ?> ms-auto me-1">
+                                            <?= htmlspecialchars($pokja['kode_role']) ?>
+                                        </small>
+
                                     </a>
+
                                 <?php endforeach; ?>
                             </div>
                         </div>

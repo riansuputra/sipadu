@@ -29,20 +29,78 @@ class UserModel
         $stmt = $this->db->prepare("
         SELECT 
             u.*,
+
+            -- role aktif/default user
             r.nama_role,
             r.kode_role,
-            p.pokja_nama,
+
             pg.nama AS pegawai_nama,
-            pg.nip AS pegawai_nip
+            pg.nip AS pegawai_nip,
+
+            -- default pokja
+            p_default.pokja_nama AS pokja_nama,
+
+            -- akses lama (opsional/backward compatibility)
+            GROUP_CONCAT(
+                DISTINCT CONCAT(
+                    pk.pokja_tipe,
+                    ' ',
+                    pk.pokja_nama
+                )
+                ORDER BY pk.pokja_nama ASC
+                SEPARATOR ', '
+            ) AS akses_pokja,
+
+            -- 🔥 akses detail baru
+            GROUP_CONCAT(
+                DISTINCT CONCAT(
+                    pk.pokja_tipe,
+                    ' ',
+                    pk.pokja_nama,
+                    '|',
+                    COALESCE(rp.nama_role, '-'),
+                    '|',
+                    COALESCE(rp.kode_role, '-'),
+                    '|',
+                    up.is_default
+                )
+                ORDER BY pk.pokja_nama ASC
+                SEPARATOR ';;'
+            ) AS akses_detail
+
         FROM users u
-        JOIN role r ON u.role_id = r.id
-        LEFT JOIN pokja p ON u.pokja_id = p.id
-        LEFT JOIN pegawai pg ON u.pegawai_id = pg.id
+
+        -- role aktif/default
+        LEFT JOIN role r 
+            ON u.role_id = r.id
+
+        LEFT JOIN pegawai pg 
+            ON u.pegawai_id = pg.id
+
+        -- semua akses user
+        LEFT JOIN user_pokja up
+            ON up.user_id = u.id
+            AND up.is_active = 1
+
+        LEFT JOIN pokja pk
+            ON pk.id = up.pokja_id
+
+        -- role per pokja
+        LEFT JOIN role rp
+            ON rp.id = up.role_id
+
+        -- default pokja
+        LEFT JOIN pokja p_default
+            ON p_default.id = u.pokja_id
+
+        GROUP BY u.id
+
         ORDER BY u.created_at DESC
     ");
 
         $stmt->execute();
-        return $stmt->fetchAll();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function usernameExists($username)
@@ -132,20 +190,26 @@ class UserModel
             $data['username'],
             password_hash($data['password'], PASSWORD_DEFAULT),
             $data['nama_lengkap'],
-            $data['pegawai_id'],
+            $data['pegawai_id'] ?: null,
+
+            // 🔥 role utama user
             $data['role_id'],
+
+            // 🔥 pokja aktif/default
             $data['pokja_id'] ?: null
         ]);
 
-        // 🔥 ambil ID user baru
+        // ambil id user baru
         $userId = $this->db->lastInsertId();
 
-        // 🔥 simpan ke user_pokja
+        // simpan multi pokja
         if (!empty($data['pokja_ids'])) {
+
             $this->saveUserPokja(
                 $userId,
                 $data['pokja_ids'],
-                $data['pokja_default'] ?? $data['pokja_id']
+                $data['role_per_pokja'] ?? [],
+                $data['pokja_default'] ?? null
             );
         }
 
@@ -156,6 +220,9 @@ class UserModel
     {
         $isActive = $data['is_active'] ?? 1;
 
+        // =========================
+        // DENGAN PASSWORD
+        // =========================
         if (!empty($data['password_baru'])) {
 
             $stmt = $this->db->prepare("
@@ -173,14 +240,25 @@ class UserModel
             $stmt->execute([
                 $data['nama_lengkap'],
                 $data['username'],
-                $data['pegawai_id'],
+                $data['pegawai_id'] ?: null,
+
+                // 🔥 role utama
                 $data['role_id'],
-                $data['pokja_id'] ?? null,
+
+                // 🔥 pokja aktif/default
+                $data['pokja_id'] ?: null,
+
                 password_hash(trim($data['password_baru']), PASSWORD_DEFAULT),
+
                 $isActive,
                 $id
             ]);
-        } else {
+        }
+
+        // =========================
+        // TANPA PASSWORD
+        // =========================
+        else {
 
             $stmt = $this->db->prepare("
             UPDATE users SET
@@ -196,20 +274,29 @@ class UserModel
             $stmt->execute([
                 $data['nama_lengkap'],
                 $data['username'],
-                $data['pegawai_id'],
+                $data['pegawai_id'] ?: null,
+
+                // 🔥 role utama
                 $data['role_id'],
-                $data['pokja_id'],
+
+                // 🔥 pokja aktif/default
+                $data['pokja_id'] ?: null,
+
                 $isActive,
                 $id
             ]);
         }
 
-        // 🔥 update user_pokja
+        // =========================
+        // UPDATE MULTI POKJA
+        // =========================
         if (isset($data['pokja_ids'])) {
+
             $this->saveUserPokja(
                 $id,
                 $data['pokja_ids'],
-                $data['pokja_default'] ?? $data['pokja_id']
+                $data['role_per_pokja'] ?? [],
+                $data['pokja_default'] ?? null
             );
         }
 
@@ -285,9 +372,18 @@ class UserModel
             pk.id,
             pk.pokja_nama,
             pk.slug,
-            pk.pokja_tipe
+            pk.pokja_tipe,
+            
+
+            up.role_id,
+            up.is_default,
+
+            r.nama_role,
+            r.kode_role
         FROM user_pokja up
         JOIN pokja pk ON up.pokja_id = pk.id
+        LEFT JOIN role r
+            ON r.id = up.role_id
         WHERE up.user_id = ?
           AND up.is_active = 1
         ORDER BY pk.pokja_nama ASC
@@ -297,28 +393,68 @@ class UserModel
         return $stmt->fetchAll();
     }
 
+    // ================================
+    // Ambil role per pokja user
+    // ================================
+    public function getUserRolePokja($userId)
+    {
+        $stmt = $this->db->prepare("
+        SELECT 
+            pokja_id,
+            role_id
+        FROM user_pokja
+        WHERE user_id = ?
+        AND is_active = 1
+    ");
+
+        $stmt->execute([$userId]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     // ============================
     // SIMPAN USER POKJA
     // ============================
-    public function saveUserPokja($userId, $pokjaIds = [], $defaultPokja = null)
-    {
-        // Hapus dulu relasi lama
-        $stmt = $this->db->prepare("DELETE FROM user_pokja WHERE user_id = ?");
-        $stmt->execute([$userId]);
+    public function saveUserPokja(
+        $userId,
+        array $pokjaIds,
+        array $rolePerPokja,
+        $defaultPokja = null
+    ) {
 
-        // Insert ulang
-        $stmt = $this->db->prepare("
-        INSERT INTO user_pokja (user_id, pokja_id, is_default, is_active)
-        VALUES (?, ?, ?, 1)
+        // hapus lama
+        $delete = $this->db->prepare("
+        DELETE FROM user_pokja
+        WHERE user_id = ?
     ");
 
-        foreach ($pokjaIds as $pid) {
-            $isDefault = ($pid == $defaultPokja) ? 1 : 0;
+        $delete->execute([$userId]);
+
+        // insert baru
+        $stmt = $this->db->prepare("
+        INSERT INTO user_pokja (
+            user_id,
+            pokja_id,
+            role_id,
+            is_default,
+            is_active
+        ) VALUES (?,?,?,?,1)
+    ");
+
+        foreach ($pokjaIds as $pokjaId) {
+
+            $roleId = $rolePerPokja[(string)$pokjaId] ?? null;
+
+            // skip kalau role kosong
+            if (!$roleId) {
+                continue;
+            }
 
             $stmt->execute([
                 $userId,
-                $pid,
-                $isDefault
+                $pokjaId,
+                $roleId,
+                ($defaultPokja == $pokjaId ? 1 : 0)
             ]);
         }
     }
@@ -328,17 +464,30 @@ class UserModel
         $stmt = $this->db->prepare("
         SELECT 
             up.pokja_id,
+            up.role_id,
             up.is_default,
+
             p.pokja_nama AS nama,
             p.slug,
-            p.pokja_tipe AS tipe
+            p.pokja_tipe AS tipe,
+
+            r.nama_role,
+            r.kode_role
+
         FROM user_pokja up
-        JOIN pokja p ON up.pokja_id = p.id
+
+        JOIN pokja p 
+            ON up.pokja_id = p.id
+
+        LEFT JOIN role r
+            ON r.id = up.role_id
+
         WHERE up.user_id = ?
         AND up.is_active = 1
     ");
 
         $stmt->execute([$userId]);
+
         return $stmt->fetchAll();
     }
 }

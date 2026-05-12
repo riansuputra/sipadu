@@ -233,20 +233,45 @@ $headerImage = $headerImage ?? url('public/assets/img/banner.webp');
                 <div class="modal-content">
 
                     <div class="modal-header">
-                        <h5 class="modal-title">Ganti Role</h5>
+                        <h5 class="modal-title">Ganti Akses</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
 
                     <div class="modal-body">
 
-                        <span class="mb-3">Silakan pilih tim/unit untuk diganti.</span>
+                        <span class="mb-3">Silakan pilih akses untuk diganti.</span>
 
                         <div class="row mt-3">
                             <div style="display:flex; flex-wrap:wrap; gap:10px;">
                                 <?php foreach ($pokjaList as $pokja): ?>
-                                    <a href="<?= url('?page=switch-pokja&id=' . $pokja['id']) ?>" class="btn btn-<?= ($currentPokja == $pokja['id']) ? 'success' : 'secondary' ?>">
-                                        <?= htmlspecialchars($pokja['pokja_nama']) ?>
+
+                                    <?php
+                                    $active = ($currentPokja == $pokja['id']);
+                                    ?>
+
+                                    <?php if ($pokja["kode_role"] === "Admin") {
+                                        $bgRole = "bg-yellow text-yellow-fg";
+                                    } elseif ($pokja["kode_role"] === "Superadmin") {
+                                        $bgRole = "bg-red text-red-fg";
+                                    } elseif ($pokja["kode_role"] === "Pimpinan") {
+                                        $bgRole = "bg-orange text-orange-fg";
+                                    } else {
+                                        $bgRole = "bg-secondary text-secondary-fg";
+                                    } ?>
+
+                                    <a href="<?= url('?page=switch-pokja&id=' . $pokja['id']) ?>"
+                                        class="btn w-100 text-start <?= $active ? 'btn-primary' : 'btn-light border' ?>">
+
+                                        <div class="fw-bold me-1">
+                                            <?= htmlspecialchars($pokja['pokja_nama']) ?>
+                                        </div>
+
+                                        <small class="badge <?= $bgRole ?> ms-auto me-1">
+                                            <?= htmlspecialchars($pokja['kode_role']) ?>
+                                        </small>
+
                                     </a>
+
                                 <?php endforeach; ?>
                             </div>
                         </div>
@@ -382,7 +407,7 @@ $headerImage = $headerImage ?? url('public/assets/img/banner.webp');
                                     ? "'Berhasil!'"
                                     : "'Gagal!'" ?>,
                         text: <?= json_encode($_SESSION['flash']['message']) ?>,
-                        timer: 1000,
+                        timer: 5000,
                     });
 
                 });

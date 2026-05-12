@@ -254,6 +254,9 @@ class PegawaiController extends BaseController
                 'description' => 'Mengubah data Pegawai'
             ]);
 
+            $_SESSION['user']['foto_profile'] =
+                $this->model->getFotoProfile($_SESSION['user']['pegawai_id']);
+
             $this->flash('success', 'Pegawai berhasil diperbarui');
         } catch (Throwable $e) {
 

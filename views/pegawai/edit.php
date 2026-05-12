@@ -375,8 +375,12 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                                         <option value="S3" <?= ($data['pendidikan'] ?? '') == 'S3' ? 'selected' : '' ?>>S3</option>
                                                         <option value="S2" <?= ($data['pendidikan'] ?? '') == 'S2' ? 'selected' : '' ?>>S2</option>
                                                         <option value="S1" <?= ($data['pendidikan'] ?? '') == 'S1' ? 'selected' : '' ?>>S1</option>
+                                                        <option value="D4" <?= ($data['pendidikan'] ?? '') == 'D4' ? 'selected' : '' ?>>D4</option>
+                                                        <option value="D3" <?= ($data['pendidikan'] ?? '') == 'D3' ? 'selected' : '' ?>>D3</option>
                                                         <option value="SMA" <?= ($data['pendidikan'] ?? '') == 'SMA' ? 'selected' : '' ?>>SMA</option>
                                                         <option value="SMP" <?= ($data['pendidikan'] ?? '') == 'SMP' ? 'selected' : '' ?>>SMP</option>
+                                                        <option value="SD" <?= ($data['pendidikan'] ?? '') == 'SD' ? 'selected' : '' ?>>SD</option>
+
                                                     </select>
                                                     <div class="invalid-feedback">
                                                         <?= $errors['pendidikan'] ?? '' ?>

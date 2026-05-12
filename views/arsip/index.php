@@ -266,7 +266,8 @@ if ($isFiltered) {
                                                 <?= $dt + 1 ?>
                                             </td>
                                             <td class="">
-                                                <?= htmlspecialchars($d['judul'] ?? '-') ?>
+                                                <div class="fw-semibold"><?= htmlspecialchars($d['judul'] ?? '-') ?></div>
+                                                <div class="text-muted small"><?= htmlspecialchars($d['lokasi'] ?? '-') ?></div>
                                             </td>
                                             <td class="">
                                                 <?= htmlspecialchars($d['jenis'] ?? '-') ?>
@@ -279,18 +280,21 @@ if ($isFiltered) {
                                             </td>
                                             <td class="text-center" data-search="<?= ((int)($d['upload_selesai'] ?? 0) === 1) ? '1' : '0' ?>">
                                                 <?php if ((int)($d['upload_selesai'] ?? 0) === 1): ?>
-                                                    <span class="text-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Semua peserta sudah upload">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#00ff00" class="icon icon-tabler icons-tabler-filled icon-tabler-circle-check">
+                                                    <span class="badge bg-green text-green-fg">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-check">
                                                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                            <path d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z" />
+                                                            <path d="M5 12l5 5l10 -10" />
                                                         </svg>
+                                                        Sudah
                                                     </span>
                                                 <?php else: ?>
-                                                    <span class="text-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Masih ada peserta yang belum upload">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#ff0000" class="icon icon-tabler icons-tabler-filled icon-tabler-circle-x">
+                                                    <span class="badge bg-red text-red-fg">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-x">
                                                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                            <path d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-6.489 5.8a1 1 0 0 0 -1.218 1.567l1.292 1.293l-1.292 1.293l-.083 .094a1 1 0 0 0 1.497 1.32l1.293 -1.292l1.293 1.292l.094 .083a1 1 0 0 0 1.32 -1.497l-1.292 -1.293l1.292 -1.293l.083 -.094a1 1 0 0 0 -1.497 -1.32l-1.293 1.292l-1.293 -1.292l-.094 -.083z" />
+                                                            <path d="M18 6l-12 12" />
+                                                            <path d="M6 6l12 12" />
                                                         </svg>
+                                                        Belum
                                                     </span>
                                                 <?php endif; ?>
                                             </td>

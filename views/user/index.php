@@ -14,7 +14,7 @@ ob_start();
 
 <?php
 // echo '<pre>';
-// print_r($users);
+// dd($data);
 // echo '</pre>';
 ?>
 
@@ -66,8 +66,7 @@ ob_start();
                                         <th class="w-1">No</th>
                                         <th>Nama Lengkap</th>
                                         <th>Username</th>
-                                        <th class="w-1">Tim / Unit</th>
-                                        <th class="w-1">Role</th>
+                                        <th class="w-1">Akses</th>
                                         <th class="w-1">Status</th>
                                         <th class="w-1">Aksi</th>
                                     </tr>
@@ -75,7 +74,6 @@ ob_start();
                                         <th></th>
                                         <th><input type="text" placeholder="Cari nama..." class="form-control w-100 h5 m-0"></th>
                                         <th><input type="text" placeholder="Cari user..." class="form-control w-100 h5 m-0"></th>
-                                        <th></th>
                                         <th></th>
                                         <th></th>
                                         <th></th>
@@ -93,31 +91,67 @@ ob_start();
                                             <td class="">
                                                 <?= htmlspecialchars($d['username'] ?? '-') ?>
                                             </td>
-                                            <td class="">
-                                                <?= htmlspecialchars($d['pokja_nama'] ?? '-') ?>
+                                            <td>
+
+                                                <?php
+                                                $aksesDetail = !empty($d['akses_detail'])
+                                                    ? explode(';;', $d['akses_detail'])
+                                                    : [];
+                                                ?>
+
+                                                <?php foreach ($aksesDetail as $item): ?>
+
+                                                    <?php
+
+                                                    [$pokja, $role, $kodeRole, $isDefault]
+                                                        = explode('|', $item);
+
+                                                    $badge = 'bg-secondary';
+
+                                                    switch ($kodeRole) {
+
+                                                        case 'Superadmin':
+                                                            $badge = 'bg-red text-red-fg';
+                                                            break;
+
+                                                        case 'Admin':
+                                                            $badge = 'bg-yellow text-yellow-fg';
+                                                            break;
+
+                                                        case 'Pimpinan':
+                                                            $badge = 'bg-orange text-orange-fg';
+                                                            break;
+
+                                                        case 'Staff':
+                                                            $badge = 'bg-secondary text-secondary-fg';
+                                                            break;
+                                                    }
+
+                                                    ?>
+
+                                                    <div class="badge badge-outline w-100 bg-secondary-lt rounded p-1 mb-1">
+
+                                                        <div class="fw-bold text-center text-dark mb-1">
+                                                            <?= htmlspecialchars($pokja) ?>
+                                                        </div>
+
+                                                        <span class="badge w-100 <?= $badge ?>">
+                                                            <?= htmlspecialchars($kodeRole) ?>
+                                                        </span>
+
+
+                                                    </div>
+
+                                                <?php endforeach; ?>
+
                                             </td>
-                                            <td class="">
-                                                <?php if ($d["kode_role"] === "Admin") {
-                                                    $bgRole = "bg-blue text-blue-fg";
-                                                    $textRole = 'Admin Tim';
-                                                } elseif ($d["kode_role"] === "Superadmin") {
-                                                    $bgRole = "bg-red text-red-fg";
-                                                    $textRole = 'Superadmin';
-                                                } elseif ($d["kode_role"] === "Pimpinan") {
-                                                    $bgRole = "bg-green text-green-fg";
-                                                    $textRole = 'Pimpinan';
-                                                } else {
-                                                    $bgRole = "bg-secondary text-secondary-fg";
-                                                    $textRole = 'Staff';
-                                                } ?>
-                                                <span class="badge <?= $bgRole ?>"><?= $textRole ?></span>
-                                            </td>
+
                                             <td class="">
                                                 <?php if ($d["is_active"] === 1) {
-                                                    $bg = "bg-success text-blue-fg";
+                                                    $bg = "bg-success w-100 text-blue-fg";
                                                     $text = 'Aktif';
                                                 } else {
-                                                    $bg = "bg-danger text-secondary-fg";
+                                                    $bg = "bg-danger w-100 text-secondary-fg";
                                                     $text = 'Nonaktif';
                                                 } ?>
                                                 <span class="badge <?= $bg ?>"><?= $text ?></span>
@@ -282,7 +316,6 @@ ob_start();
                 // =============================
                 // PASANG FILTER SELECT
                 // =============================
-                createSelectFilter(3, jenisMap); // Jenis Informasi
                 createSelectFilter(4); // Retensi
                 createSelectFilter(5, bentukMap); // Bentuk (pakai mapping)
 
