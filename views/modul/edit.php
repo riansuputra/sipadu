@@ -94,7 +94,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                     <option value="kegiatan-sd" <?= $selectedParent === 'kegiatan-sd' ? 'selected' : '' ?>>Kegiatan SD</option>
                                     <option value="kegiatan-smp" <?= $selectedParent === 'kegiatan-smp' ? 'selected' : '' ?>>Kegiatan SMP</option>
                                     <option value="kegiatan-sma" <?= $selectedParent === 'kegiatan-sma' ? 'selected' : '' ?>>Kegiatan SMA</option>
-                                    <option value="kegiatan-widyaprada" <?= $selectedParent === 'kegiatan-widyaprada' ? 'selected' : '' ?>>Kegiatan Widyaprada</option>
+                                    <option value="kegiatan-lainnya" <?= $selectedParent === 'kegiatan-lainnya' ? 'selected' : '' ?>>Kegiatan Lainnya</option>
                                 </select>
 
                                 <?php if (isset($errors['parent_slug'])): ?>

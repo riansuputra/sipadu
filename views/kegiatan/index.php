@@ -99,6 +99,20 @@ ob_start();
                 </a>
             </div>
 
+            <div class="col-sm-6 col-lg-3 p-1">
+                <a href="<?= url('?page=kegiatan-lainnya')  ?>"
+                    class="card card-link card-link-pop">
+
+                    <div class="img-responsive img-responsive-21x9 card-img-top"
+                        style="background-image: url('public/assets/img/default.webp')">
+                    </div>
+
+                    <div class="card-body text-center fw-bold mb-0">
+                        Lainnya
+                    </div>
+                </a>
+            </div>
+
 
         </div>
     </div>

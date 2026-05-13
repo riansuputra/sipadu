@@ -319,6 +319,19 @@ class DashboardController extends BaseController
         ]);
     }
 
+    public function kegiatanLainnya()
+    {
+        $this->auth();
+
+        $modules = $this->moduleModel->getByParentSlug('kegiatan-lainnya');
+
+        $this->view('kegiatan/lainnya', [
+            'user' => $this->user,
+            'role' => $this->role,
+            'modules' => $modules,
+        ]);
+    }
+
     public function kegiatanWp()
     {
         $this->auth();

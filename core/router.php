@@ -277,6 +277,12 @@ function routeRequest()
             (new DashboardController())->kegiatanSma();
             break;
 
+        case 'kegiatan-lainnya':
+            // wajib login
+            require __DIR__ . '/../controllers/DashboardController.php';
+            (new DashboardController())->kegiatanLainnya();
+            break;
+
         case 'kegiatan-widyaprada':
             // wajib login
             require __DIR__ . '/../controllers/DashboardController.php';
