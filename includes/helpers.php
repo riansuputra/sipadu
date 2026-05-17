@@ -43,9 +43,31 @@ if (!function_exists('umurTahun')) {
 }
 
 if (!function_exists('usiaPensiunPegawai')) {
-    function usiaPensiunPegawai($isWidyaprada = false)
+
+    function usiaPensiunPegawai($pangkatGolongan = null)
     {
-        return $isWidyaprada ? 60 : 58;
+        // Default
+        $usiaDefault = 58;
+
+        if (empty($pangkatGolongan)) {
+            return $usiaDefault;
+        }
+
+        // Normalisasi
+        $golongan = strtoupper(trim($pangkatGolongan));
+
+        /**
+         * Cari golongan IV/a ke atas
+         * Contoh yang cocok:
+         * - Pembina, IV/a
+         * - Pembina Tk. I, IV/b
+         * - Pembina Utama, IV/e
+         */
+        if (preg_match('/IV\/[A-E]/', $golongan)) {
+            return 60;
+        }
+
+        return $usiaDefault;
     }
 }
 
@@ -513,4 +535,14 @@ function formatSize($bytes)
         return round($bytes / 1024, 2) . ' KB';
     }
     return $bytes . ' B';
+}
+
+function getPublikasiMediaOptions()
+{
+    return [
+        'foto' => 'Foto',
+        'video' => 'Video',
+        'dokumen' => 'Dokumen',
+        'audio' => 'Audio',
+    ];
 }

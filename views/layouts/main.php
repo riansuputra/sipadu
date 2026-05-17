@@ -167,15 +167,62 @@ $headerImage = $headerImage ?? url('public/assets/img/banner.webp');
             color: #666;
         }
 
-        dt,
-        dd {
-            border-bottom: 1px solid #ccc;
-            padding: 6px 0;
-        }
+
 
         dd {
             margin: 0;
             /* supaya rapi */
+        }
+
+        .notif-dropdown {
+            width: 360px;
+            max-width: calc(100vw - 20px);
+            overflow: hidden;
+        }
+
+        /* MOBILE */
+        @media (max-width: 576px) {
+
+            .notif-dropdown {
+                position: fixed !important;
+
+                top: 60px !important;
+                left: 10px !important;
+                right: 10px !important;
+
+                width: auto !important;
+                max-width: unset !important;
+                min-width: unset !important;
+
+                transform: none !important;
+            }
+
+            .notif-dropdown .card {
+                width: 100%;
+            }
+        }
+
+        .notif-dropdown .list-group-item,
+        .notif-dropdown .text-body,
+        .notif-dropdown .text-secondary {
+            white-space: normal !important;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .notif-dropdown .col {
+            min-width: 0;
+        }
+
+        .notif-list-scroll {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        @media (max-width: 576px) {
+            .notif-list-scroll {
+                max-height: 60vh;
+            }
         }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>

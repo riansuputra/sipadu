@@ -16,6 +16,9 @@ class NotifikasiController extends BaseController
         $this->auth();
         header('Content-Type: application/json');
 
+        // generate notif ulang tahun otomatis
+        $this->model->generateBirthdayNotif();
+
         $total = $this->model->countUnread($this->user['id']);
 
         echo json_encode(['total' => $total]);

@@ -347,12 +347,13 @@ class PublikasiModel
                 tanggal_kegiatan, 
                 lokasi, 
                 jenis_id, 
+                publikasi_media, 
                 pokja_id, 
                 penulis, 
                 kabupaten, 
                 link, 
                 created_by
-            ) VALUES (?,?,?,?,?,?,?,?,?,?)
+            ) VALUES (?,?,?,?,?,?,?,?,?,?,?)
         ");
 
         $stmt->execute([
@@ -361,6 +362,7 @@ class PublikasiModel
             $data['tanggal_kegiatan'],
             $data['lokasi'],
             $data['jenis_id'],
+            $data['publikasi_media'],
             $data['pokja_id'],
             $data['penulis'],
             $data['kabupaten'],
@@ -388,6 +390,7 @@ class PublikasiModel
                 tanggal_kegiatan = ?,
                 lokasi = ?,
                 jenis_id = ?,
+                publikasi_media = ?,
                 penulis = ?,
                 kabupaten = ?,
                 link = ?,
@@ -402,6 +405,7 @@ class PublikasiModel
             $data['tanggal_kegiatan'],
             $data['lokasi'],
             $data['jenis_id'],
+            $data['publikasi_media'],
             $data['penulis'],
             $data['kabupaten'],
             $data['link'],

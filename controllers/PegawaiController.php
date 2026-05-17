@@ -145,7 +145,7 @@ class PegawaiController extends BaseController
         if (!$pegawai) die("Data pegawai tidak ditemukan");
 
         // Tentukan usia pensiun berdasarkan pokja
-        $usiaPensiun = usiaPensiunPegawai(!empty($pegawai['is_widyaprada']));
+        $usiaPensiun = usiaPensiunPegawai($pegawai['pangkat_golongan']);
 
         // Ambil info pensiun lengkap
         $infoPensiun = infoPensiunPegawaiDetail($pegawai['tanggal_lahir'], $usiaPensiun);
@@ -555,7 +555,7 @@ class PegawaiController extends BaseController
         if (!$pegawai) die("Data pegawai tidak ditemukan");
 
         // Tentukan usia pensiun berdasarkan pokja
-        $usiaPensiun = usiaPensiunPegawai(!empty($pegawai['is_widyaprada']));
+        $usiaPensiun = usiaPensiunPegawai($pegawai['pangkat_golongan']);
 
         // Ambil info pensiun lengkap
         $infoPensiun = infoPensiunPegawaiDetail($pegawai['tanggal_lahir'], $usiaPensiun);
@@ -731,7 +731,7 @@ class PegawaiController extends BaseController
         if (!$pegawai) die("Data pegawai tidak ditemukan");
 
         // Tentukan usia pensiun berdasarkan pokja
-        $usiaPensiun = usiaPensiunPegawai(!empty($pegawai['is_widyaprada']));
+        $usiaPensiun = usiaPensiunPegawai($pegawai['pangkat_golongan']);
 
         // Ambil info pensiun lengkap
         $infoPensiun = infoPensiunPegawaiDetail($pegawai['tanggal_lahir'], $usiaPensiun);

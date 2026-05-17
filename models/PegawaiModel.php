@@ -432,6 +432,7 @@ class PegawaiModel
             p.nip,
             p.tanggal_lahir,
             p.tmt_masuk,
+            p.pangkat_golongan,
             p.status_asn,
             j.nama,
             pk.pokja_nama,
@@ -457,7 +458,7 @@ class PegawaiModel
         $hasil = [];
 
         foreach ($rows as $row) {
-            $usiaPensiun = usiaPensiunPegawai(!empty($row['is_widyaprada']));
+            $usiaPensiun = usiaPensiunPegawai($row['pangkat_golongan']);
             $tanggalPensiun = tanggalPensiunPegawai($row['tanggal_lahir'], $usiaPensiun);
 
             if (!$tanggalPensiun) {
@@ -492,6 +493,7 @@ class PegawaiModel
             p.id,
             p.nama,
             p.tanggal_lahir,
+            p.pangkat_golongan,
             pk.pokja_nama,
             CASE 
                 WHEN LOWER(pk.pokja_nama) LIKE '%widyaprada%' THEN 1
@@ -516,7 +518,7 @@ class PegawaiModel
         }
 
         foreach ($rows as $row) {
-            $usiaPensiun = usiaPensiunPegawai(!empty($row['is_widyaprada']));
+            $usiaPensiun = usiaPensiunPegawai($row['pangkat_golongan']);
             $tanggalPensiun = tanggalPensiunPegawai($row['tanggal_lahir'], $usiaPensiun);
 
             if (!$tanggalPensiun) continue;
@@ -544,6 +546,7 @@ class PegawaiModel
             p.tanggal_lahir,
             p.tmt_masuk,
             p.status_asn,
+            p.pangkat_golongan,
             j.nama AS nama_jabatan,
             pk.pokja_nama,
             CASE 
@@ -568,7 +571,7 @@ class PegawaiModel
         $hasil = [];
 
         foreach ($rows as $row) {
-            $usiaPensiun = usiaPensiunPegawai(!empty($row['is_widyaprada']));
+            $usiaPensiun = usiaPensiunPegawai($row['pangkat_golongan']);
             $tanggalPensiun = tanggalPensiunPegawai($row['tanggal_lahir'], $usiaPensiun);
 
             if (!$tanggalPensiun) {
@@ -717,5 +720,19 @@ class PegawaiModel
         $stmt->execute([$pegawaiId]);
 
         return $stmt->fetchColumn();
+    }
+
+    // ambil pegawai yang ulang tahun hari ini
+    public function getBirthdayToday()
+    {
+        $stmt = $this->db->prepare("
+        SELECT id, nama
+        FROM pegawai
+        WHERE DATE_FORMAT(tanggal_lahir, '%m-%d') = DATE_FORMAT(NOW(), '%m-%d')
+    ");
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

@@ -79,6 +79,10 @@ class PublikasiController extends BaseController
             $data = $_POST;
             $data['created_by'] = $this->user['id'];
             $data['pokja_id'] = $this->pokja;
+            $publikasiMedia = $data['publikasi_media'] ?? [];
+            $data['publikasi_media'] = json_encode(
+                $publikasiMedia
+            );
 
             $id = $this->model->insert($data);
 
@@ -100,7 +104,7 @@ class PublikasiController extends BaseController
             ]);
 
             $notif_id = $this->modelNotif->createMaster(
-                'Publikasi Baru | ' . $this->user['pokja_nama'],
+                '[📢] Publikasi Baru | ' . $this->user['pokja_nama'],
                 '"' . $data['judul'] . '"',
                 ''
             );
@@ -171,6 +175,11 @@ class PublikasiController extends BaseController
 
             $data = $_POST;
             $data['updated_by'] = $this->user['id'];
+            $publikasiMedia = $data['publikasi_media'] ?? [];
+
+            $data['publikasi_media'] = json_encode(
+                $publikasiMedia
+            );
 
             if (!$this->model->update($_POST['id'], $data)) {
                 throw new Exception("Update gagal");

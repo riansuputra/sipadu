@@ -187,7 +187,7 @@ ob_start();
                                     <?php foreach ($data as $dt => $d): ?>
 
                                         <?php
-                                        $usiaPensiun = usiaPensiunPegawai(!empty($d['is_widyaprada']));
+                                        $usiaPensiun = usiaPensiunPegawai($d['pangkat_golongan']);
                                         $infoPensiun = infoPensiunPegawai($d['tanggal_lahir'], $usiaPensiun);
                                         ?>
 

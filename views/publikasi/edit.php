@@ -111,7 +111,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                 </div>
                             </div>
                             <div class="mb-3 row">
-                                <label class="col-3 col-form-label required">Jenis</label>
+                                <label class="col-3 col-form-label required">Program Prioritas</label>
                                 <div class="col">
                                     <select class="form-select <?= isset($errors['jenis_id']) ? 'is-invalid' : '' ?>" name="jenis_id" id="jenis_id">
                                         <option value="" disabled <?= empty($data['jenis_id']) ? 'selected' : '' ?>>-- Pilih Jenis --</option>
@@ -125,6 +125,45 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                         </div>
                                     </select>
                                 </div>
+                            </div>
+                            <div class="mb-3">
+
+                                <label class="form-label">
+                                    Media Publikasi
+                                </label>
+
+                                <div class="">
+                                    <?php
+                                    $selectedMedia = json_decode(
+                                        $data['publikasi_media'] ?? '[]',
+                                        true
+                                    );
+                                    ?>
+
+                                    <?php foreach (getPublikasiMediaOptions() as $key => $label): ?>
+
+                                        <label class="form-check form-check-inline">
+
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                name="publikasi_media[]"
+                                                value="<?= $key ?>"
+
+                                                <?= in_array($key, $selectedMedia)
+                                                    ? 'checked'
+                                                    : '' ?>>
+
+                                            <span class="form-check-label">
+                                                <?= $label ?>
+                                            </span>
+
+                                        </label>
+
+                                    <?php endforeach; ?>
+
+                                </div>
+
                             </div>
                             <div class="mb-3 row">
                                 <label class="col-3 col-form-label required">Penulis</label>

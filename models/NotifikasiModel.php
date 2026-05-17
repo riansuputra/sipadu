@@ -52,6 +52,7 @@ class NotifikasiModel
             n.judul,
             n.pesan,
             n.url,
+            n.created_at,
             nu.is_read
         FROM notifikasi n
         JOIN notifikasi_user nu 
@@ -87,17 +88,27 @@ class NotifikasiModel
     }
 
     // ambil user berdasarkan nama role
+    // ambil user berdasarkan role + pokja
     public function getUsersByRoleAndPokja($roles, $keywordPokja)
     {
         $in = str_repeat('?,', count($roles) - 1) . '?';
 
         $stmt = $this->db->prepare("
-        SELECT u.id
+        SELECT DISTINCT u.id
         FROM users u
-        JOIN role r ON u.role_id = r.id
-        JOIN pokja p ON u.pokja_id = p.id
+
+        JOIN user_pokja up 
+            ON u.id = up.user_id
+
+        JOIN role r 
+            ON up.role_id = r.id
+
+        JOIN pokja p 
+            ON up.pokja_id = p.id
+
         WHERE r.kode_role IN ($in)
         AND p.pokja_nama LIKE ?
+        AND up.is_active = 1
     ");
 
         $params = array_merge($roles, ["%$keywordPokja%"]);
@@ -105,5 +116,109 @@ class NotifikasiModel
         $stmt->execute($params);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // generate notif ulang tahun pegawai
+    public function generateBirthdayNotif()
+    {
+        // ambil pegawai ultah hari ini & besok
+        $stmt = $this->db->prepare("
+        SELECT id, nama, tanggal_lahir
+        FROM pegawai
+        WHERE 
+            DATE_FORMAT(tanggal_lahir, '%m-%d') = DATE_FORMAT(NOW(), '%m-%d')
+            OR
+            DATE_FORMAT(tanggal_lahir, '%m-%d') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 DAY), '%m-%d')
+    ");
+
+        $stmt->execute();
+
+        $pegawais = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($pegawais as $pegawai) {
+
+            $today = date('m-d');
+
+            $birthDate = date('m-d', strtotime($pegawai['tanggal_lahir']));
+
+            // =========================
+            // TENTUKAN PESAN
+            // =========================
+
+            // Hari H
+            if ($birthDate == $today) {
+
+                $pesan = 'Hari ini (' . formatTanggalIndonesia(date('Y-m-d')) . ') ' .
+                    $pegawai['nama'] .
+                    ' berulang tahun 🎂';
+            }
+
+            // H-1
+            else {
+
+                $pesan = 'Besok (' . formatTanggalIndonesia(date('Y-m-d', strtotime('+1 day'))) . ') ' .
+                    $pegawai['nama'] .
+                    ' akan berulang tahun 🎂';
+            }
+
+            // =========================
+            // CEK DUPLIKAT
+            // =========================
+            $check = $this->db->prepare("
+            SELECT COUNT(*) as total
+            FROM notifikasi
+            WHERE judul = '[🎉] Ulang Tahun Pegawai'
+            AND pesan = ?
+            AND DATE(created_at) = CURDATE()
+        ");
+
+            $check->execute([$pesan]);
+
+            $exists = $check->fetch(PDO::FETCH_ASSOC);
+
+            // kalau sudah ada → skip
+            if ($exists['total'] > 0) {
+                continue;
+            }
+
+            // =========================
+            // BUAT NOTIF MASTER
+            // =========================
+            $notif_id = $this->createMaster(
+                '[🎉] Ulang Tahun Pegawai',
+                $pesan,
+                null
+            );
+
+            // =========================
+            // AMBIL USER SUPERADMIN & PIMPINAN
+            // =========================
+            $in = "?,?";
+
+            $users = $this->db->prepare("
+            SELECT DISTINCT u.id
+FROM users u
+
+JOIN user_pokja up
+    ON u.id = up.user_id
+
+JOIN role r
+    ON up.role_id = r.id
+
+WHERE r.kode_role IN ($in)
+AND up.is_active = 1
+        ");
+
+            $users->execute(['Superadmin', 'Pimpinan']);
+
+            $listUsers = $users->fetchAll(PDO::FETCH_ASSOC);
+
+            // =========================
+            // ASSIGN KE USER
+            // =========================
+            foreach ($listUsers as $user) {
+                $this->assignToUser($notif_id, $user['id']);
+            }
+        }
     }
 }

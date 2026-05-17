@@ -21,41 +21,39 @@ $user = $_SESSION['user'];
         <!-- END NAVBAR LOGO -->
 
         <div class="navbar-nav flex-row order-md-last me-2">
-            <div class="mt-1">
-                <div class="nav-item dropdown me-2">
-                    <a href="#"
-                        class="btn btn-icon btn-action text-black"
-                        data-bs-toggle="dropdown"
-                        aria-label="Show notifications">
+            <div class="nav-item dropdown me-3">
+                <a href="#"
+                    class="btn btn-icon text-black"
+                    data-bs-toggle="dropdown"
+                    aria-label="Show notifications">
 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
-                            <path d="M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6"></path>
-                            <path d="M9 17v1a3 3 0 0 0 6 0v-1"></path>
-                        </svg>
-                        <span id="notif-count" class="badge bg-red text-red-fg badge-notification badge-pill mt-2">0</span>
-                    </a>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
+                        <path d="M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6"></path>
+                        <path d="M9 17v1a3 3 0 0 0 6 0v-1"></path>
+                    </svg>
+                    <span id="notif-count" class="badge bg-red badge-notification badge-pill mt-2">0</span>
+                </a>
 
-                    <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-end dropdown-menu-card">
-                        <div class="card">
+                <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-end dropdown-menu-card notif-dropdown">
+                    <div class="card">
 
-                            <div class="card-header d-flex">
-                                <h3 class="card-title">Notifikasi</h3>
-                                <div class="btn-close ms-auto" data-bs-dismiss="dropdown"></div>
-                            </div>
+                        <div class="card-header d-flex">
+                            <h3 class="card-title">Notifikasi</h3>
+                            <div class="btn-close ms-auto" data-bs-dismiss="dropdown"></div>
+                        </div>
 
-                            <div id="notif-list" class="list-group list-group-flush list-group-hoverable">
-                                <!-- Notifikasi akan dimuat di sini -->
-                            </div>
+                        <div id="notif-list" class="list-group notif-list-scroll list-group-flush list-group-hoverable">
+                            <!-- Notifikasi akan dimuat di sini -->
+                        </div>
 
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col">
-                                        <a href="#" class="btn btn-2 w-100" onclick="markAllRead()">Tandai semua sudah dibaca</a>
-                                    </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <a href="#" class="btn btn-2 w-100" onclick="markAllRead()">Tandai semua sudah dibaca</a>
                                 </div>
                             </div>
-
                         </div>
+
                     </div>
                 </div>
             </div>

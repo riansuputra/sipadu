@@ -41,7 +41,7 @@ class DashboardController extends BaseController
         }
 
         // Staff & pimpinan default
-        if (in_array($this->role, ['Staff', 'Pimpinan'])) {
+        if (in_array($this->role, ['Staff'])) {
             return $this->view('dashboard/staff', [
                 'user' => $this->user,
                 'role' => $this->role,
@@ -66,6 +66,29 @@ class DashboardController extends BaseController
             ];
 
             return $this->view('dashboard/superadmin', array_merge([
+                'user' => $this->user,
+                'role' => $this->role,
+            ], $dashboardData));
+        }
+
+        // 🔥 SUPERADMIN
+        if ($this->role === 'Pimpinan') {
+            $dashboardData = [
+                'card' => $this->dashboardModel->getDashboardAdmin(),
+                'arsip_chart' => $this->dashboardModel->getArsipChartBulanan(), // 🔥 baru
+                'publikasi_chart' => $this->dashboardModel->getPublikasiChartBulanan(), // 🔥 baru
+                'pegawai_chart' => $this->dashboardModel->getPegawaiChart(), // 🔥 baru
+                'publikasi_pokja_chart' => $this->dashboardModel->getPublikasiPerPokjaChartTahunIni(),
+                'logs' => $this->dashboardModel->getLogDashboard(),
+                'arsiparis' => $this->dashboardModel->getDashboardArsiparis(),
+                'jenis_informasi_chart' => $this->dashboardModel->getJenisInformasiChart(),
+                'dip' => $this->dashboardModel->getDashboardDip(),
+                // nanti:
+                // 'publikasi_chart' => ...
+                // 'pegawai_chart' => ...
+            ];
+
+            return $this->view('dashboard/pimpinan', array_merge([
                 'user' => $this->user,
                 'role' => $this->role,
             ], $dashboardData));
@@ -117,6 +140,7 @@ class DashboardController extends BaseController
                     return $this->view('dashboard/umum', $baseData);
             }
         }
+
 
         $this->abort403();
     }

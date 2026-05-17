@@ -170,7 +170,7 @@ if ($isFiltered) {
                                     <?php foreach ($daftarPensiun as $dt => $d): ?>
 
                                         <?php
-                                        $usiaPensiun = usiaPensiunPegawai(!empty($d['is_widyaprada']));
+                                        $usiaPensiun = usiaPensiunPegawai($d['pangkat_golongan']);
                                         $infoPensiun = infoPensiunPegawai($d['tanggal_lahir'], $usiaPensiun);
                                         ?>
 
