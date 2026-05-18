@@ -131,26 +131,156 @@ unset($_SESSION['errors'], $_SESSION['old']);
 
         <div class="col-12 col-lg-6 col-xl-4 border-top-wide d-flex flex-column justify-content-center">
             <div class="container container-tight mb-7">
+
+                <!-- Logo -->
                 <div class="text-center mb-4">
-                    <img src="public/assets/img/bpmp-tengah.webp" alt="" style="height: 150px; width: auto;">
+                    <img
+                        src="public/assets/img/bpmp-tengah.webp"
+                        alt="Logo BPMP Bali"
+                        style="height: 120px; width: auto;">
                 </div>
-                <div class="card">
-                    <div class="card-body">
 
+                <div class="card shadow-sm">
+                    <div class="card-body p-4">
 
-                        <h3>Verifikasi Google Authenticator</h3>
+                        <!-- Heading -->
+                        <div class="text-center mb-4">
 
-                        <form method="POST" action="<?= url('?page=verify-2fa-process') ?>">
+                            <h2 class="mb-2">
+                                Verifikasi Keamanan
+                            </h2>
 
+                            <p class="text-secondary mb-0">
+                                Masukkan 6 digit kode OTP dari aplikasi
+                                <strong>Google Authenticator</strong>
+                                untuk melanjutkan login ke SIPADU.
+                            </p>
+
+                        </div>
+
+                        <!-- FORM -->
+                        <form
+                            method="POST"
+                            action="<?= url('?page=verify-2fa-process') ?>"
+                            id="otpForm">
+
+                            <!-- hidden input -->
                             <input
-                                type="text"
+                                type="hidden"
                                 name="otp_code"
-                                placeholder="Masukkan kode OTP"
-                                required>
+                                id="otp_code">
 
-                            <button type="submit">
-                                Verifikasi
-                            </button>
+                            <!-- OTP INPUT -->
+                            <div class="mb-4">
+
+                                <label class="form-label fw-bold text-center w-100 mb-3">
+                                    Kode OTP
+                                </label>
+
+                                <div class="my-4">
+
+                                    <div class="row g-4">
+
+                                        <!-- kiri -->
+                                        <div class="col">
+
+                                            <div class="row g-2">
+
+                                                <div class="col">
+                                                    <input
+                                                        type="text"
+                                                        class="form-control form-control-lg text-center otp-input"
+                                                        maxlength="1"
+                                                        inputmode="numeric"
+                                                        pattern="[0-9]*"
+                                                        autocomplete="one-time-code">
+                                                </div>
+
+                                                <div class="col">
+                                                    <input
+                                                        type="text"
+                                                        class="form-control form-control-lg text-center otp-input"
+                                                        maxlength="1"
+                                                        inputmode="numeric"
+                                                        pattern="[0-9]*">
+                                                </div>
+
+                                                <div class="col">
+                                                    <input
+                                                        type="text"
+                                                        class="form-control form-control-lg text-center otp-input"
+                                                        maxlength="1"
+                                                        inputmode="numeric"
+                                                        pattern="[0-9]*">
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <!-- kanan -->
+                                        <div class="col">
+
+                                            <div class="row g-2">
+
+                                                <div class="col">
+                                                    <input
+                                                        type="text"
+                                                        class="form-control form-control-lg text-center otp-input"
+                                                        maxlength="1"
+                                                        inputmode="numeric"
+                                                        pattern="[0-9]*">
+                                                </div>
+
+                                                <div class="col">
+                                                    <input
+                                                        type="text"
+                                                        class="form-control form-control-lg text-center otp-input"
+                                                        maxlength="1"
+                                                        inputmode="numeric"
+                                                        pattern="[0-9]*">
+                                                </div>
+
+                                                <div class="col">
+                                                    <input
+                                                        type="text"
+                                                        class="form-control form-control-lg text-center otp-input"
+                                                        maxlength="1"
+                                                        inputmode="numeric"
+                                                        pattern="[0-9]*">
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <small class="text-secondary d-block text-center">
+                                    Kode OTP berubah setiap 30 detik.
+                                </small>
+
+                            </div>
+
+                            <div class="btn-list flex-nowrap">
+                                <!-- CANCEL -->
+                                <a
+                                    href="<?= url('?page=cancel-2fa') ?>"
+                                    class="btn btn-outline-secondary w-100">
+                                    Batalkan Login
+                                </a>
+
+                                <!-- BUTTON -->
+                                <button
+                                    type="submit"
+                                    class="btn btn-primary w-100">
+                                    Verifikasi & Login
+                                </button>
+
+                            </div>
+
 
                         </form>
 
@@ -158,6 +288,8 @@ unset($_SESSION['errors'], $_SESSION['old']);
                 </div>
             </div>
         </div>
+
+
     </div>
 
     <!-- JS Global -->
@@ -206,6 +338,89 @@ unset($_SESSION['errors'], $_SESSION['old']);
         </script>
         <?php unset($_SESSION['flash']); ?>
     <?php endif; ?>
+    <script>
+        // =========================
+        // OTP INPUT HANDLER
+        // =========================
+
+        const otpInputs = document.querySelectorAll('.otp-input');
+        const hiddenOtp = document.getElementById('otp_code');
+
+        otpInputs.forEach((input, index) => {
+
+            // hanya angka
+            input.addEventListener('input', () => {
+
+                input.value = input.value.replace(/[^0-9]/g, '');
+
+                // next otomatis
+                if (input.value && index < otpInputs.length - 1) {
+                    otpInputs[index + 1].focus();
+                }
+
+                updateOtpValue();
+            });
+
+            // backspace
+            input.addEventListener('keydown', (e) => {
+
+                if (
+                    e.key === 'Backspace' &&
+                    !input.value &&
+                    index > 0
+                ) {
+                    otpInputs[index - 1].focus();
+                }
+
+            });
+
+            // paste OTP
+            input.addEventListener('paste', (e) => {
+
+                e.preventDefault();
+
+                const pastedData = (
+                        e.clipboardData || window.clipboardData
+                    )
+                    .getData('text')
+                    .replace(/\D/g, '')
+                    .slice(0, 6);
+
+                pastedData.split('').forEach((char, i) => {
+
+                    if (otpInputs[i]) {
+                        otpInputs[i].value = char;
+                    }
+
+                });
+
+                updateOtpValue();
+
+                const lastIndex = pastedData.length - 1;
+
+                if (otpInputs[lastIndex]) {
+                    otpInputs[lastIndex].focus();
+                }
+
+            });
+
+        });
+
+        // =========================
+        // UPDATE HIDDEN INPUT
+        // =========================
+
+        function updateOtpValue() {
+
+            let otp = '';
+
+            otpInputs.forEach(input => {
+                otp += input.value;
+            });
+
+            hiddenOtp.value = otp;
+        }
+    </script>
 
 </body>
 

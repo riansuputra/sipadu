@@ -51,6 +51,11 @@ function routeRequest()
             $controller->verify2FAProcess();
             break;
 
+        case 'cancel-2fa':
+            require __DIR__ . '/../controllers/AuthController.php';
+            $controller = new AuthController();
+            $controller->cancel2FA();
+            break;
 
         case 'login-process':
             require __DIR__ . '/../controllers/AuthController.php';

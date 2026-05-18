@@ -517,4 +517,12 @@ class AuthController extends BaseController
 
         $this->redirect('?page=pilih-pokja');
     }
+
+    public function cancel2FA()
+    {
+        unset($_SESSION['pending_login']);
+        unset($_SESSION['2fa_setup_secret']);
+
+        $this->redirect('?page=login');
+    }
 }
