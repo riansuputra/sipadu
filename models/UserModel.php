@@ -490,4 +490,20 @@ class UserModel
 
         return $stmt->fetchAll();
     }
+
+    // ================================
+    // RESET GOOGLE AUTHENTICATOR
+    // ================================
+    public function reset2FA($userId)
+    {
+        $stmt = $this->db->prepare("
+        UPDATE users
+        SET
+            secret_code = NULL,
+            is_2fa_enabled = 0
+        WHERE id = ?
+    ");
+
+        return $stmt->execute([$userId]);
+    }
 }

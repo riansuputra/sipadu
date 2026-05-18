@@ -59,12 +59,30 @@ ob_start();
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">Informasi Arsip</h3>
+                        <?php if (($data['status_otomatis'] ?? '') === 'bukti_diunggah'): ?>
+                            <div class="card-actions">
+                                <a class="btn btn-success btn-sm btn-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-check">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M5 12l5 5l10 -10" />
+                                    </svg>
+                                    Sudah Upload
+                                </a>
+                            </div>
+                        <?php else: ?>
+                            <div class="card-actions">
+                                <a class="btn btn-danger btn-sm btn-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-x">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M18 6l-12 12" />
+                                        <path d="M6 6l12 12" />
+                                    </svg>
+                                    Belum Upload
+                                </a>
+                            </div>
+                        <?php endif; ?>
                     </div>
-                    <?php if (($data['status_otomatis'] ?? '') === 'bukti_diunggah'): ?>
-                        <div class="ribbon bg-success">Sudah Upload</div>
-                    <?php else: ?>
-                        <div class="ribbon bg-danger">Belum Upload</div>
-                    <?php endif; ?>
+
                     <div class="card-body">
                         <h2 class="mb-3">"<?= htmlspecialchars($data['judul'] ?? '-') ?>"</h2>
 
@@ -258,7 +276,7 @@ ob_start();
                     <div class="card-header">
                         <h3 class="card-title">File Bukti Saya</h3>
                         <div class="card-actions">
-                            <a href="#" class="btn btn-primary btn-3" data-bs-toggle="modal" data-bs-target="#modalTambahPeserta">
+                            <a href="#" class="btn btn-primary btn-sm btn-3" data-bs-toggle="modal" data-bs-target="#modalTambahPeserta">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-upload">
                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                     <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />

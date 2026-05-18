@@ -58,6 +58,25 @@ unset($_SESSION['errors'], $_SESSION['old']);
                 <form class="card" method="POST" action="?page=user-update" enctype="multipart/form-data">
                     <div class="card-header">
                         <h3 class="card-title">Form Edit User</h3>
+                        <?php if ($data['is_2fa_enabled']): ?>
+                            <div class="card-actions">
+                                <button
+                                    type="button"
+                                    class="btn btn-warning btn-sm"
+                                    onclick="confirmReset2FA(
+        '<?= url('?page=reset-2fa') ?>',
+        '<?= $data['id'] ?>',
+        '<?= htmlspecialchars($data['nama_lengkap']) ?>'
+    )">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-refresh">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                        <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"></path>
+                                        <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"></path>
+                                    </svg>
+                                    Reset 2FA
+                                </button>
+                            </div>
+                        <?php endif; ?>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -786,6 +805,41 @@ unset($_SESSION['errors'], $_SESSION['old']);
         });
 
     });
+</script>
+
+<script>
+    function confirmReset2FA(url, id, label = '') {
+
+        Swal.fire({
+            title: 'Reset Google Authenticator?',
+            html: label ?
+                `2FA user <strong>${label}</strong> akan direset dan user harus setup ulang saat login.` : 'User harus setup ulang Google Authenticator.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, reset',
+            cancelButtonText: 'Batal',
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+
+                // form POST dinamis
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = url;
+
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'id';
+                input.value = id;
+
+                form.appendChild(input);
+
+                document.body.appendChild(form);
+
+                form.submit();
+            }
+        });
+    }
 </script>
 
 <?php

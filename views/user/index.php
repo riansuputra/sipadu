@@ -70,14 +70,7 @@ ob_start();
                                         <th class="w-1">Status</th>
                                         <th class="w-1">Aksi</th>
                                     </tr>
-                                    <tr id="filterRow">
-                                        <th></th>
-                                        <th><input type="text" placeholder="Cari nama..." class="form-control w-100 h5 m-0"></th>
-                                        <th><input type="text" placeholder="Cari user..." class="form-control w-100 h5 m-0"></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                    </tr>
+
                                 </thead>
                                 <tbody class="table-tbody">
                                     <?php foreach ($data as $dt => $d): ?>
@@ -236,90 +229,6 @@ ob_start();
                 emptyTable: "Tidak ada data",
             },
 
-            initComplete: function() {
-                const api = this.api();
-
-                // =============================
-                // TEXT SEARCH - NAMA INFORMASI
-                // =============================
-                const namaInput = document.querySelector("#filterRow th:nth-child(2) input");
-
-                namaInput.addEventListener("keyup", function() {
-                    api.column(1).search(this.value).draw();
-                });
-
-                const usernameInput = document.querySelector("#filterRow th:nth-child(3) input");
-
-                usernameInput.addEventListener("keyup", function() {
-                    api.column(2).search(this.value).draw();
-                });
-
-                // =============================
-                // HELPER BUAT DROPDOWN FILTER
-                // =============================
-                function createSelectFilter(colIndex, labelMap = null) {
-
-                    const column = api.column(colIndex);
-                    const cell = document.querySelector(
-                        "#filterRow th:nth-child(" + (colIndex + 1) + ")"
-                    );
-
-                    const select = document.createElement("select");
-                    select.className = "form-select h5 w-auto m-0";
-                    select.innerHTML = `<option value="">Semua</option>`;
-                    cell.appendChild(select);
-
-                    const uniqueValues = new Set();
-
-                    // ambil value dari data-search attribute
-                    column.nodes().each(function(node) {
-                        const val = node.getAttribute("data-search") || node.textContent.trim();
-                        if (val) uniqueValues.add(val);
-                    });
-
-                    Array.from(uniqueValues).sort().forEach(function(val) {
-
-                        const label = labelMap && labelMap[val] ?
-                            labelMap[val] :
-                            val;
-
-                        select.innerHTML += `<option value="${val}">${label}</option>`;
-                    });
-
-                    select.addEventListener("change", function() {
-                        const value = this.value;
-
-                        column.search(
-                            value ? '^' + value + '$' : '',
-                            true, // regex
-                            false // smart search off
-                        ).draw();
-                    });
-                }
-
-                // =============================
-                // MAPPING LABEL BENTUK
-                // =============================
-                const bentukMap = {
-                    'hardcopy': 'Hardcopy',
-                    'softcopy': 'Softcopy',
-                    'hardcopy_softcopy': 'HC + SC'
-                };
-
-                const jenisMap = {
-                    'berkala': 'Berkala',
-                    'serta_merta': 'Serta Merta',
-                    'setiap_saat': 'Setiap Saat',
-                    'dikecualikan': 'Dikecualikan'
-                };
-
-                // =============================
-                // PASANG FILTER SELECT
-                // =============================
-                createSelectFilter(4); // Retensi
-                createSelectFilter(5, bentukMap); // Bentuk (pakai mapping)
-
-            }
         });
 
     });

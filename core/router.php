@@ -27,6 +27,31 @@ function routeRequest()
             $controller->login();
             break;
 
+        case 'setup-2fa':
+            require __DIR__ . '/../controllers/AuthController.php';
+            $controller = new AuthController();
+            $controller->setup2FA();
+            break;
+
+        case 'verify-setup-2fa':
+            require __DIR__ . '/../controllers/AuthController.php';
+            $controller = new AuthController();
+            $controller->verifySetup2FA();
+            break;
+
+        case 'verify-2fa':
+            require __DIR__ . '/../controllers/AuthController.php';
+            $controller = new AuthController();
+            $controller->verify2FA();
+            break;
+
+        case 'verify-2fa-process':
+            require __DIR__ . '/../controllers/AuthController.php';
+            $controller = new AuthController();
+            $controller->verify2FAProcess();
+            break;
+
+
         case 'login-process':
             require __DIR__ . '/../controllers/AuthController.php';
             $controller = new AuthController();
@@ -156,6 +181,12 @@ function routeRequest()
 
             require __DIR__ . '/../controllers/UserController.php';
             (new UserController())->active();
+            break;
+
+        case 'reset-2fa':
+            require __DIR__ . '/../controllers/UserController.php';
+            $controller = new UserController();
+            $controller->reset2FA();
             break;
 
         // Tim ================================

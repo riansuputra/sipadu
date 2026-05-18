@@ -122,7 +122,7 @@ ob_start();
                 <div class="card-header">
                     <h3 class="card-title">Informasi Arsip</h3>
                     <div class="card-actions">
-                        <a href="<?= url('?page=edit-arsip&id=' . $data["id"]) ?>" class="btn btn-yellow btn-3">
+                        <a href="<?= url('?page=edit-arsip&id=' . $data["id"]) ?>" class="btn btn-yellow btn-sm btn-3">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                 <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
@@ -291,7 +291,7 @@ ob_start();
                 <div class="card-header">
                     <h3 class="card-title">Tabel Informasi Peserta</h3>
                     <div class="card-actions">
-                        <a href="#" class="btn btn-primary btn-3" data-bs-toggle="modal" data-bs-target="#modalTambahPeserta">
+                        <a href="#" class="btn btn-primary btn-sm btn-3" data-bs-toggle="modal" data-bs-target="#modalTambahPeserta">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-users-plus">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                 <path d="M5 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />

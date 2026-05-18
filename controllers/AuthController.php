@@ -56,6 +56,8 @@ class AuthController extends BaseController
             u.username,
             u.password_hash,
             u.nama_lengkap,
+            u.secret_code,
+            u.is_2fa_enabled,
 
             pe.id AS pegawai_id,
 
@@ -162,11 +164,30 @@ class AuthController extends BaseController
         }
 
         // =========================
-        // LOGIN SESSION
+        // SIMPAN PENDING LOGIN
         // =========================
+        $_SESSION['pending_login'] = [
+            'user' => (array)$user,
+            'akses_pokja' => $aksesPokja,
+            'expired_at' => time() + 300
+        ];
 
-        // dd($user);
-        Auth::login($user);
+        // =========================
+        // BELUM SETUP 2FA
+        // =========================
+        if (
+            empty($user['secret_code']) ||
+            !$user['is_2fa_enabled']
+        ) {
+
+            $this->redirect('?page=setup-2fa');
+        }
+
+        // =========================
+        // SUDAH SETUP 2FA
+        // =========================
+        $this->redirect('?page=verify-2fa');
+        // dd($_SESSION['user']);
 
         // =========================
         // SIMPAN LIST POKJA
@@ -286,5 +307,214 @@ class AuthController extends BaseController
         $this->flash('success', 'Berhasil berpindah akses sebagai ' . $pokja['pokja_nama'] . '.');
 
         $this->redirect('?page=dashboard');
+    }
+
+    public function setup2FA()
+    {
+        $pending = $_SESSION['pending_login'] ?? null;
+
+        if (!$pending) {
+            $this->redirect('?page=login');
+        }
+
+        require_once __DIR__ . '/../core/GoogleAuthenticator.php';
+
+        $ga = new PHPGangsta_GoogleAuthenticator();
+
+        // jika belum ada secret di session
+        if (empty($_SESSION['2fa_setup_secret'])) {
+
+            $_SESSION['2fa_setup_secret'] = $ga->createSecret();
+        }
+
+        $secret = $_SESSION['2fa_setup_secret'];
+
+        $appName = 'SIPADU';
+
+        $username = $pending['user']['username'];
+
+        // format TOTP standar
+        $otpauth = 'otpauth://totp/' .
+            rawurlencode($appName . ':' . $username) .
+            '?secret=' . $secret .
+            '&issuer=' . rawurlencode($appName);
+
+        $qrCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data="
+            . urlencode($otpauth);
+
+        $this->view('auth/setup-2fa', [
+            'secret' => $secret,
+            'qrCodeUrl' => $qrCodeUrl,
+        ]);
+    }
+
+    public function verifySetup2FA()
+    {
+        $pending = $_SESSION['pending_login'] ?? null;
+
+        if (!$pending) {
+            $this->redirect('?page=login');
+        }
+
+        require_once __DIR__ . '/../core/GoogleAuthenticator.php';
+
+        $otp = trim($_POST['otp_code'] ?? '');
+
+        $secret = $_SESSION['2fa_setup_secret'] ?? null;
+
+        if (!$secret) {
+            $this->redirect('?page=setup-2fa');
+        }
+
+        $ga = new PHPGangsta_GoogleAuthenticator();
+
+        $check = $ga->verifyCode($secret, $otp, 2);
+
+        if (!$check) {
+
+            $this->flash('error', 'Kode OTP tidak valid.');
+
+            $this->redirect('?page=setup-2fa');
+        }
+
+        $stmt = $this->db->prepare("
+        UPDATE users
+        SET
+            secret_code = ?,
+            is_2fa_enabled = 1
+        WHERE id = ?
+    ");
+
+        $stmt->execute([
+            $secret,
+            $pending['user']['id']
+        ]);
+
+
+        $user = $pending['user'];
+
+        Auth::login($user);
+
+        $_SESSION['akses_pokja'] = $pending['akses_pokja'];
+
+        // hapus session sementara
+        unset($_SESSION['pending_login']);
+        unset($_SESSION['2fa_setup_secret']);
+
+        $this->flash('success', 'Google Authenticator berhasil diaktifkan.');
+
+        // =========================
+        // FLOW POKJA
+        // =========================
+        if (count($_SESSION['akses_pokja']) === 0) {
+
+            $this->redirect('?page=dashboard');
+        }
+
+        if (count($_SESSION['akses_pokja']) === 1) {
+
+            $_SESSION['active_pokja'] = [
+                'id'   => $_SESSION['akses_pokja'][0]['pokja_id'],
+                'nama' => $_SESSION['akses_pokja'][0]['nama'],
+                'slug' => $_SESSION['akses_pokja'][0]['slug'],
+                'tipe' => $_SESSION['akses_pokja'][0]['tipe'],
+            ];
+
+            $this->redirect('?page=dashboard');
+        }
+
+        $this->redirect('?page=pilih-pokja');
+    }
+
+    public function verify2FA()
+    {
+        $pending = $_SESSION['pending_login'] ?? null;
+
+        if (!$pending) {
+            $this->redirect('?page=login');
+        }
+
+        // expired
+        if (time() > $pending['expired_at']) {
+
+            unset($_SESSION['pending_login']);
+
+            $this->flash('error', 'Session login expired.');
+
+            $this->redirect('?page=login');
+        }
+
+        $this->view('auth/verify-2fa');
+    }
+
+    public function verify2FAProcess()
+    {
+        require_once __DIR__ . '/../core/GoogleAuthenticator.php';
+
+        $pending = $_SESSION['pending_login'] ?? null;
+
+        if (!$pending) {
+            $this->redirect('?page=login');
+        }
+
+        // expired
+        if (time() > $pending['expired_at']) {
+
+            unset($_SESSION['pending_login']);
+
+            $this->flash('error', 'Session login expired.');
+
+            $this->redirect('?page=login');
+        }
+
+        $otp = trim($_POST['otp_code'] ?? '');
+
+        $user = $pending['user'];
+
+        $ga = new PHPGangsta_GoogleAuthenticator();
+
+        $check = $ga->verifyCode(
+            $user['secret_code'],
+            $otp,
+            2
+        );
+
+        if (!$check) {
+
+            $this->flash('error', 'Kode OTP salah.');
+
+            $this->redirect('?page=verify-2fa');
+        }
+
+        // =========================
+        // LOGIN FINAL
+        // =========================
+        Auth::login($user);
+
+        $_SESSION['akses_pokja'] = $pending['akses_pokja'];
+
+        unset($_SESSION['pending_login']);
+
+        // =========================
+        // FLOW POKJA
+        // =========================
+        if (count($_SESSION['akses_pokja']) === 0) {
+
+            $this->redirect('?page=dashboard');
+        }
+
+        if (count($_SESSION['akses_pokja']) === 1) {
+
+            $_SESSION['active_pokja'] = [
+                'id'   => $_SESSION['akses_pokja'][0]['pokja_id'],
+                'nama' => $_SESSION['akses_pokja'][0]['nama'],
+                'slug' => $_SESSION['akses_pokja'][0]['slug'],
+                'tipe' => $_SESSION['akses_pokja'][0]['tipe'],
+            ];
+
+            $this->redirect('?page=dashboard');
+        }
+
+        $this->redirect('?page=pilih-pokja');
     }
 }

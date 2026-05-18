@@ -578,4 +578,53 @@ class UserController extends BaseController
 
         return $this->redirect('?page=user');
     }
+
+    // ================================
+    // RESET 2FA USER
+    // ================================
+    public function reset2FA()
+    {
+        $this->auth();
+
+        $id = (int)($_POST['id'] ?? 0);
+
+        if (!$id) {
+            $this->abort404();
+        }
+
+        $userModel = $this->model('UserModel');
+
+        // optional:
+        // cek user ada atau tidak
+        $user = $userModel->findById($id);
+
+        if (!$user) {
+            $this->abort404();
+        }
+
+        if ($id == $this->user['id']) {
+
+            $this->flash(
+                'error',
+                'Anda tidak dapat mereset 2FA akun sendiri.'
+            );
+
+            $this->redirect('?page=user');
+        }
+
+        // reset 2FA
+        $userModel->reset2FA($id);
+
+        // ================================
+        // LOG ACTIVITY (NANTI)
+        // ================================
+        // $logModel->create(...)
+
+        $this->flash(
+            'success',
+            '2FA user berhasil direset.'
+        );
+
+        $this->redirect('?page=user');
+    }
 }
