@@ -83,6 +83,7 @@ class DashboardController extends BaseController
                 'arsiparis' => $this->dashboardModel->getDashboardArsiparis(),
                 'jenis_informasi_chart' => $this->dashboardModel->getJenisInformasiChart(),
                 'dip' => $this->dashboardModel->getDashboardDip(),
+                'publikasi_terbaru' => $this->publikasiModel->getPublikasiTerbaru(),
                 // nanti:
                 // 'publikasi_chart' => ...
                 // 'pegawai_chart' => ...
@@ -275,6 +276,23 @@ class DashboardController extends BaseController
         $modules = $this->moduleModel->getByParentSlug('link-aplikasi');
 
         $this->view('link_aplikasi/index', [
+            'user' => $this->user,
+            'role' => $this->role,
+            'modules' => $modules,
+        ]);
+    }
+
+    public function link()
+    {
+        $this->auth();
+
+        if (!$this->canAccessPage('link-aplikasi')) {
+            $this->abort403();
+        }
+
+        $modules = $this->moduleModel->getByParentSlug('link-aplikasi');
+
+        $this->view('link_aplikasi/admin', [
             'user' => $this->user,
             'role' => $this->role,
             'modules' => $modules,

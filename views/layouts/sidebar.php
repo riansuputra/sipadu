@@ -71,17 +71,16 @@ $userPages = ['user', 'tambah-user', 'edit-user', 'tambah-tim'];
                             <a class="dropdown-item <?= ($page === 'publikasi' || $page === 'edit-publikasi' || $page === 'edit-status-publikasi-admin') ? 'active' : '' ?>" href="<?= url('?page=publikasi') ?>">
                                 Daftar Publikasi
                             </a>
-                            <a class="dropdown-item <?= $page === 'tambah-publikasi' ? 'active' : '' ?>" href="<?= url('?page=tambah-publikasi') ?>">
-                                Tambah Publikasi
-                            </a>
                             <?php if (
-                                in_array($user['role'], ['Superadmin', 'Pimpinan'])
+                                in_array($user['role'], ['Superadmin'])
                             ): ?>
+                                <a class="dropdown-item <?= $page === 'tambah-publikasi' ? 'active' : '' ?>" href="<?= url('?page=tambah-publikasi') ?>">
+                                    Tambah Publikasi
+                                </a>
                                 <a class="dropdown-item <?= ($page === 'tambah-jenis-publikasi' || $page === 'edit-jenis-publikasi') ? 'active' : '' ?>" href="<?= url('?page=tambah-jenis-publikasi') ?>">
                                     Jenis Publikasi
                                 </a>
                             <?php endif; ?>
-
                         </div>
                     </div>
                 </div>
@@ -112,13 +111,16 @@ $userPages = ['user', 'tambah-user', 'edit-user', 'tambah-tim'];
                             <a class="dropdown-item <?= ($page === 'arsip' || $page === 'detail-arsip' || $page === 'edit-arsip') ? 'active' : '' ?>" href="<?= url('?page=arsip') ?>">
                                 Daftar Arsip
                             </a>
-                            <a class="dropdown-item <?= $page === 'tambah-arsip' ? 'active' : '' ?>" href="<?= url('?page=tambah-arsip') ?>">
-                                Tambah Arsip
-                            </a>
-                            <a class="dropdown-item <?= ($page === 'tambah-jenis-arsip' || $page === 'edit-jenis-arsip') ? 'active' : '' ?>" href="<?= url('?page=tambah-jenis-arsip') ?>">
-                                Jenis Kegiatan
-                            </a>
-
+                            <?php if (
+                                in_array($user['role'], ['Superadmin'])
+                            ): ?>
+                                <a class="dropdown-item <?= $page === 'tambah-arsip' ? 'active' : '' ?>" href="<?= url('?page=tambah-arsip') ?>">
+                                    Tambah Arsip
+                                </a>
+                                <a class="dropdown-item <?= ($page === 'tambah-jenis-arsip' || $page === 'edit-jenis-arsip') ? 'active' : '' ?>" href="<?= url('?page=tambah-jenis-arsip') ?>">
+                                    Jenis Kegiatan
+                                </a>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -151,12 +153,16 @@ $userPages = ['user', 'tambah-user', 'edit-user', 'tambah-tim'];
                             <a class="dropdown-item <?= ($page === 'peraturan' || $page === 'edit-peraturan') ? 'active' : '' ?>" href="<?= url('?page=peraturan') ?>">
                                 Daftar Peraturan
                             </a>
-                            <a class="dropdown-item <?= $page === 'tambah-peraturan' ? 'active' : '' ?>" href="<?= url('?page=tambah-peraturan') ?>">
-                                Tambah Peraturan
-                            </a>
-                            <a class="dropdown-item <?= ($page === 'tambah-jenis-peraturan' || $page === 'edit-jenis-peraturan') ? 'active' : '' ?>" href="<?= url('?page=tambah-jenis-peraturan') ?>">
-                                Jenis Peraturan
-                            </a>
+                            <?php if (
+                                in_array($user['role'], ['Superadmin'])
+                            ): ?>
+                                <a class="dropdown-item <?= $page === 'tambah-peraturan' ? 'active' : '' ?>" href="<?= url('?page=tambah-peraturan') ?>">
+                                    Tambah Peraturan
+                                </a>
+                                <a class="dropdown-item <?= ($page === 'tambah-jenis-peraturan' || $page === 'edit-jenis-peraturan') ? 'active' : '' ?>" href="<?= url('?page=tambah-jenis-peraturan') ?>">
+                                    Jenis Peraturan
+                                </a>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -186,9 +192,13 @@ $userPages = ['user', 'tambah-user', 'edit-user', 'tambah-tim'];
                             <a class="dropdown-item <?= ($page === 'dip' || $page === 'edit-dip') ? 'active' : '' ?>" href="<?= url('?page=dip') ?>">
                                 Daftar DIP
                             </a>
-                            <a class="dropdown-item <?= $page === 'tambah-dip' ? 'active' : '' ?>" href="<?= url('?page=tambah-dip') ?>">
-                                Tambah DIP
-                            </a>
+                            <?php if (
+                                in_array($user['role'], ['Superadmin'])
+                            ): ?>
+                                <a class="dropdown-item <?= $page === 'tambah-dip' ? 'active' : '' ?>" href="<?= url('?page=tambah-dip') ?>">
+                                    Tambah DIP
+                                </a>
+                            <?php endif; ?>
                             <a class="dropdown-item <?= $page === 'dip-print-filter' ? 'active' : '' ?>" href="<?= url('?page=dip-print-filter') ?>">
                                 Cetak DIP
                             </a>
@@ -224,12 +234,16 @@ $userPages = ['user', 'tambah-user', 'edit-user', 'tambah-tim'];
                             <a class="dropdown-item <?= ($page === 'pegawai' || $page === 'edit-pegawai' || $page === 'detail-pegawai') ? 'active' : '' ?>" href="<?= url('?page=pegawai') ?>">
                                 Daftar Pegawai
                             </a>
-                            <a class="dropdown-item <?= $page === 'tambah-pegawai' ? 'active' : '' ?>" href="<?= url('?page=tambah-pegawai') ?>">
-                                Tambah Pegawai
-                            </a>
-                            <a class="dropdown-item <?= ($page === 'tambah-jabatan-pegawai' || $page === 'edit-jabatan-pegawai') ? 'active' : '' ?>" href="<?= url('?page=tambah-jabatan-pegawai') ?>">
-                                Jabatan Pegawai
-                            </a>
+                            <?php if (
+                                in_array($user['role'], ['Superadmin'])
+                            ): ?>
+                                <a class="dropdown-item <?= $page === 'tambah-pegawai' ? 'active' : '' ?>" href="<?= url('?page=tambah-pegawai') ?>">
+                                    Tambah Pegawai
+                                </a>
+                                <a class="dropdown-item <?= ($page === 'tambah-jabatan-pegawai' || $page === 'edit-jabatan-pegawai') ? 'active' : '' ?>" href="<?= url('?page=tambah-jabatan-pegawai') ?>">
+                                    Jabatan Pegawai
+                                </a>
+                            <?php endif; ?>
                             <a class="dropdown-item <?= $page === 'pegawai-pensiun' ? 'active' : '' ?>" href="<?= url('?page=pegawai-pensiun') ?>">
                                 Data Pensiun
                             </a>
@@ -238,8 +252,29 @@ $userPages = ['user', 'tambah-user', 'edit-user', 'tambah-tim'];
                 </div>
             </li>
         <?php endif; ?>
+
         <?php if (
             in_array($user['role'], ['Superadmin', 'Pimpinan'])
+        ): ?>
+            <li class="nav-item <?= $page === 'link' ? 'active bg-primary' : '' ?> mb-2">
+                <a class="nav-link" href="<?= url('?page=link') ?>">
+                    <span class="nav-link-icon d-md-none d-lg-inline-block">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-link">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M9 15l6 -6" />
+                            <path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464" />
+                            <path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463" />
+                        </svg>
+                    </span>
+                    <span class="nav-link-title">
+                        Link Aplikasi
+                    </span>
+                </a>
+            </li>
+        <?php endif; ?>
+
+        <?php if (
+            in_array($user['role'], ['Superadmin'])
         ): ?>
 
             <li class="nav-item dropdown <?= in_array($page, $modulPages) ? 'active' : '' ?> mb-2">
@@ -308,32 +343,6 @@ $userPages = ['user', 'tambah-user', 'edit-user', 'tambah-tim'];
                     </div>
                 </div>
             </li>
-            <!-- <li class="nav-item dropdown <?= in_array($page, $pengaturanPages) ? 'active' : '' ?> mb-2">
-                <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
-                    <span class="nav-link-icon d-md-none d-lg-inline-block">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-settings">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065" />
-                            <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
-                        </svg>
-                    </span>
-                    <span class="nav-link-title">
-                        Pengaturan
-                    </span>
-                </a>
-                <div class="dropdown-menu <?= in_array($page, $pengaturanPages) ? 'show' : '' ?>">
-                    <div class="dropdown-menu-columns">
-                        <div class="dropdown-menu-column">
-                            <a class="dropdown-item <?= $page === 'manajemen-file' ? 'active' : '' ?>" href="<?= url('?page=manajemen-file') ?>">
-                                Kelola File
-                            </a>
-                            <a class="dropdown-item <?= $page === 'backup-data' ? 'active' : '' ?>" href="<?= url('?page=backup-data') ?>">
-                                Backup Data
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </li> -->
         <?php endif; ?>
 
         <li class="nav-item">

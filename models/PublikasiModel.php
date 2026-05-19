@@ -770,4 +770,29 @@ class PublikasiModel
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    // Ambil publikasi terbaru
+    public function getPublikasiTerbaru($limit = 5)
+    {
+        $stmt = $this->db->prepare("
+        SELECT 
+            p.judul,
+            p.is_published,
+            p.created_at,
+            pk.pokja_nama
+        FROM publikasi p
+        LEFT JOIN pokja pk
+            ON pk.id = p.pokja_id
+        WHERE p.deleted_at IS NULL
+        AND p.is_active = 1
+        ORDER BY p.created_at DESC
+        LIMIT :limit
+    ");
+
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

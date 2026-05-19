@@ -177,7 +177,7 @@ class DashboardModel
         }
 
         return [
-            'labels' => ['PNS', 'PPPK', 'Outsourcing'],
+            'labels' => ['PNS', 'PPPK', 'PPNPN/Outsourcing'],
             'data' => [
                 $map['PNS'],
                 $map['PPPK'],

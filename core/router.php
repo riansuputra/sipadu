@@ -283,6 +283,12 @@ function routeRequest()
             (new DashboardController())->link_aplikasi();
             break;
 
+        case 'link':
+            // wajib login
+            require __DIR__ . '/../controllers/DashboardController.php';
+            (new DashboardController())->link();
+            break;
+
         case 'kegiatan':
             // wajib login
             require __DIR__ . '/../controllers/DashboardController.php';
