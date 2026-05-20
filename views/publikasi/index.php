@@ -51,25 +51,30 @@ if ($isFiltered) {
                 <h2 class="page-title">Daftar Publikasi</h2>
             </div>
             <!-- Page title actions -->
-            <div class="col-auto ms-auto d-print-none">
-                <div class="btn-list">
-                    <a href="<?= url('?page=tambah-publikasi') ?>" class="btn btn-primary btn-5 d-none d-sm-inline-block">
+            <?php if (
+                !in_array($user['role'], ['Pimpinan'])
 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">
-                            <path d="M12 5l0 14"></path>
-                            <path d="M5 12l14 0"></path>
-                        </svg>
-                        Tambah Publikasi
-                    </a>
-                    <a href="<?= url('?page=tambah-publikasi') ?>" class="btn btn-primary btn-6 d-sm-none btn-icon">
+            ): ?>
+                <div class="col-auto ms-auto d-print-none">
+                    <div class="btn-list">
+                        <a href="<?= url('?page=tambah-publikasi') ?>" class="btn btn-primary btn-5 d-none d-sm-inline-block">
 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">
-                            <path d="M12 5l0 14"></path>
-                            <path d="M5 12l14 0"></path>
-                        </svg>
-                    </a>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">
+                                <path d="M12 5l0 14"></path>
+                                <path d="M5 12l14 0"></path>
+                            </svg>
+                            Tambah Publikasi
+                        </a>
+                        <a href="<?= url('?page=tambah-publikasi') ?>" class="btn btn-primary btn-6 d-sm-none btn-icon">
+
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">
+                                <path d="M12 5l0 14"></path>
+                                <path d="M5 12l14 0"></path>
+                            </svg>
+                        </a>
+                    </div>
                 </div>
-            </div>
+            <?php endif; ?>
         </div>
     </div>
 </div>
@@ -178,6 +183,15 @@ if ($isFiltered) {
                                         <th class="w-1 text-center">Status <br> Publikasi</th>
                                         <th class="w-1">Aksi</th>
                                     </tr>
+                                    <tr id="filterRow">
+                                        <th></th>
+                                        <th><input type="text" placeholder="Cari nama..." class="form-control w-100 h5 m-0"></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
                                 </thead>
                                 <tbody class="table-tbody">
                                     <?php foreach ($data as $dt => $d): ?>
@@ -234,13 +248,18 @@ if ($isFiltered) {
                                                             <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
                                                         </svg>
                                                     </a>
-                                                    <a href="<?= url('?page=edit-status-publikasi-admin&id=' . $d["id"]) ?>" class="text-warning me-2">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-settings" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Status">
-                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                            <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065" />
-                                                            <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
-                                                        </svg>
-                                                    </a>
+                                                    <?php if (
+                                                        !in_array($user['role'], ['Pimpinan'])
+
+                                                    ): ?>
+                                                        <a href="<?= url('?page=edit-status-publikasi-admin&id=' . $d["id"]) ?>" class="text-warning me-2">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-settings" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Status">
+                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                                <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065" />
+                                                                <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+                                                            </svg>
+                                                        </a>
+                                                    <?php endif; ?>
                                                     <?php if (
                                                         in_array($user['role'], ['Superadmin'])
 
@@ -579,6 +598,8 @@ if ($isFiltered) {
                 // PASANG FILTER SELECT
                 // =============================
                 createSelectFilter(2); // Tahun
+                createSelectFilter(3); // Jenis Informasi
+                createSelectFilter(5); // Bentuk (pakai mapping)
 
             }
         });

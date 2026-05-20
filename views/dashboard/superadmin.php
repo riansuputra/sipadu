@@ -193,38 +193,43 @@ ob_start();
                         <h3 class="card-title">Aktivitas Sistem</h3>
                     </div>
                     <div class="card-body pt-0 pb-0">
-                        <table id="logTable" class="table table-vcenter table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Waktu</th>
-                                    <th>User</th>
-                                    <th>Keterangan</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php if (!empty($logs)): ?>
-                                    <?php foreach ($logs as $log): ?>
+                        <div class="table-responsive">
+                            <table id="logTable" class="table table-vcenter table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Waktu</th>
+                                        <th>User</th>
+                                        <th>Keterangan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if (!empty($logs)): ?>
+                                        <?php foreach ($logs as $log): ?>
+                                            <tr>
+                                                <td class="text-muted">
+                                                    <div>
+                                                        <?= date('H:i', strtotime($log['created_at'])) ?> |
+                                                        <?= formatTanggalIndonesia($log['created_at']) ?>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <?= $log['username'] ?? '-' ?>
+                                                </td>
+                                                <td>
+                                                    <?= $log['description'] ?? '-' ?>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
                                         <tr>
-                                            <td title="<?= date('d M Y H:i', strtotime($log['created_at'])) ?>">
-                                                <?= timeAgo($log['created_at']) ?>
-                                            </td>
-                                            <td>
-                                                <?= $log['username'] ?? '-' ?>
-                                            </td>
-                                            <td>
-                                                <?= $log['description'] ?? '-' ?>
+                                            <td colspan="5" class="text-center text-muted">
+                                                Belum ada aktivitas
                                             </td>
                                         </tr>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
-                                    <tr>
-                                        <td colspan="5" class="text-center text-muted">
-                                            Belum ada aktivitas
-                                        </td>
-                                    </tr>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

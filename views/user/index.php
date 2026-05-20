@@ -66,7 +66,6 @@ ob_start();
                                         <th class="w-1">No</th>
                                         <th>Nama Lengkap</th>
                                         <th>Username</th>
-                                        <th class="w-1">Akses</th>
                                         <th class="w-1">Status</th>
                                         <th class="w-1">Aksi</th>
                                     </tr>
@@ -84,61 +83,6 @@ ob_start();
                                             <td class="">
                                                 <?= htmlspecialchars($d['username'] ?? '-') ?>
                                             </td>
-                                            <td>
-
-                                                <?php
-                                                $aksesDetail = !empty($d['akses_detail'])
-                                                    ? explode(';;', $d['akses_detail'])
-                                                    : [];
-                                                ?>
-
-                                                <?php foreach ($aksesDetail as $item): ?>
-
-                                                    <?php
-
-                                                    [$pokja, $role, $kodeRole, $isDefault]
-                                                        = explode('|', $item);
-
-                                                    $badge = 'bg-secondary';
-
-                                                    switch ($kodeRole) {
-
-                                                        case 'Superadmin':
-                                                            $badge = 'bg-red text-red-fg';
-                                                            break;
-
-                                                        case 'Admin':
-                                                            $badge = 'bg-yellow text-yellow-fg';
-                                                            break;
-
-                                                        case 'Pimpinan':
-                                                            $badge = 'bg-orange text-orange-fg';
-                                                            break;
-
-                                                        case 'Staff':
-                                                            $badge = 'bg-secondary text-secondary-fg';
-                                                            break;
-                                                    }
-
-                                                    ?>
-
-                                                    <div class="badge badge-outline w-100 bg-secondary-lt rounded p-1 mb-1">
-
-                                                        <div class="fw-bold text-center text-dark mb-1">
-                                                            <?= htmlspecialchars($pokja) ?>
-                                                        </div>
-
-                                                        <span class="badge w-100 <?= $badge ?>">
-                                                            <?= htmlspecialchars($kodeRole) ?>
-                                                        </span>
-
-
-                                                    </div>
-
-                                                <?php endforeach; ?>
-
-                                            </td>
-
                                             <td class="">
                                                 <?php if ($d["is_active"] === 1) {
                                                     $bg = "bg-success w-100 text-blue-fg";
@@ -161,6 +105,13 @@ ob_start();
                                                 }
                                                 ?>
                                                 <div class="btn-group w-100">
+                                                    <a href="#" class="text-primary me-1" data-bs-toggle="modal" data-bs-target="#modalAksesRole-<?= $d['id'] ?>">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-eye" data-bs-toggle="tooltip" data-bs-placement="top" title="Akses">
+                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                            <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                                                            <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
+                                                        </svg>
+                                                    </a>
                                                     <a href="<?= url('?page=edit-user&id=' . $d["id"]) ?>" class="text-yellow me-1">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
                                                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -181,6 +132,74 @@ ob_start();
 
                                             </td>
                                         </tr>
+
+                                        <div class="modal fade" id="modalAksesRole-<?= $d['id'] ?>" tabindex="-1">
+                                            <div class="modal-dialog modal-sm modal-dialog-scrollable modal-dialog-centered">
+                                                <div class="modal-content">
+
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Akses Tim/Unit</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                    </div>
+
+                                                    <div class="modal-body text-center">
+
+                                                        <?php
+                                                        $aksesDetail = !empty($d['akses_detail'])
+                                                            ? explode(';;', $d['akses_detail'])
+                                                            : [];
+                                                        ?>
+
+                                                        <?php foreach ($aksesDetail as $item): ?>
+
+                                                            <?php
+
+                                                            [$pokja, $role, $kodeRole, $isDefault]
+                                                                = explode('|', $item);
+
+                                                            $badge = 'bg-secondary';
+
+                                                            switch ($kodeRole) {
+
+                                                                case 'Superadmin':
+                                                                    $badge = 'bg-red text-red-fg';
+                                                                    break;
+
+                                                                case 'Admin':
+                                                                    $badge = 'bg-yellow text-yellow-fg';
+                                                                    break;
+
+                                                                case 'Pimpinan':
+                                                                    $badge = 'bg-orange text-orange-fg';
+                                                                    break;
+
+                                                                case 'Staff':
+                                                                    $badge = 'bg-secondary text-secondary-fg';
+                                                                    break;
+                                                            }
+
+                                                            ?>
+
+                                                            <div class="badge badge-outline bg-secondary-lt rounded p-1 mb-1">
+
+                                                                <div class="fw-bold text-center text-dark mb-1">
+                                                                    <?= htmlspecialchars($pokja) ?>
+                                                                </div>
+
+                                                                <span class="badge w-100 <?= $badge ?>">
+                                                                    <?= htmlspecialchars($kodeRole) ?>
+                                                                </span>
+
+
+                                                            </div>
+
+                                                        <?php endforeach; ?>
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
                                     <?php endforeach; ?>
 
                                 </tbody>

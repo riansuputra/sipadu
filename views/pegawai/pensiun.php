@@ -174,7 +174,7 @@ if ($isFiltered) {
                                                 <?= htmlspecialchars($d['nip'] ?? '-') ?>
                                             </td>
                                             <td class="text-center">
-                                                <?= !empty($d['tanggal_lahir']) ? date('d-m-Y', strtotime($d['tanggal_lahir'])) : '-' ?>
+                                                <?= !empty($d['tanggal_lahir']) ? date('d/m/Y', strtotime($d['tanggal_lahir'])) : '-' ?>
                                             </td>
                                             <td class="text-center">
                                                 <?= htmlspecialchars($d['umur'] ?? '-') ?>

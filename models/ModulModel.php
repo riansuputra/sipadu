@@ -26,6 +26,8 @@ class ModulModel
 
     public function getAllWithRelations()
     {
+        $this->db->exec("SET SESSION group_concat_max_len = 100000");
+
         $stmt = $this->db->prepare("
             SELECT 
                 m.*,

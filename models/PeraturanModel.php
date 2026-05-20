@@ -26,6 +26,8 @@ class PeraturanModel
 
     public function getAll()
     {
+        $this->db->exec("SET SESSION group_concat_max_len = 100000");
+
         $stmt = $this->db->prepare("
             SELECT 
                 p.*,
@@ -52,6 +54,8 @@ class PeraturanModel
 
     public function getFiltered($tahun = null, $jenis = null)
     {
+        $this->db->exec("SET SESSION group_concat_max_len = 100000");
+
         $sql = "
             SELECT 
                 p.*,
@@ -97,6 +101,8 @@ class PeraturanModel
     // ==========================
     public function getById($id)
     {
+        $this->db->exec("SET SESSION group_concat_max_len = 100000");
+
         $stmt = $this->db->prepare("
             SELECT 
                 p.*, 
@@ -295,6 +301,8 @@ class PeraturanModel
 
     public function searchByJudul($judul)
     {
+        $this->db->exec("SET SESSION group_concat_max_len = 100000");
+
         $stmt = $this->db->prepare("
             SELECT 
                 p.*,
@@ -374,6 +382,8 @@ class PeraturanModel
 
     public function filterWithPagination($params, $limit, $offset)
     {
+        $this->db->exec("SET SESSION group_concat_max_len = 100000");
+
         $sql = "
             SELECT 
                 p.*,

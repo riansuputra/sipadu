@@ -62,25 +62,30 @@ if ($tahun || $jenis) {
                 <h2 class="page-title">Daftar Peraturan</h2>
             </div>
             <!-- Page title actions -->
-            <div class="col-auto ms-auto d-print-none">
-                <div class="btn-list">
-                    <a href="<?= url('?page=tambah-peraturan') ?>" class="btn btn-primary btn-5 d-none d-sm-inline-block">
+            <?php if (
+                !in_array($user['role'], ['Pimpinan'])
 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">
-                            <path d="M12 5l0 14"></path>
-                            <path d="M5 12l14 0"></path>
-                        </svg>
-                        Tambah Peraturan
-                    </a>
-                    <a href="<?= url('?page=tambah-peraturan') ?>" class="btn btn-primary btn-6 d-sm-none btn-icon">
+            ): ?>
+                <div class="col-auto ms-auto d-print-none">
+                    <div class="btn-list">
+                        <a href="<?= url('?page=tambah-peraturan') ?>" class="btn btn-primary btn-5 d-none d-sm-inline-block">
 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">
-                            <path d="M12 5l0 14"></path>
-                            <path d="M5 12l14 0"></path>
-                        </svg>
-                    </a>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">
+                                <path d="M12 5l0 14"></path>
+                                <path d="M5 12l14 0"></path>
+                            </svg>
+                            Tambah Peraturan
+                        </a>
+                        <a href="<?= url('?page=tambah-peraturan') ?>" class="btn btn-primary btn-6 d-sm-none btn-icon">
+
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">
+                                <path d="M12 5l0 14"></path>
+                                <path d="M5 12l14 0"></path>
+                            </svg>
+                        </a>
+                    </div>
                 </div>
-            </div>
+            <?php endif; ?>
         </div>
     </div>
 </div>
@@ -271,29 +276,34 @@ if ($tahun || $jenis) {
                                                             <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
                                                         </svg>
                                                     </a>
-                                                    <a href="<?= url('?page=edit-peraturan&id=' . $d["id"]) ?>" class="text-yellow me-1">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
-                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                            <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
-                                                            <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415" />
-                                                            <path d="M16 5l3 3" />
-                                                        </svg>
-                                                    </a>
-                                                    <a class="text-red"
-                                                        onclick="confirmDelete(
+                                                    <?php if (
+                                                        !in_array($user['role'], ['Pimpinan'])
+
+                                                    ): ?>
+                                                        <a href="<?= url('?page=edit-peraturan&id=' . $d["id"]) ?>" class="text-yellow me-1">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
+                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                                <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+                                                                <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415" />
+                                                                <path d="M16 5l3 3" />
+                                                            </svg>
+                                                        </a>
+                                                        <a class="text-red"
+                                                            onclick="confirmDelete(
                                                                 '<?= url('?page=peraturan-delete') ?>',
                                                                 '<?= $d['id'] ?>'
-                                                            )">
+                                                                )">
 
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus">
-                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                            <path d="M4 7l16 0" />
-                                                            <path d="M10 11l0 6" />
-                                                            <path d="M14 11l0 6" />
-                                                            <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                                                            <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-                                                        </svg>
-                                                    </a>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus">
+                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                                <path d="M4 7l16 0" />
+                                                                <path d="M10 11l0 6" />
+                                                                <path d="M14 11l0 6" />
+                                                                <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                                                                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                                                            </svg>
+                                                        </a>
+                                                    <?php endif; ?>
                                                 </div>
 
                                             </td>
@@ -310,30 +320,30 @@ if ($tahun || $jenis) {
                                                     <div class="modal-body">
 
                                                         <dl class="row">
-                                                            <dt class="col-4 text-muted mb-3">Judul</dt>
-                                                            <dt class="col-1 mb-3 col-auto text-end">:</dt>
-                                                            <dd class="col-7 text-bold mb-3"><strong><?= $d['judul'] ?? '-' ?></strong></dd>
-                                                            <dt class="col-4 text-muted mb-3">Lembaga Penerbit</dt>
-                                                            <dt class="col-1 mb-3 col-auto text-end">:</dt>
-                                                            <dd class="col-7 text-bold mb-3"><strong><?= $d['lembaga'] ?? '-' ?></strong></dd>
-                                                            <dt class="col-4 text-muted mb-3">Nomor</dt>
-                                                            <dt class="col-1 mb-3 col-auto text-end">:</dt>
-                                                            <dd class="col-7 text-bold mb-3"><strong><?= $d['nomor'] ?? '-' ?></strong></dd>
-                                                            <dt class="col-4 text-muted mb-3">Tahun</dt>
-                                                            <dt class="col-1 mb-3 col-auto text-end">:</dt>
-                                                            <dd class="col-7 text-bold mb-3"><strong>Tahun <?= $d['tahun_terbit'] ?? '-' ?></strong></dd>
-                                                            <dt class="col-4 text-muted mb-3">Jenis</dt>
-                                                            <dt class="col-1 mb-3 col-auto text-end">:</dt>
-                                                            <dd class="col-7 text-bold mb-3"><strong><?= $d['jenis'] ?></strong></dd>
-                                                            <dt class="col-4 text-muted mb-3">Singkatan Jenis</dt>
-                                                            <dt class="col-1 mb-3 col-auto text-end">:</dt>
-                                                            <dd class="col-7 text-bold mb-3"><strong><?= $d['kode_jenis'] ?? '-' ?></strong></dd>
-                                                            <dt class="col-4 text-muted mb-3">Tempat Penetapan</dt>
-                                                            <dt class="col-1 mb-3 col-auto text-end">:</dt>
-                                                            <dd class="col-7 text-bold mb-3"><strong><?= $d['tempat_penetapan'] ?? '-' ?></strong></dd>
-                                                            <dt class="col-4 text-muted mb-3">Penandatangan</dt>
-                                                            <dt class="col-1 mb-3 col-auto text-end">:</dt>
-                                                            <dd class="col-7 text-bold mb-3"><strong><?= $d['penandatangan'] ?? '-' ?></strong></dd>
+                                                            <dt class="col-4 text-muted mb-1">Judul</dt>
+                                                            <dt class="col-1 mb-1 col-auto text-end">:</dt>
+                                                            <dd class="col-7 text-bold mb-1"><strong><?= $d['judul'] ?? '-' ?></strong></dd>
+                                                            <dt class="col-4 text-muted mb-1">Lembaga Penerbit</dt>
+                                                            <dt class="col-1 mb-1 col-auto text-end">:</dt>
+                                                            <dd class="col-7 text-bold mb-1"><strong><?= $d['lembaga'] ?? '-' ?></strong></dd>
+                                                            <dt class="col-4 text-muted mb-1">Nomor</dt>
+                                                            <dt class="col-1 mb-1 col-auto text-end">:</dt>
+                                                            <dd class="col-7 text-bold mb-1"><strong><?= $d['nomor'] ?? '-' ?></strong></dd>
+                                                            <dt class="col-4 text-muted mb-1">Tahun</dt>
+                                                            <dt class="col-1 mb-1 col-auto text-end">:</dt>
+                                                            <dd class="col-7 text-bold mb-1"><strong>Tahun <?= $d['tahun_terbit'] ?? '-' ?></strong></dd>
+                                                            <dt class="col-4 text-muted mb-1">Jenis</dt>
+                                                            <dt class="col-1 mb-1 col-auto text-end">:</dt>
+                                                            <dd class="col-7 text-bold mb-1"><strong><?= $d['jenis'] ?></strong></dd>
+                                                            <dt class="col-4 text-muted mb-1">Singkatan Jenis</dt>
+                                                            <dt class="col-1 mb-1 col-auto text-end">:</dt>
+                                                            <dd class="col-7 text-bold mb-1"><strong><?= $d['kode_jenis'] ?? '-' ?></strong></dd>
+                                                            <dt class="col-4 text-muted mb-1">Tempat Penetapan</dt>
+                                                            <dt class="col-1 mb-1 col-auto text-end">:</dt>
+                                                            <dd class="col-7 text-bold mb-1"><strong><?= $d['tempat_penetapan'] ?? '-' ?></strong></dd>
+                                                            <dt class="col-4 text-muted mb-1">Penandatangan</dt>
+                                                            <dt class="col-1 mb-1 col-auto text-end">:</dt>
+                                                            <dd class="col-7 text-bold mb-1"><strong><?= $d['penandatangan'] ?? '-' ?></strong></dd>
                                                             <dt class="col-4 text-muted">File</dt>
                                                             <dt class="col-1 col-auto text-end">:</dt>
                                                             <dd class="col-7 text-bold">
@@ -373,7 +383,7 @@ if ($tahun || $jenis) {
                                                                     $fid = $f["id"];
                                                                     if ($ext === 'pdf') {
                                                                         $icon = '
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red icon icon-tabler icons-tabler-outline icon-tabler-file-type-pdf">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red icon icon-inline">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                 <path d="M14 3v4a1 1 0 0 0 1 1h4" />
                                                                 <path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v4" />
@@ -384,7 +394,7 @@ if ($tahun || $jenis) {
                                                             </svg>';
                                                                     } else if ($ext === 'jpg' || $ext === 'jpeg') {
                                                                         $icon = '
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow icon icon-tabler icons-tabler-outline icon-tabler-file-type-jpg">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow icon icon-inline">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                 <path d="M14 3v4a1 1 0 0 0 1 1h4" />
                                                                 <path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v4" />
@@ -394,7 +404,7 @@ if ($tahun || $jenis) {
                                                             </svg>';
                                                                     } else if ($ext === 'png') {
                                                                         $icon = '
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-purple icon icon-tabler icons-tabler-outline icon-tabler-file-type-png">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-purple icon icon-inline">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                 <path d="M14 3v4a1 1 0 0 0 1 1h4" />
                                                                 <path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v4" />
@@ -405,7 +415,7 @@ if ($tahun || $jenis) {
                                                                 ';
                                                                     } else if ($ext === 'doc' || $ext === 'docx') {
                                                                         $icon = '
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-file-type-doc">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-inline">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                 <path d="M14 3v4a1 1 0 0 0 1 1h4" />
                                                                 <path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v4" />
@@ -416,7 +426,7 @@ if ($tahun || $jenis) {
                                                                 ';
                                                                     } else if ($ext === 'ppt' || $ext === 'pptx') {
                                                                         $icon = '
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-orange icon icon-tabler icons-tabler-outline icon-tabler-file-type-ppt">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-orange icon icon-inline">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                 <path d="M14 3v4a1 1 0 0 0 1 1h4" />
                                                                 <path d="M14 3v4a1 1 0 0 0 1 1h4" />
@@ -429,7 +439,7 @@ if ($tahun || $jenis) {
                                                                 ';
                                                                     } else if ($ext === 'xls' || $ext === 'xlsx') {
                                                                         $icon = '
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green icon icon-tabler icons-tabler-outline icon-tabler-file-type-xls">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green icon icon-inline">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                 <path d="M14 3v4a1 1 0 0 0 1 1h4" />
                                                                 <path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v4" />
@@ -441,7 +451,7 @@ if ($tahun || $jenis) {
                                                                 ';
                                                                     } else {
                                                                         $icon = '
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-secondary icon icon-tabler icons-tabler-outline icon-tabler-file-type-png">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-secondary icon icon-inline">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                 <path d="M14 3v4a1 1 0 0 0 1 1h4" />
                                                                 <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2" />
@@ -453,7 +463,7 @@ if ($tahun || $jenis) {
                                                                             <?= $icon ?>&nbsp;<?= shortname($nama, 20) ?>
                                                                         </a>
                                                                         <a href="<?= url('?page=peraturan-file&file=' . $fid . '&id=' . $d['id']) ?>" class="icon icon-sm text-end mt-0" aria-label="Button" data-bs-toggle="tooltip" data-bs-placement="top" title="Download">
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2fb344" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-download">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2fb344" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-inline">
                                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                                 <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
                                                                                 <path d="M7 11l5 5l5 -5" />

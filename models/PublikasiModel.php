@@ -281,6 +281,8 @@ class PublikasiModel
 
     public function getFiltered($tanggalMulai = null, $tanggalSelesai = null, $jenis = null)
     {
+        $this->db->exec("SET SESSION group_concat_max_len = 100000");
+
         $sql = "
             SELECT 
                 publikasi.*,
@@ -772,6 +774,7 @@ class PublikasiModel
     }
 
     // Ambil publikasi terbaru
+    // Ambil publikasi terbaru
     public function getPublikasiTerbaru($limit = 5)
     {
         $stmt = $this->db->prepare("
@@ -779,13 +782,21 @@ class PublikasiModel
             p.judul,
             p.is_published,
             p.created_at,
-            pk.pokja_nama
+            pk.pokja_nama,
+            pj.nama as jenis_publikasi
         FROM publikasi p
+
         LEFT JOIN pokja pk
             ON pk.id = p.pokja_id
+
+        LEFT JOIN publikasi_jenis pj
+            ON pj.id = p.jenis_id
+
         WHERE p.deleted_at IS NULL
         AND p.is_active = 1
+
         ORDER BY p.created_at DESC
+
         LIMIT :limit
     ");
 

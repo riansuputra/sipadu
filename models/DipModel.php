@@ -26,6 +26,8 @@ class DipModel
 
     public function getAll()
     {
+        $this->db->exec("SET SESSION group_concat_max_len = 100000");
+
         $stmt = $this->db->prepare("
             SELECT 
                 dip.*,
@@ -46,6 +48,8 @@ class DipModel
 
     public function getFiltered($tahun = null, $jenis = [])
     {
+        $this->db->exec("SET SESSION group_concat_max_len = 100000");
+
         $sql = "
         SELECT 
             dip.*,
@@ -263,6 +267,8 @@ class DipModel
 
     public function getForPrint($tahun = null, $jenis = [])
     {
+        $this->db->exec("SET SESSION group_concat_max_len = 100000");
+
         $where = [];
         $params = [];
 

@@ -26,6 +26,8 @@ class KegiatanModel
 
     public function getAll()
     {
+        $this->db->exec("SET SESSION group_concat_max_len = 100000");
+
         $stmt = $this->db->prepare("
             SELECT 
                 k.*,
@@ -51,6 +53,8 @@ class KegiatanModel
 
     public function getFiltered($tahun = null, $jenis = null)
     {
+        $this->db->exec("SET SESSION group_concat_max_len = 100000");
+
         $sql = "
             SELECT 
                 p.*,
@@ -267,6 +271,8 @@ class KegiatanModel
 
     public function searchByJudul($judul)
     {
+        $this->db->exec("SET SESSION group_concat_max_len = 100000");
+
         $stmt = $this->db->prepare("
             SELECT 
                 p.*,
@@ -346,6 +352,8 @@ class KegiatanModel
 
     public function filterWithPagination($params, $limit, $offset)
     {
+        $this->db->exec("SET SESSION group_concat_max_len = 100000");
+
         $sql = "
             SELECT 
                 p.*,

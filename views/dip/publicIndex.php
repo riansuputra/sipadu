@@ -108,19 +108,19 @@ if ($tahun || $jenis) {
                                             </td>
                                             <td data-search="<?= $d['jenis_informasi']; ?>">
                                                 <?php if ($d["jenis_informasi"] === "berkala") {
-                                                    $bg = "bg-blue w-100 text-blue-fg";
+                                                    $bg = "bg-blue text-blue-fg";
                                                     $text = 'Berkala';
                                                 } elseif ($d["jenis_informasi"] === "serta_merta") {
-                                                    $bg = "bg-red w-100 text-red-fg";
+                                                    $bg = "bg-red text-red-fg";
                                                     $text = 'Serta Merta';
                                                 } elseif ($d["jenis_informasi"] === "setiap_saat") {
-                                                    $bg = "bg-green w-100 text-green-fg";
+                                                    $bg = "bg-green text-green-fg";
                                                     $text = 'Setiap Saat';
                                                 } else {
-                                                    $bg = "bg-yellow w-100 text-yellow-fg";
+                                                    $bg = "bg-yellow text-yellow-fg";
                                                     $text = 'Dikecualikan';
                                                 } ?>
-                                                <span class="badge <?= $bg ?>"><?= $text ?></span>
+                                                <span class="badge <?= $bg ?> w-100"><?= $text ?></span>
                                             </td>
                                             <td class="">
                                                 <?= htmlspecialchars($d["retensi_arsip"]) ?>
@@ -293,24 +293,24 @@ if ($tahun || $jenis) {
                                                     <div class="modal-body">
 
                                                         <dl class="row bordered">
-                                                            <dt class="col-4 text-muted">Nama Informasi</dt>
-                                                            <dt class="col-1 col-auto text-end">:</dt>
-                                                            <dd class="col-7 text-bold"><strong><?= $d['nama_informasi'] ?? '-' ?></strong></dd>
-                                                            <dt class="col-4 text-muted">Unit Kerja yang Menyediakan</dt>
-                                                            <dt class="col-1 col-auto text-end">:</dt>
-                                                            <dd class="col-7 text-bold"><strong><?= $d['unit_penyedia'] ?? '-' ?></strong></dd>
-                                                            <dt class="col-4 text-muted">Penanggung Jawab Informasi</dt>
-                                                            <dt class="col-1 col-auto text-end">:</dt>
-                                                            <dd class="col-7 text-bold"><strong><?= $d['penanggung_jawab'] ?? '-' ?></strong></dd>
-                                                            <dt class="col-4 text-muted">Waktu dan Tempat Pembuatan</dt>
-                                                            <dt class="col-1 col-auto text-end">:</dt>
-                                                            <dd class="col-7 text-bold"><strong>Tahun <?= $d['tahun_pembuatan'] ?? '-' ?>, <?= $d['tempat_pembuatan'] ?? '-' ?></strong></dd>
-                                                            <dt class="col-4 text-muted">Jenis Informasi</dt>
-                                                            <dt class="col-1 col-auto text-end">:</dt>
-                                                            <dd class="col-7 text-bold"><span class="badge <?= $bg ?>"><?= $text ?></span></dd>
-                                                            <dt class="col-4 text-muted">Bentuk Informasi</dt>
-                                                            <dt class="col-1 col-auto text-end">:</dt>
-                                                            <dd class="col-7 text-bold">
+                                                            <dt class="col-4 mb-1 text-muted">Nama Informasi</dt>
+                                                            <dt class="col-1 mb-1 col-auto text-end">:</dt>
+                                                            <dd class="col-7 mb-1 text-bold"><strong><?= $d['nama_informasi'] ?? '-' ?></strong></dd>
+                                                            <dt class="col-4 mb-1 text-muted">Unit Kerja yang Menyediakan</dt>
+                                                            <dt class="col-1 mb-1 col-auto text-end">:</dt>
+                                                            <dd class="col-7 mb-1 text-bold"><strong><?= $d['unit_penyedia'] ?? '-' ?></strong></dd>
+                                                            <dt class="col-4 mb-1 text-muted">Penanggung Jawab Informasi</dt>
+                                                            <dt class="col-1 mb-1 col-auto text-end">:</dt>
+                                                            <dd class="col-7 mb-1 text-bold"><strong><?= $d['penanggung_jawab'] ?? '-' ?></strong></dd>
+                                                            <dt class="col-4 mb-1 text-muted">Waktu dan Tempat Pembuatan</dt>
+                                                            <dt class="col-1 mb-1 col-auto text-end">:</dt>
+                                                            <dd class="col-7 mb-1 text-bold"><strong>Tahun <?= $d['tahun_pembuatan'] ?? '-' ?>, <?= $d['tempat_pembuatan'] ?? '-' ?></strong></dd>
+                                                            <dt class="col-4 mb-1 text-muted">Jenis Informasi</dt>
+                                                            <dt class="col-1 mb-1 col-auto text-end">:</dt>
+                                                            <dd class="col-7 mb-1 text-bold"><span class="badge <?= $bg ?>"><?= $text ?></span></dd>
+                                                            <dt class="col-4 mb-1 text-muted">Bentuk Informasi</dt>
+                                                            <dt class="col-1 mb-1 col-auto text-end">:</dt>
+                                                            <dd class="col-7 mb-1 text-bold">
                                                                 <?php if ($d["bentuk_informasi"] === "hardcopy") {
                                                                     $badge =
                                                                         '<span class="badge bg-dark text-dark-fg">Hardcopy</span>';
@@ -326,12 +326,12 @@ if ($tahun || $jenis) {
                                                                     <?= $badge ?>
                                                                 </div>
                                                             </dd>
-                                                            <dt class="col-4 text-muted">Retensi Arsip</dt>
-                                                            <dt class="col-1 col-auto text-end">:</dt>
-                                                            <dd class="col-7 text-bold"><strong><?= $d['retensi_arsip'] ?? '-' ?></strong></dd>
-                                                            <dt class="col-4 text-muted">File</dt>
-                                                            <dt class="col-1 col-auto text-end">:</dt>
-                                                            <dd class="col-7 text-bold">
+                                                            <dt class="col-4 mb-1 text-muted">Retensi Arsip</dt>
+                                                            <dt class="col-1 mb-1 col-auto text-end">:</dt>
+                                                            <dd class="col-7 mb-1 text-bold"><strong><?= $d['retensi_arsip'] ?? '-' ?></strong></dd>
+                                                            <dt class="col-4 mb-1 text-muted">File</dt>
+                                                            <dt class="col-1 mb-1 col-auto text-end">:</dt>
+                                                            <dd class="col-7 mb-1 text-bold">
                                                                 <?php
                                                                 $listFile = [];
 
@@ -368,7 +368,7 @@ if ($tahun || $jenis) {
                                                                     $fid = $f["id"];
                                                                     if ($ext === 'pdf') {
                                                                         $icon = '
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red icon icon-tabler icons-tabler-outline icon-tabler-file-type-pdf">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red icon icon-inline">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                 <path d="M14 3v4a1 1 0 0 0 1 1h4" />
                                                                 <path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v4" />
@@ -379,7 +379,7 @@ if ($tahun || $jenis) {
                                                             </svg>';
                                                                     } else if ($ext === 'jpg' || $ext === 'jpeg') {
                                                                         $icon = '
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow icon icon-tabler icons-tabler-outline icon-tabler-file-type-jpg">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow icon icon-inline">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                 <path d="M14 3v4a1 1 0 0 0 1 1h4" />
                                                                 <path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v4" />
@@ -389,7 +389,7 @@ if ($tahun || $jenis) {
                                                             </svg>';
                                                                     } else if ($ext === 'png') {
                                                                         $icon = '
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-purple icon icon-tabler icons-tabler-outline icon-tabler-file-type-png">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-purple icon icon-inline">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                 <path d="M14 3v4a1 1 0 0 0 1 1h4" />
                                                                 <path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v4" />
@@ -400,7 +400,7 @@ if ($tahun || $jenis) {
                                                                 ';
                                                                     } else if ($ext === 'doc' || $ext === 'docx') {
                                                                         $icon = '
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-file-type-doc">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-inline">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                 <path d="M14 3v4a1 1 0 0 0 1 1h4" />
                                                                 <path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v4" />
@@ -411,7 +411,7 @@ if ($tahun || $jenis) {
                                                                 ';
                                                                     } else if ($ext === 'ppt' || $ext === 'pptx') {
                                                                         $icon = '
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-orange icon icon-tabler icons-tabler-outline icon-tabler-file-type-ppt">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-orange icon icon-inline">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                 <path d="M14 3v4a1 1 0 0 0 1 1h4" />
                                                                 <path d="M14 3v4a1 1 0 0 0 1 1h4" />
@@ -424,7 +424,7 @@ if ($tahun || $jenis) {
                                                                 ';
                                                                     } else if ($ext === 'xls' || $ext === 'xlsx') {
                                                                         $icon = '
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green icon icon-tabler icons-tabler-outline icon-tabler-file-type-xls">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green icon icon-inline">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                 <path d="M14 3v4a1 1 0 0 0 1 1h4" />
                                                                 <path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v4" />
@@ -436,7 +436,7 @@ if ($tahun || $jenis) {
                                                                 ';
                                                                     } else {
                                                                         $icon = '
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-secondary icon icon-tabler icons-tabler-outline icon-tabler-file-type-png">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-secondary icon icon-inline">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                 <path d="M14 3v4a1 1 0 0 0 1 1h4" />
                                                                 <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2" />
@@ -449,7 +449,7 @@ if ($tahun || $jenis) {
                                                                             <?= $icon ?>&nbsp;<?= shortname($nama, 20) ?>
                                                                         </a>
                                                                         <a href="<?= url('?page=dip-file&file=' . $fid . '&id=' . $d['id']) ?>" class="icon icon-sm text-end mt-0" aria-label="Button" data-bs-toggle="tooltip" data-bs-placement="top" title="Download">
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2fb344" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-download">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2fb344" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-inline">
                                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                                 <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
                                                                                 <path d="M7 11l5 5l5 -5" />

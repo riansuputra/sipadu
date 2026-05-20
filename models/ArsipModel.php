@@ -170,6 +170,8 @@ class ArsipModel
 
     public function getById($id)
     {
+        $this->db->exec("SET SESSION group_concat_max_len = 100000");
+
         $stmt = $this->db->prepare("
             SELECT 
                 k.*, 
@@ -356,6 +358,8 @@ class ArsipModel
 
     public function searchByJudul($judul)
     {
+        $this->db->exec("SET SESSION group_concat_max_len = 100000");
+
         $stmt = $this->db->prepare("
             SELECT 
                 p.*,
@@ -435,6 +439,8 @@ class ArsipModel
 
     public function filterWithPagination($params, $limit, $offset)
     {
+        $this->db->exec("SET SESSION group_concat_max_len = 100000");
+
         $sql = "
             SELECT 
                 p.*,

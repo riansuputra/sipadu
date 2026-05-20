@@ -14,7 +14,7 @@ ob_start();
 
 <?php
 // dd($_SESSION['user']);
-// dd($user);
+// dd($publikasi_terbaru);
 // echo '<pre>';
 // print_r($user);  
 // echo '</pre>';
@@ -176,13 +176,18 @@ ob_start();
                 </div>
             </div>
 
+
+
             <div class="col-lg-6 col-xl-4">
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
-                            <h3 class="card-title">Komposisi Pegawai Aktif</h3>
+                            <h3 class="card-title">Komposisi Publikasi</h3>
+                            <div class="ms-auto mb-3 text-muted">
+                                <?= date('Y') ?>
+                            </div>
                         </div>
-                        <div id="chart-pegawai" class="position-relative" style="min-height: 240px;"></div>
+                        <div id="chart-komposisi-publikasi" class="position-relative" style="min-height: 240px;"></div>
                     </div>
                 </div>
             </div>
@@ -193,38 +198,83 @@ ob_start();
                         <h3 class="card-title">Aktivitas Sistem</h3>
                     </div>
                     <div class="card-body pt-0 pb-0">
-                        <table id="logTable" class="table table-vcenter table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Waktu</th>
-                                    <th>User</th>
-                                    <th>Keterangan</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php if (!empty($logs)): ?>
-                                    <?php foreach ($logs as $log): ?>
+                        <div class="table-responsive">
+                            <table id="logTable" class="table table-vcenter table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Waktu</th>
+                                        <th>Judul Publikasi</th>
+                                        <th>Tim/Unit</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if (!empty($publikasi_terbaru)) : ?>
+                                        <?php foreach ($publikasi_terbaru as $item) : ?>
+
+                                            <tr>
+
+                                                <!-- WAKTU -->
+                                                <td class="text-muted">
+                                                    <div>
+                                                        <?= formatTanggalIndonesia($item['created_at']) ?>
+                                                    </div>
+
+                                                    <small>
+                                                        <?= date('H:i', strtotime($item['created_at'])) ?>
+                                                    </small>
+                                                </td>
+
+                                                <!-- JUDUL -->
+                                                <td>
+                                                    <div>
+
+                                                        <?= htmlspecialchars($item['judul']) ?>
+                                                    </div>
+                                                    <small class="text-muted">
+                                                        <?= htmlspecialchars($item['jenis_publikasi']) ?>
+                                                    </small>
+                                                </td>
+
+                                                <!-- POKJA -->
+                                                <td>
+                                                    <span class="badge w-100 bg-blue-lt">
+                                                        <?= htmlspecialchars($item['pokja_nama'] ?? '-') ?>
+                                                    </span>
+                                                </td>
+
+                                                <!-- STATUS -->
+                                                <td>
+                                                    <?php if ($item['is_published']) : ?>
+
+                                                        <span class="badge w-100 bg-green-lt">
+                                                            Published
+                                                        </span>
+
+                                                    <?php else : ?>
+
+                                                        <span class="badge w-100 bg-yellow-lt">
+                                                            Draft
+                                                        </span>
+
+                                                    <?php endif; ?>
+                                                </td>
+
+                                            </tr>
+
+                                        <?php endforeach; ?>
+                                    <?php else : ?>
+
                                         <tr>
-                                            <td title="<?= date('d M Y H:i', strtotime($log['created_at'])) ?>">
-                                                <?= timeAgo($log['created_at']) ?>
-                                            </td>
-                                            <td>
-                                                <?= $log['username'] ?? '-' ?>
-                                            </td>
-                                            <td>
-                                                <?= $log['description'] ?? '-' ?>
+                                            <td colspan="4" class="text-center text-muted">
+                                                Belum ada publikasi
                                             </td>
                                         </tr>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
-                                    <tr>
-                                        <td colspan="5" class="text-center text-muted">
-                                            Belum ada aktivitas
-                                        </td>
-                                    </tr>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
+
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -232,13 +282,10 @@ ob_start();
             <div class="col-md-12 col-lg-4">
                 <div class="card">
                     <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <h3 class="card-title">Komposisi Publikasi</h3>
-                            <div class="ms-auto mb-3 text-muted">
-                                <?= date('Y') ?>
-                            </div>
+                        <div class="d-flex align-items-center mb-5">
+                            <h3 class="card-title">Komposisi Pegawai Aktif</h3>
                         </div>
-                        <div id="chart-komposisi-publikasi" class="position-relative" style="min-height: 240px;"></div>
+                        <div id="chart-pegawai" class="position-relative"></div>
                     </div>
                 </div>
             </div>
@@ -423,7 +470,7 @@ ob_start();
                 chart: {
                     type: "donut",
                     fontFamily: "inherit",
-                    height: 240,
+                    height: 300,
                     sparkline: {
                         enabled: true
                     },
