@@ -232,7 +232,7 @@ if ($isFiltered) {
                                                         </svg>
                                                     </a>
                                                     <?php if (
-                                                        !in_array($user['role'], ['Pimpinan'])
+                                                        !in_array($user['role'], ['Pimpinan', 'Staff'])
 
                                                     ): ?>
                                                         <a href="<?= url('?page=edit-status-publikasi&id=' . $d["id"]) ?>" class="text-warning me-2">

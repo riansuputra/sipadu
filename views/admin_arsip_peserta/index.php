@@ -43,29 +43,22 @@ if ($isFiltered) {
 }
 ?>
 
+<div class="page-header d-print-none" aria-label="Page header">
+    <div class="container-xl">
+        <div class="row g-2 align-items-center">
+            <div class="col">
+                <!-- Page pre-title -->
+                <div class="page-pretitle">Arsip</div>
+                <h2 class="page-title">Arsip Saya</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="page-body mt-3" id="page-content" style="display:none;">
 
     <div class="container-xl">
         <div class="row row-cards ">
-
-            <div class="col-12 mb-0">
-                <div class="row">
-                    <div class="col">
-                        <ol class="breadcrumb text-center" aria-label="breadcrumbs">
-                            <li class="breadcrumb-item">
-                                <a href="<?= url('?page=dashboard') ?>" class="h3 mb-0">
-                                    🏠︎&nbsp;&nbsp;Dashboard
-                                </a>
-                            </li>
-                            <li class="breadcrumb-item active">
-                                <a href="<?= url('?page=arsip-saya') ?>" class="h3 mb-0">
-                                    Arsip
-                                </a>
-                            </li>
-                        </ol>
-                    </div>
-                </div>
-            </div>
 
             <div class="col-12">
 
@@ -76,7 +69,7 @@ if ($isFiltered) {
                             <form method="get">
                                 <div class="row">
 
-                                    <input type="hidden" name="page" value="arsip-saya">
+                                    <input type="hidden" name="page" value="admin-arsip-saya">
 
                                     <div class="col-lg-2">
                                         <label class="form-label">Tanggal Mulai : </label>
@@ -105,7 +98,7 @@ if ($isFiltered) {
                                             </svg>
                                             Filter
                                         </button>
-                                        <a href="<?= url('?page=arsip-saya') ?>" class="btn btn-secondary">
+                                        <a href="<?= url('?page=admin-arsip-saya') ?>" class="btn btn-secondary">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-refresh">
                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                                 <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"></path>
@@ -138,7 +131,7 @@ if ($isFiltered) {
                                     </svg>
                                     <?= $deskripsi ?>
                                 </div>
-                                <a href="<?= url('?page=arsip-saya') ?>" class="btn btn-sm btn-info">
+                                <a href="<?= url('?page=admin-arsip-saya') ?>" class="btn btn-sm btn-info">
                                     Reset Filter
                                 </a>
                             </div>
@@ -224,7 +217,7 @@ if ($isFiltered) {
                                                     <?php endif; ?>
                                                 </td>
                                                 <td class="text-center">
-                                                    <a href="<?= url('?page=detail-arsip-saya&id=' . $d['arsip_id']) ?>" class="btn btn-sm btn-primary">
+                                                    <a href="<?= url('?page=admin-detail-arsip-saya&id=' . $d['arsip_id']) ?>" class="btn btn-sm btn-primary">
                                                         Detail
                                                     </a>
                                                 </td>
@@ -431,4 +424,4 @@ if ($isFiltered) {
 $content = ob_get_clean();
 
 // Load layout utama
-require __DIR__ . '/../layouts/main.php';
+require __DIR__ . '/../layouts/admin.php';

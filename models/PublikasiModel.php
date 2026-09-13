@@ -349,7 +349,7 @@ class PublikasiModel
                 tanggal_kegiatan, 
                 lokasi, 
                 jenis_id, 
-                publikasi_media, 
+                kategori, 
                 pokja_id, 
                 penulis, 
                 kabupaten, 
@@ -364,7 +364,7 @@ class PublikasiModel
             $data['tanggal_kegiatan'],
             $data['lokasi'],
             $data['jenis_id'],
-            $data['publikasi_media'],
+            $data['kategori'],
             $data['pokja_id'],
             $data['penulis'],
             $data['kabupaten'],
@@ -392,7 +392,7 @@ class PublikasiModel
                 tanggal_kegiatan = ?,
                 lokasi = ?,
                 jenis_id = ?,
-                publikasi_media = ?,
+                kategori = ?,
                 penulis = ?,
                 kabupaten = ?,
                 link = ?,
@@ -407,7 +407,7 @@ class PublikasiModel
             $data['tanggal_kegiatan'],
             $data['lokasi'],
             $data['jenis_id'],
-            $data['publikasi_media'],
+            $data['kategori'],
             $data['penulis'],
             $data['kabupaten'],
             $data['link'],
@@ -418,6 +418,10 @@ class PublikasiModel
 
     public function updatePublish($id, $data)
     {
+        if (empty($id) || !is_numeric($id)) {
+            return false;
+        }
+
         $sql = "
         UPDATE publikasi SET
             is_published = :is_published,
@@ -432,12 +436,12 @@ class PublikasiModel
         $stmt = $this->db->prepare($sql);
 
         return $stmt->execute([
-            ':id'            => $id,
-            ':is_published'  => $data['is_published'],
-            ':published_at'  => $data['published_at'],
-            ':published_by'  => $data['published_by'],
+            ':id' => (int) $id,
+            ':is_published' => (int) $data['is_published'],
+            ':published_at' => $data['published_at'],
+            ':published_by' => $data['published_by'],
             ':publish_links' => $data['publish_links'],
-            ':updated_by'    => $data['updated_by']
+            ':updated_by' => (int) $data['updated_by']
         ]);
     }
 

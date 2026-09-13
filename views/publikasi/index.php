@@ -179,13 +179,17 @@ if ($isFiltered) {
                                         <th class="text-center">Judul</th>
                                         <th class="w-1 text-center">Unit/Tim</th>
                                         <th class="w-1 text-center">Program <br>Prioritas</th>
-                                        <th class="w-1 text-center">Tanggal <br> Kegiatan</th>
+                                        <th class="w-1 text-center">Tanggal <br>Kegiatan</th>
+                                        <th class="w-1 text-center">Tgl. Upload<br>di Sipadu</th>
+                                        <th class="w-1 text-center">Tgl. Unggah<br>Publikasi</th>
                                         <th class="w-1 text-center">Status <br> Publikasi</th>
                                         <th class="w-1">Aksi</th>
                                     </tr>
                                     <tr id="filterRow">
                                         <th></th>
                                         <th><input type="text" placeholder="Cari nama..." class="form-control w-100 h5 m-0"></th>
+                                        <th></th>
+                                        <th></th>
                                         <th></th>
                                         <th></th>
                                         <th></th>
@@ -214,8 +218,29 @@ if ($isFiltered) {
                                             <td class="">
                                                 <?= htmlspecialchars($d['jenis'] ?? '-') ?>
                                             </td>
-                                            <td class="">
+                                            <td class="text-center">
                                                 <?= htmlspecialchars(date('d/m/Y', strtotime($d['tanggal_kegiatan']))) ?? '-' ?>
+                                            </td>
+                                            <td class="text-center">
+                                                <?= !empty($d['created_at'])
+                                                    ? htmlspecialchars(date('d/m/Y', strtotime($d['created_at'])))
+                                                    : '-' ?>
+                                            </td>
+                                            <td class="text-center">
+                                                <?php if (
+                                                    !empty($d['is_published']) &&
+                                                    !empty($d['published_at'])
+                                                ): ?>
+
+                                                    <?= htmlspecialchars(
+                                                        date('d/m/Y', strtotime($d['published_at']))
+                                                    ) ?>
+
+                                                <?php else: ?>
+
+                                                    -
+
+                                                <?php endif; ?>
                                             </td>
                                             <td class=" text-nowrap">
                                                 <?php if ($d['is_published'] === 1): ?>
@@ -305,6 +330,46 @@ if ($isFiltered) {
                                                     <div class="modal-body">
 
                                                         <dl class="row">
+                                                            <?php
+
+                                                            // ==========================
+                                                            // KATEGORI / JENIS MEDIA
+                                                            // ==========================
+                                                            $media = [];
+
+                                                            if (!empty($d['kategori'])) {
+
+                                                                $decodedMedia = json_decode(
+                                                                    $d['kategori'],
+                                                                    true
+                                                                );
+
+                                                                if (is_array($decodedMedia)) {
+                                                                    $media = $decodedMedia;
+                                                                } else {
+                                                                    // Kompatibilitas data lama jika masih string biasa
+                                                                    $media = [$d['kategori']];
+                                                                }
+                                                            }
+
+
+                                                            // ==========================
+                                                            // LINK PUBLIKASI
+                                                            // ==========================
+                                                            $publishLinks = [];
+
+                                                            if (!empty($d['publish_links'])) {
+
+                                                                $decodedLinks = json_decode(
+                                                                    $d['publish_links'],
+                                                                    true
+                                                                );
+
+                                                                if (is_array($decodedLinks)) {
+                                                                    $publishLinks = $decodedLinks;
+                                                                }
+                                                            }
+                                                            ?>
                                                             <dt class="col-4 text-muted mb-1">Program Prioritas</dt>
                                                             <dt class="col-1 mb-1 col-auto text-end">:</dt>
                                                             <dd class="col-7 text-bold mb-1"><strong><?= $d['jenis'] ?></strong></dd>
@@ -314,9 +379,13 @@ if ($isFiltered) {
                                                             <dt class="col-4 text-muted mb-1">Deskripsi</dt>
                                                             <dt class="col-1 mb-1 col-auto text-end">:</dt>
                                                             <dd class="col-7 text-bold mb-1"><?= $d['deskripsi'] ?? '-' ?></dd>
-                                                            <dt class="col-4 text-muted mb-1">Tanggal</dt>
+                                                            <dt class="col-4 text-muted mb-1">Tanggal Kegiatan</dt>
                                                             <dt class="col-1 mb-1 col-auto text-end">:</dt>
-                                                            <dd class="col-7 text-bold mb-1"><strong><?= htmlspecialchars(date('d/m/Y', strtotime($d['tanggal_kegiatan'])) ?? '-') ?></strong></dd>
+                                                            <dd class="col-7 text-bold mb-1">
+                                                                <?= !empty($d['tanggal_kegiatan'])
+                                                                    ? htmlspecialchars(date('d/m/Y', strtotime($d['tanggal_kegiatan'])))
+                                                                    : '-' ?>
+                                                            </dd>
                                                             <dt class="col-4 text-muted mb-1">Lokasi</dt>
                                                             <dt class="col-1 mb-1 col-auto text-end">:</dt>
                                                             <dd class="col-7 text-bold mb-1"><strong>Tahun <?= $d['lokasi'] ?? '-' ?></strong></dd>
@@ -326,18 +395,109 @@ if ($isFiltered) {
                                                             <dt class="col-4 text-muted mb-1">Penulis</dt>
                                                             <dt class="col-1 mb-1 col-auto text-end">:</dt>
                                                             <dd class="col-7 text-bold mb-1"><?= $d['penulis'] ?? '-' ?></dd>
+                                                            <dt class="col-4 text-muted mb-1">Status Publikasi</dt>
+                                                            <dt class="col-1 mb-1 col-auto text-end">:</dt>
+                                                            <dd class="col-7 text-bold mb-1"><?= $d['is_published'] === 1 ? 'Sudah' : 'Belum' ?></dd>
                                                             <dt class="col-4 text-muted mb-1">Jenis Media</dt>
                                                             <dt class="col-1 mb-1 col-auto text-end">:</dt>
-                                                            <dd class="col-7 text-bold mb-1"><?php foreach ($media as $m): ?><?= ucfirst($m) ?> |<?php endforeach; ?></dd>
+
+                                                            <dd class="col-7 text-bold mb-1">
+
+                                                                <?php if (!empty($media)): ?>
+
+                                                                    <?php foreach ($media as $index => $m): ?>
+
+                                                                        <?= htmlspecialchars(ucfirst($m)) ?>
+
+                                                                        <?php if ($index < count($media) - 1): ?>
+                                                                            |
+                                                                        <?php endif; ?>
+
+                                                                    <?php endforeach; ?>
+
+                                                                <?php else: ?>
+
+                                                                    -
+
+                                                                <?php endif; ?>
+
+                                                            </dd>
                                                             <dt class="col-4 text-muted mb-1">Link Media</dt>
                                                             <dt class="col-1 mb-1 col-auto text-end">:</dt>
-                                                            <dd class="col-7 text-bold mb-1"><a href="<?= empty($d['link']) ? ''  : $d['link'] ?>"><?= empty($d['link']) ? ''  : $d['link'] ?></a></dd>
-                                                            <dt class="col-4 text-muted mb-1">Tanggal Dibuat</dt>
+
+                                                            <dd class="col-7 text-bold mb-1">
+
+                                                                <?php if (!empty($publishLinks)): ?>
+
+                                                                    <?php foreach ($publishLinks as $link): ?>
+
+                                                                        <?php
+                                                                        $platform = $link['platform'] ?? '';
+                                                                        $url = $link['url'] ?? '';
+                                                                        ?>
+
+                                                                        <?php if (!empty($url)): ?>
+
+                                                                            <div class="mb-1">
+
+                                                                                <strong>
+                                                                                    <?= htmlspecialchars(ucfirst($platform ?: 'Link')) ?>
+                                                                                </strong>
+
+                                                                                :
+
+                                                                                <a
+                                                                                    href="<?= htmlspecialchars($url) ?>"
+                                                                                    target="_blank"
+                                                                                    rel="noopener noreferrer">
+
+                                                                                    <?= htmlspecialchars($url) ?>
+
+                                                                                </a>
+
+                                                                            </div>
+
+                                                                        <?php endif; ?>
+
+                                                                    <?php endforeach; ?>
+
+                                                                <?php else: ?>
+
+                                                                    -
+
+                                                                <?php endif; ?>
+
+                                                            </dd>
+
+
+                                                            <dt class="col-4 text-muted mb-1">Tanggal Upload di SIPADU</dt>
                                                             <dt class="col-1 mb-1 col-auto text-end">:</dt>
-                                                            <dd class="col-7 text-bold mb-1"> <?= isset($d['created_at']) && $d['created_at'] ? htmlspecialchars(date('d/m/Y', strtotime($d['created_at']))) : '-' ?></dd>
-                                                            <dt class="col-4 text-muted mb-1">Tanggal Diperbarui</dt>
+                                                            <dd class="col-7 text-bold mb-1">
+                                                                <?= !empty($d['created_at'])
+                                                                    ? htmlspecialchars(date('H:i - d/m/Y', strtotime($d['created_at'])))
+                                                                    : '-' ?>
+                                                            </dd>
+
+                                                            <dt class="col-4 text-muted mb-1">Tanggal Unggah Publikasi</dt>
                                                             <dt class="col-1 mb-1 col-auto text-end">:</dt>
-                                                            <dd class="col-7 text-bold mb-1"> <?= isset($d['updated_at']) && $d['updated_at'] ? htmlspecialchars(date('d/m/Y', strtotime($d['updated_at']))) : '-' ?></dd>
+                                                            <dd class="col-7 text-bold mb-1">
+
+                                                                <?php if (
+                                                                    !empty($d['is_published']) &&
+                                                                    !empty($d['published_at'])
+                                                                ): ?>
+
+                                                                    <?= htmlspecialchars(
+                                                                        date('H:i - d/m/Y', strtotime($d['published_at']))
+                                                                    ) ?>
+
+                                                                <?php else: ?>
+
+                                                                    -
+
+                                                                <?php endif; ?>
+
+                                                            </dd>
                                                             <dt class="col-4 text-muted">File</dt>
                                                             <dt class="col-1 col-auto text-end">:</dt>
                                                             <dd class="col-7 text-bold">
@@ -599,7 +759,7 @@ if ($isFiltered) {
                 // =============================
                 createSelectFilter(2); // Tahun
                 createSelectFilter(3); // Jenis Informasi
-                createSelectFilter(5); // Bentuk (pakai mapping)
+                createSelectFilter(7); // Bentuk (pakai mapping)
 
             }
         });

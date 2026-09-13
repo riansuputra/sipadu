@@ -252,20 +252,35 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
     }
 </script>
 <?php if (isset($_SESSION['flash'])): ?>
+
+    <?php
+    $status = $_SESSION['flash']['status'];
+
+    $titles = [
+        'success' => 'Berhasil!',
+        'error'   => 'Gagal!',
+        'warning' => 'Perhatian!',
+        'info'    => 'Informasi'
+    ];
+
+    $title = $titles[$status] ?? 'Informasi';
+    ?>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
             Swal.fire({
-                icon: '<?= $_SESSION['flash']['status'] ?>',
-                title: <?= $_SESSION['flash']['status'] === 'success'
-                            ? "'Berhasil!'"
-                            : "'Gagal!'" ?>,
-                text: <?= json_encode($_SESSION['flash']['message']) ?>
+                icon: <?= json_encode($status) ?>,
+                title: <?= json_encode($title) ?>,
+                text: <?= json_encode($_SESSION['flash']['message']) ?>,
+                confirmButtonText: 'OK'
             });
 
         });
     </script>
+
     <?php unset($_SESSION['flash']); ?>
+
 <?php endif; ?>
 
 <script>
@@ -307,25 +322,15 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
     function removeLink(button) {
         button.closest('.input-group').remove();
     }
-
-    document.querySelectorAll('form').forEach((f, i) => {
-        f.addEventListener("submit", function() {
-            console.log("FORM KE", i);
-            console.log(this.querySelectorAll('[name="publish_links[]"]').length);
-        });
-    });
 </script>
 
 <script>
     function submitApprove(id) {
-        const form = document.getElementById("form-approve-" + id);
-
-        console.log(
-            "input dalam form:",
-            form.querySelectorAll('[name="publish_links[]"]').length
+        const form = document.getElementById(
+            "form-approve-" + id
         );
 
-        form.submit();
+        form.requestSubmit();
     }
 </script>
 

@@ -299,6 +299,94 @@ class DashboardController extends BaseController
         ]);
     }
 
+    public function link_kegiatan()
+    {
+        $this->auth();
+
+        $this->view('kegiatan/admin', [
+            'user' => $this->user,
+            'role' => $this->role,
+        ]);
+    }
+
+    public function linkKegiatanPaud()
+    {
+        $this->auth();
+
+        $modules = $this->moduleModel->getByParentSlug('kegiatan-paud');
+
+        $this->view('kegiatan/admin-paud', [
+            'user' => $this->user,
+            'role' => $this->role,
+            'modules' => $modules,
+        ]);
+    }
+
+    public function linkKegiatanSd()
+    {
+        $this->auth();
+
+        $modules = $this->moduleModel->getByParentSlug('kegiatan-sd');
+
+        $this->view('kegiatan/admin-sd', [
+            'user' => $this->user,
+            'role' => $this->role,
+            'modules' => $modules,
+        ]);
+    }
+
+    public function linkKegiatanSmp()
+    {
+        $this->auth();
+
+        $modules = $this->moduleModel->getByParentSlug('kegiatan-smp');
+
+        $this->view('kegiatan/admin-smp', [
+            'user' => $this->user,
+            'role' => $this->role,
+            'modules' => $modules,
+        ]);
+    }
+
+    public function linkKegiatanSma()
+    {
+        $this->auth();
+
+        $modules = $this->moduleModel->getByParentSlug('kegiatan-sma');
+
+        $this->view('kegiatan/admin-sma', [
+            'user' => $this->user,
+            'role' => $this->role,
+            'modules' => $modules,
+        ]);
+    }
+
+    public function linkKegiatanLainnya()
+    {
+        $this->auth();
+
+        $modules = $this->moduleModel->getByParentSlug('kegiatan-lainnya');
+
+        $this->view('kegiatan/admin-lainnya', [
+            'user' => $this->user,
+            'role' => $this->role,
+            'modules' => $modules,
+        ]);
+    }
+
+    public function linkKegiatanWp()
+    {
+        $this->auth();
+
+        $modules = $this->moduleModel->getByParentSlug('kegiatan-widyaprada');
+
+        $this->view('kegiatan/admin-widyaprada', [
+            'user' => $this->user,
+            'role' => $this->role,
+            'modules' => $modules,
+        ]);
+    }
+
     public function kegiatan()
     {
         $this->auth();

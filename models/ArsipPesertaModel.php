@@ -322,6 +322,10 @@ class ArsipPesertaModel
 
     public function getArsipSaya($pegawaiId, $filters = [])
     {
+        $this->db->exec("
+        SET SESSION group_concat_max_len = 100000
+    ");
+
         $sql = "
         SELECT 
             ap.id AS arsip_peserta_id,
@@ -333,6 +337,28 @@ class ArsipPesertaModel
             a.lokasi,
             a.kategori,
             aj.nama AS jenis_nama,
+
+            (
+                SELECT COUNT(*)
+                FROM arsip_peserta ap_total
+                WHERE ap_total.arsip_id = a.id
+                AND ap_total.is_active = 1
+            ) AS total_peserta,
+
+            (
+                SELECT GROUP_CONCAT(
+                    DISTINCT pg.nama
+                    ORDER BY pg.nama ASC
+                    SEPARATOR '##'
+                )
+                FROM arsip_peserta ap_nama
+
+                INNER JOIN pegawai pg
+                    ON pg.id = ap_nama.pegawai_id
+
+                WHERE ap_nama.arsip_id = a.id
+                AND ap_nama.is_active = 1
+            ) AS nama_peserta,
 
             COUNT(apf.id) AS total_file,
 
@@ -395,7 +421,9 @@ class ArsipPesertaModel
     // Ambil detail arsip saya + file arsip utama (concat)
     public function getDetailArsipSaya($arsipId, $pegawaiId)
     {
-        $this->db->exec("SET SESSION group_concat_max_len = 100000");
+        $this->db->exec("
+        SET SESSION group_concat_max_len = 100000
+    ");
 
         $stmt = $this->db->prepare("
         SELECT 
@@ -413,15 +441,46 @@ class ArsipPesertaModel
 
             aj.nama AS jenis_nama,
 
+            (
+                SELECT COUNT(*)
+                FROM arsip_peserta ap_total
+                WHERE ap_total.arsip_id = a.id
+                AND ap_total.is_active = 1
+            ) AS total_peserta,
+
+            (
+                SELECT GROUP_CONCAT(
+                    DISTINCT pg.nama
+                    ORDER BY pg.nama ASC
+                    SEPARATOR '##'
+                )
+                FROM arsip_peserta ap_nama
+
+                INNER JOIN pegawai pg
+                    ON pg.id = ap_nama.pegawai_id
+
+                WHERE ap_nama.arsip_id = a.id
+                AND ap_nama.is_active = 1
+            ) AS nama_peserta,
+
             GROUP_CONCAT(
-                DISTINCT CONCAT(af.id, '|', af.nama_file, '|', af.path_file, '|', af.tipe_file)
+                DISTINCT CONCAT(
+                    af.id,
+                    '|',
+                    af.nama_file,
+                    '|',
+                    af.path_file,
+                    '|',
+                    af.tipe_file
+                )
                 SEPARATOR '##'
             ) AS files,
 
             COUNT(DISTINCT apf.id) AS total_file,
 
             CASE 
-                WHEN COUNT(DISTINCT apf.id) > 0 THEN 'bukti_diunggah'
+                WHEN COUNT(DISTINCT apf.id) > 0
+                    THEN 'bukti_diunggah'
                 ELSE 'diundang'
             END AS status_otomatis
 
@@ -451,6 +510,7 @@ class ArsipPesertaModel
             ap.id,
             ap.pegawai_id,
             ap.arsip_id,
+            a.id,
             a.judul,
             a.deskripsi,
             a.tanggal_mulai,
@@ -463,7 +523,11 @@ class ArsipPesertaModel
         LIMIT 1
     ");
 
-        $stmt->execute([$arsipId, $pegawaiId]);
+        $stmt->execute([
+            $arsipId,
+            $pegawaiId
+        ]);
+
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 

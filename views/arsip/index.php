@@ -248,9 +248,9 @@ if ($isFiltered) {
                                     <tr>
                                         <th class="w-1">No</th>
                                         <th class="text-center">Judul Arsip <br>& Lokasi</th>
-                                        <th class="w-1 text-center">Jenis</th>
-                                        <th class="text-center" style="width: 20%;">Tanggal</th>
+                                        <th class="text-center">Tanggal</th>
                                         <th class="w-1 text-center">Total <br> Peserta</th>
+                                        <th class="text-center">Nama Peserta</th>
                                         <th class="text-center">Status <br> Upload</th>
                                         <th class="w-1 text-center">Aksi</th>
                                     </tr>
@@ -274,14 +274,37 @@ if ($isFiltered) {
                                                 <div class="fw-semibold"><?= htmlspecialchars($d['judul'] ?? '-') ?></div>
                                                 <div class="text-muted small"><?= htmlspecialchars($d['lokasi'] ?? '-') ?></div>
                                             </td>
-                                            <td class="">
-                                                <?= htmlspecialchars($d['jenis'] ?? '-') ?>
-                                            </td>
+
                                             <td class="text-center">
-                                                <?= formatTanggalRangeTable($d['tanggal_mulai'] ?? null, $d['tanggal_selesai'] ?? null) ?>
+                                                <?= htmlspecialchars(date('d-m-Y', strtotime($d['tanggal_mulai'] ?? null))) ?> s/d <br> <?= htmlspecialchars(date('d-m-Y', strtotime($d['tanggal_selesai'] ?? null))) ?>
                                             </td>
                                             <td class="text-center">
                                                 <?= htmlspecialchars($d['total_peserta'] ?? '-') ?>
+                                            </td>
+                                            <td>
+                                                <?php
+                                                $namaPeserta = !empty($d['nama_peserta'])
+                                                    ? explode('##', $d['nama_peserta'])
+                                                    : [];
+                                                ?>
+
+                                                <?php if (!empty($namaPeserta)): ?>
+
+                                                    <ol class="mb-0 ps-3">
+                                                        <?php foreach ($namaPeserta as $nama): ?>
+                                                            <li>
+                                                                <?= htmlspecialchars($nama) ?>
+                                                            </li>
+                                                        <?php endforeach; ?>
+                                                    </ol>
+
+                                                <?php else: ?>
+
+                                                    <div class="text-center text-muted">
+                                                        -
+                                                    </div>
+
+                                                <?php endif; ?>
                                             </td>
                                             <td class="text-center" data-search="<?= ((int)($d['upload_selesai'] ?? 0) === 1) ? '1' : '0' ?>">
                                                 <?php if ((int)($d['upload_selesai'] ?? 0) === 1): ?>
@@ -473,7 +496,6 @@ if ($isFiltered) {
                 // =============================
                 // PASANG FILTER SELECT
                 // =============================
-                createSelectFilter(2); // Tahun
                 createSelectFilter(5, uploadMap);
 
             }

@@ -170,7 +170,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
 
                         </div>
                         <!-- Secret Manual -->
-                        <div class="mb-2">
+                        <!-- <div class="mb-2">
 
                             <label class="form-label fw-bold">
                                 Kode Manual
@@ -199,7 +199,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                 Gunakan kode ini jika QR Code tidak dapat discan.
                             </small>
 
-                        </div>
+                        </div> -->
                         <hr class="mb-2 mt-2">
 
                         <!-- OTP FORM -->

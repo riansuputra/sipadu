@@ -35,6 +35,8 @@ class PublikasiController extends BaseController
             $jenisFilter
         );
 
+        // dd($data);
+
         $this->view('publikasi/index', [
             'data' => $data,
             'jenis' => $jenis,
@@ -79,9 +81,11 @@ class PublikasiController extends BaseController
             $data = $_POST;
             $data['created_by'] = $this->user['id'];
             $data['pokja_id'] = $this->pokja;
-            $publikasiMedia = $data['publikasi_media'] ?? [];
-            $data['publikasi_media'] = json_encode(
-                $publikasiMedia
+            $kategori = $data['kategori'] ?? [];
+
+            $data['kategori'] = json_encode(
+                array_values($kategori),
+                JSON_UNESCAPED_UNICODE
             );
 
             $id = $this->model->insert($data);
@@ -152,6 +156,8 @@ class PublikasiController extends BaseController
     {
         $this->auth();
 
+        // dd($_POST, $_FILES);
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return $this->redirect('?page=publikasi');
         }
@@ -174,11 +180,15 @@ class PublikasiController extends BaseController
             $this->model->beginTransaction();
 
             $data = $_POST;
-            $data['updated_by'] = $this->user['id'];
-            $publikasiMedia = $data['publikasi_media'] ?? [];
 
-            $data['publikasi_media'] = json_encode(
-                $publikasiMedia
+            $data['updated_by'] = $this->user['id'];
+
+            // Publikasi media
+            $kategori = $data['kategori'] ?? [];
+
+            $data['kategori'] = json_encode(
+                array_values($kategori),
+                JSON_UNESCAPED_UNICODE
             );
 
             if (!$this->model->update($_POST['id'], $data)) {
@@ -309,107 +319,386 @@ class PublikasiController extends BaseController
     {
         $this->auth();
 
-        // ======================
-        // VALIDASI INPUT
-        // ======================
-        $errors = [];
+        // ========================================
+        // VALIDASI REQUEST
+        // ========================================
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
-        if (empty($_POST['id']) || !ctype_digit($_POST['id'])) {
-            $errors['id'] = "ID publikasi tidak valid";
+            $this->flash(
+                'error',
+                'Request tidak valid'
+            );
+
+            return $this->redirect('?page=publikasi');
         }
 
-        $isPublished = isset($_POST['is_published']) ? 1 : 0;
+        if (
+            empty($_POST['id']) ||
+            !ctype_digit((string) $_POST['id'])
+        ) {
+
+            $this->flash(
+                'error',
+                'ID publikasi tidak valid'
+            );
+
+            return $this->redirect('?page=publikasi');
+        }
+
+        $id = (int) $_POST['id'];
+
+        // Setelah ID diketahui, semua hasil proses
+        // dikembalikan ke halaman status publikasi
+        $statusUrl =
+            '?page=edit-status-publikasi-admin&id=' . $id;
+
+        // ========================================
+        // AMBIL DATA LAMA
+        // ========================================
+        $current = $this->model->getById($id);
+
+        if (!$current) {
+
+            $this->flash(
+                'error',
+                'Data publikasi tidak ditemukan'
+            );
+
+            return $this->redirect('?page=publikasi');
+        }
+
+        $statusLama = (int) $current['is_published'];
+        $statusBaru = isset($_POST['is_published']) ? 1 : 0;
+
+        // ========================================
+        // LINK LAMA
+        // ========================================
+        $currentLinks = [];
+
+        if (!empty($current['publish_links'])) {
+
+            $decoded = json_decode(
+                $current['publish_links'],
+                true
+            );
+
+            if (is_array($decoded)) {
+                $currentLinks = $decoded;
+            }
+        }
+
+        // Normalisasi link lama
+        $normalizedCurrentLinks = [];
+
+        foreach ($currentLinks as $link) {
+
+            $platform = trim($link['platform'] ?? '');
+            $url = trim($link['url'] ?? '');
+
+            if ($platform === '' && $url === '') {
+                continue;
+            }
+
+            $normalizedCurrentLinks[] = [
+                'platform' => $platform,
+                'url' => $url
+            ];
+        }
+
+        // ========================================
+        // VALIDASI LINK BARU
+        // ========================================
+        $errors = [];
+
         $linksInput = $_POST['publish_links'] ?? [];
         $cleanLinks = [];
 
-        if ($isPublished) {
+        // Link wajib hanya jika status akhirnya published
+        if ($statusBaru === 1) {
+
+            $allowedPlatforms = [
+                'youtube',
+                'facebook',
+                'instagram',
+                'website',
+                'drive'
+            ];
 
             foreach ($linksInput as $link) {
 
-                $platform = trim($link['platform'] ?? '');
-                $url      = trim($link['url'] ?? '');
+                $platform = trim(
+                    $link['platform'] ?? ''
+                );
 
-                if (!$platform && !$url) continue;
+                $url = trim(
+                    $link['url'] ?? ''
+                );
 
-                if (!$platform) {
-                    $errors['publish_links'] = "Platform wajib dipilih";
+                // Input kosong seluruhnya, abaikan
+                if ($platform === '' && $url === '') {
+                    continue;
+                }
+
+                // Platform dipilih tapi URL kosong
+                if ($platform !== '' && $url === '') {
+
+                    $errors['publish_links'] =
+                        'Link publikasi wajib diisi';
+
                     break;
                 }
 
-                if (!$url) {
-                    $errors['publish_links'] = "Link publikasi wajib diisi";
+                // URL ada tapi platform belum dipilih
+                if ($platform === '' && $url !== '') {
+
+                    $errors['publish_links'] =
+                        'Platform publikasi wajib dipilih';
+
                     break;
                 }
 
-                if (!filter_var($url, FILTER_VALIDATE_URL)) {
-                    $errors['publish_links'] = "Format URL tidak valid";
+                // Platform tidak valid
+                if (
+                    !in_array(
+                        $platform,
+                        $allowedPlatforms,
+                        true
+                    )
+                ) {
+
+                    $errors['publish_links'] =
+                        'Platform publikasi tidak valid';
+
+                    break;
+                }
+
+                // URL tidak valid
+                if (
+                    !filter_var(
+                        $url,
+                        FILTER_VALIDATE_URL
+                    )
+                ) {
+
+                    $errors['publish_links'] =
+                        'Format URL publikasi tidak valid';
+
                     break;
                 }
 
                 $cleanLinks[] = [
                     'platform' => $platform,
-                    'url'      => $url
+                    'url' => $url
                 ];
             }
 
-            if (empty($cleanLinks)) {
-                $errors['publish_links'] = "Minimal 1 link publish wajib diisi jika publish aktif";
+            // Published wajib memiliki minimal satu link
+            if (
+                empty($cleanLinks) &&
+                empty($errors)
+            ) {
+
+                $errors['publish_links'] =
+                    'Minimal 1 link publikasi wajib diisi';
             }
         }
 
+        // ========================================
+        // VALIDASI GAGAL
+        // ========================================
         if (!empty($errors)) {
-            $_SESSION["errors"] = $errors;
-            $_SESSION["old"] = $_POST;
-            return $this->redirect('?page=edit-status-publikasi&id=' . $_POST['id']);
+
+            $_SESSION['errors'] = $errors;
+            $_SESSION['old'] = $_POST;
+
+            // Ambil pesan error pertama
+            $errorMessage = reset($errors);
+
+            $this->flash(
+                'error',
+                $errorMessage
+            );
+
+            return $this->redirect(
+                $statusUrl
+            );
         }
 
-        // ======================
-        // DATA UPDATE
-        // ======================
+        // ========================================
+        // DETEKSI PERUBAHAN LINK
+        // ========================================
+        $linkBerubah = false;
+
+        if ($statusBaru === 1) {
+
+            $linkBerubah =
+                $cleanLinks !== $normalizedCurrentLinks;
+        }
+
+        // ========================================
+        // 0 → 0
+        // TIDAK ADA PERUBAHAN
+        // ========================================
+        if (
+            $statusLama === 0 &&
+            $statusBaru === 0
+        ) {
+
+            $this->flash(
+                'info',
+                'Tidak ada perubahan status publikasi'
+            );
+
+            return $this->redirect(
+                $statusUrl
+            );
+        }
+
+        // ========================================
+        // 1 → 1 DAN LINK TIDAK BERUBAH
+        // ========================================
+        if (
+            $statusLama === 1 &&
+            $statusBaru === 1 &&
+            !$linkBerubah
+        ) {
+
+            $this->flash(
+                'info',
+                'Tidak ada perubahan pada status atau link publikasi'
+            );
+
+            return $this->redirect(
+                $statusUrl
+            );
+        }
+
+        // ========================================
+        // SIAPKAN DATA UPDATE
+        // ========================================
         $data = [
-            'is_published' => $isPublished,
-            'published_at' => $isPublished ? date('Y-m-d H:i:s') : null,
-            'published_by' => $isPublished ? $this->user['id'] : null,
-            'updated_by'   => $this->user['id']
+            'is_published' => $statusBaru,
+            'updated_by' => $this->user['id']
         ];
 
-        if (!empty($cleanLinks)) {
-            $data['publish_links'] = json_encode($cleanLinks);
+        // ========================================
+        // 0 → 1
+        // PUBLISH
+        // ========================================
+        if (
+            $statusLama === 0 &&
+            $statusBaru === 1
+        ) {
+
+            $data['published_at'] =
+                date('Y-m-d H:i:s');
+
+            $data['published_by'] =
+                $this->user['id'];
+
+            $data['publish_links'] =
+                json_encode(
+                    $cleanLinks,
+                    JSON_UNESCAPED_SLASHES
+                );
+
+            $pesanSukses =
+                'Publikasi berhasil dipublish';
         }
 
-        // ======================
-        // TRY TRANSACTION
-        // ======================
+        // ========================================
+        // 1 → 0
+        // UNPUBLISH
+        // ========================================
+        elseif (
+            $statusLama === 1 &&
+            $statusBaru === 0
+        ) {
+
+            // Karena tidak lagi published,
+            // tanggal dan user publish dihapus
+            $data['published_at'] = null;
+            $data['published_by'] = null;
+
+            // Link lama tetap disimpan
+            $data['publish_links'] =
+                $current['publish_links'];
+
+            $pesanSukses =
+                'Publikasi berhasil di-unpublish';
+        }
+
+        // ========================================
+        // 1 → 1
+        // LINK BERUBAH
+        // ========================================
+        else {
+
+            // Karena isi publikasi diperbarui,
+            // published_at menjadi waktu terbaru
+            $data['published_at'] =
+                date('Y-m-d H:i:s');
+
+            // User terakhir yang memperbarui publish
+            $data['published_by'] =
+                $this->user['id'];
+
+            $data['publish_links'] =
+                json_encode(
+                    $cleanLinks,
+                    JSON_UNESCAPED_SLASHES
+                );
+
+            $pesanSukses =
+                'Link publikasi berhasil diperbarui';
+        }
+
+        // ========================================
+        // UPDATE DATABASE
+        // ========================================
         try {
 
             $this->model->beginTransaction();
 
-            if (!$this->model->updatePublish($_POST['id'], $data)) {
-                throw new Exception("Gagal update publish");
+            if (
+                !$this->model->updatePublish(
+                    $id,
+                    $data
+                )
+            ) {
+
+                throw new Exception(
+                    'Gagal mengubah status publikasi'
+                );
             }
 
             $this->model->commit();
 
             $this->flash(
                 'success',
-                $isPublished
-                    ? 'Publikasi berhasil dipublish'
-                    : 'Publikasi di-unpublish'
+                $pesanSukses
             );
         } catch (Throwable $e) {
 
             $this->model->rollback();
 
-            debug_log($e->getMessage(), 'APPROVE ERROR');
+            debug_log(
+                $e->getMessage(),
+                'APPROVE PUBLIKASI ERROR'
+            );
 
-            $this->flash('error', 'Gagal mengubah status publikasi');
+            $this->flash(
+                'error',
+                'Gagal mengubah status publikasi'
+            );
         }
 
-        if (in_array($this->role, ['Superadmin', 'Admin'])) {
-            return $this->redirect('?page=publikasi');
-        } else {
-            return $this->redirect('?page=timpublikasi');
-        }
+        // ========================================
+        // SELALU KEMBALI KE HALAMAN STATUS
+        // ========================================
+        return $this->redirect(
+            $statusUrl
+        );
     }
 
     public function publicIndex()

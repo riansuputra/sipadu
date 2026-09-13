@@ -10,13 +10,32 @@ class NotifikasiModel
     }
 
     // Buat notifikasi master
-    public function createMaster($judul, $pesan, $url)
-    {
+    // Buat notifikasi master
+    public function createMaster(
+        $judul,
+        $pesan,
+        $url = null,
+        $type = null,
+        $ref_id = null
+    ) {
         $stmt = $this->db->prepare("
-            INSERT INTO notifikasi (judul, pesan, url)
-            VALUES (?, ?, ?)
-        ");
-        $stmt->execute([$judul, $pesan, $url]);
+        INSERT INTO notifikasi (
+            judul,
+            pesan,
+            url,
+            type,
+            ref_id
+        )
+        VALUES (?, ?, ?, ?, ?)
+    ");
+
+        $stmt->execute([
+            $judul,
+            $pesan,
+            $url,
+            $type,
+            $ref_id
+        ]);
 
         return $this->db->lastInsertId();
     }
@@ -48,21 +67,28 @@ class NotifikasiModel
     {
         $stmt = $this->db->prepare("
         SELECT 
-            n.id as notif_id,
+            n.id AS notif_id,
             n.judul,
             n.pesan,
             n.url,
+            n.type,
+            n.ref_id,
             n.created_at,
             nu.is_read
         FROM notifikasi n
-        JOIN notifikasi_user nu 
+
+        JOIN notifikasi_user nu
             ON n.id = nu.notifikasi_id
+
         WHERE nu.user_id = ?
+
         ORDER BY n.created_at DESC
+
         LIMIT 5
     ");
 
         $stmt->execute([$user_id]);
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     // Tandai 1 notif
@@ -220,5 +246,63 @@ AND up.is_active = 1
                 $this->assignToUser($notif_id, $user['id']);
             }
         }
+    }
+
+    // Ambil user berdasarkan daftar pegawai
+    public function getUserIdsByPegawaiIds(array $pegawaiIds)
+    {
+        if (empty($pegawaiIds)) {
+            return [];
+        }
+
+        // Hilangkan ID duplikat
+        $pegawaiIds = array_values(
+            array_unique(
+                array_map('intval', $pegawaiIds)
+            )
+        );
+
+        $placeholders = implode(
+            ',',
+            array_fill(0, count($pegawaiIds), '?')
+        );
+
+        $stmt = $this->db->prepare("
+        SELECT DISTINCT id
+        FROM users
+        WHERE pegawai_id IN ($placeholders)
+    ");
+
+        $stmt->execute($pegawaiIds);
+
+        return array_map(
+            'intval',
+            $stmt->fetchAll(PDO::FETCH_COLUMN)
+        );
+    }
+
+    // Ambil role berdasarkan akses/pokja yang sedang aktif
+    public function getActiveRole($userId, $pokjaId)
+    {
+        $stmt = $this->db->prepare("
+        SELECT r.kode_role
+        FROM user_pokja up
+
+        JOIN role r
+            ON r.id = up.role_id
+
+        WHERE up.user_id = ?
+        AND up.pokja_id = ?
+        AND up.is_active = 1
+
+        LIMIT 1
+    ");
+
+        $stmt->execute([
+            $userId,
+            $pokjaId
+        ]);
+
+        return $stmt->fetchColumn();
     }
 }

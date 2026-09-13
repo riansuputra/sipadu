@@ -39,7 +39,7 @@ class ArsipController extends BaseController
         $totalArsip = count($data);
         $totalSudah = count(array_filter($data, fn($d) => (int)($d['upload_selesai'] ?? 0) === 1));
         $totalBelum = $totalArsip - $totalSudah;
-
+        // dd($data);
         $this->view('arsip/index', [
             'data' => $data,
             'jenisList' => $jenisList,

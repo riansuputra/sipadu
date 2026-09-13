@@ -300,25 +300,15 @@ if ($tanggalMulai || $tanggalSelesai || $jenis) {
     function removeLink(button) {
         button.closest('.input-group').remove();
     }
-
-    document.querySelectorAll('form').forEach((f, i) => {
-        f.addEventListener("submit", function() {
-            console.log("FORM KE", i);
-            console.log(this.querySelectorAll('[name="publish_links[]"]').length);
-        });
-    });
 </script>
 
 <script>
     function submitApprove(id) {
-        const form = document.getElementById("form-approve-" + id);
-
-        console.log(
-            "input dalam form:",
-            form.querySelectorAll('[name="publish_links[]"]').length
+        const form = document.getElementById(
+            "form-approve-" + id
         );
 
-        form.submit();
+        form.requestSubmit();
     }
 </script>
 

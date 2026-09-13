@@ -139,12 +139,12 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                             <input
                                                 class="form-check-input"
                                                 type="checkbox"
-                                                name="publikasi_media[]"
+                                                name="kategori[]"
                                                 value="<?= $key ?>"
 
                                                 <?= in_array(
                                                     $key,
-                                                    $old['publikasi_media'] ?? []
+                                                    $old['kategori'] ?? []
                                                 ) ? 'checked' : '' ?>>
 
                                             <span class="form-check-label">

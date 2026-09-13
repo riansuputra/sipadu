@@ -24,36 +24,24 @@ $bannerSubtitle = "SIPADU BPMP Provinsi Bali";
 ob_start();
 ?>
 
+<div class="page-header d-print-none" aria-label="Page header">
+    <div class="container-xl">
+        <div class="row g-2 align-items-center">
+            <div class="col">
+                <!-- Page pre-title -->
+                <div class="page-pretitle">Arsip</div>
+                <h2 class="page-title">Detail Arsip Saya</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="page-body mt-3" id="page-content" style="display:none;">
     <div class="container-xl">
 
 
 
         <div class="row row-cards">
-
-            <div class="col-12 mb-0">
-                <div class="row">
-                    <div class="col">
-                        <ol class="breadcrumb text-center" aria-label="breadcrumbs">
-                            <li class="breadcrumb-item">
-                                <a href="<?= url('?page=dashboard') ?>" class="h3 mb-0">
-                                    🏠︎&nbsp;&nbsp;Dashboard
-                                </a>
-                            </li>
-                            <li class="breadcrumb-item">
-                                <a href="<?= url('?page=arsip-saya') ?>" class="h3 mb-0">
-                                    Arsip
-                                </a>
-                            </li>
-                            <li class="breadcrumb-item active">
-                                <a href="tests" class="h3 mb-0">
-                                    Detail Arsip
-                                </a>
-                            </li>
-                        </ol>
-                    </div>
-                </div>
-            </div>
 
             <div class="col-12">
                 <div class="card">
@@ -266,8 +254,6 @@ ob_start();
                                     <?php endif; ?>
                                 </div>
                             </div>
-
-
                         </div>
                     </div>
                 </div>
@@ -276,7 +262,7 @@ ob_start();
             <div class="modal modal-blur fade" id="modalTambahPeserta" tabindex="-1" aria-labelledby="modalTambahPesertaLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
                     <div class="modal-content">
-                        <form action="<?= url('?page=upload-bukti-arsip-saya') ?>" method="POST" enctype="multipart/form-data">
+                        <form action="<?= url('?page=admin-upload-bukti-arsip-saya') ?>" method="POST" enctype="multipart/form-data">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="modalTambahPesertaLabel">Tambah Peserta</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -376,7 +362,7 @@ ob_start();
                                                         </a>
                                                         <a href="javascript:void(0)" class="text-red"
                                                             onclick="confirmDeleteBukti(
-                                                        '<?= url('?page=hapus-bukti-arsip-saya') ?>',
+                                                        '<?= url('?page=admin-hapus-bukti-arsip-saya') ?>',
                                                         '<?= $d['id'] ?>',
                                                         '<?= $data['arsip_id'] ?>',
                                                         '<?= htmlspecialchars(addslashes($d['nama_file'] ?? 'File ini')) ?>'
@@ -640,4 +626,4 @@ ob_start();
 $content = ob_get_clean();
 
 // Load layout utama
-require __DIR__ . '/../layouts/main.php';
+require __DIR__ . '/../layouts/admin.php';

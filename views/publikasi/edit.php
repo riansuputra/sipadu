@@ -135,7 +135,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                 <div class="">
                                     <?php
                                     $selectedMedia = json_decode(
-                                        $data['publikasi_media'] ?? '[]',
+                                        $data['kategori'] ?? '[]',
                                         true
                                     );
                                     ?>
@@ -147,7 +147,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
                                             <input
                                                 class="form-check-input"
                                                 type="checkbox"
-                                                name="publikasi_media[]"
+                                                name="kategori[]"
                                                 value="<?= $key ?>"
 
                                                 <?= in_array($key, $selectedMedia)

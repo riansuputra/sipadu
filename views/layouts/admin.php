@@ -594,9 +594,13 @@
                                         </div>
 
                                         <div class="col text-truncate">
-                                            <a href="#"
+                                            <a href="${item.url || '#'}"
                                             class="text-body d-block"
-                                            onclick="markAsRead(${item.notif_id}); return false;">
+                                            onclick="handleNotifClick(
+                                                event,
+                                                ${item.notif_id},
+                                                '${item.url || '#'}'
+                                            )">
                                                 ${item.judul}
                                             </a>
                                             <div class="d-block text-secondary text-truncate mt-n1">

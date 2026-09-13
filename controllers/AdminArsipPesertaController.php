@@ -2,13 +2,12 @@
 
 require_once __DIR__ . '/../core/BaseController.php';
 
-class ArsipPesertaController extends BaseController
+class AdminArsipPesertaController extends BaseController
 {
     private $model;
     private $modelArsip;
     private $modelJenis;
     private $modelPegawai;
-    private $modelNotifikasi;
 
     public function __construct()
     {
@@ -16,7 +15,6 @@ class ArsipPesertaController extends BaseController
         $this->modelArsip = $this->model('ArsipModel');
         $this->modelJenis = $this->model('ArsipJenisModel');
         $this->modelPegawai = $this->model('PegawaiModel');
-        $this->modelNotifikasi = $this->model('NotifikasiModel');
     }
 
     public function index()
@@ -54,7 +52,7 @@ class ArsipPesertaController extends BaseController
         $arsip_id = $_POST['arsip_id'] ?? null;
         $pegawai_ids = $_POST['pegawai_id'] ?? [];
 
-        if (!$arsip_id || !ctype_digit((string)$arsip_id)) {
+        if (!$arsip_id || !ctype_digit($arsip_id)) {
             $this->flash('error', 'ID arsip tidak valid');
             return $this->redirect('?page=arsip');
         }
@@ -64,158 +62,54 @@ class ArsipPesertaController extends BaseController
             return $this->redirect('?page=detail-arsip&id=' . $arsip_id);
         }
 
-        // Ambil informasi arsip
-        $arsip = $this->modelArsip->getById($arsip_id);
-
-        if (!$arsip) {
-            $this->flash('error', 'Arsip tidak ditemukan');
-            return $this->redirect('?page=arsip');
-        }
-
         try {
-
             $this->model->beginTransaction();
 
             $berhasil = 0;
             $dilewati = 0;
             $diaktifkan = 0;
 
-            // Pegawai yang benar-benar perlu mendapat notifikasi
-            $pegawaiUntukNotifikasi = [];
-
             foreach ($pegawai_ids as $pegawai_id) {
 
-                if (!ctype_digit((string)$pegawai_id)) {
-                    continue;
-                }
+                if (!ctype_digit((string)$pegawai_id)) continue;
 
-                $existing = $this->model->findByArsipPegawai(
-                    $arsip_id,
-                    $pegawai_id
-                );
+                $existing = $this->model->findByArsipPegawai($arsip_id, $pegawai_id);
 
-                // ========================================
-                // PESERTA SUDAH PERNAH ADA
-                // ========================================
                 if ($existing) {
-
-                    // Peserta sebelumnya nonaktif
                     if ((int)$existing['is_active'] === 0) {
-
-                        $this->model->reactivate(
-                            $existing['id']
-                        );
-
-                        $pegawaiUntukNotifikasi[] = $pegawai_id;
-
+                        $this->model->reactivate($existing['id']);
                         $diaktifkan++;
                     } else {
-
-                        // Peserta masih aktif
-                        // Tidak perlu notifikasi baru
                         $dilewati++;
                     }
-
                     continue;
                 }
 
-                // ========================================
-                // PESERTA BARU
-                // ========================================
                 $this->model->insert([
                     'arsip_id' => $arsip_id,
                     'pegawai_id' => $pegawai_id,
                     'status' => 'diundang'
                 ]);
 
-                $pegawaiUntukNotifikasi[] = $pegawai_id;
-
                 $berhasil++;
             }
 
-            // ========================================
-            // BUAT NOTIFIKASI PESERTA
-            // ========================================
-            if (!empty($pegawaiUntukNotifikasi)) {
-
-                // Cari akun user dari pegawai
-                $userIds = $this->modelNotifikasi
-                    ->getUserIdsByPegawaiIds(
-                        $pegawaiUntukNotifikasi
-                    );
-
-                // Hanya buat master notifikasi
-                // jika ada user yang bisa menerima
-                if (!empty($userIds)) {
-
-                    $judulNotif = '[📁] Arsip Baru';
-
-                    $pesanNotif =
-                        'Anda ditambahkan sebagai peserta pada arsip "' .
-                        $arsip['judul'] .
-                        '".';
-
-                    // URL tidak ditentukan di sini.
-                    // Nanti dibuat berdasarkan active role penerima.
-                    $notifId = $this->modelNotifikasi->createMaster(
-                        $judulNotif,
-                        $pesanNotif,
-                        null,
-                        'arsip_peserta',
-                        $arsip_id
-                    );
-
-                    // Assign ke seluruh peserta
-                    foreach ($userIds as $userId) {
-
-                        $this->modelNotifikasi->assignToUser(
-                            $notifId,
-                            $userId
-                        );
-                    }
-                }
-            }
-
-            // Commit peserta + notifikasi
             $this->model->commit();
 
             $pesan = [];
 
-            if ($berhasil > 0) {
-                $pesan[] = "$berhasil peserta ditambahkan";
-            }
+            if ($berhasil > 0) $pesan[] = "$berhasil peserta ditambahkan";
+            if ($diaktifkan > 0) $pesan[] = "$diaktifkan peserta diaktifkan kembali";
+            if ($dilewati > 0) $pesan[] = "$dilewati peserta sudah terdaftar";
 
-            if ($diaktifkan > 0) {
-                $pesan[] = "$diaktifkan peserta diaktifkan kembali";
-            }
-
-            if ($dilewati > 0) {
-                $pesan[] = "$dilewati peserta sudah terdaftar";
-            }
-
-            $this->flash(
-                'success',
-                implode(', ', $pesan)
-                    ?: 'Peserta berhasil diproses'
-            );
+            $this->flash('success', implode(', ', $pesan) ?: 'Peserta berhasil diproses');
         } catch (Throwable $e) {
-
             $this->model->rollback();
-
-            debug_log(
-                $e->getMessage(),
-                'STORE PESERTA ARSIP ERROR'
-            );
-
-            $this->flash(
-                'error',
-                'Gagal menambahkan peserta'
-            );
+            debug_log($e->getMessage(), 'STORE PESERTA ARSIP ERROR');
+            $this->flash('error', 'Gagal menambahkan peserta');
         }
 
-        return $this->redirect(
-            '?page=detail-arsip&id=' . $arsip_id
-        );
+        return $this->redirect('?page=detail-arsip&id=' . $arsip_id);
     }
 
     public function update()
@@ -324,7 +218,7 @@ class ArsipPesertaController extends BaseController
 
         $jenisList = $this->modelJenis->getAll();
 
-        $this->view('arsip_peserta/index', [
+        $this->view('admin_arsip_peserta/index', [
             'data' => $data,
             'jenisList' => $jenisList,
             'user' => $this->user,
@@ -347,7 +241,7 @@ class ArsipPesertaController extends BaseController
 
         if (!$arsipId || !ctype_digit($arsipId)) {
             $this->flash('error', 'ID arsip tidak valid');
-            return $this->redirect('?page=arsip-saya');
+            return $this->redirect('?page=admin-arsip-saya');
         }
 
         $data = $this->model->getDetailArsipSaya($arsipId, $pegawaiId);
@@ -355,14 +249,14 @@ class ArsipPesertaController extends BaseController
 
         if (!$data) {
             $this->flash('error', 'Data arsip tidak ditemukan atau Anda bukan peserta arsip ini');
-            return $this->redirect('?page=arsip-saya');
+            return $this->redirect('?page=admin-arsip-saya');
         }
 
         $files = $this->model->getFilesByArsipPeserta($data['arsip_peserta_id']);
         // dd($files);
 
 
-        $this->view('arsip_peserta/detail', [
+        $this->view('admin_arsip_peserta/detail', [
             'data' => $data,
             'files' => $files,
             'user' => $this->user,
@@ -375,7 +269,7 @@ class ArsipPesertaController extends BaseController
         $this->auth();
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return $this->redirect('?page=arsip-saya');
+            return $this->redirect('?page=admin-arsip-saya');
         }
 
         $pegawaiId = $this->user['pegawai_id'] ?? null;
@@ -390,24 +284,24 @@ class ArsipPesertaController extends BaseController
 
         if (!$arsipPesertaId || !ctype_digit($arsipPesertaId)) {
             $this->flash('error', 'Data peserta arsip tidak valid');
-            return $this->redirect('?page=arsip-saya');
+            return $this->redirect('?page=admin-arsip-saya');
         }
 
         if (!$arsipId || !ctype_digit($arsipId)) {
             $this->flash('error', 'Data arsip tidak valid');
-            return $this->redirect('?page=arsip-saya');
+            return $this->redirect('?page=admin-arsip-saya');
         }
 
         $arsipPeserta = $this->model->getArsipPesertaByIdAndPegawai($arsipPesertaId, $pegawaiId);
 
         if (!$arsipPeserta) {
             $this->flash('error', 'Anda tidak memiliki akses ke arsip ini');
-            return $this->redirect('?page=arsip-saya');
+            return $this->redirect('?page=admin-arsip-saya');
         }
 
         if (empty($_FILES['file']['name'][0])) {
             $this->flash('error', 'Silakan pilih minimal 1 file');
-            return $this->redirect('?page=detail-arsip-saya&id=' . $arsipId);
+            return $this->redirect('?page=admin-detail-arsip-saya&id=' . $arsipId);
         }
 
         try {
@@ -433,7 +327,7 @@ class ArsipPesertaController extends BaseController
             $this->flash('error', 'Gagal mengunggah bukti');
         }
 
-        return $this->redirect('?page=detail-arsip-saya&id=' . $arsipId);
+        return $this->redirect('?page=admin-detail-arsip-saya&id=' . $arsipId);
     }
 
     public function deleteBukti()
@@ -441,7 +335,7 @@ class ArsipPesertaController extends BaseController
         $this->auth();
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return $this->redirect('?page=arsip-saya');
+            return $this->redirect('?page=admin-arsip-saya');
         }
 
         $pegawaiId = $this->user['pegawai_id'] ?? null;
@@ -456,26 +350,26 @@ class ArsipPesertaController extends BaseController
 
         if (!$fileId || !ctype_digit($fileId)) {
             $this->flash('error', 'ID file tidak valid');
-            return $this->redirect('?page=arsip-saya');
+            return $this->redirect('?page=admin-arsip-saya');
         }
 
         if (!$arsipId || !ctype_digit($arsipId)) {
             $this->flash('error', 'ID arsip tidak valid');
-            return $this->redirect('?page=arsip-saya');
+            return $this->redirect('?page=admin-arsip-saya');
         }
 
         $file = $this->model->getFileById($fileId);
 
         if (!$file) {
             $this->flash('error', 'File tidak ditemukan');
-            return $this->redirect('?page=detail-arsip-saya&id=' . $arsipId);
+            return $this->redirect('?page=admin-detail-arsip-saya&id=' . $arsipId);
         }
 
         $cekAkses = $this->model->isFileMilikPegawai($fileId, $pegawaiId);
 
         if (!$cekAkses) {
             $this->flash('error', 'Anda tidak memiliki akses ke file ini');
-            return $this->redirect('?page=detail-arsip-saya&id=' . $arsipId);
+            return $this->redirect('?page=admin-detail-arsip-saya&id=' . $arsipId);
         }
 
         try {
@@ -503,7 +397,7 @@ class ArsipPesertaController extends BaseController
             $this->flash('error', 'Gagal menghapus file bukti');
         }
 
-        return $this->redirect('?page=detail-arsip-saya&id=' . $arsipId);
+        return $this->redirect('?page=admin-detail-arsip-saya&id=' . $arsipId);
     }
 
     // Upload file bukti arsip peserta

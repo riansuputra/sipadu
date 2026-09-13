@@ -289,6 +289,48 @@ function routeRequest()
             (new DashboardController())->link();
             break;
 
+        case 'link-kegiatan':
+            // wajib login
+            require __DIR__ . '/../controllers/DashboardController.php';
+            (new DashboardController())->link_kegiatan();
+            break;
+
+        case 'link-kegiatan-paud':
+            // wajib login
+            require __DIR__ . '/../controllers/DashboardController.php';
+            (new DashboardController())->linkKegiatanPaud();
+            break;
+
+        case 'link-kegiatan-sd':
+            // wajib login
+            require __DIR__ . '/../controllers/DashboardController.php';
+            (new DashboardController())->linkKegiatanSd();
+            break;
+
+        case 'link-kegiatan-smp':
+            // wajib login
+            require __DIR__ . '/../controllers/DashboardController.php';
+            (new DashboardController())->linkKegiatanSmp();
+            break;
+
+        case 'link-kegiatan-sma':
+            // wajib login
+            require __DIR__ . '/../controllers/DashboardController.php';
+            (new DashboardController())->linkKegiatanSma();
+            break;
+
+        case 'link-kegiatan-lainnya':
+            // wajib login
+            require __DIR__ . '/../controllers/DashboardController.php';
+            (new DashboardController())->linkKegiatanLainnya();
+            break;
+
+        case 'link-kegiatan-widyaprada':
+            // wajib login
+            require __DIR__ . '/../controllers/DashboardController.php';
+            (new DashboardController())->linkKegiatanWp();
+            break;
+
         case 'kegiatan':
             // wajib login
             require __DIR__ . '/../controllers/DashboardController.php';
@@ -435,6 +477,56 @@ function routeRequest()
 
             require __DIR__ . '/../controllers/ArsipPesertaController.php';
             $controller = new ArsipPesertaController();
+            $controller->deleteBukti();
+            break;
+
+        // Arsip Peserta di Admin ==========================================
+        case 'admin-arsip-peserta-store':
+
+            require __DIR__ . '/../controllers/ArsipPesertaController.php';
+            $controller = new AdminArsipPesertaController();
+            $controller->store();
+            break;
+
+        case 'admin-arsip-peserta-update':
+
+            require __DIR__ . '/../controllers/AdminArsipPesertaController.php';
+            $controller = new AdminArsipPesertaController();
+            $controller->update();
+            break;
+
+        case 'admin-arsip-peserta-delete':
+
+            require __DIR__ . '/../controllers/AdminArsipPesertaController.php';
+            $controller = new AdminArsipPesertaController();
+            $controller->delete();
+            break;
+
+        case 'admin-arsip-saya':
+
+            require __DIR__ . '/../controllers/AdminArsipPesertaController.php';
+            $controller = new AdminArsipPesertaController();
+            $controller->indexPeserta();
+            break;
+
+        case 'admin-detail-arsip-saya':
+
+            require __DIR__ . '/../controllers/AdminArsipPesertaController.php';
+            $controller = new AdminArsipPesertaController();
+            $controller->showPeserta();
+            break;
+
+        case 'admin-upload-bukti-arsip-saya':
+
+            require __DIR__ . '/../controllers/AdminArsipPesertaController.php';
+            $controller = new AdminArsipPesertaController();
+            $controller->uploadBukti();
+            break;
+
+        case 'admin-hapus-bukti-arsip-saya':
+
+            require __DIR__ . '/../controllers/AdminArsipPesertaController.php';
+            $controller = new AdminArsipPesertaController();
             $controller->deleteBukti();
             break;
 
